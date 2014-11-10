@@ -1,0 +1,21 @@
+﻿
+Filter
+	* Attribute
+	* Interface
+	Base
+	* Return
+Transform all
+	Save *.tst
+	Build?
+	Context menu
+* (nej) En undo operation
+* Logga till Output
+typewriter.config
+Description osv för Plugin
+Itemtype för *.tst
+Templates för vanliga tst
+Intellisense för *.tst
+
+* Ctrl + . rename => krasch
+* Spara alla filer, inte bara den aktiva
+Add + rename => file not found vid incheckning
