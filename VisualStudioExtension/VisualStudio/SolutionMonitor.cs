@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -19,6 +21,8 @@ namespace Typewriter.VisualStudio
 
     public class SolutionMonitor : ISolutionMonitor, IVsSolutionEvents, IVsRunningDocTableEvents3, IVsTrackProjectDocumentsEvents2
     {
+        private readonly ILog log;
+
         private uint solutionCookie;
         private uint runningDocumentTableCookie;
         private uint trackProjectDocumentsCookie;
@@ -36,8 +40,9 @@ namespace Typewriter.VisualStudio
         public event FileDeletedEventHandler FileDeleted;
         public event FileRenamedEventHandler FileRenamed;
 
-        public SolutionMonitor()
+        public SolutionMonitor(ILog log)
         {
+            this.log = log;
             AdviceSolutionEvents();
         }
 
@@ -237,7 +242,7 @@ namespace Typewriter.VisualStudio
 
         #region TrackProjectDocuments events
 
-        private string ExtractPath(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments)
+        private IEnumerable<string> ExtractPath(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments)
         {
             var projItemIndex = 0;
             for (var changeProjIndex = 0; changeProjIndex < cProjects; changeProjIndex++)
@@ -247,12 +252,10 @@ namespace Typewriter.VisualStudio
                 {
                     if (rgpProjects[changeProjIndex] != null)
                     {
-                        return rgpszMkDocuments[projItemIndex];
+                        yield return rgpszMkDocuments[projItemIndex];
                     }
                 }
             }
-
-            return null;
         }
 
         public int OnAfterAddDirectoriesEx(int cProjects, int cDirectories, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSADDDIRECTORYFLAGS[] rgFlags)
@@ -262,10 +265,13 @@ namespace Typewriter.VisualStudio
 
         public int OnAfterAddFilesEx(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSADDFILEFLAGS[] rgFlags)
         {
-            var path = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments);
-            if (FileAdded != null && path != null)
+            if (FileAdded != null)
             {
-                FileAdded(this, new FileAddedEventArgs(path));
+                var paths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments);
+                foreach (var path in paths)
+                {
+                    FileAdded(this, new FileAddedEventArgs(path));
+                }
             }
 
             return VSConstants.S_OK;
@@ -278,10 +284,13 @@ namespace Typewriter.VisualStudio
 
         public int OnAfterRemoveFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSREMOVEFILEFLAGS[] rgFlags)
         {
-            var path = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments);
-            if (FileDeleted != null && path != null)
+            var paths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments);
+            if (FileDeleted != null)
             {
-                FileDeleted(this, new FileDeletedEventArgs(path));
+                foreach (var path in paths)
+                {
+                    FileDeleted(this, new FileDeletedEventArgs(path));
+                }
             }
 
             return VSConstants.S_OK;
@@ -294,12 +303,15 @@ namespace Typewriter.VisualStudio
 
         public int OnAfterRenameFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgszMkOldNames, string[] rgszMkNewNames, VSRENAMEFILEFLAGS[] rgFlags)
         {
-            var oldPath = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkOldNames);
-            var newPath = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkNewNames);
-
-            if (FileRenamed != null && oldPath != null && newPath != null)
+            if (FileRenamed != null)
             {
-                FileRenamed(this, new FileRenamedEventArgs(oldPath, newPath));
+                var oldPaths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkOldNames).ToArray();
+                var newPaths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkNewNames).ToArray();
+
+                for (var i = 0; i < oldPaths.Length; i++)
+                {
+                    FileRenamed(this, new FileRenamedEventArgs(oldPaths[i], newPaths[i]));
+                }
             }
 
             return VSConstants.S_OK;

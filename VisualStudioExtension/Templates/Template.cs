@@ -2,12 +2,13 @@
 using System.IO;
 using EnvDTE;
 using Typewriter.CodeModel;
+using FileInfo = Typewriter.CodeModel.CodeDom.FileInfo;
 
 namespace Typewriter.Templates
 {
     public interface ITemplate
     {
-        void Render(IFileInfo fileInfo);
+        void Render(IFileInfo file);
         void DeleteFile(string path);
         void RenameFile(string oldPath, string newPath);
     }
@@ -17,13 +18,14 @@ namespace Typewriter.Templates
         private readonly string template;
         private readonly Type extensions;
         private readonly string templatePath;
-
-        public ProjectItem ProjectItem { get; set; }
+        private readonly string solutionPath;
+        private readonly ProjectItem projectItem;
 
         public Template(ProjectItem projectItem)
         {
-            ProjectItem = projectItem;
-            templatePath = projectItem.FileNames[1];
+            this.projectItem = projectItem;
+            this.templatePath = projectItem.FileNames[1];
+            this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
 
             string codePath = null;
             //foreach (ProjectItem item in projectItem.ProjectItems)
@@ -39,11 +41,11 @@ namespace Typewriter.Templates
             this.extensions = (codePath != null) ? Compiler.Compile(File.ReadAllText(codePath)) : typeof(Extensions);
         }
 
-        public void Render(IFileInfo fileInfo)
+        public void Render(IFileInfo file)
         {
             var parser = new Parser(extensions);
-            var output = parser.Parse(template, fileInfo);
-            var outputPath = GetOutputPath(fileInfo.FullName);
+            var output = parser.Parse(template, file);
+            var outputPath = GetOutputPath(file.FullName);
 
             if (output == null)
             {
@@ -51,23 +53,37 @@ namespace Typewriter.Templates
             }
             else if (HasChanged(outputPath, output))
             {
-                SaveFile(outputPath, output);
+                SaveFile(outputPath, output, file.FullName);
             }
         }
 
-        private void SaveFile(string path, string output)
+        private void SaveFile(string path, string output, string fileName)
         {
             File.WriteAllText(path, output);
-            ProjectItem.ProjectItems.AddFromFile(path);
+            var item = projectItem.ProjectItems.AddFromFile(path);
+            SetMappedSourceFile(item, fileName);
         }
 
         public void DeleteFile(string path)
         {
             var outputPath = GetOutputPath(path);
-            var item = FindProjectItem(ProjectItem, outputPath);
+            var item = FindProjectItem(outputPath);
+
             if (item != null)
             {
-                item.Delete();
+                var lastItem = FindLastProjectItem(path);
+
+                if (lastItem != null && lastItem != item)
+                {
+                    File.Delete(item.FileNames[1]);
+                    File.Move(lastItem.FileNames[1], item.FileNames[1]);
+                    SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
+                    lastItem.Remove();
+                }
+                else
+                {
+                    item.Delete();
+                }
             }
         }
 
@@ -75,22 +91,68 @@ namespace Typewriter.Templates
         {
             var oldOutputPath = GetOutputPath(oldPath);
             var newOutputPath = GetOutputPath(newPath);
-            var item = FindProjectItem(ProjectItem, oldOutputPath);
+            var item = FindProjectItem(oldOutputPath);
 
             if (item != null)
             {
-                item.Remove();
+                var lastItem = FindLastProjectItem(oldPath);
                 File.Move(oldOutputPath, newOutputPath);
-                ProjectItem.ProjectItems.AddFromFile(newOutputPath);
+
+                if (lastItem != null && lastItem != item)
+                {
+                    File.Move(lastItem.FileNames[1], item.FileNames[1]);
+                    SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
+                    lastItem.Remove();
+                }
+                else
+                {
+                    item.Remove();
+                }
+
+                var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
+                SetMappedSourceFile(newItem, newPath);
             }
+        }
+
+        private string GetRelativeSourcePath(string path)
+        {
+            if (path.StartsWith(solutionPath, StringComparison.InvariantCultureIgnoreCase))
+            {
+                path = path.Remove(0, solutionPath.Length);
+            }
+
+            return path;
+        }
+
+        private string GetMappedSourceFile(ProjectItem item)
+        {
+            var value = item.Properties.Item("CustomToolNamespace").Value as string;
+            return string.IsNullOrWhiteSpace(value) ? null : Path.Combine(solutionPath, value);
+        }
+
+        private void SetMappedSourceFile(ProjectItem item, string path)
+        {
+            item.Properties.Item("CustomToolNamespace").Value = GetRelativeSourcePath(path);
         }
 
         private string GetOutputPath(string path)
         {
             var directory = Path.GetDirectoryName(templatePath);
-            var fileName = Path.GetFileNameWithoutExtension(path) + ".ts";
+            var fileName = Path.GetFileNameWithoutExtension(path);
+            var outputPath = Path.Combine(directory, fileName) + ".ts";
 
-            return Path.Combine(directory, fileName);
+            for (var i = 1; i < 1000; i++)
+            {
+                var item = FindProjectItem(outputPath);
+                if (item == null) return outputPath;
+
+                var mappedSourceFile = GetMappedSourceFile(item);
+                if (mappedSourceFile == null || path.Equals(mappedSourceFile, StringComparison.InvariantCultureIgnoreCase)) return outputPath;
+
+                outputPath = Path.Combine(directory, string.Format("{0}({1}).ts", fileName, i));
+            }
+
+            throw new Exception("GetOutputPath");
         }
 
         private static bool HasChanged(string path, string output)
@@ -107,7 +169,7 @@ namespace Typewriter.Templates
             return true;
         }
 
-        private static ProjectItem FindProjectItem(ProjectItem projectItem, string path)
+        private ProjectItem FindProjectItem(string path)
         {
             foreach (ProjectItem item in projectItem.ProjectItems)
             {
@@ -119,6 +181,34 @@ namespace Typewriter.Templates
             }
 
             return null;
+        }
+
+        private ProjectItem FindLastProjectItem(string path)
+        {
+            string outputPath;
+            ProjectItem lastItem = null;
+            var directory = Path.GetDirectoryName(templatePath);
+            var fileName = Path.GetFileNameWithoutExtension(path);
+
+
+            for (var i = 1; i < projectItem.ProjectItems.Count; i++)
+            {
+                if (i == 0)
+                    outputPath = Path.Combine(directory, fileName) + ".ts";
+                else
+                    outputPath = Path.Combine(directory, string.Format("{0}({1}).ts", fileName, i));
+
+                var item = FindProjectItem(outputPath);
+                if (item != null) lastItem = item;
+            }
+
+            return lastItem;
+        }
+
+        public void VerifyProjectItem()
+        {
+            // ReSharper disable once UnusedVariable
+            var dummy = projectItem.FileNames[1];
         }
     }
 }

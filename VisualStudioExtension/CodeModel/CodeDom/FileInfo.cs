@@ -7,20 +7,16 @@ using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class FileInfo : IFileInfo, IDisposable
+    public class FileInfo : IFileInfo
     {
-        private readonly Stopwatch stopwatch;
         private readonly IDictionary<string, ITypeInfo> typeCache;
-        private readonly ILog log;
         private readonly ProjectItem projectItem;
 
         private CodeNamespace currentNamespace;
 
-        public FileInfo(ILog log, ProjectItem projectItem)
+        public FileInfo(ProjectItem projectItem)
         {
-            this.stopwatch = Stopwatch.StartNew();
             this.typeCache = new Dictionary<string, ITypeInfo>();
-            this.log = log;
             this.projectItem = projectItem;
         }
 
@@ -108,12 +104,6 @@ namespace Typewriter.CodeModel.CodeDom
                 this.currentNamespace = ns;
                 return ns;
             });
-        }
-
-        public void Dispose()
-        {
-            this.stopwatch.Stop();
-            log.Debug("Render time: {0} ms", stopwatch.ElapsedMilliseconds);
         }
     }
 }

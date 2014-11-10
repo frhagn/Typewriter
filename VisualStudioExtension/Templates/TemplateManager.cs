@@ -95,8 +95,7 @@ namespace Typewriter.Templates
             {
                 try
                 {
-                    // ReSharper disable once UnusedVariable
-                    var dummy = template.ProjectItem.FileNames[1];
+                    template.VerifyProjectItem();
                 }
                 catch
                 {

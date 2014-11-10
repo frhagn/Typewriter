@@ -18,7 +18,7 @@ namespace Typewriter.VisualStudio
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     //[ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class ExtensionPackage : Package
+    public sealed class ExtensionPackage : Package, IDisposable
     {
         //private EditorFactory editorFactory;
 
@@ -46,11 +46,29 @@ namespace Typewriter.VisualStudio
                 ErrorHandler.ThrowOnFailure(1);
 
             this.log = new Log(dte);
-            this.solutionMonitor = new SolutionMonitor();
+            this.solutionMonitor = new SolutionMonitor(log);
             this.templateManager = new TemplateManager(log, dte, solutionMonitor);
             this.eventQueue = new EventQueue(log);
             var generationManager = new GenerationManager(log, dte, solutionMonitor, templateManager, eventQueue);
             //this.commendManager = new CommandManager(generationManager);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (!disposing) return;
+
+            if (this.eventQueue != null)
+            {
+                this.eventQueue.Dispose();
+                this.eventQueue = null;
+            }
         }
     }
 }

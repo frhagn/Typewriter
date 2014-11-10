@@ -5,7 +5,7 @@ using System.Timers;
 
 namespace Typewriter
 {
-    public interface IEventQueue
+    public interface IEventQueue : IDisposable
     {
         void QueueRender(string path, Action<string> action);
         void QueueDelete(string path, Action<string> action);
@@ -16,9 +16,9 @@ namespace Typewriter
     {
         private readonly ILog log;
         private readonly ICollection<RenderEvent> queue = new HashSet<RenderEvent>();
-        private readonly Timer timer = new Timer(100);
         private readonly object locker = new object();
-
+        private Timer timer = new Timer(100);
+        
         private DateTime timestamp = DateTime.Now;
 
         public EventQueue(ILog log)
@@ -77,7 +77,7 @@ namespace Typewriter
                 log.Debug("Rename queued {0} -> {1}", oldPath, newPath);
                 queue.Add(new RenderEvent
                 {
-                    EventType = EventType.Changed,
+                    EventType = EventType.Renamed,
                     RenameAction = action,
                     Path = oldPath,
                     NewPath = newPath
@@ -140,6 +140,22 @@ namespace Typewriter
             Changed,
             Deleted,
             Renamed
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing) return;
+
+            if (this.timer != null)
+            {
+                this.timer.Dispose();
+                this.timer = null;
+            }
         }
     }
 }

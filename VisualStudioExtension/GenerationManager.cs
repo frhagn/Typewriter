@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
 using Typewriter.Templates;
@@ -29,17 +30,21 @@ namespace Typewriter
         {
             try
             {
-                log.Debug("Render {0}", path);
                 if (templateManager.Templates.Any() == false) return;
 
+                log.Debug("Render {0}", path);
+                var stopwatch = Stopwatch.StartNew();
+
                 var item = dte.Solution.FindProjectItem(path);
-                using (var file = new FileInfo(log, item))
+                var file = new FileInfo(item);
+             
+                foreach (var template in templateManager.Templates)
                 {
-                    foreach (var template in templateManager.Templates)
-                    {
-                        template.Render(file);
-                    }
+                    template.Render(file);
                 }
+
+                stopwatch.Stop();
+                log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
             }
             catch (Exception exception)
             {
@@ -51,13 +56,18 @@ namespace Typewriter
         {
             try
             {
-                log.Debug("Delete {0}", path);
                 if (templateManager.Templates.Any() == false) return;
+
+                log.Debug("Delete {0}", path);
+                var stopwatch = Stopwatch.StartNew();
 
                 foreach (var template in templateManager.Templates)
                 {
                     template.DeleteFile(path);
                 }
+
+                stopwatch.Stop();
+                log.Debug("Delete completed in {0} ms", stopwatch.ElapsedMilliseconds);
             }
             catch (Exception exception)
             {
@@ -69,13 +79,18 @@ namespace Typewriter
         {
             try
             {
-                log.Debug("Rename {0} -> {1}", oldPath, newPath);
                 if (templateManager.Templates.Any() == false) return;
+
+                log.Debug("Rename {0} -> {1}", oldPath, newPath);
+                var stopwatch = Stopwatch.StartNew();
 
                 foreach (var template in templateManager.Templates)
                 {
                     template.RenameFile(oldPath, newPath);
                 }
+
+                stopwatch.Stop();
+                log.Debug("Rename completed in {0} ms", stopwatch.ElapsedMilliseconds);
             }
             catch (Exception exception)
             {
