@@ -2,7 +2,6 @@
 using System.IO;
 using EnvDTE;
 using Typewriter.CodeModel;
-using FileInfo = Typewriter.CodeModel.CodeDom.FileInfo;
 
 namespace Typewriter.Templates
 {
@@ -149,7 +148,7 @@ namespace Typewriter.Templates
                 var mappedSourceFile = GetMappedSourceFile(item);
                 if (mappedSourceFile == null || path.Equals(mappedSourceFile, StringComparison.InvariantCultureIgnoreCase)) return outputPath;
 
-                outputPath = Path.Combine(directory, string.Format("{0}({1}).ts", fileName, i));
+                outputPath = Path.Combine(directory, string.Format("{0} ({1}).ts", fileName, i));
             }
 
             throw new Exception("GetOutputPath");
@@ -185,20 +184,17 @@ namespace Typewriter.Templates
 
         private ProjectItem FindLastProjectItem(string path)
         {
-            string outputPath;
             ProjectItem lastItem = null;
             var directory = Path.GetDirectoryName(templatePath);
-            var fileName = Path.GetFileNameWithoutExtension(path);
+            var filename = Path.GetFileNameWithoutExtension(path);
 
 
             for (var i = 1; i < projectItem.ProjectItems.Count; i++)
             {
-                if (i == 0)
-                    outputPath = Path.Combine(directory, fileName) + ".ts";
-                else
-                    outputPath = Path.Combine(directory, string.Format("{0}({1}).ts", fileName, i));
-
+                var indexedName = (i == 0) ? string.Format("{0} ({1})", filename, i) : filename;
+                var outputPath = Path.Combine(directory, indexedName) + ".ts";
                 var item = FindProjectItem(outputPath);
+
                 if (item != null) lastItem = item;
             }
 

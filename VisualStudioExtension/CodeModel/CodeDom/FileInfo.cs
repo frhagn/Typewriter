@@ -9,15 +9,17 @@ namespace Typewriter.CodeModel.CodeDom
 {
     public class FileInfo : IFileInfo
     {
-        private readonly IDictionary<string, ITypeInfo> typeCache;
+        private readonly ILog log;
         private readonly ProjectItem projectItem;
+        private readonly IDictionary<string, ITypeInfo> typeCache;
 
         private CodeNamespace currentNamespace;
 
-        public FileInfo(ProjectItem projectItem)
+        public FileInfo(ILog log, ProjectItem projectItem)
         {
-            this.typeCache = new Dictionary<string, ITypeInfo>();
+            this.log = log;
             this.projectItem = projectItem;
+            this.typeCache = new Dictionary<string, ITypeInfo>();
         }
 
         public string Name
@@ -49,14 +51,17 @@ namespace Typewriter.CodeModel.CodeDom
         {
             if (typeCache.ContainsKey(fullName)) return typeCache[fullName];
 
+            var stopwatch = Stopwatch.StartNew();
+
             var undoContext = projectItem.DTE.UndoContext;
             var undo = undoContext.IsOpen == false;// && projectItem.DTE.Documents.Cast<Document>().Any(document => document.ProjectItem == projectItem);
+
+            ITypeInfo typeInfo;
 
             try
             {
                 if (undo) undoContext.Open("GetType");
 
-                ITypeInfo typeInfo;
                 var classAdded = false;
                 var name = Guid.NewGuid().ToString("N");
 
@@ -89,12 +94,16 @@ namespace Typewriter.CodeModel.CodeDom
                 }
 
                 typeCache.Add(fullName, typeInfo);
-                return typeInfo;
             }
             finally
             {
                 if (undo) undoContext.SetAborted();
             }
+
+            stopwatch.Stop();
+            log.Debug("GetType({0}) completed in {1} ms", fullName, stopwatch.ElapsedMilliseconds);
+
+            return typeInfo;
         }
 
         private IEnumerable<CodeNamespace> GetNamespaces()

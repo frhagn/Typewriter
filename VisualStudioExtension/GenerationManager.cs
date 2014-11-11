@@ -36,7 +36,7 @@ namespace Typewriter
                 var stopwatch = Stopwatch.StartNew();
 
                 var item = dte.Solution.FindProjectItem(path);
-                var file = new FileInfo(item);
+                var file = new FileInfo(log, item);
              
                 foreach (var template in templateManager.Templates)
                 {

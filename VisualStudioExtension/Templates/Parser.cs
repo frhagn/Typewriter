@@ -156,22 +156,22 @@ namespace Typewriter.Templates
         private string GetBlockValue(string block, string keyword, string filter, object data, string separator)
         {
             var value = GetValue(keyword, data);
-            var list = value as IEnumerable<ItemInfo>;
+            var list = value as IEnumerable<object>;
 
             if (list != null)
             {
                 if (filter != null)
                 {
-                    if (filter.StartsWith("\"")) return Filter(list, m => new [] { m.Name, m.FullName }, filter.Replace("\"", ""), block, separator);
-                    if (filter.StartsWith(":")) return Filter(list, m => m.Interfaces.SelectMany(i => new[] { i.Name, i.FullName }), filter.Replace(":", ""), block, separator);
-                    if (filter.StartsWith("[")) return Filter(list, m => m.Attributes.SelectMany(i => new[] { i.Name, i.FullName }), filter.Replace("[", "").Replace("]", ""), block, separator);
+                    if (filter.StartsWith("\"")) return Filter(list.Cast<ItemInfo>(), m => new [] { m.Name, m.FullName }, filter.Replace("\"", ""), block, separator);
+                    if (filter.StartsWith(":")) return Filter(list.Cast<ItemInfo>(), m => m.Interfaces.SelectMany(i => new[] { i.Name, i.FullName }), filter.Replace(":", ""), block, separator);
+                    if (filter.StartsWith("[")) return Filter(list.Cast<ItemInfo>(), m => m.Attributes.SelectMany(i => new[] { i.Name, i.FullName }), filter.Replace("[", "").Replace("]", ""), block, separator);
                     
                     // Returvärdet
-                    if (filter.StartsWith("=\"")) return Filter(list, m => new[] { m.Type.Name, m.Type.FullName }, filter.Replace("=\"", ""), block, separator);
-                    if (filter.StartsWith("=:")) return Filter(list, m => m.Type.Interfaces.SelectMany(i => new[] { i.Name, i.FullName }), filter.Replace("=:", ""), block, separator);
-                    if (filter.StartsWith("=[")) return Filter(list, m => m.Type.Attributes.SelectMany(i => new[] { i.Name, i.FullName }), filter.Replace("=[", "").Replace("]", ""), block, separator);
+                    if (filter.StartsWith("=\"")) return Filter(list.Cast<ItemInfo>(), m => new[] { m.Type.Name, m.Type.FullName }, filter.Replace("=\"", ""), block, separator);
+                    if (filter.StartsWith("=:")) return Filter(list.Cast<ItemInfo>(), m => m.Type.Interfaces.SelectMany(i => new[] { i.Name, i.FullName }), filter.Replace("=:", ""), block, separator);
+                    if (filter.StartsWith("=[")) return Filter(list.Cast<ItemInfo>(), m => m.Type.Attributes.SelectMany(i => new[] { i.Name, i.FullName }), filter.Replace("=[", "").Replace("]", ""), block, separator);
 
-                    return MethodFilter(list, filter, block, separator);
+                    return MethodFilter(list.Cast<ItemInfo>(), filter, block, separator);
                 }
 
                 return string.Join(separator, list.Select(y =>
@@ -247,7 +247,7 @@ namespace Typewriter.Templates
                 method = typeof(SolutionExtensions).GetMethod(filter, new[] { type });
                 if (method == null)
                 {
-                    return string.Format("<Can't find extension method \"{0}\">", filter);
+                    return string.Format("<Can't find method {0}({1})>", filter, type);
                 }
             }
 
@@ -304,7 +304,7 @@ namespace Typewriter.Templates
                 return method.Invoke(null, new[] { data });
             }
 
-            return string.Format("<Can't find property or extension method \"{0}\">", keyword);
+            return string.Format("<Can't find property or method {0} on {1}>", keyword, type);
         }
 
         private static string CamelCase(string value)
