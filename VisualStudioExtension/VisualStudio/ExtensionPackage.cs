@@ -11,8 +11,6 @@ namespace Typewriter.VisualStudio
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
     /// </summary>
-    //[ProvideEditorFactory(typeof(EditorFactory), 101)]
-    //[ProvideEditorExtension(typeof(EditorFactory), ".tst", 32, NameResourceID = 101)]
     [Guid(GuidList.VisualStudioExtensionPackageId)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
@@ -36,9 +34,6 @@ namespace Typewriter.VisualStudio
         protected override void Initialize()
         {
             base.Initialize();
-
-            //this.editorFactory = new EditorFactory(this);
-            //base.RegisterEditorFactory(this.editorFactory);
 
             this.dte = GetService(typeof(DTE)) as DTE;
 
