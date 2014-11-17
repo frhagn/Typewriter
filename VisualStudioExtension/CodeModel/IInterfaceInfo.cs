@@ -7,8 +7,8 @@ namespace Typewriter.CodeModel
     {
         bool IsGeneric { get; }
 
-        IEnumerable<IInterfaceInfo> Interfaces { get; }
-        IEnumerable<IMethodInfo> Methods { get; }
-        IEnumerable<IPropertyInfo> Properties { get; }
+        ICollection<IInterfaceInfo> Interfaces { get; }
+        ICollection<IMethodInfo> Methods { get; }
+        ICollection<IPropertyInfo> Properties { get; }
     }
 }

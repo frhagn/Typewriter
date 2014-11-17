@@ -7,10 +7,10 @@ namespace Typewriter.CodeModel
     {
         bool IsGeneric { get; }
 
-        IEnumerable<IConstantInfo> Constants { get; }
-        IEnumerable<IFieldInfo> Fields { get; }
-        IEnumerable<IInterfaceInfo> Interfaces { get; }
-        IEnumerable<IMethodInfo> Methods { get; }
-        IEnumerable<IPropertyInfo> Properties { get; }
+        ICollection<IConstantInfo> Constants { get; }
+        ICollection<IFieldInfo> Fields { get; }
+        ICollection<IInterfaceInfo> Interfaces { get; }
+        ICollection<IMethodInfo> Methods { get; }
+        ICollection<IPropertyInfo> Properties { get; }
     }
 }

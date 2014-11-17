@@ -5,7 +5,7 @@ namespace Typewriter.CodeModel
 {
     public interface IMethodInfo : IItemInfo
     {
-        IEnumerable<IParameterInfo> Parameters { get; }
+        ICollection<IParameterInfo> Parameters { get; }
         ITypeInfo Type { get; }
     }
 }

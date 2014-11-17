@@ -11,7 +11,7 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly ILog log;
         private readonly ProjectItem projectItem;
-        private readonly IDictionary<string, ITypeInfo> typeCache;
+        private readonly IDictionary<string, CodeType> typeCache;
 
         private CodeNamespace currentNamespace;
 
@@ -19,7 +19,7 @@ namespace Typewriter.CodeModel.CodeDom
         {
             this.log = log;
             this.projectItem = projectItem;
-            this.typeCache = new Dictionary<string, ITypeInfo>();
+            this.typeCache = new Dictionary<string, CodeType>();
         }
 
         public string Name
@@ -47,7 +47,7 @@ namespace Typewriter.CodeModel.CodeDom
             get { return GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Children, i => new InterfaceInfo(i, this))); }
         }
 
-        public ITypeInfo GetType(string fullName)
+        public CodeType GetType(string fullName)
         {
             if (typeCache.ContainsKey(fullName)) return typeCache[fullName];
 
@@ -56,7 +56,7 @@ namespace Typewriter.CodeModel.CodeDom
             var undoContext = projectItem.DTE.UndoContext;
             var undo = undoContext.IsOpen == false;// && projectItem.DTE.Documents.Cast<Document>().Any(document => document.ProjectItem == projectItem);
 
-            ITypeInfo typeInfo;
+            CodeType typeInfo;
 
             try
             {
@@ -76,12 +76,12 @@ namespace Typewriter.CodeModel.CodeDom
 
                 try
                 {
-                    typeInfo = new TypeInfo(variable.Type.CodeType, this);
+                    typeInfo = variable.Type.CodeType;
                 }
-                catch // (NotImplementedException)
-                {
-                    typeInfo = new ObjectTypeInfo();
-                }
+                //catch // (NotImplementedException)
+                //{
+                //    typeInfo = new ObjectTypeInfo();
+                //}
                 finally
                 {
                     if (undo == false)

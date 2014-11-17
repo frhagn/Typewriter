@@ -3,72 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EnvDTE;
-using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
     public class TypeInfo : ItemInfo, ITypeInfo
     {
-        private static readonly Type[] primitiveTypes =
-        {
-            typeof (string),
-            typeof (char),
-            typeof (byte),
-            typeof (sbyte),
-            typeof (ushort),
-            typeof (short),
-            typeof (uint),
-            typeof (int),
-            typeof (ulong),
-            typeof (long),
-            typeof (float),
-            typeof (double),
-            typeof (decimal),
-            typeof (void),
-            typeof (bool),
-            typeof (DateTime)
-        };
+        private static readonly Type[] primitiveTypes = { typeof(string), typeof(char), typeof(byte), typeof(sbyte), typeof(ushort), typeof(short), typeof(uint), typeof(int), typeof(ulong), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(void), typeof(bool), typeof(DateTime) };
 
-        private readonly CodeType codeType;
+        private readonly string fullName;
+        private CodeType codeType;
 
-        public TypeInfo(CodeType codeType, FileInfo file) : base(codeType, file)
+        public TypeInfo(CodeType codeType, FileInfo file)
+            : base(codeType, file)
         {
             this.codeType = codeType;
+            this.fullName = codeType.FullName;
         }
 
-        public bool IsEnum
+        public TypeInfo(string fullName, FileInfo file)
+            : base(null, file)
         {
-            get { return codeType.Kind == vsCMElement.vsCMElementEnum; }
+            this.fullName = fullName;
         }
 
-        public bool IsEnumerable
+        protected override void Load()
         {
-            get { return FullName != "System.String" && (FullName.StartsWith("System.Collections.") || FullName.EndsWith("[]") || Implements(Interfaces, "System.Collections.")); }
+            if (this.codeType != null) return;
+
+            this.codeType = file.GetType(fullName);
+            this.element = this.codeType;
         }
 
-        private bool Implements(IEnumerable<IInterfaceInfo> interfaces, string name)
+        public override string Name
         {
-            return interfaces.Any(i => i.FullName.StartsWith(name) || Implements(i.Interfaces, name));
+            get
+            {
+                var name = this.fullName.Split('<')[0];
+                return name.Substring(name.LastIndexOf('.') + 1);
+            }
+        }
+
+        public override string FullName
+        {
+            get { return this.fullName; }
         }
 
         public bool IsGeneric
         {
-            get
-            {
-                var codeClass = codeType as CodeClass2;
-                if (codeClass != null)
-                {
-                    return codeClass.IsGeneric;
-                }
-                
-                var codeInterface = codeType as CodeInterface2;
-                if (codeInterface != null)
-                {
-                    return codeInterface.IsGeneric;
-                }
-
-                return IsNullable;
-            }
+            get { return FullName.IndexOf("<", StringComparison.Ordinal) > -1 || IsNullable; }
         }
 
         public bool IsNullable
@@ -82,22 +64,49 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 if (IsNullable)
                 {
-                    if (FullName.EndsWith("?")) return primitiveTypes.Any(t => t.FullName == codeType.FullName.TrimEnd('?'));
+                    if (FullName.EndsWith("?")) return primitiveTypes.Any(t => t.FullName == FullName.TrimEnd('?'));
                     return primitiveTypes.Any(t => t.FullName == ExtractGenericTypeNames(FullName).First());
                 }
 
-                return primitiveTypes.Any(t => t.FullName == codeType.FullName); 
+                return primitiveTypes.Any(t => t.FullName == FullName);
             }
         }
-        
+
+        public bool IsEnum
+        {
+            get
+            {
+                Load();
+                return codeType.Kind == vsCMElement.vsCMElementEnum;
+            }
+        }
+
+        public bool IsEnumerable
+        {
+            //get { return FullName != "System.String" && (FullName.StartsWith("System.Collections.") || Implements(Interfaces, "System.Collections.")); }
+            get { return FullName != "System.String" && FullName.StartsWith("System.Collections."); }
+        }
+
+        private static bool Implements(IEnumerable<IInterfaceInfo> interfaces, string name)
+        {
+            return interfaces.Any(i => i.FullName.StartsWith(name) || Implements(i.Interfaces, name));
+        }
+
         public IEnumerable<ITypeInfo> GenericTypeArguments
         {
             get
             {
                 if (IsGeneric == false) return new ITypeInfo[0];
-                if (IsNullable && FullName.EndsWith("?")) return new[] { file.GetType(codeType.FullName.TrimEnd('?')) };
+                if (IsNullable && FullName.EndsWith("?")) return new[] { new TypeInfo(FullName.TrimEnd('?'), file) };
 
-                return ExtractGenericTypeNames(FullName).Select(file.GetType);
+                return ExtractGenericTypeNames(FullName).Select(n =>
+                {
+                    if (n.EndsWith("[]"))
+                    {
+                        n = string.Format("System.Collections.Generic.ICollection<{0}>", n);
+                    }
+                    return new TypeInfo(n, file);
+                });
             }
         }
 

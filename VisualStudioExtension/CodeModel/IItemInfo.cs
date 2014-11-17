@@ -9,6 +9,6 @@ namespace Typewriter.CodeModel
         //string Namespace { get; }
         string FullName { get; }
 
-        IEnumerable<IAttributeInfo> Attributes { get; }
+        ICollection<IAttributeInfo> Attributes { get; }
     }
 }
