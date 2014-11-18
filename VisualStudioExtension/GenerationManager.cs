@@ -30,17 +30,18 @@ namespace Typewriter
         {
             try
             {
-                if (templateManager.Templates.Any() == false) return;
-
                 log.Debug("Render {0}", path);
                 var stopwatch = Stopwatch.StartNew();
 
-                var item = dte.Solution.FindProjectItem(path);
-                var file = new FileInfo(log, item);
-             
-                foreach (var template in templateManager.Templates)
+                if (templateManager.Templates.Any())
                 {
-                    template.Render(file);
+                    var item = dte.Solution.FindProjectItem(path);
+                    var file = new FileInfo(log, item);
+
+                    foreach (var template in templateManager.Templates)
+                    {
+                        template.Render(file);
+                    }
                 }
 
                 stopwatch.Stop();

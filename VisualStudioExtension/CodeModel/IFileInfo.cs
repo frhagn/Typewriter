@@ -8,7 +8,7 @@ namespace Typewriter.CodeModel
         string Name { get; }
         string FullName { get; }
 
-        IEnumerable<IClassInfo> Classes { get; }
+        ICollection<IClassInfo> Classes { get; }
         IEnumerable<IEnumInfo> Enums { get; }
         IEnumerable<IInterfaceInfo> Interfaces { get; }
     }

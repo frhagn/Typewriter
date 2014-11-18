@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Typewriter.Templates;
 using Typewriter.VisualStudio.Resources;
 
@@ -21,6 +22,7 @@ namespace Typewriter.VisualStudio
         //private EditorFactory editorFactory;
 
         private DTE dte;
+        private IVsStatusbar statusBar;
         private Log log;
         private ISolutionMonitor solutionMonitor;
         private ITemplateManager templateManager;
@@ -40,10 +42,15 @@ namespace Typewriter.VisualStudio
             if (this.dte == null)
                 ErrorHandler.ThrowOnFailure(1);
 
+            this.statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
+
+            if (this.statusBar == null)
+                ErrorHandler.ThrowOnFailure(1);
+
             this.log = new Log(dte);
+            this.eventQueue = new EventQueue(statusBar, log);
             this.solutionMonitor = new SolutionMonitor(log);
-            this.templateManager = new TemplateManager(log, dte, solutionMonitor);
-            this.eventQueue = new EventQueue(log);
+            this.templateManager = new TemplateManager(log, dte, solutionMonitor, eventQueue);
             var generationManager = new GenerationManager(log, dte, solutionMonitor, templateManager, eventQueue);
             //this.commendManager = new CommandManager(generationManager);
         }

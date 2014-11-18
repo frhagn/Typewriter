@@ -9,6 +9,8 @@ namespace Typewriter.CodeModel.CodeDom
 {
     public class FileInfo : IFileInfo
     {
+        private static readonly object locker = new object();
+
         private readonly ILog log;
         private readonly ProjectItem projectItem;
         private readonly IDictionary<string, CodeType> typeCache;
@@ -20,6 +22,8 @@ namespace Typewriter.CodeModel.CodeDom
             this.log = log;
             this.projectItem = projectItem;
             this.typeCache = new Dictionary<string, CodeType>();
+
+            var x = this.Classes;
         }
 
         public string Name
@@ -32,78 +36,105 @@ namespace Typewriter.CodeModel.CodeDom
             get { return projectItem.FileNames[1]; }
         }
 
-        public IEnumerable<IClassInfo> Classes
+        private IClassInfo[] classes;
+        public ICollection<IClassInfo> Classes
         {
-            get { return GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Children, c => new ClassInfo(c, this))); }
+            get 
+            {
+                if (classes == null)
+                {
+                    classes = GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Members, c => (IClassInfo)new ClassInfo(c, this))).ToArray();
+                }
+                return classes;
+            }
         }
 
+        private IEnumInfo[] enums;
         public IEnumerable<IEnumInfo> Enums
         {
-            get { return GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Children, e => new EnumInfo(e, this))); }
+            get
+            {
+                if (enums == null)
+                {
+                    enums = GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Members, e => (IEnumInfo)new EnumInfo(e, this))).ToArray();
+                }
+                return enums;
+            }
         }
 
+        private IInterfaceInfo[] interfaces;
         public IEnumerable<IInterfaceInfo> Interfaces
         {
-            get { return GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Children, i => new InterfaceInfo(i, this))); }
+            get
+            {
+                if (interfaces == null)
+                {
+                    interfaces = GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Members, i => (IInterfaceInfo)new InterfaceInfo(i, this))).ToArray();
+                }
+                return interfaces;
+            }
         }
 
         public CodeType GetType(string fullName)
         {
-            if (typeCache.ContainsKey(fullName)) return typeCache[fullName];
-
-            var stopwatch = Stopwatch.StartNew();
-
-            var undoContext = projectItem.DTE.UndoContext;
-            var undo = undoContext.IsOpen == false;// && projectItem.DTE.Documents.Cast<Document>().Any(document => document.ProjectItem == projectItem);
-
-            CodeType typeInfo;
-
-            try
+            lock (locker)
             {
-                if (undo) undoContext.Open("GetType");
+                if (typeCache.ContainsKey(fullName)) return typeCache[fullName];
 
-                var classAdded = false;
-                var name = Guid.NewGuid().ToString("N");
+                var stopwatch = Stopwatch.StartNew();
 
-                var codeClass = new Iterator<CodeClass>(currentNamespace.Children).FirstOrDefault();
+                var undoContext = projectItem.DTE.UndoContext;
+                var undo = undoContext.IsOpen == false; // && projectItem.DTE.Documents.Cast<Document>().Any(document => document.ProjectItem == projectItem);
 
-                if (codeClass == null)
-                {
-                    codeClass = currentNamespace.AddClass("c" + name, -1, null, null, vsCMAccess.vsCMAccessPublic);
-                    classAdded = true;
-                }
-                var variable = codeClass.AddVariable("v" + name, fullName, -1, vsCMAccess.vsCMAccessPublic, null);
+                CodeType typeInfo;
 
                 try
                 {
-                    typeInfo = variable.Type.CodeType;
+                    if (undo) undoContext.Open("GetType");
+
+                    var classAdded = false;
+                    var name = Guid.NewGuid().ToString("N");
+
+                    var codeClass = new Iterator<CodeClass>(currentNamespace.Children).FirstOrDefault();
+
+                    if (codeClass == null)
+                    {
+                        codeClass = currentNamespace.AddClass("c" + name, -1, null, null, vsCMAccess.vsCMAccessPublic);
+                        classAdded = true;
+                    }
+                    var variable = codeClass.AddVariable("v" + name, fullName, -1, vsCMAccess.vsCMAccessPublic, null);
+
+                    try
+                    {
+                        typeInfo = variable.Type.CodeType;
+                    }
+                        //catch // (NotImplementedException)
+                        //{
+                        //    typeInfo = new ObjectTypeInfo();
+                        //}
+                    finally
+                    {
+                        if (undo == false)
+                        {
+                            if (classAdded)
+                                currentNamespace.Remove(codeClass);
+                            else
+                                codeClass.RemoveMember(variable);
+                        }
+                    }
+
+                    typeCache.Add(fullName, typeInfo);
                 }
-                //catch // (NotImplementedException)
-                //{
-                //    typeInfo = new ObjectTypeInfo();
-                //}
                 finally
                 {
-                    if (undo == false)
-                    {
-                        if (classAdded)
-                            currentNamespace.Remove(codeClass);
-                        else
-                            codeClass.RemoveMember(variable);
-                    }
+                    if (undo) undoContext.SetAborted();
                 }
 
-                typeCache.Add(fullName, typeInfo);
-            }
-            finally
-            {
-                if (undo) undoContext.SetAborted();
-            }
+                stopwatch.Stop();
+                log.Debug("GetType({0}) completed in {1} ms", fullName, stopwatch.ElapsedMilliseconds);
 
-            stopwatch.Stop();
-            log.Debug("GetType({0}) completed in {1} ms", fullName, stopwatch.ElapsedMilliseconds);
-
-            return typeInfo;
+                return typeInfo;
+            }
         }
 
         private IEnumerable<CodeNamespace> GetNamespaces()

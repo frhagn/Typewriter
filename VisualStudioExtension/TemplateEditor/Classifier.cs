@@ -79,12 +79,24 @@ namespace Typewriter.TemplateEditor
             {"name",Constants.PropertyClassificationType},
             {"Name",Constants.PropertyClassificationType},
             {"Methods",Constants.PropertyClassificationType},
+            {"Attributes",Constants.PropertyClassificationType},
             {"Properties",Constants.PropertyClassificationType},
             {"Classes",Constants.PropertyClassificationType},
             {"TypeName",Constants.PropertyClassificationType},
+            {"Interfaces",Constants.PropertyClassificationType},
+            {"Type",Constants.PropertyClassificationType},
+            {"ClassName",Constants.PropertyClassificationType},
+            {"Parameters",Constants.PropertyClassificationType},
+            {"IsEnumerable",Constants.PropertyClassificationType},
+            {"IsGeneric",Constants.PropertyClassificationType},
+            {"Value",Constants.PropertyClassificationType},
 
             { "module", Constants.KeywordClassificationType },
             { "class", Constants.KeywordClassificationType },
+            { "interface", Constants.KeywordClassificationType },
+            { "declare", Constants.KeywordClassificationType },
+            { "implements", Constants.KeywordClassificationType },
+            { "extends", Constants.KeywordClassificationType },
             { "export", Constants.KeywordClassificationType },
             { "number", Constants.KeywordClassificationType },
             { "string", Constants.KeywordClassificationType },
@@ -96,7 +108,14 @@ namespace Typewriter.TemplateEditor
             { "void", Constants.KeywordClassificationType },
             { "null", Constants.KeywordClassificationType },
             { "boolean", Constants.KeywordClassificationType },
-            { "any", Constants.KeywordClassificationType }
+            { "any", Constants.KeywordClassificationType },
+            { "this", Constants.KeywordClassificationType },
+            { "get", Constants.KeywordClassificationType },
+            { "set", Constants.KeywordClassificationType },
+            { "var", Constants.KeywordClassificationType },
+            { "new", Constants.KeywordClassificationType },
+            { "true", Constants.KeywordClassificationType },
+            { "false", Constants.KeywordClassificationType }
         };
     }
 

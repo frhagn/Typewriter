@@ -50,7 +50,7 @@ namespace Typewriter.Templates
             {
                 DeleteFile(outputPath);
             }
-            else if (HasChanged(outputPath, output))
+            else 
             {
                 SaveFile(outputPath, output, file.FullName);
             }
@@ -58,8 +58,18 @@ namespace Typewriter.Templates
 
         private void SaveFile(string path, string output, string fileName)
         {
-            File.WriteAllText(path, output);
-            var item = projectItem.ProjectItems.AddFromFile(path);
+            ProjectItem item;
+
+            if (HasChanged(path, output))
+            {
+                File.WriteAllText(path, output);
+                item = FindProjectItem(path) ?? projectItem.ProjectItems.AddFromFile(path);
+            }
+            else
+            {
+                item = FindProjectItem(path);
+            }
+
             SetMappedSourceFile(item, fileName);
         }
 
@@ -131,7 +141,11 @@ namespace Typewriter.Templates
 
         private void SetMappedSourceFile(ProjectItem item, string path)
         {
-            item.Properties.Item("CustomToolNamespace").Value = GetRelativeSourcePath(path);
+            var relativeSourcePath = GetRelativeSourcePath(path);
+            if (relativeSourcePath.Equals(GetMappedSourceFile(item), StringComparison.InvariantCultureIgnoreCase) == false)
+            {
+                item.Properties.Item("CustomToolNamespace").Value = relativeSourcePath;
+            }
         }
 
         private string GetOutputPath(string path)

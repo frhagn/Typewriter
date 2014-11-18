@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Timers;
+using System.Threading;
+using Microsoft.VisualStudio.Shell.Interop;
+using Timer = System.Timers.Timer;
 
 namespace Typewriter
 {
@@ -14,15 +17,17 @@ namespace Typewriter
 
     public class EventQueue : IEventQueue
     {
+        private readonly IVsStatusbar statusBar;
         private readonly ILog log;
         private readonly ICollection<RenderEvent> queue = new HashSet<RenderEvent>();
         private readonly object locker = new object();
-        private Timer timer = new Timer(100);
-        
+        private Timer timer = new Timer(500);
+
         private DateTime timestamp = DateTime.Now;
 
-        public EventQueue(ILog log)
+        public EventQueue(IVsStatusbar statusBar, ILog log)
         {
+            this.statusBar = statusBar;
             this.log = log;
             SetupTimer();
         }
@@ -102,27 +107,78 @@ namespace Typewriter
 
                 lock (locker)
                 {
-                    if (timestamp.AddMilliseconds(500) > DateTime.Now) return;
+                    if (timestamp.AddMilliseconds(500) > DateTime.Now)
+                    {
+                        return;
+                    }
 
                     items = queue.ToArray();
                     queue.Clear();
                 }
 
-                foreach (var item in items)
+                var count = (uint)items.Length;
+                if (count > 0)
                 {
-                    switch (item.EventType)
+                    uint cookie = 0;
+                    object icon = (short)Constants.SBAI_Save;
+                    int frozen;
+                    statusBar.IsFrozen(out frozen);
+                    if (frozen == 0)
                     {
-                        case EventType.Changed:
-                            item.Action(item.Path);
-                            break;
-                        case EventType.Deleted:
-                            item.Action(item.Path);
-                            break;
-                        case EventType.Renamed:
-                            item.RenameAction(item.Path, item.NewPath);
-                            break;
+                        statusBar.Progress(ref cookie, 1, "", 0, 0);
+                        statusBar.SetText("Rendering template...");
+                        statusBar.Animation(1, ref icon);
                     }
+
+                    var stopwatch = Stopwatch.StartNew();
+                    uint i = 0;
+                    var p = items.AsParallel();
+                    p.ForAll(item =>
+                    {
+                        switch (item.EventType)
+                        {
+                            case EventType.Changed:
+                                item.Action(item.Path);
+                                break;
+                            case EventType.Deleted:
+                                item.Action(item.Path);
+                                break;
+                            case EventType.Renamed:
+                                item.RenameAction(item.Path, item.NewPath);
+                                break;
+                        }
+                        i++;
+                        statusBar.Progress(ref cookie, 1, "", i, count);
+                    });
+
+                    statusBar.Animation(0, ref icon);
+                    statusBar.SetText("Rendering complete");
+
+                    Thread.Sleep(1000);
+
+                    // Clear the progress bar.
+                    statusBar.Progress(ref cookie, 0, "", 0, 0);
+                    //statusBar.FreezeOutput(0);
+                    //statusBar.Clear();
+
+                    stopwatch.Stop();
+                    log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
                 }
+                //foreach (var item in items)
+                //{
+                //    switch (item.EventType)
+                //    {
+                //        case EventType.Changed:
+                //            item.Action(item.Path);
+                //            break;
+                //        case EventType.Deleted:
+                //            item.Action(item.Path);
+                //            break;
+                //        case EventType.Renamed:
+                //            item.RenameAction(item.Path, item.NewPath);
+                //            break;
+                //    }
+                //}
             };
         }
 
@@ -142,15 +198,12 @@ namespace Typewriter
             Renamed
         }
 
+        private bool disposed;
         public void Dispose()
         {
-            Dispose(true);
-        }
+            if (disposed) return;
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing) return;
-
+            disposed = true;
             if (this.timer != null)
             {
                 this.timer.Dispose();
