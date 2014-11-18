@@ -15,7 +15,7 @@ namespace Typewriter
         void QueueRename(string oldPath, string newPath, Action<string, string> action);
     }
 
-    public class EventQueue : IEventQueue
+    public sealed class EventQueue : IEventQueue
     {
         private readonly IVsStatusbar statusBar;
         private readonly ILog log;
