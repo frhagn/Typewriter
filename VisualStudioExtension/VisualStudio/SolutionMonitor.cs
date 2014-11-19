@@ -208,6 +208,11 @@ namespace Typewriter.VisualStudio
 
         public int OnBeforeSave(uint docCookie)
         {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterSave(uint docCookie)
+        {
             uint flags, readlocks, editlocks;
             string name;
             IVsHierarchy hier;
@@ -220,11 +225,6 @@ namespace Typewriter.VisualStudio
                 FileChanged(this, new FileChangedEventArgs(name));
             }
 
-            return VSConstants.S_OK;
-        }
-
-        public int OnAfterSave(uint docCookie)
-        {
             return VSConstants.S_OK;
         }
 

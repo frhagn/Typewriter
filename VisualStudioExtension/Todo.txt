@@ -4,13 +4,15 @@ Filter
 	* Interface
 	Base
 	* Return
+	Or-filter *.(Internal|Shared).*Models
+	And-filter *.(Internal&Shared).*Models
 Transform all
-	Save *.tst
+	* Save *.tst
 	Build?
 	Context menu
 * (nej) En undo operation
 * Logga till Output
-	
+* Statusbar
 typewriter.config
 Description osv för Plugin
 Itemtype för *.tst
@@ -18,7 +20,11 @@ Templates för vanliga tst
 Intellisense för *.tst
 * Source control
 * Tracka source file i properties
-
 * Ctrl + . rename => krasch
 * Spara alla filer, inte bara den aktiva
-Add + rename => file not found vid incheckning
+bug: Add + rename => file not found vid incheckning
+* Trigga render efter file save, inte innan
+* Trigga inte render all om mallen är ny
+Delete unmodified files vid render template
+Prestanda på load templates
+Default value på type?

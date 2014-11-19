@@ -10,6 +10,7 @@ namespace Typewriter.Templates
         void Render(IFileInfo file);
         void DeleteFile(string path);
         void RenameFile(string oldPath, string newPath);
+        void VerifyProjectItem();
     }
 
     public class Template : ITemplate

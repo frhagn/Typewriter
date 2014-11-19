@@ -12,19 +12,20 @@ namespace Typewriter.Templates
 {
     public interface ITemplateManager
     {
-        IEnumerable<ITemplate> Templates { get; }
+        ICollection<ITemplate> Templates { get; }
     }
 
     public class TemplateManager : ITemplateManager
     {
         private const string templateExtension = ".tst";
+        private static readonly object locker = new object();
 
         private readonly ILog log;
         private readonly DTE dte;
         private readonly IEventQueue eventQueue;
 
         private bool solutionOpen;
-        private List<Template> templates;
+        private ICollection<ITemplate> templates;
 
         public TemplateManager(ILog log, DTE dte, ISolutionMonitor solutionMonitor, IEventQueue eventQueue)
         {
@@ -38,9 +39,13 @@ namespace Typewriter.Templates
             solutionMonitor.ProjectRemoved += (o, e) => ProjectChanged();
 
             solutionMonitor.FileAdded += (o, e) => FileChanged(e.Path);
-            solutionMonitor.FileChanged += (o, e) => FileChanged(e.Path);
+            solutionMonitor.FileChanged += (o, e) => FileSaved(e.Path);
             solutionMonitor.FileDeleted += (o, e) => FileChanged(e.Path);
-            solutionMonitor.FileRenamed += (o, e) => FileRenamed(e.OldPath, e.NewPath);
+            solutionMonitor.FileRenamed += (o, e) =>
+            {
+                FileChanged(e.OldPath);
+                FileChanged(e.NewPath);
+            };
         }
 
         private void SolutionOpened()
@@ -61,91 +66,86 @@ namespace Typewriter.Templates
             this.templates = null;
         }
 
-        private void FileChanged(string path)
+        private bool FileChanged(string path)
         {
             if (path.EndsWith(templateExtension, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.templates = null;
+                return true;
+            }
 
-                var projectItem = dte.Solution.FindProjectItem(path);
-                var template = new Template(projectItem);
+            return false;
+        }
 
-                foreach (var item in GetReferencedProjectItems(projectItem, ".cs"))
+        private void FileSaved(string path)
+        {
+            if (!FileChanged(path)) return;
+
+            var projectItem = dte.Solution.FindProjectItem(path);
+            var template = new Template(projectItem);
+
+            foreach (var item in GetReferencedProjectItems(projectItem, ".cs"))
+            {
+                eventQueue.QueueRender(item.FileNames[1], s =>
                 {
-                    eventQueue.QueueRender(item.FileNames[1], s =>
+                    try
+                    {
+                        var stopwatch = Stopwatch.StartNew();
+                        log.Debug("Render {0}", s);
+
+                        var file = new FileInfo(log, dte.Solution.FindProjectItem(s));
+                        template.Render(file);
+
+                        stopwatch.Stop();
+                        log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
+                    }
+                    catch (Exception exception)
+                    {
+                        log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
+                    }
+                });
+            }
+        }
+
+        public ICollection<ITemplate> Templates
+        {
+            get { return LoadTemplates(); }
+        }
+
+        private ICollection<ITemplate> LoadTemplates()
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            lock (locker)
+            {
+                if (this.templates == null)
+                {
+                    var items = GetProjectItems(templateExtension);
+                    this.templates = items.Select(i => (ITemplate)new Template(i)).ToList();
+                }
+                else
+                {
+                    foreach (var template in this.templates)
                     {
                         try
                         {
-                            var stopwatch = Stopwatch.StartNew();
-                            log.Debug("Render {0}", s);
-
-                            var file = new FileInfo(log, dte.Solution.FindProjectItem(s));
-                            template.Render(file);
-
-                            stopwatch.Stop();
-                            log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
+                            template.VerifyProjectItem();
                         }
-                        catch (Exception exception)
+                        catch
                         {
-                            log.Error("Render Exception: {0}", exception.Message);
+                            log.Debug("Invalid template");
+                            this.templates = null;
+
+                            return LoadTemplates();
                         }
-                    });
+                    }
                 }
             }
-        }
 
-        private void FileRenamed(string oldPath, string newPath)
-        {
-            FileChanged(oldPath);
-            FileChanged(newPath);
-        }
+            stopwatch.Stop();
+            log.Debug("Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds);
 
-        public IEnumerable<ITemplate> Templates
-        {
-            get
-            {
-                var stopwatch = Stopwatch.StartNew();
-
-                LoadTemplates();
-
-                stopwatch.Stop();
-                log.Debug("Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds);
-                stopwatch.Restart();
-
-                ValidateLoadedTemplates();
-
-                stopwatch.Stop();
-                log.Debug("Templates validated in {0} ms", stopwatch.ElapsedMilliseconds);
-                
-                return this.templates;
-            }
-        }
-
-        private void LoadTemplates()
-        {
-            if (this.templates == null)
-            {
-                var items = GetProjectItems(templateExtension);
-                this.templates = items.Select(i => new Template(i)).ToList();
-            }
-        }
-
-        private void ValidateLoadedTemplates()
-        {
-            foreach (var template in this.templates)
-            {
-                try
-                {
-                    template.VerifyProjectItem();
-                }
-                catch
-                {
-                    log.Debug("Invalid template");
-                    this.templates = null;
-                    LoadTemplates();
-                    break;
-                }
-            }
+            return this.templates;
         }
 
         private IEnumerable<ProjectItem> GetReferencedProjectItems(ProjectItem i, string extension)
@@ -174,16 +174,8 @@ namespace Typewriter.Templates
 
         private IEnumerable<ProjectItem> GetProjectItems(string extension)
         {
-            foreach (var project in dte.Solution.AllProjetcs())
-            {
-                foreach (var item in project.AllProjectItems())
-                {
-                    if (item.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        yield return item;
-                    }
-                }
-            }
+            return dte.Solution.AllProjetcs().SelectMany(p => p.AllProjectItems())
+                .Where(i => i.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

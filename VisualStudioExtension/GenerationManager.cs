@@ -33,12 +33,13 @@ namespace Typewriter
                 log.Debug("Render {0}", path);
                 var stopwatch = Stopwatch.StartNew();
 
-                if (templateManager.Templates.Any())
+                var templates = templateManager.Templates;
+                if (templates.Any())
                 {
                     var item = dte.Solution.FindProjectItem(path);
                     var file = new FileInfo(log, item);
 
-                    foreach (var template in templateManager.Templates)
+                    foreach (var template in templates)
                     {
                         template.Render(file);
                     }
@@ -49,7 +50,7 @@ namespace Typewriter
             }
             catch (Exception exception)
             {
-                log.Error("Render Exception: {0}", exception.Message);
+                log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
             }
         }
 
@@ -57,12 +58,13 @@ namespace Typewriter
         {
             try
             {
-                if (templateManager.Templates.Any() == false) return;
+                var templates = templateManager.Templates;
+                if (templates.Any() == false) return;
 
                 log.Debug("Delete {0}", path);
                 var stopwatch = Stopwatch.StartNew();
 
-                foreach (var template in templateManager.Templates)
+                foreach (var template in templates)
                 {
                     template.DeleteFile(path);
                 }
@@ -72,7 +74,7 @@ namespace Typewriter
             }
             catch (Exception exception)
             {
-                log.Error("File Deleted Exception: {0}", exception.Message);
+                log.Error("File Deleted Exception: {0}, {1}", exception.Message, exception.StackTrace);
             }
         }
 
@@ -80,12 +82,13 @@ namespace Typewriter
         {
             try
             {
-                if (templateManager.Templates.Any() == false) return;
+                var templates = templateManager.Templates;
+                if (templates.Any() == false) return;
 
                 log.Debug("Rename {0} -> {1}", oldPath, newPath);
                 var stopwatch = Stopwatch.StartNew();
 
-                foreach (var template in templateManager.Templates)
+                foreach (var template in templates)
                 {
                     template.RenameFile(oldPath, newPath);
                 }
@@ -95,7 +98,7 @@ namespace Typewriter
             }
             catch (Exception exception)
             {
-                log.Error("File Renamed Exception: {0}", exception.Message);
+                log.Error("File Renamed Exception: {0}, {1}", exception.Message, exception.StackTrace);
             }
         }
     }
