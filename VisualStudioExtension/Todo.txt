@@ -29,3 +29,4 @@ Delete unmodified files vid render template
 Prestanda på load templates
 Default value på type?
 Tvinga utf-8
+Stoppa generering vid build
