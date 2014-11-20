@@ -252,7 +252,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Todo.txt" />
+    <None Include="Resources\Item.ico" />
+    <None Include="Resources\Project.ico" />
     <Content Include="VisualStudio\Resources\Package.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ItemTemplates\ItemTemplates.csproj">
+      <Project>{417568AF-7B73-4C93-9261-025D69AC89A5}</Project>
+      <Name>ItemTemplates</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
