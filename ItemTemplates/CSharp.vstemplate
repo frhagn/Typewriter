@@ -3,15 +3,15 @@
   <TemplateData>
     <Name>TypeScript Template</Name>
     <Description>Empty TypeScript Template file</Description>
-    <Icon>Item.ico</Icon>
+    <Icon>tst.ico</Icon>
     <TemplateID>4bf556a6-677e-4c55-9550-4563e5829809</TemplateID>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <DefaultName>Template.tst</DefaultName>
   </TemplateData>
   <TemplateContent>
     <References/>
-    <ProjectItem ReplaceParameters="true">TypeScriptTemplate.tst</ProjectItem>
+    <ProjectItem ReplaceParameters="true">Template.tst</ProjectItem>
   </TemplateContent>
 </VSTemplate>

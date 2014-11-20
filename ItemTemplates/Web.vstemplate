@@ -3,15 +3,15 @@
   <TemplateData>
     <Name>TypeScript Template</Name>
     <Description>Empty TypeScript Template file</Description>
-    <Icon>Item.ico</Icon>
+    <Icon>tst.ico</Icon>
     <TemplateID>65cefb29-7a4a-416f-82cf-128c9521e195</TemplateID>
     <ProjectType>Web</ProjectType>
-    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
-    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>2</NumberOfParentCategoriesToRollUp>
     <DefaultName>Template.tst</DefaultName>
   </TemplateData>
   <TemplateContent>
     <References/>
-    <ProjectItem ReplaceParameters="true">TypeScriptTemplate.tst</ProjectItem>
+    <ProjectItem ReplaceParameters="true">Template.tst</ProjectItem>
   </TemplateContent>
 </VSTemplate>

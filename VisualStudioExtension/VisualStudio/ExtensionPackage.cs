@@ -47,6 +47,8 @@ namespace Typewriter.VisualStudio
             if (this.statusBar == null)
                 ErrorHandler.ThrowOnFailure(1);
 
+            IconRegistration.RegisterIcons();
+
             this.log = new Log(dte);
             this.eventQueue = new EventQueue(statusBar, log);
             this.solutionMonitor = new SolutionMonitor(log);

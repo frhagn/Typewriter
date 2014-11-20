@@ -204,6 +204,7 @@
     <Compile Include="Templates\Template.cs" />
     <Compile Include="CodeModel\CodeDom\TypeInfo.cs" />
     <Compile Include="VisualStudio\CommandManager.cs" />
+    <Compile Include="VisualStudio\IconRegistration.cs" />
     <Compile Include="VisualStudio\SolutionEvents.cs" />
     <Compile Include="GenerationManager.cs" />
     <Compile Include="Log.cs" />
@@ -252,8 +253,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Todo.txt" />
-    <None Include="Resources\Item.ico" />
-    <None Include="Resources\Project.ico" />
+    <Content Include="VisualStudio\Resources\tst.ico">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="VisualStudio\Resources\Project.ico" />
     <Content Include="VisualStudio\Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -264,6 +268,9 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

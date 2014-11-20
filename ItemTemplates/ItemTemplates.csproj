@@ -77,7 +77,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TypeScriptTemplate.tst" />
+    <None Include="Template.tst" />
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="CSharp.vstemplate">
@@ -102,11 +102,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Item.ico" />
+    <None Include="tst.ico" />
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="Web.vstemplate">
-      <OutputSubPath>TypeScript</OutputSubPath>
+      <OutputSubPath>Web\Scripts</OutputSubPath>
     </VSTemplate>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
