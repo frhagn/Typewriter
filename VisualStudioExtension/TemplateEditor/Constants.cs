@@ -10,13 +10,19 @@ namespace Typewriter.TemplateEditor
         internal const string Extension = ".tst";
         internal const string ContentType = "tst";
         internal const string BaseDefinition = "plaintext";
+    }
 
-        public const string KeywordClassificationType = "tst.keywordType";
-        public const string KeywordClassificationName = "TypeScript Template Keyword";
-        public const string PropertyClassificationType = "tst.propertyType";
-        public const string PropertyClassificationName = "TypeScript Template Property";
-        public const string CommentClassificationType = "tst.commentType";
-        public const string CommentClassificationName = "TypeScript Template Comment";
+    public static class Classifications
+    {
+        public const string BraceMatching = "MarkerFormatDefinition/HighlightedReference";
+        public const string Comment = "Comment";
+        public const string Identifier = "Identifier";
+        public const string Keyword = "Keyword";
+        public const string Number = "Number";
+        public const string Operator = "Operator";
+        public const string Property = "Tst/Property";
+        public const string String = "String";
+        public const string SyntaxError = "syntax error";
     }
 
     internal static class Exports
@@ -28,15 +34,6 @@ namespace Typewriter.TemplateEditor
 
         [Export, ContentType(Constants.ContentType), FileExtension(Constants.Extension)]
         internal static FileExtensionToContentTypeDefinition TstFileExtensionDefinition;
-
-        [Export, Name(Constants.KeywordClassificationType)] 
-        internal static ClassificationTypeDefinition KeywordClassificationType;
-
-        [Export, Name(Constants.PropertyClassificationType)]
-        internal static ClassificationTypeDefinition PropertyClassificationType;
-
-        [Export, Name(Constants.CommentClassificationType)]
-        internal static ClassificationTypeDefinition CommentClassificationType;
 
         // ReSharper restore UnassignedField.Compiler
     }

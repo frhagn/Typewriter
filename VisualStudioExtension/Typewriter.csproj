@@ -83,6 +83,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PublicAssemblies\VSLangProj.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE">
@@ -195,11 +196,32 @@
     <Compile Include="CodeModel\CodeDom\MethodInfo.cs" />
     <Compile Include="CodeModel\CodeDom\ParameterInfo.cs" />
     <Compile Include="CodeModel\CodeDom\PropertyInfo.cs" />
-    <Compile Include="TemplateEditor\ClassificationFormatDefinitions.cs" />
+    <Compile Include="TemplateEditor\FormatDefinitions\FormatDefinitionBase.cs" />
+    <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
+    <Compile Include="TemplateEditor\FormatDefinitions\FormatDefinitionExports.cs" />
+    <Compile Include="TemplateEditor\FormatDefinitions\PropertyFormatDefinition.cs" />
     <Compile Include="TemplateEditor\Constants.cs" />
-    <Compile Include="TemplateEditor\Classifier.cs" />
-    <Compile Include="TemplateEditor\IntellisenseController.cs" />
-    <Compile Include="TemplateEditor\TooltipSource.cs" />
+    <Compile Include="TemplateEditor\Controllers\ClassificationController.cs" />
+    <Compile Include="TemplateEditor\Editor.cs" />
+    <Compile Include="TemplateEditor\Controllers\QuickInfoController.cs" />
+    <Compile Include="TemplateEditor\Lexing\Braces\Brace.cs" />
+    <Compile Include="TemplateEditor\Lexing\Braces\BraceStack.cs" />
+    <Compile Include="TemplateEditor\Lexing\Contexts\ClassContext.cs" />
+    <Compile Include="TemplateEditor\Lexing\Contexts\ContextBase.cs" />
+    <Compile Include="TemplateEditor\Lexing\Contexts\ContextStack.cs" />
+    <Compile Include="TemplateEditor\Lexing\Contexts\EnumContext.cs" />
+    <Compile Include="TemplateEditor\Lexing\Contexts\FileContext.cs" />
+    <Compile Include="TemplateEditor\Lexing\Contexts\IContext.cs" />
+    <Compile Include="TemplateEditor\Lexing\Identifiers\Identifier.cs" />
+    <Compile Include="TemplateEditor\Lexing\Identifiers\IdentifierType.cs" />
+    <Compile Include="TemplateEditor\Lexing\Lexer.cs" />
+    <Compile Include="TemplateEditor\Lexing\Scopes\Scope.cs" />
+    <Compile Include="TemplateEditor\Lexing\Scopes\ScopeStack.cs" />
+    <Compile Include="TemplateEditor\Lexing\TemplateStream.cs" />
+    <Compile Include="TemplateEditor\Lexing\Tokens\Token.cs" />
+    <Compile Include="TemplateEditor\Lexing\Tokens\TokenList.cs" />
+    <Compile Include="TemplateEditor\Lexing\Tokens\TokenType.cs" />
+    <Compile Include="TemplateEditor\Controllers\CompletionController.cs" />
     <Compile Include="Templates\Extensions.cs" />
     <Compile Include="Templates\Template.cs" />
     <Compile Include="CodeModel\CodeDom\TypeInfo.cs" />
@@ -269,9 +291,7 @@
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

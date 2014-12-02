@@ -15,7 +15,7 @@ Transform all
 * Statusbar
 typewriter.config
 Description osv för Plugin
-Itemtype för *.tst
+* Itemtype för *.tst
 Templates för vanliga tst
 Intellisense för *.tst
 * Source control

@@ -14,12 +14,25 @@ namespace Typewriter
 
     public class Log : ILog
     {
+        private static Log instance;
+
+        public static void Print(string message, params object[] parameters)
+        {
+            message = string.Format("{0:HH:mm:ss}: ", DateTime.Now) + message;
+
+            if (parameters.Any())
+                instance.OutputWindow.OutputString(string.Format(message, parameters) + Environment.NewLine);
+            else
+                instance.OutputWindow.OutputString(message + Environment.NewLine);
+        }
+
         private readonly DTE dte;
         private OutputWindowPane outputWindowPane;
 
         public Log(DTE dte)
         {
             this.dte = dte;
+            instance = this;
         }
 
         public void Debug(string message, params object[] parameters)
@@ -46,10 +59,14 @@ namespace Typewriter
         {
             message = string.Format("{0:HH:mm:ss} {1}: ", DateTime.Now, type) + message;
 
-            if (parameters.Any())
-                OutputWindow.OutputString(string.Format(message, parameters) + Environment.NewLine);
-            else
-                OutputWindow.OutputString(message + Environment.NewLine);
+            try
+            {
+                if (parameters.Any())
+                    OutputWindow.OutputString(string.Format(message, parameters) + Environment.NewLine);
+                else
+                    OutputWindow.OutputString(message + Environment.NewLine);
+            }
+            catch { }
         }
 
         private OutputWindowPane OutputWindow

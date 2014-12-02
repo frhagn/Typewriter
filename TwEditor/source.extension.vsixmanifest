@@ -1,11 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="45b6b392-ce2f-409c-a39f-bbf90b34349e" Version="0.4" Language="en-US" Publisher="Feke" />
-    <DisplayName>Typewriter</DisplayName>
-    <Description xml:space="preserve">Provides automatic TypeScript template generation from C# source files</Description>
-    <Icon>VisualStudio\Resources\tst.ico</Icon>
-    <PreviewImage>VisualStudio\Resources\tst.ico</PreviewImage>
+    <Identity Id="7b2f8ea6-5c1a-4e2c-9d53-f0a5d02d9c38" Version="1.0" Language="en-US" Publisher="Company" />
+    <DisplayName>TwEditor</DisplayName>
+    <Description>Information about my package</Description>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0]" />
@@ -17,6 +15,5 @@
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
-    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="ItemTemplates" d:TargetPath="|ItemTemplates;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
   </Assets>
 </PackageManifest>
