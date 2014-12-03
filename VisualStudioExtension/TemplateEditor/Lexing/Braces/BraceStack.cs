@@ -9,6 +9,7 @@ namespace Typewriter.TemplateEditor.Lexing.Braces
         private readonly Stack<Brace> braceStack = new Stack<Brace>();
         private readonly Stack<Brace> curlyBraceStack = new Stack<Brace>();
         private readonly Stack<Brace> functionBraceStack = new Stack<Brace>();
+        private readonly Stack<Brace> bracketStack = new Stack<Brace>();
 
         public void Push(Token token, bool scopeChanged)
         {
@@ -22,6 +23,9 @@ namespace Typewriter.TemplateEditor.Lexing.Braces
                     break;
                 case TokenType.OpenFunctionBrace:
                     functionBraceStack.Push(new Brace(token, scopeChanged));
+                    break;
+                case TokenType.OpenBracket:
+                    bracketStack.Push(new Brace(token, scopeChanged));
                     break;
             }
         }
@@ -43,6 +47,11 @@ namespace Typewriter.TemplateEditor.Lexing.Braces
                 case TokenType.OpenFunctionBrace:
                     if (functionBraceStack.Count > 0)
                         return functionBraceStack.Pop();
+                    return new Brace();
+
+                case TokenType.OpenBracket:
+                    if (bracketStack.Count > 0)
+                        return bracketStack.Pop();
                     return new Brace();
             }
 

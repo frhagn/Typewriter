@@ -24,10 +24,7 @@ namespace Typewriter.TemplateEditor.Lexing
             get { return current; }
         }
 
-        public int Length
-        {
-            get { return template.Length; }
-        }
+        public int Line { get; private set; }
 
         public bool Advance(int offset = 1)
         {
@@ -36,20 +33,7 @@ namespace Typewriter.TemplateEditor.Lexing
             if (position < template.Length)
             {
                 current = template[position];
-                return true;
-            }
-
-            current = '\0';
-            return false;
-        }
-
-        public bool Reverse(int offset = 1)
-        {
-            position -= offset;
-
-            if (position >= 0)
-            {
-                current = template[position];
+                if (current == '\r') Line++;
                 return true;
             }
 

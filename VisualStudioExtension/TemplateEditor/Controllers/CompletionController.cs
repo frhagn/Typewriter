@@ -85,13 +85,16 @@ namespace Typewriter.TemplateEditor.Controllers
         [Import]
         internal SVsServiceProvider ServiceProvider { get; set; }
 
+        //[Import]
+        //internal ISignatureHelpBroker SignatureHelpBroker { get; set; }
+
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             ITextView textView = AdapterService.GetWpfTextView(textViewAdapter);
             if (textView == null)
                 return;
 
-            textView.Properties.GetOrCreateSingletonProperty(() => new CompletionController(textViewAdapter, textView, this));
+            textView.Properties.GetOrCreateSingletonProperty(() => new CompletionController(textViewAdapter, textView, this));//, SignatureHelpBroker));
         }
     }
 
@@ -100,12 +103,14 @@ namespace Typewriter.TemplateEditor.Controllers
         private readonly IOleCommandTarget nextCommandHandler;
         private readonly ITextView textView;
         private readonly CompletionControllerProvider provider;
+        //private readonly ISignatureHelpBroker broker;
         private ICompletionSession session;
 
-        internal CompletionController(IVsTextView textViewAdapter, ITextView textView, CompletionControllerProvider provider)
+        internal CompletionController(IVsTextView textViewAdapter, ITextView textView, CompletionControllerProvider provider)//, ISignatureHelpBroker broker)
         {
             this.textView = textView;
             this.provider = provider;
+            //this.broker = broker;
 
             textViewAdapter.AddCommandFilter(this, out nextCommandHandler);
         }
@@ -140,6 +145,9 @@ namespace Typewriter.TemplateEditor.Controllers
                     if (session.SelectedCompletionSet.SelectionStatus.IsSelected)
                     {
                         session.Commit();
+
+                        //broker.TriggerSignatureHelp(textView);
+
                         return VSConstants.S_OK;
                     }
                     
@@ -148,7 +156,7 @@ namespace Typewriter.TemplateEditor.Controllers
             }
 
             //pass along the command so the char is added to the buffer 
-            var retVal = nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+            var retVal = nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut); // Error här
             var handled = false;
             
             if (!typedChar.Equals(char.MinValue) && char.IsLetterOrDigit(typedChar))

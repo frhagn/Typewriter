@@ -10,11 +10,11 @@ namespace Typewriter.TemplateEditor.Lexing.Tokens
         CloseCurlyBrace,
         OpenFunctionBrace,
         CloseFunctionBrace,
+        OpenBracket,
+        CloseBracket,
         Keyword,
         Comment,
         Identifier,
-        Filter,
-        OpenBlock,
-        CloseBlock,
+        Filter
     }
 }

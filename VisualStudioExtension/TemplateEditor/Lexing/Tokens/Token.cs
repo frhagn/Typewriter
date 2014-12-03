@@ -5,11 +5,12 @@ namespace Typewriter.TemplateEditor.Lexing.Tokens
 {
     public class Token
     {
-        public Token(int start, int length, TokenType type, IContext context, string quickInfo = null, Token matchingToken = null)
+        public Token(int start, int length, int line, TokenType type, IContext context, string quickInfo = null, Token matchingToken = null)
         {
             Start = start;
             End = start + length;
             Length = length;
+            Line = line;
             Type = type;
             Context = context;
             QuickInfo = quickInfo;
@@ -28,6 +29,15 @@ namespace Typewriter.TemplateEditor.Lexing.Tokens
                 case TokenType.Identifier:
                     Classification = Classifications.Property;
                     break;
+
+                case TokenType.OpenBrace:
+                case TokenType.OpenCurlyBrace:
+                case TokenType.OpenFunctionBrace:
+                case TokenType.CloseBrace:
+                case TokenType.CloseCurlyBrace:
+                case TokenType.CloseFunctionBrace:
+                    Classification = Classifications.Operator;
+                    break;
             }
         }
 
@@ -39,5 +49,6 @@ namespace Typewriter.TemplateEditor.Lexing.Tokens
         public int Start { get; private set; }
         public int End { get; private set; }
         public int Length { get; private set; }
+        public int Line { get; set; }
     }
 }

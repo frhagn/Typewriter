@@ -31,7 +31,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 //if (ParseWhitespace(stream, scope))
                 //    continue;
 
-                if (ParseComment(stream, tokens))
+                if (ParseComment(stream, tokens, context))
                     continue;
 
                 if (ParseDollar(stream, tokens, context, scope))
@@ -65,9 +65,24 @@ namespace Typewriter.TemplateEditor.Lexing
             return found;
         }
 
-        private bool ParseComment(TemplateStream stream, TokenList tokens)
+        private bool ParseComment(TemplateStream stream, TokenList tokens, ContextStack context)
         {
-            return false;
+            if (stream.Current != '/' || stream.Peek() != '/') return false;
+
+            var start = stream.Position;
+            var line = stream.Line;
+            while (stream.Advance())
+            {
+                if (stream.Peek() == '\r')
+                {
+                    stream.Advance();
+                    break;
+                }
+            }
+
+            tokens.Add(new Token(start, stream.Position - start, line, TokenType.Comment, context.Current));
+
+            return true;
         }
 
         private bool ParseDollar(TemplateStream stream, TokenList tokens, ContextStack context, ScopeStack scope)
@@ -121,7 +136,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
             if (identifier != null)
             {
-                tokens.Add(new Token(stream.Position, name.Length, TokenType.Identifier, context.Current, identifier.QuickInfo));
+                tokens.Add(new Token(stream.Position, name.Length, stream.Line, TokenType.Identifier, context.Current, identifier.QuickInfo));
                 stream.Advance(name.Length);
 
                 if (identifier.Type == IdentifierType.Indexed)
@@ -168,13 +183,13 @@ namespace Typewriter.TemplateEditor.Lexing
             switch (stream.Current)
             {
                 case '[':
-                    brace.Push(tokens.Add(new Token(stream.Position, 1, TokenType.OpenBrace, context.Current)), scope.Changed);
+                    brace.Push(tokens.Add(new Token(stream.Position, 1, stream.Line, TokenType.OpenBrace, context.Current)), scope.Changed);
                     stream.Advance();
                     return true;
 
                 case ']':
                     var openBrace = brace.Pop(TokenType.OpenBrace);
-                    var token = tokens.Add(new Token(stream.Position, 1, TokenType.CloseBrace, context.Current, null, openBrace.Token));
+                    var token = tokens.Add(new Token(stream.Position, 1, stream.Line, TokenType.CloseBrace, context.Current, null, openBrace.Token));
                     if (openBrace.Token != null)
                     {
                         openBrace.Token.MatchingToken = token;
@@ -199,13 +214,13 @@ namespace Typewriter.TemplateEditor.Lexing
 
                 case '{':
                     //tokens.Add(new Token(stream.Position - 1, 2, TokenType.OpenBlock, context.Current));
-                    brace.Push(tokens.Add(new Token(stream.Position, 1, TokenType.OpenCurlyBrace, context.Current)), scope.Changed);
+                    brace.Push(tokens.Add(new Token(stream.Position, 1, stream.Line, TokenType.OpenCurlyBrace, context.Current)), scope.Changed);
                     stream.Advance();
                     return true;
 
                 case '}':
                     var openCurlyBrace = brace.Pop(TokenType.OpenCurlyBrace);
-                    token = tokens.Add(new Token(stream.Position, 1, TokenType.CloseCurlyBrace, context.Current, null, openCurlyBrace.Token));
+                    token = tokens.Add(new Token(stream.Position, 1, stream.Line, TokenType.CloseCurlyBrace, context.Current, null, openCurlyBrace.Token));
                     if (openCurlyBrace.Token != null)
                     {
                         openCurlyBrace.Token.MatchingToken = token;
@@ -220,13 +235,13 @@ namespace Typewriter.TemplateEditor.Lexing
                     return true;
 
                 case '(':
-                    brace.Push(tokens.Add(new Token(stream.Position, 1, TokenType.OpenFunctionBrace, context.Current)), scope.Changed);
+                    brace.Push(tokens.Add(new Token(stream.Position, 1, stream.Line, TokenType.OpenFunctionBrace, context.Current)), scope.Changed);
                     stream.Advance();
                     return true;
 
                 case ')':
                     var openFunctionBrace = brace.Pop(TokenType.OpenFunctionBrace);
-                    token = tokens.Add(new Token(stream.Position, 1, TokenType.CloseFunctionBrace, context.Current, null, openFunctionBrace.Token));
+                    token = tokens.Add(new Token(stream.Position, 1, stream.Line, TokenType.CloseFunctionBrace, context.Current, null, openFunctionBrace.Token));
                     if (openFunctionBrace.Token != null)
                     {
                         openFunctionBrace.Token.MatchingToken = token;
@@ -248,7 +263,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
             if (keywords.Contains(name))
             {
-                tokens.Add(new Token(stream.Position, name.Length, TokenType.Keyword, context.Current));
+                tokens.Add(new Token(stream.Position, name.Length, stream.Line, TokenType.Keyword, context.Current));
             }
 
             stream.Advance(name.Length);

@@ -196,6 +196,7 @@
     <Compile Include="CodeModel\CodeDom\MethodInfo.cs" />
     <Compile Include="CodeModel\CodeDom\ParameterInfo.cs" />
     <Compile Include="CodeModel\CodeDom\PropertyInfo.cs" />
+    <Compile Include="TemplateEditor\Controllers\SignatureHelpController.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\FormatDefinitionBase.cs" />
     <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\FormatDefinitionExports.cs" />

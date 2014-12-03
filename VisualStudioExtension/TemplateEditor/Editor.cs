@@ -35,18 +35,26 @@ namespace Typewriter.TemplateEditor
         }
 
         // Brace matching
-        public IEnumerable<ITagSpan<TextMarkerTag>> GetBraceTags(ITextBuffer buffer, SnapshotSpan span)
+        public IEnumerable<ITagSpan<TextMarkerTag>> GetBraceTags(ITextBuffer buffer, SnapshotPoint point)
         {
             var tokens = GetTokens(buffer);
+            var token = tokens.GetToken(point.Position - 1);
+            var tag = new TextMarkerTag(Classifications.BraceMatching);
 
-            var token = tokens.FirstOrDefault(t => t.Start == span.Start && t.Length == 1);// Här!
-            if (token != null && token.MatchingToken != null)
+            if (token != null && token.MatchingToken != null && token.Type.ToString().StartsWith("Close"))
             {
-                var tag = new TextMarkerTag(Classifications.BraceMatching);
-                var matchingSpan = new SnapshotSpan(span.Snapshot, token.MatchingToken.Start, 1);
+                yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
+                yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
+            }
+            else
+            {
+                token = tokens.GetToken(point.Position);
 
-                yield return new TagSpan<TextMarkerTag>(span, tag);
-                yield return new TagSpan<TextMarkerTag>(matchingSpan, tag);
+                if (token != null && token.MatchingToken != null && token.Type.ToString().StartsWith("Open"))
+                {
+                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
+                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
+                }
             }
         }
 
@@ -54,14 +62,11 @@ namespace Typewriter.TemplateEditor
         public IEnumerable<ClassificationSpan> GetClassificationSpans(ITextBuffer buffer, SnapshotSpan span, IClassificationTypeRegistryService classificationRegistry)
         {
             var tokens = GetTokens(buffer);
+            var line = span.Start.GetContainingLine().LineNumber;
 
-
-            foreach (var token in tokens)
+            foreach (var token in tokens.GetTokensForLine(line))
             {
-                if (token.Start > span.End)
-                    break;
-
-                if (token.Start <= span.End && token.End >= span.Start && token.Classification != null)// Här!
+                if (token.Classification != null)
                 {
                     var classificationType = classificationRegistry.GetClassificationType(token.Classification);
                     yield return new ClassificationSpan(new SnapshotSpan(span.Snapshot, token.Start, token.Length), classificationType);
@@ -75,7 +80,7 @@ namespace Typewriter.TemplateEditor
             var tokens = GetTokens(buffer);
             var imageSource = glyphService.GetGlyph(StandardGlyphGroup.GlyphGroupProperty, StandardGlyphItem.GlyphItemPublic);
 
-            var token = tokens.LastOrDefault(t => t.Start <= span.Start); // Här!
+            var token = tokens.GetToken(span.Start);
             if (token != null)
             {
                 return token.Context.Identifiers.Select(i => new Completion(i.Name, i.Name, i.QuickInfo, imageSource, null));
@@ -88,7 +93,7 @@ namespace Typewriter.TemplateEditor
         public string GetQuickInfo(ITextBuffer buffer, SnapshotSpan span)
         {
             var tokens = GetTokens(buffer);
-            var token = tokens.FirstOrDefault(t => t.Start == span.Start && t.End == span.End);
+            var token = tokens.GetToken(span.Start);
 
             if (token != null && token.QuickInfo != null)
             {
