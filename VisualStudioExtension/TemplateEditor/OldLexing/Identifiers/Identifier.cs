@@ -1,4 +1,5 @@
 ﻿using System;
+using Typewriter.TemplateEditor.Lexing.Contexts;
 
 namespace Typewriter.TemplateEditor.Lexing.Identifiers
 {
@@ -16,5 +17,6 @@ namespace Typewriter.TemplateEditor.Lexing.Identifiers
         public string Name { get; set; }
         public IdentifierType Type { get; set; }
         public string QuickInfo { get; set; }
+        public IContext Context { get; set; }
     }
 }

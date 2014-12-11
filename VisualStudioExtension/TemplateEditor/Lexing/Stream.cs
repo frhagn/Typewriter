@@ -3,20 +3,25 @@ using System.Text;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
-    internal class TemplateStream
+    internal class Stream
     {
+        private readonly int offset;
+        private readonly int lineOffset;
         private readonly string template;
         private int position = -1;
+        private int line;
         private char current = '\0';
 
-        public TemplateStream(string template)
+        public Stream(string template, int offset = 0, int lineOffset = 0)
         {
+            this.offset = offset;
+            this.lineOffset = lineOffset;
             this.template = template ?? string.Empty;
         }
 
         public int Position
         {
-            get { return position; }
+            get { return position + offset; }
         }
 
         public char Current
@@ -24,7 +29,9 @@ namespace Typewriter.TemplateEditor.Lexing
             get { return current; }
         }
 
-        public int Line { get; private set; }
+        public int Line {
+            get { return line + lineOffset; }
+        }
 
         public bool Advance(int offset = 1)
         {
@@ -33,7 +40,7 @@ namespace Typewriter.TemplateEditor.Lexing
             if (position < template.Length)
             {
                 current = template[position];
-                if (current == '\r') Line++;
+                if (current == '\r') line++;
                 return true;
             }
 
@@ -53,15 +60,36 @@ namespace Typewriter.TemplateEditor.Lexing
             return '\0';
         }
 
-        public string PeekWord()
+        public string PeekWord(int start = 0)
         {
-            if (char.IsLetter(current) == false) return null;
+            if (char.IsLetter(Peek(start)) == false) return null;
 
             var identifier = new StringBuilder();
-            var i = 0;
+            var i = start;
             while (char.IsLetterOrDigit(Peek(i)))
             {
                 identifier.Append(Peek(i));
+                i++;
+            }
+
+            return identifier.ToString();
+        }
+
+        public string PeekBlock(int start = 0)
+        {
+            var i = start;
+            var depth = 1;
+            var identifier = new StringBuilder();
+            
+            while (depth > 0)
+            {
+                var letter = Peek(i);
+
+                if (letter == '\0') break;
+                if (letter == '[') depth++;
+                if (letter == ']') depth--;
+                if (depth > 0) identifier.Append(letter);
+
                 i++;
             }
 

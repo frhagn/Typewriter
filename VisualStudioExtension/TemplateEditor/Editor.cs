@@ -6,13 +6,11 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
 using Typewriter.TemplateEditor.Lexing;
-using Typewriter.TemplateEditor.Lexing.Tokens;
 
 namespace Typewriter.TemplateEditor
 {
     public class Editor
     {
-        private readonly Lexer lexer = new Lexer();
         private static readonly Editor instance = new Editor();
 
         public static Editor Instance
@@ -21,41 +19,42 @@ namespace Typewriter.TemplateEditor
         }
 
         private ITextSnapshot snapshot;
-        private TokenList tokenList;
+        private Lexer lexer;
 
-        private TokenList GetTokens(ITextBuffer buffer)
+        private Lexer GetTokens(ITextBuffer buffer)
         {
             if (snapshot == buffer.CurrentSnapshot)
-                return tokenList;
+                return lexer;
 
             snapshot = buffer.CurrentSnapshot;
-            tokenList = lexer.Tokenize(snapshot.GetText());
+            lexer = new Lexer(snapshot.GetText());
 
-            return tokenList;
+            return lexer;
         }
 
         // Brace matching
         public IEnumerable<ITagSpan<TextMarkerTag>> GetBraceTags(ITextBuffer buffer, SnapshotPoint point)
         {
-            var tokens = GetTokens(buffer);
-            var token = tokens.GetToken(point.Position - 1);
-            var tag = new TextMarkerTag(Classifications.BraceMatching);
+            yield break;
+            //var tokens = GetTokens(buffer);
+            //var token = tokens.GetToken(point.Position - 1);
+            //var tag = new TextMarkerTag(Classifications.BraceHighlight);
 
-            if (token != null && token.MatchingToken != null && token.Type.ToString().StartsWith("Close"))
-            {
-                yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
-                yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
-            }
-            else
-            {
-                token = tokens.GetToken(point.Position);
+            //if (token != null && token.MatchingToken != null && token.Type.ToString().StartsWith("Close"))
+            //{
+            //    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
+            //    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
+            //}
+            //else
+            //{
+            //    token = tokens.GetToken(point.Position);
 
-                if (token != null && token.MatchingToken != null && token.Type.ToString().StartsWith("Open"))
-                {
-                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
-                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
-                }
-            }
+            //    if (token != null && token.MatchingToken != null && token.Type.ToString().StartsWith("Open"))
+            //    {
+            //        yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
+            //        yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
+            //    }
+            //}
         }
 
         // Classification
@@ -80,10 +79,10 @@ namespace Typewriter.TemplateEditor
             var tokens = GetTokens(buffer);
             var imageSource = glyphService.GetGlyph(StandardGlyphGroup.GlyphGroupProperty, StandardGlyphItem.GlyphItemPublic);
 
-            var token = tokens.GetToken(span.Start);
-            if (token != null)
+            var context = tokens.GetContext(span.Start);
+            if (context != null)
             {
-                return token.Context.Identifiers.Select(i => new Completion(i.Name, i.Name, i.QuickInfo, imageSource, null));
+                return context.Identifiers.Select(i => new Completion("$" + i.Name, "$" + i.Name, i.QuickInfo, imageSource, null));
             }
 
             return new Completion[0];

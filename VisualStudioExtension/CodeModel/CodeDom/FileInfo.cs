@@ -50,7 +50,7 @@ namespace Typewriter.CodeModel.CodeDom
         }
 
         private IEnumInfo[] enums;
-        public IEnumerable<IEnumInfo> Enums
+        public ICollection<IEnumInfo> Enums
         {
             get
             {
@@ -63,7 +63,7 @@ namespace Typewriter.CodeModel.CodeDom
         }
 
         private IInterfaceInfo[] interfaces;
-        public IEnumerable<IInterfaceInfo> Interfaces
+        public ICollection<IInterfaceInfo> Interfaces
         {
             get
             {

@@ -26,6 +26,11 @@ namespace Typewriter.CodeModel.CodeDom
             }
         }
 
+        public virtual string name
+        {
+            get { return Name; }
+        }
+
         public virtual string FullName
         {
             get
