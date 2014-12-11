@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
@@ -20,27 +21,5 @@ namespace Typewriter.CodeModel
 
         [Property("collection Interfaces", "All interfaces defined in the $context")]
         ICollection<IInterfaceInfo> Interfaces { get; }
-    }
-
-    public class PropertyAttribute : Attribute
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-
-        public PropertyAttribute(string name, string description)
-        {
-            Name = name;
-            Description = description;
-        }
-    }
-
-    public class ContextAttribute : Attribute
-    {
-        public string Name { get; set; }
-
-        public ContextAttribute(string name)
-        {
-            Name = name;
-        }
     }
 }

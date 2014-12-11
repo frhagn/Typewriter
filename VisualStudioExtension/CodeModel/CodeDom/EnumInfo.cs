@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EnvDTE;
 using EnvDTE80;
 
@@ -14,9 +15,9 @@ namespace Typewriter.CodeModel.CodeDom
             this.codeEnum = codeEnum;
         }
 
-        public IEnumerable<IEnumValueInfo> Values
+        public ICollection<IEnumValueInfo> Values
         {
-            get { return Iterator<CodeVariable2>.Select(() => codeEnum.Members, (v, i) => new EnumValueInfo(v, file, i)); }
+            get { return Iterator<CodeVariable2>.Select(() => codeEnum.Members, (v, i) => new EnumValueInfo(v, file, i)).ToArray(); }
         }
     }
 }
