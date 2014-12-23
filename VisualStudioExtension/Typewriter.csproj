@@ -206,6 +206,7 @@
     <Compile Include="TemplateEditor\Controllers\ClassificationController.cs" />
     <Compile Include="TemplateEditor\Editor.cs" />
     <Compile Include="TemplateEditor\Controllers\QuickInfoController.cs" />
+    <Compile Include="TemplateEditor\Lexing\BraceStack.cs" />
     <Compile Include="TemplateEditor\Lexing\Context.cs" />
     <Compile Include="TemplateEditor\Lexing\Identifier.cs" />
     <Compile Include="TemplateEditor\Lexing\Lexer.cs" />

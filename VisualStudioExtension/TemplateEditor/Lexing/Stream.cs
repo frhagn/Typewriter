@@ -35,17 +35,21 @@ namespace Typewriter.TemplateEditor.Lexing
 
         public bool Advance(int offset = 1)
         {
-            position += offset;
-
-            if (position < template.Length)
+            for (int i = 0; i < offset; i++)
             {
+                position ++;
+
+                if (position >= template.Length)
+                {
+                    current = '\0';
+                    return false;
+                }
+
                 current = template[position];
                 if (current == '\r') line++;
-                return true;
             }
 
-            current = '\0';
-            return false;
+            return true;
         }
 
         public char Peek(int offset = 1)
@@ -75,7 +79,7 @@ namespace Typewriter.TemplateEditor.Lexing
             return identifier.ToString();
         }
 
-        public string PeekBlock(int start = 0)
+        public string PeekBlock(int start = 0, char open = '[', char close = ']')
         {
             var i = start;
             var depth = 1;
@@ -86,8 +90,8 @@ namespace Typewriter.TemplateEditor.Lexing
                 var letter = Peek(i);
 
                 if (letter == '\0') break;
-                if (letter == '[') depth++;
-                if (letter == ']') depth--;
+                if (letter == open) depth++;
+                if (letter == close) depth--;
                 if (depth > 0) identifier.Append(letter);
 
                 i++;

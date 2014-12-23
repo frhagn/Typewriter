@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
+using VSCommand = Microsoft.VisualStudio.VSConstants.VSStd2KCmdID;
 
 namespace Typewriter.TemplateEditor.Controllers
 {
@@ -120,26 +121,19 @@ namespace Typewriter.TemplateEditor.Controllers
             return nextCommandHandler.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }
 
-        public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        public int Exec(ref Guid pguidCmdGroup, uint commandId, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (VsShellUtilities.IsInAutomationFunction(provider.ServiceProvider))
-            {
-                return nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
-            }
+            if (VsShellUtilities.IsInAutomationFunction(provider.ServiceProvider) || pguidCmdGroup != VSConstants.VSStd2K)
+                return nextCommandHandler.Exec(ref pguidCmdGroup, commandId, nCmdexecopt, pvaIn, pvaOut);
 
-            var commandId = nCmdID;
+            var command = (VSCommand)commandId;
             var typedChar = char.MinValue;
-
-
-            if (pguidCmdGroup == VSConstants.VSStd2K && nCmdID == (uint)VSConstants.VSStd2KCmdID.TYPECHAR)
-            {
+            
+            if (command == VSCommand.TYPECHAR)
                 typedChar = (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
-            }
 
-
-            if (nCmdID == (uint)VSConstants.VSStd2KCmdID.RETURN || nCmdID == (uint)VSConstants.VSStd2KCmdID.TAB || (char.IsWhiteSpace(typedChar) || char.IsPunctuation(typedChar)))
+            if (command == VSCommand.RETURN || command == VSCommand.TAB || (char.IsWhiteSpace(typedChar) || char.IsPunctuation(typedChar)))
             {
-
                 if (session != null && !session.IsDismissed)
                 {
                     if (session.SelectedCompletionSet.SelectionStatus.IsSelected)
@@ -156,10 +150,10 @@ namespace Typewriter.TemplateEditor.Controllers
             }
 
             //pass along the command so the char is added to the buffer 
-            var retVal = nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut); // Error här
+            var retVal = nextCommandHandler.Exec(ref pguidCmdGroup, commandId, nCmdexecopt, pvaIn, pvaOut); // Error här
             var handled = false;
-
-            if (!typedChar.Equals(char.MinValue) && (char.IsLetterOrDigit(typedChar) || typedChar == '$'))
+            
+            if (command == VSCommand.AUTOCOMPLETE || command == VSCommand.COMPLETEWORD || char.IsLetterOrDigit(typedChar) || typedChar == '$') // !typedChar.Equals(char.MinValue) && 
             {
                 if (session == null || session.IsDismissed) // If there is no active session, bring up completion
                 {
@@ -178,7 +172,7 @@ namespace Typewriter.TemplateEditor.Controllers
 
                 handled = true;
             }
-            else if (commandId == (uint)VSConstants.VSStd2KCmdID.BACKSPACE || commandId == (uint)VSConstants.VSStd2KCmdID.DELETE)
+            else if (command == VSCommand.BACKSPACE || command == VSCommand.DELETE)
             {
                 if (session != null && !session.IsDismissed)
                 {

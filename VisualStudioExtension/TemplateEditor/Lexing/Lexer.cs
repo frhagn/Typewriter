@@ -8,8 +8,8 @@ namespace Typewriter.TemplateEditor.Lexing
     {
         private readonly Dictionary<int, Token> tokens = new Dictionary<int, Token>();
         private readonly Dictionary<int, ICollection<Token>> lines = new Dictionary<int, ICollection<Token>>();
-        private readonly List<ContextSpan> contexts = new List<ContextSpan>(); 
-        
+        private readonly List<ContextSpan> contexts = new List<ContextSpan>();
+
         public IEnumerable<Token> _Tokens
         {
             get { return tokens.Values; }
@@ -35,9 +35,9 @@ namespace Typewriter.TemplateEditor.Lexing
             Parse(code, Contexts.Find("File"), 0, 0);
         }
 
-        private void AddToken(string classification, int line, int start, int length = 1, string quickInfo = null)
+        private Token AddToken(string classification, int line, int start, int length = 1, string quickInfo = null)
         {
-            var token = new Token {Line = line, Start = start, Length = length, Classification = classification, QuickInfo = quickInfo };
+            var token = new Token { Line = line, Start = start, Length = length, Classification = classification, QuickInfo = quickInfo };
 
             tokens[start] = token;
 
@@ -49,30 +49,57 @@ namespace Typewriter.TemplateEditor.Lexing
             {
                 lines[line] = new List<Token> { token };
             }
+
+            return token;
         }
 
-        //private static readonly char[] operators = { '!', '&', '|', '+', '-', '/', '*', '?', '=', ',', '.', ':', ';', '<', '>', '%' };
-        //private static readonly string[] keywords = { "module", "class" };
+        private void AddBrace(BraceStack braces, Stream stream, string classification = Classifications.Operator)
+        {
+            var brace = stream.Current;
+
+            if (brace == '{' || brace == '[' || brace == '(' || brace == ')' || brace == ']' || brace == '}')
+            {
+                var token = AddToken(classification, stream.Line, stream.Position);
+
+                if (brace == '{' || brace == '[' || brace == '(')
+                {
+                    token.IsOpen = true;
+                    braces.Push(token, stream.Current);
+                }
+                else
+                {
+                    var match = braces.Pop(brace);
+                    if (match != null)
+                    {
+                        token.MatchingToken = match;
+                        match.MatchingToken = token;
+                    }
+                }
+            }
+        }
 
         private void Parse(string code, Context context, int offset, int lineOffset)
         {
             var stream = new Stream(code, offset, lineOffset);
-            
+            var braces = new BraceStack();
+
             do
             {
-                if (ParseDollar(stream, context)) continue;
-                if (ParseString(stream, context)) continue;
-                if (ParseComment(stream, context)) continue;
+                if (ParseDollar(stream, context, braces)) continue;
+                if (ParseString(stream, context, braces)) continue;
+                if (ParseComment(stream, context, braces)) continue;
                 if (ParseNumber(stream)) continue;
                 if (ParseOperators(stream)) continue;
-                ParseKeywords(stream);
+                if (ParseKeywords(stream)) continue;
+
+                AddBrace(braces, stream);
             }
             while (stream.Advance());
 
             contexts.Add(new ContextSpan(offset, stream.Position, context));
         }
 
-        private bool ParseDollar(Stream stream, Context context)
+        private bool ParseDollar(Stream stream, Context context, BraceStack braces)
         {
             if (stream.Current == '$')
             {
@@ -88,14 +115,14 @@ namespace Typewriter.TemplateEditor.Lexing
 
                         if (identifier.IsCollection)
                         {
-                            // ParseFilter();
-                            ParseBlock(stream, Contexts.Find(identifier.Context)); // template
-                            ParseBlock(stream, context); // separator
+                            ParseFilter(stream, braces);
+                            ParseBlock(stream, Contexts.Find(identifier.Context), braces); // template
+                            ParseBlock(stream, context, braces); // separator
                         }
                         else if (identifier.IsBoolean)
                         {
-                            ParseBlock(stream, context); // true
-                            ParseBlock(stream, context); // false
+                            ParseBlock(stream, context, braces); // true
+                            ParseBlock(stream, context, braces); // false
                         }
 
                         return true;
@@ -106,12 +133,31 @@ namespace Typewriter.TemplateEditor.Lexing
             return false;
         }
 
-        private void ParseBlock(Stream stream, Context context)
+        private void ParseFilter(Stream stream, BraceStack braces)
+        {
+            if (stream.Peek() == '(')
+            {
+                stream.Advance();
+                AddBrace(braces, stream, Classifications.Property);
+
+                var block = stream.PeekBlock(1, '(', ')');
+                AddToken(Classifications.String, stream.Line, stream.Position + 1, block.Length);
+                stream.Advance(block.Length);
+
+                if (stream.Peek() == ')')
+                {
+                    stream.Advance();
+                    AddBrace(braces, stream, Classifications.Property);
+                }
+            }
+        }
+
+        private void ParseBlock(Stream stream, Context context, BraceStack braces)
         {
             if (stream.Peek() == '[')
             {
                 stream.Advance();
-                AddToken(Classifications.Operator, stream.Line, stream.Position);
+                AddBrace(braces, stream, Classifications.Property);
 
                 var block = stream.PeekBlock(1);
                 Parse(block, context, stream.Position + 1, stream.Line);
@@ -120,12 +166,12 @@ namespace Typewriter.TemplateEditor.Lexing
                 if (stream.Peek() == ']')
                 {
                     stream.Advance();
-                    AddToken(Classifications.Operator, stream.Line, stream.Position);
+                    AddBrace(braces, stream, Classifications.Property);
                 }
             }
         }
 
-        private bool ParseString(Stream stream, Context context)
+        private bool ParseString(Stream stream, Context context, BraceStack braces)
         {
             if (stream.Current == '\'' || stream.Current == '"')
             {
@@ -135,7 +181,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 while (stream.Advance())
                 {
                     var length = stream.Position - start;
-                    if (ParseDollar(stream, context))
+                    if (ParseDollar(stream, context, braces))
                     {
                         AddToken(Classifications.String, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
                         if (stream.Advance() == false || stream.Current == '\r') return true;
@@ -159,7 +205,7 @@ namespace Typewriter.TemplateEditor.Lexing
             return false;
         }
 
-        private bool ParseComment(Stream stream, Context context)
+        private bool ParseComment(Stream stream, Context context, BraceStack braces)
         {
             if (stream.Current == '/')
             {
@@ -171,7 +217,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     while (stream.Advance())
                     {
                         var length = stream.Position - start;
-                        if (ParseDollar(stream, context))
+                        if (ParseDollar(stream, context, braces))
                         {
                             AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
                             if (stream.Advance() == false || stream.Current == '\r') return true;
@@ -180,7 +226,7 @@ namespace Typewriter.TemplateEditor.Lexing
                         if (stream.Current == '\r') break;
                     }
 
-                    AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line-1 : stream.Line, start, stream.Position - start);
+                    AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, stream.Position - start);
                     return true;
                 }
 
@@ -190,7 +236,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     {
                         var length = stream.Position - start;
 
-                        if (ParseDollar(stream, context))
+                        if (ParseDollar(stream, context, braces))
                         {
                             AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
                             if (stream.Advance() == false || stream.Current == '\r') return true;
@@ -199,7 +245,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
                         if (stream.Current == '\r')
                         {
-                            AddToken(Classifications.Comment, stream.Line-1, start, length);
+                            AddToken(Classifications.Comment, stream.Line - 1, start, length);
                             if (stream.Advance(2) == false) return true;
                             start = stream.Position;
                         }
@@ -225,7 +271,7 @@ namespace Typewriter.TemplateEditor.Lexing
             if (char.IsDigit(stream.Current) || (stream.Current == '.' && char.IsDigit(stream.Peek())))
             {
                 var start = stream.Position;
-                
+
                 do
                 {
                     if (char.IsDigit(stream.Peek()) == false && (stream.Peek() == '.' && char.IsDigit(stream.Peek(2))) == false)

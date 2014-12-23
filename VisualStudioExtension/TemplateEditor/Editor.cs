@@ -35,26 +35,25 @@ namespace Typewriter.TemplateEditor
         // Brace matching
         public IEnumerable<ITagSpan<TextMarkerTag>> GetBraceTags(ITextBuffer buffer, SnapshotPoint point)
         {
-            yield break;
-            //var tokens = GetTokens(buffer);
-            //var token = tokens.GetToken(point.Position - 1);
-            //var tag = new TextMarkerTag(Classifications.BraceHighlight);
+            var tokens = GetTokens(buffer);
+            var token = tokens.GetToken(point.Position - 1);
+            var tag = new TextMarkerTag(Classifications.BraceHighlight);
 
-            //if (token != null && token.MatchingToken != null && token.Type.ToString().StartsWith("Close"))
-            //{
-            //    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
-            //    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
-            //}
-            //else
-            //{
-            //    token = tokens.GetToken(point.Position);
+            if (token != null && token.MatchingToken != null && token.IsOpen == false)
+            {
+                yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
+                yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
+            }
+            else
+            {
+                token = tokens.GetToken(point.Position);
 
-            //    if (token != null && token.MatchingToken != null && token.Type.ToString().StartsWith("Open"))
-            //    {
-            //        yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
-            //        yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
-            //    }
-            //}
+                if (token != null && token.MatchingToken != null && token.IsOpen)
+                {
+                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
+                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
+                }
+            }
         }
 
         // Classification

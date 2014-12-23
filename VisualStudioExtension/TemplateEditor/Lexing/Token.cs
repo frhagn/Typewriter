@@ -10,5 +10,7 @@ namespace Typewriter.TemplateEditor.Lexing
         public int Length { get; set; }
         public string Classification { get; set; }
         public string QuickInfo { get; set; }
+        public Token MatchingToken { get; set; }
+        public bool IsOpen { get; set; }
     }
 }
