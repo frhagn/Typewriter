@@ -10,7 +10,7 @@ namespace Typewriter.TemplateEditor.FormatDefinitions
     internal abstract class FormatDefinitionBase : ClassificationFormatDefinition
     {
         static readonly Lazy<IVsFontAndColorStorage> storage = new Lazy<IVsFontAndColorStorage>(() => Package.GetGlobalService(typeof(SVsFontAndColorStorage)) as IVsFontAndColorStorage, false);
-        static readonly Lazy<FormatColorStorage> plainText = new Lazy<FormatColorStorage>(() => TryGetItem(storage.Value, "Plain Text"), false);
+        static readonly Lazy<ColorFormat> plainText = new Lazy<ColorFormat>(() => TryGetItem(storage.Value, "Plain Text"), false);
 
         protected FormatDefinitionBase(bool foreground, bool background)
         {
@@ -23,8 +23,8 @@ namespace Typewriter.TemplateEditor.FormatDefinitions
         bool StyleForeground { get; set; }
         bool StyleBackground { get; set; }
 
-        protected abstract FormatColorStorage Light { get; }
-        protected abstract FormatColorStorage Dark { get; }
+        protected abstract ColorFormat Light { get; }
+        protected abstract ColorFormat Dark { get; }
 
         private void Apply()
         {
@@ -64,9 +64,9 @@ namespace Typewriter.TemplateEditor.FormatDefinitions
             }
         }
 
-        private static FormatColorStorage TryGetItem(IVsFontAndColorStorage fontAndColorStorage, string item)
+        private static ColorFormat TryGetItem(IVsFontAndColorStorage fontAndColorStorage, string item)
         {
-            var result = new FormatColorStorage();
+            var result = new ColorFormat();
             // load specific category to prevent our own format classifications being loaded
             InCategory(fontAndColorStorage, Microsoft.VisualStudio.Editor.DefGuidList.guidTextEditorFontCategory, () =>
             {
@@ -88,7 +88,7 @@ namespace Typewriter.TemplateEditor.FormatDefinitions
             return Color.FromArgb(dcolor.A, dcolor.R, dcolor.G, dcolor.B);
         }
 
-        protected class FormatColorStorage
+        protected class ColorFormat
         {
             public Color? Foreground { get; set; }
             public Color? Background { get; set; }

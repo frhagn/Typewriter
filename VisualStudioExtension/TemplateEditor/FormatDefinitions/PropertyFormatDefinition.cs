@@ -17,7 +17,7 @@ namespace Typewriter.TemplateEditor.FormatDefinitions
             this.BackgroundCustomizable = false;
         }
 
-        protected override FormatColorStorage Light { get { return new FormatColorStorage { Foreground = Color.FromRgb(59, 139, 59) }; } }
-        protected override FormatColorStorage Dark { get { return new FormatColorStorage { Foreground = Color.FromRgb(103, 197, 103) }; } }
+        protected override ColorFormat Light { get { return new ColorFormat { Foreground = Color.FromRgb(203, 75, 22) }; } } //Color.FromRgb(59, 139, 59)
+        protected override ColorFormat Dark { get { return new ColorFormat { Foreground = Color.FromRgb(236, 118, 0) }; } } //Color.FromRgb(103, 197, 103)
     }
 }
