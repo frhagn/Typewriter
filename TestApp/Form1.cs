@@ -17,12 +17,12 @@ namespace TestApp
         private void source_TextChanged(object sender, EventArgs e)
         {
             var stopwatch = Stopwatch.StartNew();
-            var lexer = new Lexer(source.Text);
+            var tokens = new Lexer().Tokenize(source.Text);
             stopwatch.Stop();
 
             target.Text = string.Format("{0} ms\r\n", stopwatch.ElapsedMilliseconds);
 
-            foreach (var token in lexer._Tokens)
+            foreach (var token in tokens.List)
             {
                 //var context = token.Context.GetType().Name;
                 //var match = token.MatchingToken != null ? string.Format("{0}\t{1}", token.MatchingToken.Start, token.MatchingToken.End) : "";
@@ -36,7 +36,7 @@ namespace TestApp
             int end = 0;
             for (var i = 0; i < source.TextLength; i++)
             {
-                var context = lexer.GetContext(i);
+                var context = tokens.GetContext(i);
                 switch (context.Name)
                 {
                     case "File":
@@ -52,7 +52,7 @@ namespace TestApp
                         break;
                 }
 
-                var token = lexer.GetToken(i);
+                var token = tokens.GetToken(i);
                 if (token != null)
                 {
                     end = token.Start + token.Length;

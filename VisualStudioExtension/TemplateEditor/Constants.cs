@@ -10,23 +10,7 @@ namespace Typewriter.TemplateEditor
         internal const string Extension = ".tst";
         internal const string ContentType = "tst";
         internal const string BaseDefinition = "plaintext";
-    }
-
-    public static class Classifications
-    {
-        public const string BraceHighlight = "MarkerFormatDefinition/HighlightedReference";
-        public const string Comment = "Comment";
-        public const string Identifier = "Identifier";
-        public const string Keyword = "Keyword";
-        public const string Number = "Number";
-        public const string Operator = "Operator";
-        public const string Property = "Tst/Property";
-        public const string String = "String";
-        public const string SyntaxError = "syntax error";
-    }
-
-    public static class Tokens
-    {
+        
         public static readonly char[] Operators = "!&|+-/*?=,.:;<>%".ToCharArray();
         public static readonly string[] Keywords = 
         {
@@ -85,6 +69,19 @@ namespace Typewriter.TemplateEditor
             "with",
             "yield"
         };
+    }
+
+    public static class Classifications
+    {
+        public const string BraceHighlight = "MarkerFormatDefinition/HighlightedReference";
+        public const string Comment = "Comment";
+        public const string Identifier = "Identifier";
+        public const string Keyword = "Keyword";
+        public const string Number = "Number";
+        public const string Operator = "Operator";
+        public const string Property = "Tst/Property";
+        public const string String = "String";
+        public const string SyntaxError = "syntax error";
     }
 
     internal static class Exports

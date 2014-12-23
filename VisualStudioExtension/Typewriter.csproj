@@ -213,6 +213,7 @@
     <Compile Include="TemplateEditor\Controllers\CompletionController.cs" />
     <Compile Include="TemplateEditor\Lexing\Stream.cs" />
     <Compile Include="TemplateEditor\Lexing\Token.cs" />
+    <Compile Include="TemplateEditor\Lexing\Tokens.cs" />
     <Compile Include="Templates\Extensions.cs" />
     <Compile Include="Templates\Template.cs" />
     <Compile Include="CodeModel\CodeDom\TypeInfo.cs" />

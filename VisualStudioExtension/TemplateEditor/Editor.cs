@@ -18,18 +18,19 @@ namespace Typewriter.TemplateEditor
             get { return instance; }
         }
 
+        private readonly Lexer lexer = new Lexer();
         private ITextSnapshot snapshot;
-        private Lexer lexer;
+        private Tokens cachedTokens;
 
-        private Lexer GetTokens(ITextBuffer buffer)
+        private Tokens GetTokens(ITextBuffer buffer)
         {
             if (snapshot == buffer.CurrentSnapshot)
-                return lexer;
+                return cachedTokens;
 
             snapshot = buffer.CurrentSnapshot;
-            lexer = new Lexer(snapshot.GetText());
+            cachedTokens = lexer.Tokenize(snapshot.GetText());
 
-            return lexer;
+            return cachedTokens;
         }
 
         // Brace matching

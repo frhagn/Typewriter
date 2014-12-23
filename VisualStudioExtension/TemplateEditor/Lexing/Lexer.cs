@@ -1,105 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
     public class Lexer
     {
-        private readonly Dictionary<int, Token> tokens = new Dictionary<int, Token>();
-        private readonly Dictionary<int, ICollection<Token>> lines = new Dictionary<int, ICollection<Token>>();
-        private readonly List<ContextSpan> contexts = new List<ContextSpan>();
-
-        public IEnumerable<Token> _Tokens
+        public Tokens Tokenize(string code)
         {
-            get { return tokens.Values; }
+            var tokens = new Tokens();
+            Parse(code, tokens, Contexts.Find("File"), 0, 0);
+
+            return tokens;
         }
 
-        public Token GetToken(int position)
-        {
-            return tokens.ContainsKey(position) ? tokens[position] : null;
-        }
-
-        public IEnumerable<Token> GetTokensForLine(int line)
-        {
-            return lines.ContainsKey(line) ? lines[line] : new Token[0];
-        }
-
-        public Context GetContext(int position)
-        {
-            return contexts.Where(c => c.Start <= position && c.End > position).OrderByDescending(c => c.Start).First().Context;
-        }
-
-        public Lexer(string code)
-        {
-            Parse(code, Contexts.Find("File"), 0, 0);
-        }
-
-        private Token AddToken(string classification, int line, int start, int length = 1, string quickInfo = null)
-        {
-            var token = new Token { Line = line, Start = start, Length = length, Classification = classification, QuickInfo = quickInfo };
-
-            tokens[start] = token;
-
-            if (lines.ContainsKey(line))
-            {
-                lines[line].Add(token);
-            }
-            else
-            {
-                lines[line] = new List<Token> { token };
-            }
-
-            return token;
-        }
-
-        private void AddBrace(BraceStack braces, Stream stream, string classification = Classifications.Operator)
-        {
-            var brace = stream.Current;
-
-            if (brace == '{' || brace == '[' || brace == '(' || brace == ')' || brace == ']' || brace == '}')
-            {
-                var token = AddToken(classification, stream.Line, stream.Position);
-
-                if (brace == '{' || brace == '[' || brace == '(')
-                {
-                    token.IsOpen = true;
-                    braces.Push(token, stream.Current);
-                }
-                else
-                {
-                    var match = braces.Pop(brace);
-                    if (match != null)
-                    {
-                        token.MatchingToken = match;
-                        match.MatchingToken = token;
-                    }
-                }
-            }
-        }
-
-        private void Parse(string code, Context context, int offset, int lineOffset)
+        private void Parse(string code, Tokens tokens, Context context, int offset, int lineOffset)
         {
             var stream = new Stream(code, offset, lineOffset);
             var braces = new BraceStack();
 
             do
             {
-                if (ParseDollar(stream, context, braces)) continue;
-                if (ParseString(stream, context, braces)) continue;
-                if (ParseComment(stream, context, braces)) continue;
-                if (ParseNumber(stream)) continue;
-                if (ParseOperators(stream)) continue;
-                if (ParseKeywords(stream)) continue;
+                if (ParseDollar(stream, tokens, context, braces)) continue;
+                if (ParseString(stream, tokens, context, braces)) continue;
+                if (ParseComment(stream, tokens, context, braces)) continue;
+                if (ParseNumber(stream, tokens)) continue;
+                if (ParseOperators(stream, tokens)) continue;
+                if (ParseKeywords(stream, tokens)) continue;
 
-                AddBrace(braces, stream);
+                tokens.AddBrace(braces, stream);
             }
             while (stream.Advance());
 
-            contexts.Add(new ContextSpan(offset, stream.Position, context));
+            tokens.AddContext(context, offset, stream.Position);
         }
 
-        private bool ParseDollar(Stream stream, Context context, BraceStack braces)
+        private bool ParseDollar(Stream stream, Tokens tokens, Context context, BraceStack braces)
         {
             if (stream.Current == '$')
             {
@@ -110,19 +45,19 @@ namespace Typewriter.TemplateEditor.Lexing
                 {
                     if (IsValidIdentifier(stream, identifier))
                     {
-                        AddToken(Classifications.Property, stream.Line, stream.Position, word.Length + 1, identifier.QuickInfo);
+                        tokens.AddToken(Classifications.Property, stream.Line, stream.Position, word.Length + 1, identifier.QuickInfo);
                         stream.Advance(word.Length);
 
                         if (identifier.IsCollection)
                         {
-                            ParseFilter(stream, braces);
-                            ParseBlock(stream, Contexts.Find(identifier.Context), braces); // template
-                            ParseBlock(stream, context, braces); // separator
+                            ParseFilter(stream, tokens, braces);
+                            ParseBlock(stream, tokens, Contexts.Find(identifier.Context), braces); // template
+                            ParseBlock(stream, tokens, context, braces); // separator
                         }
                         else if (identifier.IsBoolean)
                         {
-                            ParseBlock(stream, context, braces); // true
-                            ParseBlock(stream, context, braces); // false
+                            ParseBlock(stream, tokens, context, braces); // true
+                            ParseBlock(stream, tokens, context, braces); // false
                         }
 
                         return true;
@@ -133,45 +68,45 @@ namespace Typewriter.TemplateEditor.Lexing
             return false;
         }
 
-        private void ParseFilter(Stream stream, BraceStack braces)
+        private void ParseFilter(Stream stream, Tokens tokens, BraceStack braces)
         {
             if (stream.Peek() == '(')
             {
                 stream.Advance();
-                AddBrace(braces, stream, Classifications.Property);
+                tokens.AddBrace(braces, stream, Classifications.Property);
 
                 var block = stream.PeekBlock(1, '(', ')');
-                AddToken(Classifications.String, stream.Line, stream.Position + 1, block.Length);
+                tokens.AddToken(Classifications.String, stream.Line, stream.Position + 1, block.Length);
                 stream.Advance(block.Length);
 
                 if (stream.Peek() == ')')
                 {
                     stream.Advance();
-                    AddBrace(braces, stream, Classifications.Property);
+                    tokens.AddBrace(braces, stream, Classifications.Property);
                 }
             }
         }
 
-        private void ParseBlock(Stream stream, Context context, BraceStack braces)
+        private void ParseBlock(Stream stream, Tokens tokens, Context context, BraceStack braces)
         {
             if (stream.Peek() == '[')
             {
                 stream.Advance();
-                AddBrace(braces, stream, Classifications.Property);
+                tokens.AddBrace(braces, stream, Classifications.Property);
 
                 var block = stream.PeekBlock(1);
-                Parse(block, context, stream.Position + 1, stream.Line);
+                Parse(block, tokens, context, stream.Position + 1, stream.Line);
                 stream.Advance(block.Length);
 
                 if (stream.Peek() == ']')
                 {
                     stream.Advance();
-                    AddBrace(braces, stream, Classifications.Property);
+                    tokens.AddBrace(braces, stream, Classifications.Property);
                 }
             }
         }
 
-        private bool ParseString(Stream stream, Context context, BraceStack braces)
+        private bool ParseString(Stream stream, Tokens tokens, Context context, BraceStack braces)
         {
             if (stream.Current == '\'' || stream.Current == '"')
             {
@@ -181,9 +116,9 @@ namespace Typewriter.TemplateEditor.Lexing
                 while (stream.Advance())
                 {
                     var length = stream.Position - start;
-                    if (ParseDollar(stream, context, braces))
+                    if (ParseDollar(stream, tokens, context, braces))
                     {
-                        AddToken(Classifications.String, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
+                        tokens.AddToken(Classifications.String, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
                         if (stream.Advance() == false || stream.Current == '\r') return true;
                         start = stream.Position;
                     }
@@ -192,20 +127,20 @@ namespace Typewriter.TemplateEditor.Lexing
                     {
                         if (stream.Peek(-1) != '\\')
                         {
-                            AddToken(Classifications.String, stream.Line, start, stream.Position + 1 - start);
+                            tokens.AddToken(Classifications.String, stream.Line, start, stream.Position + 1 - start);
                             return true;
                         }
                     }
                 }
 
-                AddToken(Classifications.String, stream.Line, start, stream.Position - start);
+                tokens.AddToken(Classifications.String, stream.Line, start, stream.Position - start);
                 return true;
             }
 
             return false;
         }
 
-        private bool ParseComment(Stream stream, Context context, BraceStack braces)
+        private bool ParseComment(Stream stream, Tokens tokens, Context context, BraceStack braces)
         {
             if (stream.Current == '/')
             {
@@ -217,16 +152,16 @@ namespace Typewriter.TemplateEditor.Lexing
                     while (stream.Advance())
                     {
                         var length = stream.Position - start;
-                        if (ParseDollar(stream, context, braces))
+                        if (ParseDollar(stream, tokens, context, braces))
                         {
-                            AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
+                            tokens.AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
                             if (stream.Advance() == false || stream.Current == '\r') return true;
                             start = stream.Position;
                         }
                         if (stream.Current == '\r') break;
                     }
 
-                    AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, stream.Position - start);
+                    tokens.AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, stream.Position - start);
                     return true;
                 }
 
@@ -236,16 +171,16 @@ namespace Typewriter.TemplateEditor.Lexing
                     {
                         var length = stream.Position - start;
 
-                        if (ParseDollar(stream, context, braces))
+                        if (ParseDollar(stream, tokens, context, braces))
                         {
-                            AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
+                            tokens.AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
                             if (stream.Advance() == false || stream.Current == '\r') return true;
                             start = stream.Position;
                         }
 
                         if (stream.Current == '\r')
                         {
-                            AddToken(Classifications.Comment, stream.Line - 1, start, length);
+                            tokens.AddToken(Classifications.Comment, stream.Line - 1, start, length);
                             if (stream.Advance(2) == false) return true;
                             start = stream.Position;
                         }
@@ -253,12 +188,12 @@ namespace Typewriter.TemplateEditor.Lexing
                         if (stream.Current == '*' && stream.Peek(1) == '/')
                         {
                             stream.Advance();
-                            AddToken(Classifications.Comment, stream.Line, start, stream.Position + 1 - start);
+                            tokens.AddToken(Classifications.Comment, stream.Line, start, stream.Position + 1 - start);
                             return true;
                         }
                     }
 
-                    AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, stream.Position - start);
+                    tokens.AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, stream.Position - start);
                     return true;
                 }
             }
@@ -266,7 +201,7 @@ namespace Typewriter.TemplateEditor.Lexing
             return false;
         }
 
-        private bool ParseNumber(Stream stream)
+        private bool ParseNumber(Stream stream, Tokens tokens)
         {
             if (char.IsDigit(stream.Current) || (stream.Current == '.' && char.IsDigit(stream.Peek())))
             {
@@ -279,33 +214,33 @@ namespace Typewriter.TemplateEditor.Lexing
                 }
                 while (stream.Advance());
 
-                AddToken(Classifications.Number, stream.Line, start, stream.Position + 1 - start);
+                tokens.AddToken(Classifications.Number, stream.Line, start, stream.Position + 1 - start);
                 return true;
             }
 
             return false;
         }
 
-        private bool ParseOperators(Stream stream)
+        private bool ParseOperators(Stream stream, Tokens tokens)
         {
-            if (Tokens.Operators.Contains(stream.Current))
+            if (Constants.Operators.Contains(stream.Current))
             {
-                AddToken(Classifications.Operator, stream.Line, stream.Position);
+                tokens.AddToken(Classifications.Operator, stream.Line, stream.Position);
                 return true;
             }
 
             return false;
         }
 
-        private bool ParseKeywords(Stream stream)
+        private bool ParseKeywords(Stream stream, Tokens tokens)
         {
             var name = stream.PeekWord();
 
             if (name == null) return false;
 
-            if (Tokens.Keywords.Contains(name))
+            if (Constants.Keywords.Contains(name))
             {
-                AddToken(Classifications.Keyword, stream.Line, stream.Position, name.Length);
+                tokens.AddToken(Classifications.Keyword, stream.Line, stream.Position, name.Length);
             }
 
             stream.Advance(name.Length - 1);
