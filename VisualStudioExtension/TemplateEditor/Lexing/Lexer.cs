@@ -118,8 +118,8 @@ namespace Typewriter.TemplateEditor.Lexing
                     var length = stream.Position - start;
                     if (ParseDollar(stream, tokens, context, braces))
                     {
-                        tokens.AddToken(Classifications.String, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
-                        if (stream.Advance() == false || stream.Current == '\r') return true;
+                        tokens.AddToken(Classifications.String, stream.Current == Constants.NewLine ? stream.Line - 1 : stream.Line, start, length);
+                        if (stream.Advance() == false || stream.Current == Constants.NewLine) return true;
                         start = stream.Position;
                     }
 
@@ -154,14 +154,14 @@ namespace Typewriter.TemplateEditor.Lexing
                         var length = stream.Position - start;
                         if (ParseDollar(stream, tokens, context, braces))
                         {
-                            tokens.AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
-                            if (stream.Advance() == false || stream.Current == '\r') return true;
+                            tokens.AddToken(Classifications.Comment, stream.Current == Constants.NewLine ? stream.Line - 1 : stream.Line, start, length);
+                            if (stream.Advance() == false || stream.Current == Constants.NewLine) return true;
                             start = stream.Position;
                         }
-                        if (stream.Current == '\r') break;
+                        if (stream.Current == Constants.NewLine) break;
                     }
 
-                    tokens.AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, stream.Position - start);
+                    tokens.AddToken(Classifications.Comment, stream.Current == Constants.NewLine ? stream.Line - 1 : stream.Line, start, stream.Position - start);
                     return true;
                 }
 
@@ -173,12 +173,12 @@ namespace Typewriter.TemplateEditor.Lexing
 
                         if (ParseDollar(stream, tokens, context, braces))
                         {
-                            tokens.AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, length);
-                            if (stream.Advance() == false || stream.Current == '\r') return true;
+                            tokens.AddToken(Classifications.Comment, stream.Current == Constants.NewLine ? stream.Line - 1 : stream.Line, start, length);
+                            if (stream.Advance() == false || stream.Current == Constants.NewLine) return true;
                             start = stream.Position;
                         }
 
-                        if (stream.Current == '\r')
+                        if (stream.Current == Constants.NewLine)
                         {
                             tokens.AddToken(Classifications.Comment, stream.Line - 1, start, length);
                             if (stream.Advance(2) == false) return true;
@@ -193,7 +193,7 @@ namespace Typewriter.TemplateEditor.Lexing
                         }
                     }
 
-                    tokens.AddToken(Classifications.Comment, stream.Current == '\r' ? stream.Line - 1 : stream.Line, start, stream.Position - start);
+                    tokens.AddToken(Classifications.Comment, stream.Current == Constants.NewLine ? stream.Line - 1 : stream.Line, start, stream.Position - start);
                     return true;
                 }
             }

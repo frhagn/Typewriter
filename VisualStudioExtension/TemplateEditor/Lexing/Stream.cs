@@ -10,7 +10,7 @@ namespace Typewriter.TemplateEditor.Lexing
         private readonly string template;
         private int position = -1;
         private int line;
-        private char current = '\0';
+        private char current = char.MinValue;
 
         public Stream(string template, int offset = 0, int lineOffset = 0)
         {
@@ -41,12 +41,12 @@ namespace Typewriter.TemplateEditor.Lexing
 
                 if (position >= template.Length)
                 {
-                    current = '\0';
+                    current = char.MinValue;
                     return false;
                 }
 
                 current = template[position];
-                if (current == '\r') line++;
+                if (current == Constants.NewLine) line++;
             }
 
             return true;
@@ -61,7 +61,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 return template[index];
             }
 
-            return '\0';
+            return char.MinValue;
         }
 
         public string PeekWord(int start = 0)
@@ -89,7 +89,7 @@ namespace Typewriter.TemplateEditor.Lexing
             {
                 var letter = Peek(i);
 
-                if (letter == '\0') break;
+                if (letter == char.MinValue) break;
                 if (letter == open) depth++;
                 if (letter == close) depth--;
                 if (depth > 0) identifier.Append(letter);
