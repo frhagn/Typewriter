@@ -2,7 +2,7 @@
 using System.Linq;
 using Typewriter.CodeModel;
 
-namespace Typewriter.Templates
+namespace Typewriter.Generation.Parsing
 {
     public class Extensions
     {

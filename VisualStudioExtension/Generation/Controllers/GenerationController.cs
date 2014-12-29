@@ -2,23 +2,21 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
-using Typewriter.Templates;
-using Typewriter.VisualStudio;
 using Typewriter.CodeModel.CodeDom;
 
-namespace Typewriter
+namespace Typewriter.Generation.Controllers
 {
-    public class GenerationManager
+    public class GenerationController
     {
         private readonly ILog log;
         private readonly DTE dte;
-        private readonly ITemplateManager templateManager;
+        private readonly TemplateController templateController;
 
-        public GenerationManager(ILog log, DTE dte, ISolutionMonitor solutionMonitor, ITemplateManager templateManager, IEventQueue eventQueue)
+        public GenerationController(ILog log, DTE dte, ISolutionMonitor solutionMonitor, TemplateController templateController, IEventQueue eventQueue)
         {
             this.log = log;
             this.dte = dte;
-            this.templateManager = templateManager;
+            this.templateController = templateController;
 
             solutionMonitor.FileAdded += (sender, args) => eventQueue.QueueRender(args.Path, Render);
             solutionMonitor.FileChanged += (sender, args) => eventQueue.QueueRender(args.Path, Render);
@@ -33,7 +31,7 @@ namespace Typewriter
                 log.Debug("Render {0}", path);
                 var stopwatch = Stopwatch.StartNew();
 
-                var templates = templateManager.Templates;
+                var templates = templateController.Templates;
                 if (templates.Any())
                 {
                     var item = dte.Solution.FindProjectItem(path);
@@ -58,7 +56,7 @@ namespace Typewriter
         {
             try
             {
-                var templates = templateManager.Templates;
+                var templates = templateController.Templates;
                 if (templates.Any() == false) return;
 
                 log.Debug("Delete {0}", path);
@@ -82,7 +80,7 @@ namespace Typewriter
         {
             try
             {
-                var templates = templateManager.Templates;
+                var templates = templateController.Templates;
                 if (templates.Any() == false) return;
 
                 log.Debug("Rename {0} -> {1}", oldPath, newPath);

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using Typewriter.CodeModel;
-using Typewriter.CodeModel.CodeDom;
 
-namespace Typewriter.Templates
+namespace Typewriter.Generation.Parsing
 {
     internal static class Compiler
     {

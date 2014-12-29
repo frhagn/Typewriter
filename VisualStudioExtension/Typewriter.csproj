@@ -193,8 +193,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeModel\Attributes\PropertyAttribute.cs" />
-    <Compile Include="EventQueue.cs" />
-    <Compile Include="Iterator.cs" />
+    <Compile Include="Generation\Controllers\EventQueue.cs" />
+    <Compile Include="CodeModel\CodeDom\Iterator.cs" />
     <Compile Include="CodeModel\CodeDom\MethodInfo.cs" />
     <Compile Include="CodeModel\CodeDom\ParameterInfo.cs" />
     <Compile Include="CodeModel\CodeDom\PropertyInfo.cs" />
@@ -213,14 +213,13 @@
     <Compile Include="TemplateEditor\Controllers\CompletionController.cs" />
     <Compile Include="TemplateEditor\Lexing\Stream.cs" />
     <Compile Include="TemplateEditor\Lexing\Token.cs" />
-    <Compile Include="Templates\Extensions.cs" />
-    <Compile Include="Templates\Parser2.cs" />
-    <Compile Include="Templates\Template.cs" />
+    <Compile Include="Generation\Parsing\Extensions.cs" />
+    <Compile Include="Generation\Parsing\Parser.cs" />
+    <Compile Include="Generation\Template.cs" />
     <Compile Include="CodeModel\CodeDom\TypeInfo.cs" />
-    <Compile Include="VisualStudio\CommandManager.cs" />
     <Compile Include="VisualStudio\IconRegistration.cs" />
-    <Compile Include="VisualStudio\SolutionEvents.cs" />
-    <Compile Include="GenerationManager.cs" />
+    <Compile Include="Generation\Controllers\SolutionEvents.cs" />
+    <Compile Include="Generation\Controllers\GenerationController.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="VisualStudio\Resources\Guids.cs" />
     <Compile Include="VisualStudio\Resources\Resources.Designer.cs">
@@ -231,11 +230,10 @@
     <Compile Include="VisualStudio\ExtensionPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualStudio\Resources\PkgCmdID.cs" />
-    <Compile Include="VisualStudio\SolutionMonitor.cs" />
-    <Compile Include="Templates\TemplateManager.cs" />
-    <Compile Include="Templates\Compiler.cs" />
-    <Compile Include="Templates\SolutionExtensions.cs" />
-    <Compile Include="Templates\Parser.cs" />
+    <Compile Include="Generation\Controllers\SolutionMonitor.cs" />
+    <Compile Include="Generation\Controllers\TemplateController.cs" />
+    <Compile Include="Generation\Parsing\Compiler.cs" />
+    <Compile Include="Generation\Controllers\SolutionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="VisualStudio\Resources\Resources.resx">

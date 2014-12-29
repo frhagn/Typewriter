@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Typewriter.VisualStudio
+namespace Typewriter.Generation.Controllers
 {
     public delegate void SolutionOpenedEventHandler(object sender, SolutionOpenedEventArgs e);
     public delegate void SolutionClosedEventHandler(object sender, SolutionClosedEventArgs e);

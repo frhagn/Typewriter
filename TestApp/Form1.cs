@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Typewriter.Generation.Parsing;
 using Typewriter.TemplateEditor;
 using Typewriter.TemplateEditor.Lexing;
-using Typewriter.Templates;
 
 namespace TestApp
 {
@@ -33,7 +33,7 @@ namespace TestApp
             var stopwatch = Stopwatch.StartNew();
             var tokens = new Lexer().Tokenize(source.Text);
             stopwatch.Stop();
-            var parser = new Parser2();
+            var parser = new Parser();
 
             var file = new FileInfo { Name = "File", Classes = new[] { new ClassInfo { Name = "Class 1" }, new ClassInfo { Name = "Class 2", Bool = true} } };
 

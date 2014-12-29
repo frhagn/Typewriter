@@ -4,9 +4,9 @@ using System.Linq;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.TemplateEditor.Lexing;
 
-namespace Typewriter.Templates
+namespace Typewriter.Generation.Parsing
 {
-    public class Parser2
+    public class Parser
     {
         public string Parse(string template, object context)
         {

@@ -2,20 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
 using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
-using Typewriter.VisualStudio;
 using VSLangProj;
 
-namespace Typewriter.Templates
+namespace Typewriter.Generation.Controllers
 {
-    public interface ITemplateManager
-    {
-        ICollection<ITemplate> Templates { get; }
-    }
-
-    public class TemplateManager : ITemplateManager
+    public class TemplateController
     {
         private const string templateExtension = ".tst";
         private static readonly object locker = new object();
@@ -27,7 +20,7 @@ namespace Typewriter.Templates
         private bool solutionOpen;
         private ICollection<ITemplate> templates;
 
-        public TemplateManager(ILog log, DTE dte, ISolutionMonitor solutionMonitor, IEventQueue eventQueue)
+        public TemplateController(ILog log, DTE dte, ISolutionMonitor solutionMonitor, IEventQueue eventQueue)
         {
             this.log = log;
             this.dte = dte;

@@ -6,7 +6,7 @@ using System.Threading;
 using Microsoft.VisualStudio.Shell.Interop;
 using Timer = System.Timers.Timer;
 
-namespace Typewriter
+namespace Typewriter.Generation.Controllers
 {
     public interface IEventQueue : IDisposable
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
 
-namespace Typewriter.Templates
+namespace Typewriter.Generation.Controllers
 {
     public static class SolutionExtensions
     {

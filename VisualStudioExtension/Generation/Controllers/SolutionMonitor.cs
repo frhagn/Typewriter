@@ -5,7 +5,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Typewriter.VisualStudio
+namespace Typewriter.Generation.Controllers
 {
     public interface ISolutionMonitor
     {

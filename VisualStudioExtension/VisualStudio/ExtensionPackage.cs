@@ -4,7 +4,7 @@ using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Typewriter.Templates;
+using Typewriter.Generation.Controllers;
 using Typewriter.VisualStudio.Resources;
 
 namespace Typewriter.VisualStudio
@@ -19,16 +19,13 @@ namespace Typewriter.VisualStudio
     //[ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class ExtensionPackage : Package, IDisposable
     {
-        //private EditorFactory editorFactory;
-
         private DTE dte;
         private IVsStatusbar statusBar;
         private Log log;
         private ISolutionMonitor solutionMonitor;
-        private ITemplateManager templateManager;
+        private TemplateController templateController;
         private IEventQueue eventQueue;
-        //private CommandManager commendManager;
-
+        
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
@@ -52,9 +49,8 @@ namespace Typewriter.VisualStudio
             this.log = new Log(dte);
             this.eventQueue = new EventQueue(statusBar, log);
             this.solutionMonitor = new SolutionMonitor(log);
-            this.templateManager = new TemplateManager(log, dte, solutionMonitor, eventQueue);
-            var generationManager = new GenerationManager(log, dte, solutionMonitor, templateManager, eventQueue);
-            //this.commendManager = new CommandManager(generationManager);
+            this.templateController = new TemplateController(log, dte, solutionMonitor, eventQueue);
+            var generationController = new GenerationController(log, dte, solutionMonitor, templateController, eventQueue);
         }
 
         public void Dispose()
