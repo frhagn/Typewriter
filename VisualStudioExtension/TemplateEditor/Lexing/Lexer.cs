@@ -13,9 +13,9 @@ namespace Typewriter.TemplateEditor.Lexing
             return tokens;
         }
 
-        private void Parse(string code, Tokens tokens, Context context, int offset, int lineOffset)
+        private void Parse(string template, Tokens tokens, Context context, int offset, int lineOffset)
         {
-            var stream = new Stream(code, offset, lineOffset);
+            var stream = new Stream(template, offset, lineOffset);
             var braces = new BraceStack();
 
             do

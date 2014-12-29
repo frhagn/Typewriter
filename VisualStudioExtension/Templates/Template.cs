@@ -43,35 +43,35 @@ namespace Typewriter.Templates
 
         public void Render(IFileInfo file)
         {
-            var parser = new Parser(extensions);
+            var parser = new Parser2(); //new Parser(extensions);
             var output = parser.Parse(template, file);
-            var outputPath = GetOutputPath(file.FullName);
 
             if (output == null)
             {
-                DeleteFile(outputPath);
+                DeleteFile(file.FullName);
             }
             else 
             {
-                SaveFile(outputPath, output, file.FullName);
+                SaveFile(file.FullName, output);
             }
         }
 
-        private void SaveFile(string path, string output, string fileName)
+        private void SaveFile(string path, string output)
         {
             ProjectItem item;
+            var outputPath = GetOutputPath(path);
 
-            if (HasChanged(path, output))
+            if (HasChanged(outputPath, output))
             {
-                File.WriteAllText(path, output);
-                item = FindProjectItem(path) ?? projectItem.ProjectItems.AddFromFile(path);
+                File.WriteAllText(outputPath, output);
+                item = FindProjectItem(outputPath) ?? projectItem.ProjectItems.AddFromFile(outputPath);
             }
             else
             {
-                item = FindProjectItem(path);
+                item = FindProjectItem(outputPath);
             }
 
-            SetMappedSourceFile(item, fileName);
+            SetMappedSourceFile(item, path);
         }
 
         public void DeleteFile(string path)

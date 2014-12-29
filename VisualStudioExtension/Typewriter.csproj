@@ -214,6 +214,7 @@
     <Compile Include="TemplateEditor\Lexing\Stream.cs" />
     <Compile Include="TemplateEditor\Lexing\Token.cs" />
     <Compile Include="Templates\Extensions.cs" />
+    <Compile Include="Templates\Parser2.cs" />
     <Compile Include="Templates\Template.cs" />
     <Compile Include="CodeModel\CodeDom\TypeInfo.cs" />
     <Compile Include="VisualStudio\CommandManager.cs" />
