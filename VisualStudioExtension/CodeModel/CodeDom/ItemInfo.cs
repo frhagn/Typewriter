@@ -28,7 +28,12 @@ namespace Typewriter.CodeModel.CodeDom
 
         public virtual string name
         {
-            get { return Name; }
+            get 
+            {
+                if(Name.Length > 1)
+                    return Name.Substring(0, 1).ToLowerInvariant() + Name.Substring(1);
+                return Name.ToLowerInvariant();
+            }
         }
 
         public virtual string FullName
@@ -152,6 +157,41 @@ namespace Typewriter.CodeModel.CodeDom
                 }
                 return properties;
             }
+        }
+
+        public virtual bool IsEnum
+        {
+            get { return ((TypeInfo)this.Type).IsEnum; }
+        }
+
+        public virtual bool IsEnumerable
+        {
+            get { return ((TypeInfo)this.Type).IsEnumerable; }
+        }
+
+        public virtual bool IsGeneric
+        {
+            get { return ((TypeInfo)this.Type).IsGeneric; }
+        }
+
+        public virtual bool IsNullable
+        {
+            get { return ((TypeInfo)this.Type).IsNullable; }
+        }
+
+        public virtual bool IsPrimitive
+        {
+            get { return ((TypeInfo)this.Type).IsPrimitive; }
+        }
+
+        public virtual string Default
+        {
+            get { return ((TypeInfo)this.Type).Default; }
+        }
+
+        public virtual string Class
+        {
+            get { return ((TypeInfo)this.Type).Class; }
         }
 
         private ITypeInfo type;

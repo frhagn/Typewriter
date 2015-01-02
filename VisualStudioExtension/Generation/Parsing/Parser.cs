@@ -72,7 +72,15 @@ namespace Typewriter.Generation.Parsing
                     }
                     else
                     {
-                        output += value.ToString();
+                        var block = ParseBlock(stream, '[', ']');
+                        if (block != null)
+                        {
+                            output += Parse(block, value, ref match);
+                        }
+                        else
+                        {
+                            output += value.ToString();
+                        }
                     }
 
                     return true;

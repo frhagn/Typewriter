@@ -8,20 +8,18 @@ namespace Typewriter.CodeModel.CodeDom
 {
     public class TypeInfo : ItemInfo, ITypeInfo
     {
-        private static readonly Type[] primitiveTypes = { typeof(string), typeof(char), typeof(byte), typeof(sbyte), typeof(ushort), typeof(short), typeof(uint), typeof(int), typeof(ulong), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(void), typeof(bool), typeof(DateTime) };
+        private static readonly string[] primitiveTypes = { "string", "number", "boolean", "Date" };
 
         private readonly string fullName;
         private CodeType codeType;
 
-        public TypeInfo(CodeType codeType, FileInfo file)
-            : base(codeType, file)
+        public TypeInfo(CodeType codeType, FileInfo file) : base(codeType, file)
         {
             this.codeType = codeType;
             this.fullName = codeType.FullName;
         }
 
-        public TypeInfo(string fullName, FileInfo file)
-            : base(null, file)
+        public TypeInfo(string fullName, FileInfo file) : base(null, file)
         {
             this.fullName = fullName;
         }
@@ -48,31 +46,26 @@ namespace Typewriter.CodeModel.CodeDom
             get { return this.fullName; }
         }
 
-        public bool IsGeneric
+        public override bool IsGeneric
         {
             get { return FullName.IndexOf("<", StringComparison.Ordinal) > -1 || IsNullable; }
         }
 
-        public bool IsNullable
+        public override bool IsNullable
         {
             get { return FullName.StartsWith("System.Nullable<") || FullName.EndsWith("?"); }
         }
 
-        public bool IsPrimitive
+        public override bool IsPrimitive
         {
             get
             {
-                if (IsNullable)
-                {
-                    if (FullName.EndsWith("?")) return primitiveTypes.Any(t => t.FullName == FullName.TrimEnd('?'));
-                    return primitiveTypes.Any(t => t.FullName == ExtractGenericTypeNames(FullName).First());
-                }
-
-                return primitiveTypes.Any(t => t.FullName == FullName);
+                var type = this.ToString().TrimEnd('[', ']');
+                return primitiveTypes.Any(t => t == type);
             }
         }
 
-        public bool IsEnum
+        public override bool IsEnum
         {
             get
             {
@@ -81,10 +74,35 @@ namespace Typewriter.CodeModel.CodeDom
             }
         }
 
-        public bool IsEnumerable
+        public override bool IsEnumerable
         {
             //get { return FullName != "System.String" && (FullName.StartsWith("System.Collections.") || Implements(Interfaces, "System.Collections.")); }
             get { return FullName != "System.String" && FullName.StartsWith("System.Collections."); }
+        }
+
+        public override string Class
+        {
+            get
+            {
+                var type = this.ToString();
+                return type.EndsWith("[]") ? type.Substring(0, type.Length - 2) : type;
+            }
+        }
+
+        public override string Default
+        {
+            get 
+            {
+                var type = this.ToString();
+                
+                if (type.EndsWith("[]")) return "[]";
+                if (type == "boolean") return "false";
+                if (type == "number") return "0";
+                if (type == "string" || type == "Date") return "null";
+                if (type == "void") return "void(0)";
+
+                return string.Format("new {0}()", type);
+            }
         }
 
         private static bool Implements(IEnumerable<IInterfaceInfo> interfaces, string name)
@@ -147,6 +165,64 @@ namespace Typewriter.CodeModel.CodeDom
                 list.Add(current.ToString());
 
             return list;
+        }
+
+        public override string ToString()
+        {
+            var type = this as ITypeInfo;
+
+            if (type.IsNullable)
+            {
+                type = type.GenericTypeArguments.FirstOrDefault();
+            }
+            else if (type.IsEnumerable)
+            {
+                if (type.Name.EndsWith("[]")) return GetTypeScriptType(type.Name.Substring(0, type.Name.Length - 2)) + "[]";
+
+                type = type.GenericTypeArguments.FirstOrDefault();
+                if (type != null)
+                {
+                    if (type.IsNullable)
+                    {
+                        type = type.GenericTypeArguments.FirstOrDefault();
+                    }
+                    
+                    return GetTypeScriptType(type.Name) + "[]";
+                }
+
+                return "any[]";
+            }
+
+            return GetTypeScriptType(type.Name);
+        }
+
+        private static string GetTypeScriptType(string type)
+        {
+            switch (type)
+            {
+                case "Boolean":
+                    return "boolean";
+                case "String":
+                case "Char":
+                    return "string";
+                case "Byte":
+                case "Int16":
+                case "Int32":
+                case "Int64":
+                case "UInt16":
+                case "UInt32":
+                case "UInt64":
+                case "Single":
+                case "Double":
+                case "Decimal":
+                    return "number";
+                case "DateTime":
+                    return "Date";
+                case "Void":
+                    return "void";
+                default:
+                    return type;
+            }
         }
     }
 }

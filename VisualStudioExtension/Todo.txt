@@ -13,20 +13,22 @@ Transform all
 * (nej) En undo operation
 * Logga till Output
 * Statusbar
-typewriter.config
-Description osv för Plugin
 * Itemtype för *.tst
 Templates för vanliga tst
-Intellisense för *.tst
+* Intellisense för *.tst
 * Source control
 * Tracka source file i properties
 * Ctrl + . rename => krasch
 * Spara alla filer, inte bara den aktiva
-bug: Add + rename => file not found vid incheckning
+bug: Add + rename => file not found vid incheckning -> räcker med att spara projektfilen?
 * Trigga render efter file save, inte innan
 * Trigga inte render all om mallen är ny
+Default value på type?
+Stoppa generering vid build
+typewriter.config
+
+Implementera Type
 Delete unmodified files vid render template
 Prestanda på load templates
-Default value på type?
 Tvinga utf-8
-Stoppa generering vid build
+Description osv för Plugin
