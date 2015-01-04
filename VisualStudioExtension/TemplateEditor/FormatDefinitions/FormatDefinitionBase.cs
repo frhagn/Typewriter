@@ -20,8 +20,8 @@ namespace Typewriter.TemplateEditor.FormatDefinitions
             Apply();
         }
 
-        bool StyleForeground { get; set; }
-        bool StyleBackground { get; set; }
+        private bool StyleForeground { get; set; }
+        private bool StyleBackground { get; set; }
 
         protected abstract ColorFormat Light { get; }
         protected abstract ColorFormat Dark { get; }
