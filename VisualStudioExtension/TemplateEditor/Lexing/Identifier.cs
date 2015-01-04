@@ -9,5 +9,6 @@ namespace Typewriter.TemplateEditor.Lexing
         public string Context { get; set; }
         public bool IsCollection { get; set; }
         public bool IsBoolean { get; set; }
+        public bool HasContext { get; set; }
     }
 }

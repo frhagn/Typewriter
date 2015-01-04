@@ -26,9 +26,10 @@ bug: Add + rename => file not found vid incheckning -> räcker med att spara pro
 Default value på type?
 Stoppa generering vid build
 typewriter.config
+Smart Indent och default till insert spaces
 
-Implementera Type
+* Implementera Type
 Delete unmodified files vid render template
 Prestanda på load templates
-Tvinga utf-8
+? Tvinga utf-8
 Description osv för Plugin

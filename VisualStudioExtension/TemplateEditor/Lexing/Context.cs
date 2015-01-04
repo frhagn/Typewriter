@@ -78,11 +78,18 @@ namespace Typewriter.TemplateEditor.Lexing
                         identifier.Context = ctxn;
                         identifier.IsCollection = true;
                     }
-
+                    
                     if (p.PropertyType == typeof(bool))
                     {
                         identifier.IsBoolean = true;
                     }
+                    else if (p.PropertyType.GetCustomAttribute<ContextAttribute>() != null)
+                    {
+                        var ctxn = p.PropertyType.GetCustomAttribute<ContextAttribute>().Name;
+                        identifier.Context = ctxn;
+                        identifier.HasContext = true;
+                    }
+
 
                     item.identifiers.Add(p.Name, identifier);
                 }

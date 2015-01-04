@@ -216,7 +216,6 @@ namespace Typewriter.CodeModel.CodeDom
                     }
                     catch (NotImplementedException)
                     {
-                        //return new ObjectTypeInfo();
                         type = new TypeInfo(FullName, file);
                     }
                 }

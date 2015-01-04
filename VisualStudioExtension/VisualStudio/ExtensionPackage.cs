@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio;
@@ -17,6 +18,8 @@ namespace Typewriter.VisualStudio
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     //[ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideLanguageService(typeof(LanguageService), "TST", 100)]
+    [ProvideLanguageExtension(typeof(LanguageService), ".tst")]
     public sealed class ExtensionPackage : Package, IDisposable
     {
         private DTE dte;
@@ -43,6 +46,9 @@ namespace Typewriter.VisualStudio
 
             if (this.statusBar == null)
                 ErrorHandler.ThrowOnFailure(1);
+
+            var languageService = new LanguageService();
+            ((IServiceContainer)this).AddService(typeof(LanguageService), languageService, true);
 
             IconRegistration.RegisterIcons();
 

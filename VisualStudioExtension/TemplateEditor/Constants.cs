@@ -9,7 +9,7 @@ namespace Typewriter.TemplateEditor
     {
         internal const string Extension = ".tst";
         internal const string ContentType = "tst";
-        internal const string BaseDefinition = "plaintext";
+        internal const string BaseDefinition = "code";//"plaintext";
         internal const char NewLine = '\n';
         
         public static readonly char[] Operators = "!&|+-/*?=,.:;<>%".ToCharArray();

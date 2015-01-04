@@ -13,7 +13,7 @@ namespace Typewriter.CodeModel.CodeDom
             this.codeInterface = codeInterface;
         }
 
-        public bool IsGeneric
+        public override bool IsGeneric
         {
             get { return codeInterface.IsGeneric; }
         }

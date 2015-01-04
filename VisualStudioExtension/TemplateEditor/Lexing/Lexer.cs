@@ -59,6 +59,10 @@ namespace Typewriter.TemplateEditor.Lexing
                             ParseBlock(stream, tokens, context, braces); // true
                             ParseBlock(stream, tokens, context, braces); // false
                         }
+                        else if (identifier.HasContext)
+                        {
+                            ParseBlock(stream, tokens, Contexts.Find(identifier.Context), braces); // template
+                        }
 
                         return true;
                     }

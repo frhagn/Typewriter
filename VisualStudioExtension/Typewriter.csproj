@@ -221,6 +221,7 @@
     <Compile Include="Generation\Controllers\SolutionEvents.cs" />
     <Compile Include="Generation\Controllers\GenerationController.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="VisualStudio\LanguageService.cs" />
     <Compile Include="VisualStudio\Resources\Guids.cs" />
     <Compile Include="VisualStudio\Resources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
