@@ -13,13 +13,13 @@ namespace Typewriter.CodeModel.CodeDom
         private readonly string fullName;
         private CodeType codeType;
 
-        public TypeInfo(CodeType codeType, FileInfo file) : base(codeType, file)
+        public TypeInfo(CodeType codeType, object parent, FileInfo file) : base(codeType, parent, file)
         {
             this.codeType = codeType;
             this.fullName = codeType.FullName;
         }
 
-        public TypeInfo(string fullName, FileInfo file) : base(null, file)
+        public TypeInfo(string fullName, object parent, FileInfo file) : base(null, parent, file)
         {
             this.fullName = fullName;
         }
@@ -61,7 +61,7 @@ namespace Typewriter.CodeModel.CodeDom
             get
             {
                 var type = this.ToString().TrimEnd('[', ']');
-                return primitiveTypes.Any(t => t == type);
+                return this.IsEnum || primitiveTypes.Any(t => t == type);
             }
         }
 
@@ -98,24 +98,24 @@ namespace Typewriter.CodeModel.CodeDom
                 if (type.EndsWith("[]")) return "[]";
                 if (type == "boolean") return "false";
                 if (type == "number") return "0";
-                if (type == "string" || type == "Date") return "null";
+                if (type == "string" || type == "Date" || this.IsEnum) return "null";
                 if (type == "void") return "void(0)";
 
                 return string.Format("new {0}()", type);
             }
         }
 
-        private static bool Implements(IEnumerable<IInterfaceInfo> interfaces, string name)
-        {
-            return interfaces.Any(i => i.FullName.StartsWith(name) || Implements(i.Interfaces, name));
-        }
+        //private static bool Implements(IEnumerable<IInterfaceInfo> interfaces, string name)
+        //{
+        //    return interfaces.Any(i => i.FullName.StartsWith(name) || Implements(i.Interfaces, name));
+        //}
 
         public IEnumerable<ITypeInfo> GenericTypeArguments
         {
             get
             {
                 if (IsGeneric == false) return new ITypeInfo[0];
-                if (IsNullable && FullName.EndsWith("?")) return new[] { new TypeInfo(FullName.TrimEnd('?'), file) };
+                if (IsNullable && FullName.EndsWith("?")) return new[] { new TypeInfo(FullName.TrimEnd('?'), this, file) };
 
                 return ExtractGenericTypeNames(FullName).Select(n =>
                 {
@@ -123,7 +123,7 @@ namespace Typewriter.CodeModel.CodeDom
                     {
                         n = string.Format("System.Collections.Generic.ICollection<{0}>", n);
                     }
-                    return new TypeInfo(n, file);
+                    return new TypeInfo(n, this, file);
                 });
             }
         }

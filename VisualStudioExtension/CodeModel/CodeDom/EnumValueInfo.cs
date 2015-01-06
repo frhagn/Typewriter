@@ -8,7 +8,7 @@ namespace Typewriter.CodeModel.CodeDom
         private readonly CodeVariable2 codeVariable;
         private readonly int index;
 
-        public EnumValueInfo(CodeVariable2 codeVariable, FileInfo file, int index) : base(codeVariable, file)
+        public EnumValueInfo(CodeVariable2 codeVariable, object parent, FileInfo file, int index) : base(codeVariable, parent, file)
         {
             this.codeVariable = codeVariable;
             this.index = index;

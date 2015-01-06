@@ -43,7 +43,7 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 if (classes == null)
                 {
-                    classes = GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Members, c => (IClassInfo)new ClassInfo(c, this))).ToArray();
+                    classes = GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Members, c => (IClassInfo)new ClassInfo(c, this, this))).ToArray();
                 }
                 return classes;
             }
@@ -56,7 +56,7 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 if (enums == null)
                 {
-                    enums = GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Members, e => (IEnumInfo)new EnumInfo(e, this))).ToArray();
+                    enums = GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Members, e => (IEnumInfo)new EnumInfo(e, this, this))).ToArray();
                 }
                 return enums;
             }
@@ -69,7 +69,7 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 if (interfaces == null)
                 {
-                    interfaces = GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Members, i => (IInterfaceInfo)new InterfaceInfo(i, this))).ToArray();
+                    interfaces = GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Members, i => (IInterfaceInfo)new InterfaceInfo(i, this, this))).ToArray();
                 }
                 return interfaces;
             }

@@ -8,7 +8,7 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeInterface2 codeInterface;
 
-        public InterfaceInfo(CodeInterface2 codeInterface, FileInfo file) : base(codeInterface, file)
+        public InterfaceInfo(CodeInterface2 codeInterface, object parent, FileInfo file) : base(codeInterface, parent, file)
         {
             this.codeInterface = codeInterface;
         }

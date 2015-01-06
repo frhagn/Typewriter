@@ -8,7 +8,7 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeClass2 codeClass;
 
-        public ClassInfo(CodeClass2 codeClass, FileInfo file) : base(codeClass, file)
+        public ClassInfo(CodeClass2 codeClass, object parent, FileInfo file) : base(codeClass, parent, file)
         {
             this.codeClass = codeClass;
         }

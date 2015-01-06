@@ -1,113 +1,30 @@
 ﻿using System;
 using System.Linq;
 using Typewriter.CodeModel;
+using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.Generation.Parsing
 {
     public class Extensions
     {
-        public static string ClassName(IMethodInfo propertyInfo)
+        [Property("(extension) string name", "The name of the $context (camelCased)")]
+        public static string name(IItemInfo itemInfo)
         {
-            return ClassName(propertyInfo.Type);
+            if (itemInfo.Name.Length > 1)
+                return itemInfo.Name.Substring(0, 1).ToLowerInvariant() + itemInfo.Name.Substring(1);
+            return itemInfo.Name.ToLowerInvariant();
         }
 
-        public static string ClassName(IFieldInfo propertyInfo)
+        [Property("(extension) string Route", "Returns the value of the RouteAttribute of the $context and the RoutePrefixAttribute of the current class")]
+        public static string Route(IMethodInfo methodInfo)
         {
-            return ClassName(propertyInfo.Type);
-        }
+            var parent = methodInfo.Parent as IItemInfo;
+            var route = methodInfo.Attributes.FirstOrDefault(a => a.Name == "Route");
+            var routePrefix = parent != null ? parent.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix") : null;
 
-        public static string ClassName(IConstantInfo propertyInfo)
-        {
-            return ClassName(propertyInfo.Type);
-        }
-
-        public static string ClassName(IParameterInfo propertyInfo)
-        {
-            return ClassName(propertyInfo.Type);
-        }
-
-        public static string ClassName(IPropertyInfo propertyInfo)
-        {
-            return ClassName(propertyInfo.Type);
-        }
-
-        public static string ClassName(ITypeInfo propertyInfo)
-        {
-            var type = TypeName(propertyInfo);
-            return type.EndsWith("[]") ? type.Substring(0, type.Length - 2) : type;
-        }
-
-        public static string TypeName(IMethodInfo propertyInfo)
-        {
-            return TypeName(propertyInfo.Type);
-        }
-
-        public static string TypeName(IFieldInfo propertyInfo)
-        {
-            return TypeName(propertyInfo.Type);
-        }
-
-        public static string TypeName(IConstantInfo propertyInfo)
-        {
-            return TypeName(propertyInfo.Type);
-        }
-
-        public static string TypeName(IParameterInfo propertyInfo)
-        {
-            return TypeName(propertyInfo.Type);
-        }
-
-        public static string TypeName(IPropertyInfo propertyInfo)
-        {
-            return TypeName(propertyInfo.Type);
-        }
-        
-        public static string TypeName(ITypeInfo type)
-        {
-            if (type.IsNullable)
-            {
-                type = type.GenericTypeArguments.FirstOrDefault();
-            }
-            else if (type.IsEnumerable)
-            {
-                if (type.Name.EndsWith("[]")) return GetTypeScriptType(type.Name.Substring(0, type.Name.Length - 2)) + "[]";
-
-                type = type.GenericTypeArguments.FirstOrDefault();
-                if (type != null) return GetTypeScriptType(type.Name) + "[]";
-
-                return "any[]";
-            }
-
-            return GetTypeScriptType(type.Name);
-        }
-
-        private static string GetTypeScriptType(string type)
-        {
-            switch (type)
-            {
-                case "Boolean":
-                    return "boolean";
-                case "String":
-                case "Char":
-                    return "string";
-                case "Byte":
-                case "Int16":
-                case "Int32":
-                case "Int64":
-                case "UInt16":
-                case "UInt32":
-                case "UInt64":
-                case "Single":
-                case "Double":
-                case "Decimal":
-                    return "number";
-                case "DateTime":
-                    return "Date";
-                case "Void":
-                    return "void";
-                default:
-                    return type;
-            }
+            if (route == null && routePrefix == null) return null;
+            
+            return string.Concat(routePrefix != null ? routePrefix.Value + "/" : null, route != null ? route.Value : null);
         }
     }
 }

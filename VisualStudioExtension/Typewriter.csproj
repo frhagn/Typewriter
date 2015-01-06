@@ -151,7 +151,6 @@
     <Compile Include="CodeModel\CodeDom\FieldInfo.cs" />
     <Compile Include="CodeModel\CodeDom\ItemInfo.cs" />
     <Compile Include="CodeModel\CodeDom\FileInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\ObjectTypeInfo.cs" />
     <Compile Include="CodeModel\Attributes\ContextAttribute.cs" />
     <Compile Include="CodeModel\IAttributeInfo.cs">
       <SubType>Code</SubType>
@@ -199,7 +198,7 @@
     <Compile Include="CodeModel\CodeDom\ParameterInfo.cs" />
     <Compile Include="CodeModel\CodeDom\PropertyInfo.cs" />
     <Compile Include="TemplateEditor\Controllers\SignatureHelpController.cs" />
-    <Compile Include="TemplateEditor\FormatDefinitions\FormatDefinitionBase.cs" />
+    <Compile Include="VisualStudio\ThemeInfo.cs" />
     <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\PropertyFormatDefinition.cs" />
     <Compile Include="TemplateEditor\Constants.cs" />

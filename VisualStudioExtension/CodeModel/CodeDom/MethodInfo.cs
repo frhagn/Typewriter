@@ -7,7 +7,7 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeFunction2 codeFunction;
 
-        public MethodInfo(CodeFunction2 codeFunction, FileInfo file) : base(codeFunction, file)
+        public MethodInfo(CodeFunction2 codeFunction, object parent, FileInfo file) : base(codeFunction, parent, file)
         {
             this.codeFunction = codeFunction;
         }

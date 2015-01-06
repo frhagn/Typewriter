@@ -11,11 +11,14 @@ namespace Typewriter.CodeModel.CodeDom
         protected dynamic element;
         protected readonly FileInfo file;
 
-        protected ItemInfo(dynamic element, FileInfo file)
+        protected ItemInfo(dynamic element, object parent, FileInfo file)
         {
             this.element = element;
             this.file = file;
+            this.Parent = parent;
         }
+
+        public object Parent { get; private set; }
 
         public virtual string Name
         {
@@ -23,16 +26,6 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 Load();
                 return element.Name;
-            }
-        }
-
-        public virtual string name
-        {
-            get 
-            {
-                if(Name.Length > 1)
-                    return Name.Substring(0, 1).ToLowerInvariant() + Name.Substring(1);
-                return Name.ToLowerInvariant();
             }
         }
 
@@ -53,7 +46,7 @@ namespace Typewriter.CodeModel.CodeDom
                 if (attributes == null)
                 {
                     Load();
-                    attributes = Iterator<CodeAttribute2>.Select(() => element.Children, a => (IAttributeInfo)new AttributeInfo(a, file)).ToArray();
+                    attributes = Iterator<CodeAttribute2>.Select(() => element.Children, a => (IAttributeInfo)new AttributeInfo(a, this, file)).ToArray();
                 }
                 return attributes;
             }
@@ -67,7 +60,7 @@ namespace Typewriter.CodeModel.CodeDom
                 if (constants == null)
                 {
                     Load();
-                    constants = Iterator<CodeVariable2>.Select(() => element.Children, v => v.IsConstant, f => (IConstantInfo)new ConstantInfo(f, file)).ToArray();
+                    constants = Iterator<CodeVariable2>.Select(() => element.Children, v => v.IsConstant, f => (IConstantInfo)new ConstantInfo(f, this, file)).ToArray();
                 }
                 return constants;
             }
@@ -81,7 +74,7 @@ namespace Typewriter.CodeModel.CodeDom
                 if (fields == null)
                 {
                     Load();
-                    fields = Iterator<CodeVariable2>.Select(() => element.Children, v => v.IsConstant == false, f => (IFieldInfo)new FieldInfo(f, file)).ToArray();
+                    fields = Iterator<CodeVariable2>.Select(() => element.Children, v => v.IsConstant == false, f => (IFieldInfo)new FieldInfo(f, this, file)).ToArray();
                 }
                 return fields;
             }
@@ -111,7 +104,7 @@ namespace Typewriter.CodeModel.CodeDom
                         return elements;
                     };
 
-                    interfaces = Iterator<CodeInterface2>.Select(func, i => (IInterfaceInfo)new InterfaceInfo(i, file)).ToArray();
+                    interfaces = Iterator<CodeInterface2>.Select(func, i => (IInterfaceInfo)new InterfaceInfo(i, this, file)).ToArray();
                 }
                 return interfaces;
             }
@@ -125,7 +118,7 @@ namespace Typewriter.CodeModel.CodeDom
                 if (methods == null)
                 {
                     Load();
-                    methods = Iterator<CodeFunction2>.Select(() => element.Children, m => m.FunctionKind != vsCMFunction.vsCMFunctionConstructor, f => (IMethodInfo)new MethodInfo(f, file)).ToArray();
+                    methods = Iterator<CodeFunction2>.Select(() => element.Children, m => m.FunctionKind != vsCMFunction.vsCMFunctionConstructor, f => (IMethodInfo)new MethodInfo(f, this, file)).ToArray();
                 }
                 return methods;
             }
@@ -139,7 +132,7 @@ namespace Typewriter.CodeModel.CodeDom
                 if (parameters == null)
                 {
                     Load();
-                    parameters = Iterator<CodeParameter2>.Select(() => element.Children, p => (IParameterInfo)new ParameterInfo(p, file)).ToArray();
+                    parameters = Iterator<CodeParameter2>.Select(() => element.Children, p => (IParameterInfo)new ParameterInfo(p, this, file)).ToArray();
                 }
                 return parameters;
             }
@@ -153,7 +146,7 @@ namespace Typewriter.CodeModel.CodeDom
                 if (properties == null)
                 {
                     Load();
-                    properties = Iterator<CodeProperty2>.Select(() => element.Children, p => (IPropertyInfo)new PropertyInfo(p, file)).ToArray();
+                    properties = Iterator<CodeProperty2>.Select(() => element.Children, p => (IPropertyInfo)new PropertyInfo(p, this, file)).ToArray();
                 }
                 return properties;
             }
@@ -207,16 +200,16 @@ namespace Typewriter.CodeModel.CodeDom
                         if (element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray)
                         {
                             // Fulhack för Array-type som är definierade i kod
-                            type = new TypeInfo(string.Format("System.Collections.Generic.ICollection<{0}>", element.Type.ElementType.AsFullName), file);
+                            type = new TypeInfo(string.Format("System.Collections.Generic.ICollection<{0}>", element.Type.ElementType.AsFullName), this, file);
                         }
                         else
                         {
-                            type = new TypeInfo(element.Type.CodeType, file);
+                            type = new TypeInfo(element.Type.CodeType, this, file);
                         }
                     }
                     catch (NotImplementedException)
                     {
-                        type = new TypeInfo(FullName, file);
+                        type = new TypeInfo(FullName, this, file);
                     }
                 }
                 return type;

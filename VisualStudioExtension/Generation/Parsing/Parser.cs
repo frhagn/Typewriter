@@ -8,6 +8,8 @@ namespace Typewriter.Generation.Parsing
 {
     public class Parser
     {
+        private static readonly Type extensions = typeof(Extensions);
+
         public string Parse(string template, object context)
         {
             if (template == null) return null;
@@ -59,7 +61,7 @@ namespace Typewriter.Generation.Parsing
                         var block = ParseBlock(stream, '[', ']');
                         var separator = ParseBlock(stream, '[', ']');
 
-                        var items = Filter(collection, m => new[] { m.Name, m.FullName }, filter, ref match);
+                        var items = Filter(collection, filter, ref match);
                         var mtch = match;
                         output += string.Join(Parse(separator, context, ref match), items.Select(item => Parse(block, item, ref mtch)));
                     }
@@ -105,9 +107,21 @@ namespace Typewriter.Generation.Parsing
             return null;
         }
 
-        private static IEnumerable<object> Filter(IEnumerable<object> items, Func<ItemInfo, IEnumerable<string>> selector, string filter, ref bool match)
+        private static IEnumerable<object> Filter(IEnumerable<object> items, string filter, ref bool match)
         {
             if (string.IsNullOrWhiteSpace(filter)) return items;
+
+            Func<ItemInfo, IEnumerable<string>> selector;
+
+            if (filter.StartsWith("[") && filter.EndsWith("]"))
+            {
+                filter = filter.Trim('[', ']');
+                selector = i => i.Attributes.SelectMany(a => new[] { a.Name, a.FullName });
+            }
+            else
+            {
+                selector = i => new[] { i.Name, i.FullName };
+            }
 
             var parts = filter.Split('*');
 
@@ -144,6 +158,12 @@ namespace Typewriter.Generation.Parsing
             if (identifier == null) return null;
 
             var type = context.GetType();
+
+            var extension = extensions.GetMethod(identifier, new[] { type });
+            if (extension != null)
+            {
+                return extension.Invoke(null, new[] { context });
+            }
 
             var property = type.GetProperty(identifier);
             if (property != null)

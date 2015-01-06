@@ -6,11 +6,10 @@ namespace Typewriter.CodeModel
 {
     public interface IItemInfo
     {
+        object Parent { get; }
+
         [Property("string Name", "The name of the $context")]
         string Name { get; }
-
-        [Property("string name", "The name of the $context (camelCased)")]
-        string name { get; }
 
         [Property("string FullName", "The namespace and name of the $context")]
         string FullName { get; }

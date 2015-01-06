@@ -12,7 +12,7 @@ namespace Typewriter.TemplateEditor.Controllers
     internal class ClassificationControllerProvider : IClassifierProvider
     {
         [Import]
-        internal IClassificationTypeRegistryService ClassificationRegistry;
+        internal IClassificationTypeRegistryService ClassificationRegistry { get; set; }
 
         public IClassifier GetClassifier(ITextBuffer buffer)
         {

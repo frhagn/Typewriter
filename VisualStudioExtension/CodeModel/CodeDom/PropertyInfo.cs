@@ -7,7 +7,7 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeProperty2 codeProperty;
 
-        public PropertyInfo(CodeProperty2 codeProperty, FileInfo file) : base(codeProperty, file)
+        public PropertyInfo(CodeProperty2 codeProperty, object parent, FileInfo file) : base(codeProperty, parent, file)
         {
             this.codeProperty = codeProperty;
         }

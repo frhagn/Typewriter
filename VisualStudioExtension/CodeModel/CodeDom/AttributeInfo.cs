@@ -7,7 +7,7 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeAttribute2 codeAttribute;
 
-        public AttributeInfo(CodeAttribute2 codeAttribute, FileInfo file) : base(codeAttribute, file)
+        public AttributeInfo(CodeAttribute2 codeAttribute, object parent, FileInfo file) : base(codeAttribute, parent, file)
         {
             this.codeAttribute = codeAttribute;
         }

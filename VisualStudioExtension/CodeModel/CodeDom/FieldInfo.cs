@@ -7,7 +7,7 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeVariable2 codeVariable;
 
-        public FieldInfo(CodeVariable2 codeVariable, FileInfo file) : base(codeVariable, file)
+        public FieldInfo(CodeVariable2 codeVariable, object parent, FileInfo file) : base(codeVariable, parent, file)
         {
             this.codeVariable = codeVariable;
         }

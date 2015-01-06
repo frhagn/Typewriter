@@ -10,14 +10,14 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeEnum codeEnum;
 
-        public EnumInfo(CodeEnum codeEnum, FileInfo file) : base(codeEnum, file)
+        public EnumInfo(CodeEnum codeEnum, object parent, FileInfo file) : base(codeEnum, parent, file)
         {
             this.codeEnum = codeEnum;
         }
 
         public ICollection<IEnumValueInfo> Values
         {
-            get { return Iterator<CodeVariable2>.Select(() => codeEnum.Members, (v, i) => new EnumValueInfo(v, file, i)).ToArray(); }
+            get { return Iterator<CodeVariable2>.Select(() => codeEnum.Members, (v, i) => new EnumValueInfo(v, this, file, i)).ToArray(); }
         }
     }
 }

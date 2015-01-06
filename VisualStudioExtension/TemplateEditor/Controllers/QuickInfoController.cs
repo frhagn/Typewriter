@@ -15,7 +15,7 @@ namespace Typewriter.TemplateEditor.Controllers
     internal class QuickInfoSourceProvider : IQuickInfoSourceProvider
     {
         [Import]
-        internal ITextStructureNavigatorSelectorService NavigatorService;
+        internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
         
 
         //[ImportMany]
@@ -94,7 +94,7 @@ namespace Typewriter.TemplateEditor.Controllers
     internal class QuickInfoControllerProvider : IIntellisenseControllerProvider
     {
         [Import]
-        internal IQuickInfoBroker QuickInfoBroker;
+        internal IQuickInfoBroker QuickInfoBroker { get; set; }
 
         public IIntellisenseController TryCreateIntellisenseController(ITextView textView, IList<ITextBuffer> subjectBuffers)
         {

@@ -90,13 +90,13 @@ namespace Typewriter.TemplateEditor
         // ReSharper disable UnassignedField.Compiler
 
         [Export, Name(Constants.ContentType), BaseDefinition(Constants.BaseDefinition)]
-        internal static ContentTypeDefinition TstContentTypeDefinition;
+        internal static ContentTypeDefinition TstContentTypeDefinition { get; set; }
 
         [Export, ContentType(Constants.ContentType), FileExtension(Constants.Extension)]
-        internal static FileExtensionToContentTypeDefinition TstFileExtensionDefinition;
+        internal static FileExtensionToContentTypeDefinition TstFileExtensionDefinition { get; set; }
 
         [Export, Name(Classifications.Property)]
-        internal static ClassificationTypeDefinition PropertyClassificationType;
+        internal static ClassificationTypeDefinition PropertyClassificationType { get; set; }
 
         // ReSharper restore UnassignedField.Compiler
     }

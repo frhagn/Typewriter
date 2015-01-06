@@ -7,7 +7,7 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeParameter2 codeParameter;
 
-        public ParameterInfo(CodeParameter2 codeParameter, FileInfo file) : base(codeParameter, file)
+        public ParameterInfo(CodeParameter2 codeParameter, object parent, FileInfo file) : base(codeParameter, parent, file)
         {
             this.codeParameter = codeParameter;
         }
