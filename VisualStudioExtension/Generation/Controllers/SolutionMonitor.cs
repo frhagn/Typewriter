@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation.Controllers
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Win32;
+using Typewriter.TemplateEditor;
 
 namespace Typewriter.VisualStudio
 {
@@ -17,7 +18,7 @@ namespace Typewriter.VisualStudio
                     if (classes == null)
                         return;
 
-                    AddIcon(classes, "tst.ico", ".tst");
+                    AddIcon(classes, ThemeInfo.IsDark ? "dark.ico" : "light.ico", Constants.Extension);
                 }
             }
             catch
@@ -25,14 +26,11 @@ namespace Typewriter.VisualStudio
             }
         }
 
-        private static void AddIcon(RegistryKey classes, string iconName, params string[] extensions)
+        private static void AddIcon(RegistryKey classes, string iconName, string extension)
         {
-            foreach (var extension in extensions)
+            using (var key = classes.CreateSubKey(extension + "\\DefaultIcon"))
             {
-                using (var key = classes.CreateSubKey(extension + "\\DefaultIcon"))
-                {
-                    if (key != null) key.SetValue(string.Empty, folder + iconName);
-                }
+                if (key != null) key.SetValue(string.Empty, folder + iconName);
             }
         }
 

@@ -7,8 +7,8 @@ namespace Typewriter.CodeModel
     [Context("Class")]
     public interface IClassInfo : IItemInfo
     {
-        //[Property("Namespace", "The namespace of the $context")]
-        //string Namespace { get; }
+        [Property("string Namespace", "The namespace of the $context")]
+        string Namespace { get; }
 
         [Property("bool IsGeneric", "Determines if the $context is generic")]
         bool IsGeneric { get; }

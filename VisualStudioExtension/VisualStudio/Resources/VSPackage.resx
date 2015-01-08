@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="100" xml:space="preserve">
-    <value>Typewriter Templates</value>
+    <value>TypeSript Template</value>
   </data>
   <data name="110" xml:space="preserve">
     <value>Typewriter</value>
   </data>
   <data name="112" xml:space="preserve">
-    <value>Information about my package</value>
+    <value>Provides automatic TypeScript Template generation from C# source files</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">

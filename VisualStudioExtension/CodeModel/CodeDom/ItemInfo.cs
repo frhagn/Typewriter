@@ -22,20 +22,17 @@ namespace Typewriter.CodeModel.CodeDom
 
         public virtual string Name
         {
-            get
-            {
-                Load();
-                return element.Name;
-            }
+            get { return element.Name; }
         }
 
         public virtual string FullName
         {
-            get
-            {
-                Load();
-                return element.FullName;
-            }
+            get { return element.FullName; }
+        }
+
+        public virtual string Namespace
+        {
+            get { return element.Namespace.FullName; }
         }
 
         private IAttributeInfo[] attributes;
@@ -154,7 +151,7 @@ namespace Typewriter.CodeModel.CodeDom
 
         public virtual bool IsEnum
         {
-            get { return ((TypeInfo)this.Type).IsEnum; }
+            get { return this.Type.IsEnum; }
         }
 
         public virtual bool IsEnumerable
@@ -177,16 +174,6 @@ namespace Typewriter.CodeModel.CodeDom
             get { return ((TypeInfo)this.Type).IsPrimitive; }
         }
 
-        public virtual string Default
-        {
-            get { return ((TypeInfo)this.Type).Default; }
-        }
-
-        public virtual string Class
-        {
-            get { return ((TypeInfo)this.Type).Class; }
-        }
-
         private ITypeInfo type;
         public virtual ITypeInfo Type
         {
@@ -197,15 +184,9 @@ namespace Typewriter.CodeModel.CodeDom
                     Load();
                     try
                     {
-                        if (element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray)
-                        {
-                            // Fulhack för Array-type som är definierade i kod
-                            type = new TypeInfo(string.Format("System.Collections.Generic.ICollection<{0}>", element.Type.ElementType.AsFullName), this, file);
-                        }
-                        else
-                        {
-                            type = new TypeInfo(element.Type.CodeType, this, file);
-                        }
+                        type = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray ? 
+                            new TypeInfo(string.Format("System.Collections.Generic.ICollection<{0}>", element.Type.ElementType.AsFullName), this, file) : 
+                            new TypeInfo(element.Type.CodeType, this, file);
                     }
                     catch (NotImplementedException)
                     {

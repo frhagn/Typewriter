@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.Shell.Interop;
+using Typewriter.VisualStudio;
+using InteropConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
 using Timer = System.Timers.Timer;
 
 namespace Typewriter.Generation.Controllers
@@ -120,7 +122,7 @@ namespace Typewriter.Generation.Controllers
                 if (count > 0)
                 {
                     uint cookie = 0;
-                    object icon = (short)Constants.SBAI_Save;
+                    object icon = (short)InteropConstants.SBAI_Save;
                     int frozen;
                     statusBar.IsFrozen(out frozen);
                     if (frozen == 0)

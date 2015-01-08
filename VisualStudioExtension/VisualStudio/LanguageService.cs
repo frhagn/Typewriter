@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Typewriter.VisualStudio.Resources;
+using Typewriter.TemplateEditor;
 
 namespace Typewriter.VisualStudio
 {
-    [GuidAttribute(GuidList.LanguageServiceString)]
+    [GuidAttribute(Constants.LanguageServiceId)]
     class LanguageService : IVsLanguageInfo, IVsLanguageTextOps
     {
         private const int failed = 2147467263;
@@ -24,13 +24,13 @@ namespace Typewriter.VisualStudio
 
         public int GetFileExtensions(out string pbstrExtensions)
         {
-            pbstrExtensions = ".tst";
+            pbstrExtensions = Constants.Extension;
             return 0;
         }
 
         public int GetLanguageName(out string bstrName)
         {
-            bstrName = "TST";
+            bstrName = Constants.LanguageName;
             return 0;
         }
 

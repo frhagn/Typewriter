@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
+using Typewriter.VisualStudio;
 using VSLangProj;
+using Constants = Typewriter.Constants;
 
 namespace Typewriter.Generation.Controllers
 {
     public class TemplateController
     {
-        private const string templateExtension = ".tst";
         private static readonly object locker = new object();
 
         private readonly ILog log;
@@ -61,7 +62,7 @@ namespace Typewriter.Generation.Controllers
 
         private bool FileChanged(string path)
         {
-            if (path.EndsWith(templateExtension, StringComparison.InvariantCultureIgnoreCase))
+            if (path.EndsWith(Constants.Extension, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.templates = null;
                 return true;
@@ -113,7 +114,7 @@ namespace Typewriter.Generation.Controllers
             {
                 if (this.templates == null)
                 {
-                    var items = GetProjectItems(templateExtension);
+                    var items = GetProjectItems(Constants.Extension);
                     this.templates = items.Select(i => (ITemplate)new Template(i)).ToList();
                 }
                 else

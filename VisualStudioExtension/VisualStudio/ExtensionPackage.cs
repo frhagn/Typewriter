@@ -6,20 +6,16 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Typewriter.Generation.Controllers;
-using Typewriter.VisualStudio.Resources;
+using Constants = Typewriter.Constants;
 
 namespace Typewriter.VisualStudio
 {
-    /// <summary>
-    /// This is the class that implements the package exposed by this assembly.
-    /// </summary>
-    [Guid(GuidList.VisualStudioExtensionPackageId)]
+    [Guid(Constants.ExtensionPackageId)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    //[ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideLanguageService(typeof(LanguageService), "TST", 100)]
-    [ProvideLanguageExtension(typeof(LanguageService), ".tst")]
+    [ProvideLanguageService(typeof(LanguageService), Constants.LanguageName, 100)]
+    [ProvideLanguageExtension(typeof(LanguageService), Constants.Extension)]
     public sealed class ExtensionPackage : Package, IDisposable
     {
         private DTE dte;

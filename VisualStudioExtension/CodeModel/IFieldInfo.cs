@@ -20,12 +20,6 @@ namespace Typewriter.CodeModel
 
         [Property("bool IsPrimitive", "Determines if the $context is primitive")]
         bool IsPrimitive { get; }
-        
-        [Property("string Class", "The class name of the $context")]
-        string Class { get; }
-
-        [Property("string Default", "The default value of the $context")]
-        string Default { get; }
 
         [Property("type Type", "The type of the $context")]
         ITypeInfo Type { get; }

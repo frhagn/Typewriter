@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Typewriter;
 using Typewriter.Generation.Parsing;
 using Typewriter.TemplateEditor;
 using Typewriter.TemplateEditor.Lexing;

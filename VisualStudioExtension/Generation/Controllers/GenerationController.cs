@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation.Controllers
 {

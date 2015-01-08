@@ -41,6 +41,15 @@ namespace Typewriter.CodeModel.CodeDom
             }
         }
 
+        public override string Namespace
+        {
+            get
+            {
+                var name = this.fullName.Split('<')[0];
+                return name.Substring(0, name.LastIndexOf('.'));
+            }
+        }
+
         public override string FullName
         {
             get { return this.fullName; }
@@ -76,39 +85,8 @@ namespace Typewriter.CodeModel.CodeDom
 
         public override bool IsEnumerable
         {
-            //get { return FullName != "System.String" && (FullName.StartsWith("System.Collections.") || Implements(Interfaces, "System.Collections.")); }
             get { return FullName != "System.String" && FullName.StartsWith("System.Collections."); }
         }
-
-        public override string Class
-        {
-            get
-            {
-                var type = this.ToString();
-                return type.EndsWith("[]") ? type.Substring(0, type.Length - 2) : type;
-            }
-        }
-
-        public override string Default
-        {
-            get 
-            {
-                var type = this.ToString();
-                
-                if (type.EndsWith("[]")) return "[]";
-                if (type == "boolean") return "false";
-                if (type == "number") return "0";
-                if (type == "string" || type == "Date" || this.IsEnum) return "null";
-                if (type == "void") return "void(0)";
-
-                return string.Format("new {0}()", type);
-            }
-        }
-
-        //private static bool Implements(IEnumerable<IInterfaceInfo> interfaces, string name)
-        //{
-        //    return interfaces.Any(i => i.FullName.StartsWith(name) || Implements(i.Interfaces, name));
-        //}
 
         public IEnumerable<ITypeInfo> GenericTypeArguments
         {

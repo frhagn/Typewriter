@@ -12,6 +12,6 @@
   </TemplateData>
   <TemplateContent>
     <References/>
-    <ProjectItem ReplaceParameters="true">Template.tst</ProjectItem>
+    <ProjectItem ReplaceParameters="true" ItemType="None">Template.tst</ProjectItem>
   </TemplateContent>
 </VSTemplate>

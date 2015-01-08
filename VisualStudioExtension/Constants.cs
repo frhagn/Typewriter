@@ -3,13 +3,18 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
-namespace Typewriter.TemplateEditor
+namespace Typewriter
 {
     internal static class Constants
     {
         internal const string Extension = ".tst";
         internal const string ContentType = "tst";
-        internal const string BaseDefinition = "code";//"plaintext";
+        internal const string LanguageName = "TST";
+
+        internal const string ExtensionPackageId = "45b6b392-ce2f-409c-a39f-bbf90b34349e";
+        internal const string LanguageServiceId = "aa5d6809-9c5d-443c-a37c-c29e6af2fe15";
+
+        internal const string BaseDefinition = "code";
         internal const char NewLine = '\n';
         
         public static readonly char[] Operators = "!&|+-/*?=,.:;<>%".ToCharArray();

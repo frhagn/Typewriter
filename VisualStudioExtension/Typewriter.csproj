@@ -17,7 +17,8 @@
     <RootNamespace>Typewriter</RootNamespace>
     <AssemblyName>Typewriter</AssemblyName>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>VisualStudio\Resources\Key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -201,7 +202,7 @@
     <Compile Include="VisualStudio\ThemeInfo.cs" />
     <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\PropertyFormatDefinition.cs" />
-    <Compile Include="TemplateEditor\Constants.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="TemplateEditor\Controllers\ClassificationController.cs" />
     <Compile Include="TemplateEditor\Editor.cs" />
     <Compile Include="TemplateEditor\Controllers\QuickInfoController.cs" />
@@ -219,28 +220,16 @@
     <Compile Include="VisualStudio\IconRegistration.cs" />
     <Compile Include="Generation\Controllers\SolutionEvents.cs" />
     <Compile Include="Generation\Controllers\GenerationController.cs" />
-    <Compile Include="Log.cs" />
+    <Compile Include="VisualStudio\Log.cs" />
     <Compile Include="VisualStudio\LanguageService.cs" />
-    <Compile Include="VisualStudio\Resources\Guids.cs" />
-    <Compile Include="VisualStudio\Resources\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="VisualStudio\ExtensionPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VisualStudio\Resources\PkgCmdID.cs" />
     <Compile Include="Generation\Controllers\SolutionMonitor.cs" />
     <Compile Include="Generation\Controllers\TemplateController.cs" />
     <Compile Include="Generation\Parsing\Compiler.cs" />
     <Compile Include="Generation\Controllers\SolutionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="VisualStudio\Resources\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="VisualStudio\Resources\VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
@@ -253,23 +242,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VisualStudio\Resources\Key.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <VSCTCompile Include="VisualStudio\Resources\VisualStudioExtension.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-    </VSCTCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="VisualStudio\Resources\Images.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Todo.txt" />
-    <Content Include="VisualStudio\Resources\tst.ico">
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="VisualStudio\Resources\Project.ico" />
+    <Content Include="VisualStudio\Resources\dark.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="VisualStudio\Resources\light.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="VisualStudio\Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.CodeModel.CodeDom
 {

@@ -2,7 +2,7 @@
 using System.Linq;
 using EnvDTE;
 
-namespace Typewriter
+namespace Typewriter.VisualStudio
 {
     public interface ILog
     {
@@ -37,7 +37,9 @@ namespace Typewriter
 
         public void Debug(string message, params object[] parameters)
         {
+#if DEBUG
             Write("DEBUG", message, parameters);
+#endif
         }
 
         public void Info(string message, params object[] parameters)
@@ -75,7 +77,7 @@ namespace Typewriter
             {
                 if (outputWindowPane != null) return outputWindowPane;
 
-                var window = dte.Windows.Item(Constants.vsWindowKindOutput);
+                var window = dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
                 var outputWindow = (OutputWindow)window.Object;
 
                 for (uint i = 1; i <= outputWindow.OutputWindowPanes.Count; i++)
