@@ -17,7 +17,6 @@ namespace Typewriter.Generation
     public class Template : ITemplate
     {
         private readonly string template;
-        private readonly Type extensions;
         private readonly string templatePath;
         private readonly string solutionPath;
         private readonly ProjectItem projectItem;
@@ -28,7 +27,7 @@ namespace Typewriter.Generation
             this.templatePath = projectItem.FileNames[1];
             this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
 
-            string codePath = null;
+            //string codePath = null;
             //foreach (ProjectItem item in projectItem.ProjectItems)
             //{
             //    if (item.Name.EndsWith(".tst.cs", StringComparison.InvariantCultureIgnoreCase))
@@ -39,7 +38,7 @@ namespace Typewriter.Generation
             //}
 
             this.template = File.ReadAllText(templatePath);
-            this.extensions = (codePath != null) ? Compiler.Compile(File.ReadAllText(codePath)) : typeof(Extensions);
+            //this.extensions = (codePath != null) ? Compiler.Compile(File.ReadAllText(codePath)) : typeof(Extensions);
         }
 
         public void Render(IFileInfo file)

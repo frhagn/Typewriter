@@ -19,21 +19,15 @@ namespace Typewriter.CodeModel.CodeDom
         }
 
         public object Parent { get; private set; }
+        public virtual string Name { get { return element.Name; } }
+        public virtual string FullName { get { return element.FullName; } }
+        public virtual string Namespace { get { return element.Namespace.FullName; } }
 
-        public virtual string Name
-        {
-            get { return element.Name; }
-        }
-
-        public virtual string FullName
-        {
-            get { return element.FullName; }
-        }
-
-        public virtual string Namespace
-        {
-            get { return element.Namespace.FullName; }
-        }
+        public virtual bool IsEnum { get { return this.Type.IsEnum; } }
+        public virtual bool IsEnumerable { get { return this.Type.IsEnumerable; } }
+        public virtual bool IsGeneric { get { return this.Type.IsGeneric; } }
+        public virtual bool IsNullable { get { return this.Type.IsNullable; } }
+        public virtual bool IsPrimitive { get { return this.Type.IsPrimitive; } }
 
         private IAttributeInfo[] attributes;
         public virtual ICollection<IAttributeInfo> Attributes
@@ -149,31 +143,6 @@ namespace Typewriter.CodeModel.CodeDom
             }
         }
 
-        public virtual bool IsEnum
-        {
-            get { return this.Type.IsEnum; }
-        }
-
-        public virtual bool IsEnumerable
-        {
-            get { return ((TypeInfo)this.Type).IsEnumerable; }
-        }
-
-        public virtual bool IsGeneric
-        {
-            get { return ((TypeInfo)this.Type).IsGeneric; }
-        }
-
-        public virtual bool IsNullable
-        {
-            get { return ((TypeInfo)this.Type).IsNullable; }
-        }
-
-        public virtual bool IsPrimitive
-        {
-            get { return ((TypeInfo)this.Type).IsPrimitive; }
-        }
-
         private ITypeInfo type;
         public virtual ITypeInfo Type
         {
@@ -184,8 +153,8 @@ namespace Typewriter.CodeModel.CodeDom
                     Load();
                     try
                     {
-                        type = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray ? 
-                            new TypeInfo(string.Format("System.Collections.Generic.ICollection<{0}>", element.Type.ElementType.AsFullName), this, file) : 
+                        type = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray ?
+                            new TypeInfo(string.Format("System.Collections.Generic.ICollection<{0}>", element.Type.ElementType.AsFullName), this, file) :
                             new TypeInfo(element.Type.CodeType, this, file);
                     }
                     catch (NotImplementedException)

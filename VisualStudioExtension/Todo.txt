@@ -29,6 +29,7 @@ typewriter.config
 Smart Indent och default till insert spaces
 
 * Implementera Type
+bug: Add + rename => file not found vid incheckning -> räcker med att spara projektfilen?
 Delete unmodified files vid render template
 Prestanda på load templates
 ? Tvinga utf-8
