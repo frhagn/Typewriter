@@ -242,7 +242,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Todo.txt" />
     <None Include="VisualStudio\Resources\Project.ico" />
     <Content Include="License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
