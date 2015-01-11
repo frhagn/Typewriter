@@ -213,11 +213,10 @@
     <Compile Include="TemplateEditor\Controllers\CompletionController.cs" />
     <Compile Include="TemplateEditor\Lexing\Stream.cs" />
     <Compile Include="TemplateEditor\Lexing\Token.cs" />
-    <Compile Include="Generation\Parsing\Extensions.cs" />
-    <Compile Include="Generation\Parsing\Parser.cs" />
+    <Compile Include="Generation\Extensions.cs" />
+    <Compile Include="Generation\Parser.cs" />
     <Compile Include="Generation\Template.cs" />
     <Compile Include="CodeModel\CodeDom\TypeInfo.cs" />
-    <Compile Include="VisualStudio\IconRegistration.cs" />
     <Compile Include="Generation\Controllers\SolutionEvents.cs" />
     <Compile Include="Generation\Controllers\GenerationController.cs" />
     <Compile Include="VisualStudio\Log.cs" />
@@ -226,11 +225,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Generation\Controllers\SolutionMonitor.cs" />
     <Compile Include="Generation\Controllers\TemplateController.cs" />
-    <Compile Include="Generation\Parsing\Compiler.cs" />
     <Compile Include="Generation\Controllers\SolutionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="VisualStudio\Resources\VSPackage.resx">
+    <EmbeddedResource Include="Resources\VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
@@ -242,20 +240,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VisualStudio\Resources\Project.ico" />
-    <Content Include="License.txt">
+    <None Include="Resources\Project.ico" />
+    <Content Include="Resources\License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="VisualStudio\Resources\dark.ico">
+    <Content Include="Resources\dark.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="VisualStudio\Resources\light.ico">
+    <Content Include="Resources\light.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="VisualStudio\Resources\Package.ico">
+    <Content Include="Resources\Package.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

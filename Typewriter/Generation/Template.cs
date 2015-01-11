@@ -2,7 +2,7 @@
 using System.IO;
 using EnvDTE;
 using Typewriter.CodeModel;
-using Typewriter.Generation.Parsing;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation
 {
@@ -50,7 +50,7 @@ namespace Typewriter.Generation
             {
                 DeleteFile(file.FullName);
             }
-            else 
+            else
             {
                 SaveFile(file.FullName, output);
             }
@@ -72,6 +72,7 @@ namespace Typewriter.Generation
             }
 
             SetMappedSourceFile(item, path);
+            item.ContainingProject.Save();
         }
 
         public void DeleteFile(string path)
@@ -94,6 +95,8 @@ namespace Typewriter.Generation
                 {
                     item.Delete();
                 }
+
+                item.ContainingProject.Save();
             }
         }
 
@@ -121,6 +124,8 @@ namespace Typewriter.Generation
 
                 var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
                 SetMappedSourceFile(newItem, newPath);
+
+                newItem.ContainingProject.Save();
             }
         }
 
@@ -187,10 +192,17 @@ namespace Typewriter.Generation
         {
             foreach (ProjectItem item in projectItem.ProjectItems)
             {
-                var itemPath = item.Properties.Item("FullPath").Value.ToString();
-                if (itemPath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
+                try
                 {
-                    return item;
+                    var itemPath = item.Properties.Item("FullPath").Value.ToString();
+                    if (itemPath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return item;
+                    }
+                }
+                catch
+                {
+                    // Can't read properties from project item sometimes when deleting miltiple files
                 }
             }
 
@@ -203,14 +215,20 @@ namespace Typewriter.Generation
             var directory = Path.GetDirectoryName(templatePath);
             var filename = Path.GetFileNameWithoutExtension(path);
 
-
             for (var i = 1; i < projectItem.ProjectItems.Count; i++)
             {
-                var indexedName = (i == 0) ? string.Format("{0} ({1})", filename, i) : filename;
-                var outputPath = Path.Combine(directory, indexedName) + ".ts";
-                var item = FindProjectItem(outputPath);
+                try
+                {
+                    var indexedName = (i == 0) ? string.Format("{0} ({1})", filename, i) : filename;
+                    var outputPath = Path.Combine(directory, indexedName) + ".ts";
+                    var item = FindProjectItem(outputPath);
 
-                if (item != null) lastItem = item;
+                    if (item != null) lastItem = item;
+                }
+                catch
+                {
+                    // Can't read properties from project item sometimes when deleting miltiple files
+                }
             }
 
             return lastItem;

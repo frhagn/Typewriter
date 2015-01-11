@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using System.IO;
 using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.Win32;
 using Typewriter.Generation.Controllers;
-using Constants = Typewriter.Constants;
 
 namespace Typewriter.VisualStudio
 {
@@ -33,26 +34,61 @@ namespace Typewriter.VisualStudio
         {
             base.Initialize();
 
-            this.dte = GetService(typeof(DTE)) as DTE;
-
-            if (this.dte == null)
-                ErrorHandler.ThrowOnFailure(1);
-
-            this.statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
-
-            if (this.statusBar == null)
-                ErrorHandler.ThrowOnFailure(1);
-
-            var languageService = new LanguageService();
-            ((IServiceContainer)this).AddService(typeof(LanguageService), languageService, true);
-
-            IconRegistration.RegisterIcons();
+            GetDte();
+            GetStatusbar();
+            RegisterLanguageService();
+            RegisterIcons();
 
             this.log = new Log(dte);
             this.eventQueue = new EventQueue(statusBar, log);
             this.solutionMonitor = new SolutionMonitor(log);
             this.templateController = new TemplateController(log, dte, solutionMonitor, eventQueue);
             var generationController = new GenerationController(log, dte, solutionMonitor, templateController, eventQueue);
+        }
+
+        private void GetDte()
+        {
+            this.dte = GetService(typeof(DTE)) as DTE;
+
+            if (this.dte == null)
+                ErrorHandler.ThrowOnFailure(1);
+        }
+
+        private void GetStatusbar()
+        {
+            this.statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
+
+            if (this.statusBar == null)
+                ErrorHandler.ThrowOnFailure(1);
+        }
+
+        private void RegisterLanguageService()
+        {
+            var languageService = new LanguageService();
+            ((IServiceContainer)this).AddService(typeof(LanguageService), languageService, true);
+        }
+
+        private static void RegisterIcons()
+        {
+            try
+            {
+                var icon = ThemeInfo.IsDark ? "dark.ico" : "light.ico";
+                var directory = Path.Combine(Path.GetDirectoryName(typeof(ExtensionPackage).Assembly.Location), "Resources");
+                var path = Path.Combine(directory, icon);
+
+                using (RegistryKey classes = Registry.CurrentUser.OpenSubKey("SoftWare\\Classes", true))
+                {
+                    if (classes == null) return;
+
+                    using (var key = classes.CreateSubKey(Constants.Extension + "\\DefaultIcon"))
+                    {
+                        if (key != null) key.SetValue(string.Empty, path);
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
 
         public void Dispose()

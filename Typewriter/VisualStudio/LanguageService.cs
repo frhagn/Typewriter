@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Typewriter.TemplateEditor;
 
 namespace Typewriter.VisualStudio
 {

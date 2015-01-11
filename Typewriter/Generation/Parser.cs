@@ -4,7 +4,7 @@ using System.Linq;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.TemplateEditor.Lexing;
 
-namespace Typewriter.Generation.Parsing
+namespace Typewriter.Generation
 {
     public class Parser
     {
@@ -20,7 +20,7 @@ namespace Typewriter.Generation.Parsing
 
             while (stream.Advance())
             {
-                if(ParseDollar(stream, context, ref output, ref match)) continue;
+                if (ParseDollar(stream, context, ref output, ref match)) continue;
                 output += stream.Current;
             }
 
@@ -36,7 +36,7 @@ namespace Typewriter.Generation.Parsing
 
             while (stream.Advance())
             {
-                if(ParseDollar(stream, context, ref output, ref match)) continue;
+                if (ParseDollar(stream, context, ref output, ref match)) continue;
                 output += stream.Current;
             }
 
@@ -97,7 +97,7 @@ namespace Typewriter.Generation.Parsing
             if (stream.Peek() == open)
             {
                 var block = stream.PeekBlock(2, open, close);
-                
+
                 stream.Advance(block.Length);
                 stream.Advance(stream.Peek(2) == close ? 2 : 1);
 
@@ -113,10 +113,17 @@ namespace Typewriter.Generation.Parsing
 
             Func<ItemInfo, IEnumerable<string>> selector;
 
+            filter = filter.Trim();
+
             if (filter.StartsWith("[") && filter.EndsWith("]"))
             {
-                filter = filter.Trim('[', ']');
+                filter = filter.Trim('[', ']', ' ');
                 selector = i => i.Attributes.SelectMany(a => new[] { a.Name, a.FullName });
+            }
+            else if (filter.StartsWith(":"))
+            {
+                filter = filter.Remove(0, 1).Trim();
+                selector = i => i.Interfaces.SelectMany(a => new[] { a.Name, a.FullName });
             }
             else
             {

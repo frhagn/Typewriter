@@ -3,7 +3,7 @@ using System.Linq;
 using Typewriter.CodeModel;
 using Typewriter.CodeModel.Attributes;
 
-namespace Typewriter.Generation.Parsing
+namespace Typewriter.Generation
 {
     public class Extensions
     {

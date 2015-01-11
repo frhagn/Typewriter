@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Typewriter.CodeModel;
 using Typewriter.CodeModel.Attributes;
-using Typewriter.Generation.Parsing;
+using Typewriter.Generation;
 
 namespace Typewriter.TemplateEditor.Lexing
 {

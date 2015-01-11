@@ -6,7 +6,6 @@ using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.VisualStudio;
 using VSLangProj;
-using Constants = Typewriter.Constants;
 
 namespace Typewriter.Generation.Controllers
 {

@@ -51,11 +51,6 @@ namespace Typewriter.CodeModel.CodeDom
 
         public Iterator(CodeElements codeElements)
         {
-            //if (codeElements == null)
-            //{
-            //    throw new ArgumentNullException("codeElements");
-            //}
-
             this.codeElements = codeElements;
         }
 
@@ -79,24 +74,6 @@ namespace Typewriter.CodeModel.CodeDom
             foreach (CodeElement element in elements)
             {
                 yield return element;
-
-                //CodeElements children;
-
-                //try
-                //{
-                //    children = element.Children;
-                //}
-                //catch (NotImplementedException)
-                //{
-                //    children = null;
-                //}
-
-                //if (children == null) continue;
-
-                //foreach (var subElement in Enumerate(children))
-                //{
-                //    yield return subElement;
-                //}
             }
         }
     }
