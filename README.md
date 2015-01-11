@@ -20,11 +20,11 @@ using System;
 
 namespace TestApplication
 {
-	public class TestModel
-        {
-            public int Id { get; set; }
-            public int Name { get; set; }
-        }
+    public class TestModel
+    {
+        public int Id { get; set; }
+        public int Name { get; set; }
+    }
 }
 ```
 Step 6: Save the class.  
