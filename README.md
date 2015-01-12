@@ -28,8 +28,11 @@ namespace TestApplication
 }
 ```
 Step 6: Save the class.  
-When the class is saved a new TypeScript class matching the template is added to the project
+
+Each time a class matching the filter in the template is saved a new TypeScript class matching the template is added to the project.
 
 ## Links
 [Documentation](http://frhagn.github.io/Typewriter)  
 [Download from Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6)
+
+More info coming soon :)
