@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.TemplateEditor.Lexing;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation
 {
@@ -166,16 +167,22 @@ namespace Typewriter.Generation
 
             var type = context.GetType();
 
-            var extension = extensions.GetMethod(identifier, new[] { type });
-            if (extension != null)
+            try
             {
-                return extension.Invoke(null, new[] { context });
-            }
+                var extension = extensions.GetMethod(identifier, new[] { type });
+                if (extension != null)
+                {
+                    return extension.Invoke(null, new[] { context });
+                }
 
-            var property = type.GetProperty(identifier);
-            if (property != null)
+                var property = type.GetProperty(identifier);
+                if (property != null)
+                {
+                    return property.GetValue(context);
+                }
+            }
+            catch
             {
-                return property.GetValue(context);
             }
 
             return null;

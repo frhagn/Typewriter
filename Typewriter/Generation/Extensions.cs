@@ -18,14 +18,32 @@ namespace Typewriter.Generation
         [Property("(extension) string Class", "The class name of the $context")]
         public static string Class(IFieldInfo fieldInfo)
         {
-            var type = fieldInfo.Type.ToString();
-            return type.EndsWith("[]") ? type.Substring(0, type.Length - 2) : type;
+            return Class(fieldInfo.Type);
         }
 
         [Property("(extension) string Default", "The default value of the $context")]
         public static string Default(IFieldInfo fieldInfo)
         {
-            var type = fieldInfo.Type.ToString();
+            return Default(fieldInfo.Type);
+        }
+
+        [Property("(extension) string Type", "The type name")]
+        public static string Type(ITypeInfo typeInfo)
+        {
+            return typeInfo.ToString();
+        }
+
+        [Property("(extension) string Class", "The class name of the $context")]
+        public static string Class(ITypeInfo typeInfo)
+        {
+            var type = typeInfo.ToString();
+            return type.EndsWith("[]") ? type.Substring(0, type.Length - 2) : type;
+        }
+
+        [Property("(extension) string Default", "The default value of the $context")]
+        public static string Default(ITypeInfo typeInfo)
+        {
+            var type = typeInfo.ToString();
 
             if (type.EndsWith("[]")) return "[]";
             if (type == "boolean") return "false";
