@@ -2,7 +2,6 @@
 using System.IO;
 using EnvDTE;
 using Typewriter.CodeModel;
-using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation
 {
@@ -24,7 +23,7 @@ namespace Typewriter.Generation
         public Template(ProjectItem projectItem)
         {
             this.projectItem = projectItem;
-            this.templatePath = projectItem.FileNames[1];
+            this.templatePath = projectItem.Properties.Item("FullPath").Value.ToString();
             this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
 
             //string codePath = null;
@@ -77,17 +76,17 @@ namespace Typewriter.Generation
 
         public void DeleteFile(string path)
         {
-            var outputPath = GetOutputPath(path);
-            var item = FindProjectItem(outputPath);
+            var item = GetExistingItem(path);
 
             if (item != null)
             {
                 var lastItem = FindLastProjectItem(path);
-
                 if (lastItem != null && lastItem != item)
                 {
-                    File.Delete(item.FileNames[1]);
-                    File.Move(lastItem.FileNames[1], item.FileNames[1]);
+                    var outputPath = item.Properties.Item("FullPath").Value.ToString();
+
+                    File.Delete(outputPath);
+                    File.Move(lastItem.Properties.Item("FullPath").Value.ToString(), outputPath);
                     SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
                     lastItem.Remove();
                 }
@@ -102,18 +101,23 @@ namespace Typewriter.Generation
 
         public void RenameFile(string oldPath, string newPath)
         {
-            var oldOutputPath = GetOutputPath(oldPath);
-            var newOutputPath = GetOutputPath(newPath);
-            var item = FindProjectItem(oldOutputPath);
+            if (Path.GetFileName(oldPath).Equals(Path.GetFileName(newPath))) return;
+
+            var item = GetExistingItem(oldPath);
 
             if (item != null)
             {
+                var newOutputPath = GetOutputPath(newPath);
+                var oldOutputPath = item.Properties.Item("FullPath").Value.ToString();
                 var lastItem = FindLastProjectItem(oldPath);
+
                 File.Move(oldOutputPath, newOutputPath);
+                var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
+                SetMappedSourceFile(newItem, newPath);
 
                 if (lastItem != null && lastItem != item)
                 {
-                    File.Move(lastItem.FileNames[1], item.FileNames[1]);
+                    File.Move(lastItem.Properties.Item("FullPath").Value.ToString(), oldOutputPath);
                     SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
                     lastItem.Remove();
                 }
@@ -121,9 +125,6 @@ namespace Typewriter.Generation
                 {
                     item.Remove();
                 }
-
-                var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
-                SetMappedSourceFile(newItem, newPath);
 
                 newItem.ContainingProject.Save();
             }
@@ -152,6 +153,26 @@ namespace Typewriter.Generation
             {
                 item.Properties.Item("CustomToolNamespace").Value = relativeSourcePath;
             }
+        }
+
+        private ProjectItem GetExistingItem(string path)
+        {
+            foreach (ProjectItem item in projectItem.ProjectItems)
+            {
+                try
+                {
+                    if (path.Equals(GetMappedSourceFile(item), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return item;
+                    }
+                }
+                catch
+                {
+                    // Can't read properties from project item sometimes when deleting miltiple files
+                }
+            }
+
+            return null;
         }
 
         private string GetOutputPath(string path)
@@ -215,11 +236,11 @@ namespace Typewriter.Generation
             var directory = Path.GetDirectoryName(templatePath);
             var filename = Path.GetFileNameWithoutExtension(path);
 
-            for (var i = 1; i < projectItem.ProjectItems.Count; i++)
+            for (var i = 0; i < projectItem.ProjectItems.Count; i++)
             {
                 try
                 {
-                    var indexedName = (i == 0) ? string.Format("{0} ({1})", filename, i) : filename;
+                    var indexedName = (i > 0) ? string.Format("{0} ({1})", filename, i) : filename;
                     var outputPath = Path.Combine(directory, indexedName) + ".ts";
                     var item = FindProjectItem(outputPath);
 
