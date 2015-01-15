@@ -42,8 +42,7 @@ namespace Typewriter.Generation
 
         public void Render(IFileInfo file)
         {
-            var parser = new Parser(); //new Parser(extensions);
-            var output = parser.Parse(template, file);
+            var output = Parser.Parse(template, file);
 
             if (output == null)
             {
