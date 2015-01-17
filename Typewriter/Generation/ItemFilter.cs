@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Typewriter.CodeModel.CodeDom;
+using ItemInfo = Typewriter.CodeModel.CodeDom.ItemInfo;
 
 namespace Typewriter.Generation
 {
@@ -30,16 +30,17 @@ namespace Typewriter.Generation
                 selector = i => new[] { i.Name, i.FullName };
             }
 
-            var parts = filter.Split('*');
-            var filtered = ApplyFilter(items, parts, selector);
+            var filtered = ApplyFilter(items, filter, selector);
 
             matchFound = matchFound || filtered.Any();
 
             return filtered;
         }
 
-        private static ICollection<object> ApplyFilter(IEnumerable<object> items, string[] parts, Func<ItemInfo, IEnumerable<string>> selector)
+        private static ICollection<object> ApplyFilter(IEnumerable<object> items, string filter, Func<ItemInfo, IEnumerable<string>> selector)
         {
+            var parts = filter.Split('*');
+
             for (var i = 0; i < parts.Length; i++)
             {
                 var part = parts[i];

@@ -40,6 +40,13 @@ namespace Typewriter.Generation
             return type.EndsWith("[]") ? type.Substring(0, type.Length - 2) : type;
         }
 
+        [Property("(extension) bool IsDate", "Determines if the $context is a DateTime")]
+        public static bool IsDate(IFieldInfo fieldInfo)
+        {
+            var type = fieldInfo.Type.ToString();
+            return type == "Date";
+        }
+
         [Property("(extension) string Default", "The default value of the $context")]
         public static string Default(ITypeInfo typeInfo)
         {

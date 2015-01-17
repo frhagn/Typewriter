@@ -54,21 +54,21 @@ namespace Typewriter.Generation
                         var separator = ParseBlock(stream, '[', ']');
 
                         var items = ItemFilter.Apply(collection, filter, ref matchFound);
-                        output += string.Join(Parse(separator, context), items.Select(item => Parse(block, item)));
+                        output += string.Join(ParseTemplate(separator, context), items.Select(item => ParseTemplate(block, item)));
                     }
                     else if (value is bool)
                     {
                         var trueBlock = ParseBlock(stream, '[', ']');
                         var falseBlock = ParseBlock(stream, '[', ']');
 
-                        output += Parse((bool)value ? trueBlock : falseBlock, context);
+                        output += ParseTemplate((bool)value ? trueBlock : falseBlock, context);
                     }
                     else
                     {
                         var block = ParseBlock(stream, '[', ']');
                         if (block != null)
                         {
-                            output += Parse(block, value);
+                            output += ParseTemplate(block, value);
                         }
                         else
                         {
