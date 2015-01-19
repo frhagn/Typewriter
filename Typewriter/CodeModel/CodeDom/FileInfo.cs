@@ -12,15 +12,13 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private static readonly object locker = new object();
 
-        private readonly ILog log;
         private readonly ProjectItem projectItem;
         private readonly IDictionary<string, CodeType> typeCache;
 
         private CodeNamespace currentNamespace;
 
-        public FileInfo(ILog log, ProjectItem projectItem)
+        public FileInfo(ProjectItem projectItem)
         {
-            this.log = log;
             this.projectItem = projectItem;
             this.typeCache = new Dictionary<string, CodeType>();
 
@@ -132,7 +130,7 @@ namespace Typewriter.CodeModel.CodeDom
                 }
 
                 stopwatch.Stop();
-                log.Debug("GetType({0}) completed in {1} ms", fullName, stopwatch.ElapsedMilliseconds);
+                Log.Debug("GetType({0}) completed in {1} ms", fullName, stopwatch.ElapsedMilliseconds);
 
                 return typeInfo;
             }

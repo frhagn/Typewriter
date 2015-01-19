@@ -1,12 +1,24 @@
 ﻿using System;
+using System.ComponentModel.Composition;
 using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.Utilities;
 
 namespace Typewriter.VisualStudio
 {
     [GuidAttribute(Constants.LanguageServiceId)]
-    class LanguageService : IVsLanguageInfo, IVsLanguageTextOps
+    internal class LanguageService : IVsLanguageInfo, IVsLanguageTextOps
     {
+        [Export, Name(Constants.ContentType), BaseDefinition(Constants.BaseDefinition)]
+        internal static ContentTypeDefinition TstContentTypeDefinition { get; set; }
+
+        [Export, ContentType(Constants.ContentType), FileExtension(Constants.Extension)]
+        internal static FileExtensionToContentTypeDefinition TstFileExtensionDefinition { get; set; }
+
+        [Export, Name(Classifications.Property)]
+        internal static ClassificationTypeDefinition PropertyClassificationType { get; set; }
+
         private const int failed = 2147467263;
 
         public int GetCodeWindowManager(IVsCodeWindow pCodeWin, out IVsCodeWindowManager ppCodeWinMgr)

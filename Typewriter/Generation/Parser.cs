@@ -2,22 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using Typewriter.TemplateEditor.Lexing;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation
 {
     public class Parser
     {
-        private static readonly Type extensions = typeof(Extensions);
+        private static readonly Type standardExtensions = typeof(Extensions);
 
-        public static string Parse(string template, object context)
+        public static string Parse(string template, Type customExtensions, object context)
         {
-            var instance = new Parser();
+            var instance = new Parser(customExtensions);
             var output = instance.ParseTemplate(template, context);
 
             return instance.matchFound ? output : null;
         }
 
+        private readonly Type customExtensions;
         private bool matchFound;
+
+        private Parser(Type customExtensions)
+        {
+            this.customExtensions = customExtensions;
+        }
 
         private string ParseTemplate(string template, object context)
         {
@@ -106,7 +113,13 @@ namespace Typewriter.Generation
 
             try
             {
-                var extension = extensions.GetMethod(identifier, new[] { type });
+                var c = customExtensions.GetMethod(identifier, new[] { type });
+                if (c != null)
+                {
+                    return c.Invoke(null, new[] { context });
+                }
+
+                var extension = standardExtensions.GetMethod(identifier, new[] { type });
                 if (extension != null)
                 {
                     return extension.Invoke(null, new[] { context });
@@ -118,8 +131,9 @@ namespace Typewriter.Generation
                     return property.GetValue(context);
                 }
             }
-            catch
+            catch(Exception e)
             {
+                Log.Error(e.Message);
             }
 
             return null;

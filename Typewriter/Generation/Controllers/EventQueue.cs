@@ -20,17 +20,15 @@ namespace Typewriter.Generation.Controllers
     public sealed class EventQueue : IEventQueue
     {
         private readonly IVsStatusbar statusBar;
-        private readonly ILog log;
         private readonly ICollection<RenderEvent> queue = new HashSet<RenderEvent>();
         private readonly object locker = new object();
         private Timer timer = new Timer(500);
 
         private DateTime timestamp = DateTime.Now;
 
-        public EventQueue(IVsStatusbar statusBar, ILog log)
+        public EventQueue(IVsStatusbar statusBar)
         {
             this.statusBar = statusBar;
-            this.log = log;
             SetupTimer();
         }
 
@@ -43,7 +41,7 @@ namespace Typewriter.Generation.Controllers
                 timestamp = DateTime.Now;
                 if (queue.Any(i => i.Path == path)) return;
 
-                log.Debug("Render queued {0}", path);
+                Log.Debug("Render queued {0}", path);
                 queue.Add(new RenderEvent
                 {
                     EventType = EventType.Changed,
@@ -62,7 +60,7 @@ namespace Typewriter.Generation.Controllers
                 timestamp = DateTime.Now;
                 if (queue.Any(i => i.Path == path)) return;
 
-                log.Debug("Delete queued {0}", path);
+                Log.Debug("Delete queued {0}", path);
                 queue.Add(new RenderEvent
                 {
                     EventType = EventType.Deleted,
@@ -81,7 +79,7 @@ namespace Typewriter.Generation.Controllers
                 timestamp = DateTime.Now;
                 if (queue.Any(i => i.Path == oldPath)) return;
 
-                log.Debug("Rename queued {0} -> {1}", oldPath, newPath);
+                Log.Debug("Rename queued {0} -> {1}", oldPath, newPath);
                 queue.Add(new RenderEvent
                 {
                     EventType = EventType.Renamed,
@@ -95,7 +93,6 @@ namespace Typewriter.Generation.Controllers
         private static bool CanHandle(string path)
         {
             if (path.EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase) == false) return false;
-            if (path.EndsWith(".tst.cs", StringComparison.InvariantCultureIgnoreCase)) return false;
 
             return true;
         }
@@ -164,7 +161,7 @@ namespace Typewriter.Generation.Controllers
                     //statusBar.Clear();
 
                     stopwatch.Stop();
-                    log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
+                    Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
                 }
                 //foreach (var item in items)
                 //{

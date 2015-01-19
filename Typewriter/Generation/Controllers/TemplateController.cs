@@ -13,16 +13,14 @@ namespace Typewriter.Generation.Controllers
     {
         private static readonly object locker = new object();
 
-        private readonly ILog log;
         private readonly DTE dte;
         private readonly IEventQueue eventQueue;
 
         private bool solutionOpen;
-        private ICollection<ITemplate> templates;
+        private ICollection<Template> templates;
 
-        public TemplateController(ILog log, DTE dte, ISolutionMonitor solutionMonitor, IEventQueue eventQueue)
+        public TemplateController(DTE dte, ISolutionMonitor solutionMonitor, IEventQueue eventQueue)
         {
-            this.log = log;
             this.dte = dte;
             this.eventQueue = eventQueue;
 
@@ -43,13 +41,13 @@ namespace Typewriter.Generation.Controllers
 
         private void SolutionOpened()
         {
-            log.Debug("Solution Opened");
+            Log.Debug("Solution Opened");
             solutionOpen = true;
         }
 
         private void SolutionClosed()
         {
-            log.Debug("Solution Closed");
+            Log.Debug("Solution Closed");
             solutionOpen = false;
         }
 
@@ -84,28 +82,28 @@ namespace Typewriter.Generation.Controllers
                     try
                     {
                         var stopwatch = Stopwatch.StartNew();
-                        log.Debug("Render {0}", s);
+                        Log.Debug("Render {0}", s);
 
-                        var file = new FileInfo(log, dte.Solution.FindProjectItem(s));
+                        var file = new FileInfo(dte.Solution.FindProjectItem(s));
                         template.Render(file);
 
                         stopwatch.Stop();
-                        log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
+                        Log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
                     }
                     catch (Exception exception)
                     {
-                        log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
+                        Log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
                     }
                 });
             }
         }
 
-        public ICollection<ITemplate> Templates
+        public ICollection<Template> Templates
         {
             get { return LoadTemplates(); }
         }
 
-        private ICollection<ITemplate> LoadTemplates()
+        private ICollection<Template> LoadTemplates()
         {
             var stopwatch = Stopwatch.StartNew();
 
@@ -114,7 +112,7 @@ namespace Typewriter.Generation.Controllers
                 if (this.templates == null)
                 {
                     var items = GetProjectItems(Constants.Extension);
-                    this.templates = items.Select(i => (ITemplate)new Template(i)).ToList();
+                    this.templates = items.Select(i => new Template(i)).ToList();
                 }
                 else
                 {
@@ -126,7 +124,7 @@ namespace Typewriter.Generation.Controllers
                         }
                         catch
                         {
-                            log.Debug("Invalid template");
+                            Log.Debug("Invalid template");
                             this.templates = null;
 
                             return LoadTemplates();
@@ -136,7 +134,7 @@ namespace Typewriter.Generation.Controllers
             }
 
             stopwatch.Stop();
-            log.Debug("Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds);
+            Log.Debug("Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds);
 
             return this.templates;
         }

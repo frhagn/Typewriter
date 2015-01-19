@@ -4,57 +4,29 @@ using EnvDTE;
 
 namespace Typewriter.VisualStudio
 {
-    public interface ILog
-    {
-        void Debug(string message, params object[] parameters);
-        void Info(string message, params object[] parameters);
-        void Warn(string message, params object[] parameters);
-        void Error(string message, params object[] parameters);
-    }
-
-    public class Log : ILog
+    public class Log
     {
         private static Log instance;
-
-        public static void Print(string message, params object[] parameters)
-        {
-            message = string.Format("{0:HH:mm:ss}: ", DateTime.Now) + message;
-
-            if (parameters.Any())
-                instance.OutputWindow.OutputString(string.Format(message, parameters) + Environment.NewLine);
-            else
-                instance.OutputWindow.OutputString(message + Environment.NewLine);
-        }
 
         private readonly DTE dte;
         private OutputWindowPane outputWindowPane;
 
-        public Log(DTE dte)
+        internal Log(DTE dte)
         {
             this.dte = dte;
             instance = this;
         }
 
-        public void Debug(string message, params object[] parameters)
+        public static void Debug(string message, params object[] parameters)
         {
 #if DEBUG
-            Write("DEBUG", message, parameters);
+            instance.Write("DEBUG", message, parameters);
 #endif
         }
 
-        public void Info(string message, params object[] parameters)
+        public static void Error(string message, params object[] parameters)
         {
-            Write(" INFO", message, parameters);
-        }
-
-        public void Warn(string message, params object[] parameters)
-        {
-            Write(" WARN", message, parameters);
-        }
-
-        public void Error(string message, params object[] parameters)
-        {
-            Write("ERROR", message, parameters);
+            instance.Write("ERROR", message, parameters);
         }
 
         private void Write(string type, string message, object[] parameters)
@@ -89,12 +61,7 @@ namespace Typewriter.VisualStudio
                     }
                 }
 
-                if (outputWindowPane == null)
-                {
-                    outputWindowPane = outputWindow.OutputWindowPanes.Add("Typewriter");
-                }
-
-                return outputWindowPane;
+                return outputWindowPane ?? (outputWindowPane = outputWindow.OutputWindowPanes.Add("Typewriter"));
             }
         }
     }

@@ -2,19 +2,13 @@
 using System.IO;
 using EnvDTE;
 using Typewriter.CodeModel;
+using Typewriter.Generation.Controllers;
 
 namespace Typewriter.Generation
 {
-    public interface ITemplate
+    public class Template
     {
-        void Render(IFileInfo file);
-        void DeleteFile(string path);
-        void RenameFile(string oldPath, string newPath);
-        void VerifyProjectItem();
-    }
-
-    public class Template : ITemplate
-    {
+        private readonly Type extensions;
         private readonly string template;
         private readonly string templatePath;
         private readonly string solutionPath;
@@ -23,26 +17,16 @@ namespace Typewriter.Generation
         public Template(ProjectItem projectItem)
         {
             this.projectItem = projectItem;
-            this.templatePath = projectItem.Properties.Item("FullPath").Value.ToString();
+            this.templatePath = projectItem.Path();
             this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
 
-            //string codePath = null;
-            //foreach (ProjectItem item in projectItem.ProjectItems)
-            //{
-            //    if (item.Name.EndsWith(".tst.cs", StringComparison.InvariantCultureIgnoreCase))
-            //    {
-            //        codePath = item.FileNames[1];
-            //        break;
-            //    }
-            //}
-
-            this.template = File.ReadAllText(templatePath);
-            //this.extensions = (codePath != null) ? Compiler.Compile(File.ReadAllText(codePath)) : typeof(Extensions);
+            var code = File.ReadAllText(templatePath);
+            this.template = TemplateParser.Parse(code, ref this.extensions);
         }
 
         public void Render(IFileInfo file)
         {
-            var output = Parser.Parse(template, file);
+            var output = Parser.Parse(template, extensions, file);
 
             if (output == null)
             {
@@ -82,10 +66,10 @@ namespace Typewriter.Generation
                 var lastItem = FindLastProjectItem(path);
                 if (lastItem != null && lastItem != item)
                 {
-                    var outputPath = item.Properties.Item("FullPath").Value.ToString();
+                    var outputPath = item.Path();
 
                     File.Delete(outputPath);
-                    File.Move(lastItem.Properties.Item("FullPath").Value.ToString(), outputPath);
+                    File.Move(lastItem.Path(), outputPath);
                     SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
                     lastItem.Remove();
                 }
@@ -100,32 +84,40 @@ namespace Typewriter.Generation
 
         public void RenameFile(string oldPath, string newPath)
         {
-            if (Path.GetFileName(oldPath).Equals(Path.GetFileName(newPath))) return;
-
             var item = GetExistingItem(oldPath);
 
             if (item != null)
             {
-                var newOutputPath = GetOutputPath(newPath);
-                var oldOutputPath = item.Properties.Item("FullPath").Value.ToString();
-                var lastItem = FindLastProjectItem(oldPath);
+                if (Path.GetFileName(oldPath).Equals(Path.GetFileName(newPath)))
+                {
+                    SetMappedSourceFile(item, newPath);
+                    item.ContainingProject.Save();
+                    return;
+                }
 
-                File.Move(oldOutputPath, newOutputPath);
-                var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
-                SetMappedSourceFile(newItem, newPath);
+                var newOutputPath = GetOutputPath(newPath);
+                var oldOutputPath = item.Path();
+                var lastItem = FindLastProjectItem(oldPath);
 
                 if (lastItem != null && lastItem != item)
                 {
-                    File.Move(lastItem.Properties.Item("FullPath").Value.ToString(), oldOutputPath);
+                    File.Move(oldOutputPath, newOutputPath);
+                    var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
+                    SetMappedSourceFile(newItem, newPath);
+
+                    File.Move(lastItem.Path(), oldOutputPath);
                     SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
                     lastItem.Remove();
+
+                    newItem.ContainingProject.Save();
                 }
                 else
                 {
-                    item.Remove();
+                    item.SaveAs(newOutputPath);
+                    SetMappedSourceFile(item, newPath);
+                    item.ContainingProject.Save();
                 }
 
-                newItem.ContainingProject.Save();
             }
         }
 
@@ -214,7 +206,7 @@ namespace Typewriter.Generation
             {
                 try
                 {
-                    var itemPath = item.Properties.Item("FullPath").Value.ToString();
+                    var itemPath = item.Path();
                     if (itemPath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return item;

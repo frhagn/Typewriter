@@ -21,7 +21,6 @@ namespace Typewriter.VisualStudio
     {
         private DTE dte;
         private IVsStatusbar statusBar;
-        private Log log;
         private ISolutionMonitor solutionMonitor;
         private TemplateController templateController;
         private IEventQueue eventQueue;
@@ -38,12 +37,13 @@ namespace Typewriter.VisualStudio
             GetStatusbar();
             RegisterLanguageService();
             RegisterIcons();
+            ClearTempDirectory();
 
-            this.log = new Log(dte);
-            this.eventQueue = new EventQueue(statusBar, log);
-            this.solutionMonitor = new SolutionMonitor(log);
-            this.templateController = new TemplateController(log, dte, solutionMonitor, eventQueue);
-            var generationController = new GenerationController(log, dte, solutionMonitor, templateController, eventQueue);
+            var log = new Log(dte);
+            this.eventQueue = new EventQueue(statusBar);
+            this.solutionMonitor = new SolutionMonitor();
+            this.templateController = new TemplateController(dte, solutionMonitor, eventQueue);
+            var generationController = new GenerationController(dte, solutionMonitor, templateController, eventQueue);
         }
 
         private void GetDte()
@@ -85,6 +85,22 @@ namespace Typewriter.VisualStudio
                         if (key != null) key.SetValue(string.Empty, path);
                     }
                 }
+            }
+            catch
+            {
+            }
+        }
+
+        private static void ClearTempDirectory()
+        {
+            try
+            {
+                if (Directory.Exists(Constants.TempDirectory))
+                {
+                    Directory.Delete(Constants.TempDirectory, true);
+                }
+
+                Directory.CreateDirectory(Constants.TempDirectory);
             }
             catch
             {

@@ -9,13 +9,11 @@ namespace Typewriter.Generation.Controllers
 {
     public class GenerationController
     {
-        private readonly ILog log;
         private readonly DTE dte;
         private readonly TemplateController templateController;
 
-        public GenerationController(ILog log, DTE dte, ISolutionMonitor solutionMonitor, TemplateController templateController, IEventQueue eventQueue)
+        public GenerationController(DTE dte, ISolutionMonitor solutionMonitor, TemplateController templateController, IEventQueue eventQueue)
         {
-            this.log = log;
             this.dte = dte;
             this.templateController = templateController;
 
@@ -29,14 +27,14 @@ namespace Typewriter.Generation.Controllers
         {
             try
             {
-                log.Debug("Render {0}", path);
+                Log.Debug("Render {0}", path);
                 var stopwatch = Stopwatch.StartNew();
 
                 var templates = templateController.Templates;
                 if (templates.Any())
                 {
                     var item = dte.Solution.FindProjectItem(path);
-                    var file = new FileInfo(log, item);
+                    var file = new FileInfo(item);
 
                     foreach (var template in templates)
                     {
@@ -45,11 +43,11 @@ namespace Typewriter.Generation.Controllers
                 }
 
                 stopwatch.Stop();
-                log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
+                Log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
             }
             catch (Exception exception)
             {
-                log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
+                Log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
             }
         }
 
@@ -60,7 +58,7 @@ namespace Typewriter.Generation.Controllers
                 var templates = templateController.Templates;
                 if (templates.Any() == false) return;
 
-                log.Debug("Delete {0}", path);
+                Log.Debug("Delete {0}", path);
                 var stopwatch = Stopwatch.StartNew();
 
                 foreach (var template in templates)
@@ -69,11 +67,11 @@ namespace Typewriter.Generation.Controllers
                 }
 
                 stopwatch.Stop();
-                log.Debug("Delete completed in {0} ms", stopwatch.ElapsedMilliseconds);
+                Log.Debug("Delete completed in {0} ms", stopwatch.ElapsedMilliseconds);
             }
             catch (Exception exception)
             {
-                log.Error("File Deleted Exception: {0}, {1}", exception.Message, exception.StackTrace);
+                Log.Error("File Deleted Exception: {0}, {1}", exception.Message, exception.StackTrace);
             }
         }
 
@@ -84,7 +82,7 @@ namespace Typewriter.Generation.Controllers
                 var templates = templateController.Templates;
                 if (templates.Any() == false) return;
 
-                log.Debug("Rename {0} -> {1}", oldPath, newPath);
+                Log.Debug("Rename {0} -> {1}", oldPath, newPath);
                 var stopwatch = Stopwatch.StartNew();
 
                 foreach (var template in templates)
@@ -93,11 +91,11 @@ namespace Typewriter.Generation.Controllers
                 }
 
                 stopwatch.Stop();
-                log.Debug("Rename completed in {0} ms", stopwatch.ElapsedMilliseconds);
+                Log.Debug("Rename completed in {0} ms", stopwatch.ElapsedMilliseconds);
             }
             catch (Exception exception)
             {
-                log.Error("File Renamed Exception: {0}, {1}", exception.Message, exception.StackTrace);
+                Log.Error("File Renamed Exception: {0}, {1}", exception.Message, exception.StackTrace);
             }
         }
     }

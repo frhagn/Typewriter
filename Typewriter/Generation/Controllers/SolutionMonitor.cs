@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -22,8 +21,6 @@ namespace Typewriter.Generation.Controllers
 
     public class SolutionMonitor : ISolutionMonitor, IVsSolutionEvents, IVsRunningDocTableEvents3, IVsTrackProjectDocumentsEvents2
     {
-        private readonly ILog log;
-
         private uint solutionCookie;
         private uint runningDocumentTableCookie;
         private uint trackProjectDocumentsCookie;
@@ -41,9 +38,8 @@ namespace Typewriter.Generation.Controllers
         public event FileDeletedEventHandler FileDeleted;
         public event FileRenamedEventHandler FileRenamed;
 
-        public SolutionMonitor(ILog log)
+        public SolutionMonitor()
         {
-            this.log = log;
             AdviceSolutionEvents();
         }
 

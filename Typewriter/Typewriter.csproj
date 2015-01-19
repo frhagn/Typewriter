@@ -193,12 +193,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeModel\Attributes\PropertyAttribute.cs" />
+    <Compile Include="Generation\Compiler.cs" />
     <Compile Include="Generation\Controllers\EventQueue.cs" />
     <Compile Include="CodeModel\CodeDom\Iterator.cs" />
     <Compile Include="CodeModel\CodeDom\MethodInfo.cs" />
     <Compile Include="CodeModel\CodeDom\ParameterInfo.cs" />
     <Compile Include="CodeModel\CodeDom\PropertyInfo.cs" />
     <Compile Include="Generation\ItemFilter.cs" />
+    <Compile Include="Generation\TemplateParser.cs" />
     <Compile Include="TemplateEditor\Controllers\SignatureHelpController.cs" />
     <Compile Include="VisualStudio\ThemeInfo.cs" />
     <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
