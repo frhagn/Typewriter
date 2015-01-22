@@ -1,40 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Typewriter.TemplateEditor.Lexing;
 
 namespace Typewriter.Generation
 {
     public static class TemplateParser
     {
+        private const string classTemplate = @"
+            namespace Typewriter{0}
+            {{
+                using System;
+                using System.Linq;
+                using Typewriter.CodeModel;
+
+                public class Code
+                {{
+                    {1}
+                }}
+            }}";
+
         public static string Parse(string template, ref Type extensions)
         {
             if (string.IsNullOrWhiteSpace(template)) return null;
 
-            extensions = Compiler.Compile(@"
-namespace Test
-{
-    using System;
-    using System.Linq;
-    using Typewriter.CodeModel;
-
-    public class Code" + DateTime.Now.Ticks + @"
-    {
-        public static object Test(dynamic item)
-        {
-            return item.FullName;
-        }
-    }
-}
-");
-
+            var code = string.Empty;
             var output = string.Empty;
             var stream = new Stream(template);
 
             while (stream.Advance())
             {
-                if (ParseDollar(stream, ref output)) continue;
+                if (ParseDollar(stream, ref code)) continue;
                 output += stream.Current;
+            }
+
+            if (code != string.Empty)
+            {
+                extensions = Compiler.Compile(string.Format(classTemplate, DateTime.Now.Ticks, code));
             }
 
             return output;
@@ -42,14 +42,44 @@ namespace Test
 
         private static bool ParseDollar(Stream stream, ref string output)
         {
-            if (stream.Current == '$' && stream.Peek() == '{')
-            {
-                var code = ParseBlock(stream, '{', '}');
+            if (stream.Current != '$' || stream.Peek() != '{') return false;
 
-                return true;
+            var code = new Stream(ParseBlock(stream, '{', '}'));
+
+            while (code.Advance())
+            {
+                if (code.PeekWord() == "declare")
+                {
+                    code.Advance(7);
+                    ParseWhitespace(code);
+
+                    var name = code.PeekWord(1);
+                    if (name == null) continue;
+
+                    code.Advance(name.Length);
+                    ParseWhitespace(code);
+
+                    var parameter = ParseBlock(code, '(', ')');
+                    if (parameter == null) continue;
+
+                    ParseWhitespace(code);
+
+                    var body = ParseBlock(code, '{', '}');
+                    if (body == null) continue;
+
+                    output += string.Format("public static object {0}({1}){{ {2} }}", name, parameter, body);
+                }
             }
 
-            return false;
+            return true;
+        }
+
+        private static void ParseWhitespace(Stream stream)
+        {
+            while (char.IsWhiteSpace(stream.Peek()))
+            {
+                stream.Advance();
+            }
         }
 
         private static string ParseBlock(Stream stream, char open, char close)
@@ -66,38 +96,5 @@ namespace Test
 
             return null;
         }
-
-        //private object GetIdentifier(string identifier, object context)
-        //{
-        //    if (identifier == null) return null;
-
-        //    var type = context.GetType();
-
-        //    try
-        //    {
-        //        var c = code.GetMethod(identifier, new[] { type });
-        //        if (c != null)
-        //        {
-        //            return c.Invoke(null, new[] { context });
-        //        }
-
-        //        var extension = extensions.GetMethod(identifier, new[] { type });
-        //        if (extension != null)
-        //        {
-        //            return extension.Invoke(null, new[] { context });
-        //        }
-
-        //        var property = type.GetProperty(identifier);
-        //        if (property != null)
-        //        {
-        //            return property.GetValue(context);
-        //        }
-        //    }
-        //    catch
-        //    {
-        //    }
-
-        //    return null;
-        //}
     }
 }

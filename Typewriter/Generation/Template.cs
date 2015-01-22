@@ -8,6 +8,8 @@ namespace Typewriter.Generation
 {
     public class Template
     {
+        private readonly object locker = new object();
+
         private readonly Type extensions;
         private readonly string template;
         private readonly string templatePath;
@@ -54,70 +56,75 @@ namespace Typewriter.Generation
             }
 
             SetMappedSourceFile(item, path);
-            item.ContainingProject.Save();
+            projectItem.ContainingProject.Save();
         }
 
         public void DeleteFile(string path)
         {
-            var item = GetExistingItem(path);
-
-            if (item != null)
+            lock (locker)
             {
-                var lastItem = FindLastProjectItem(path);
-                if (lastItem != null && lastItem != item)
-                {
-                    var outputPath = item.Path();
+                var item = GetExistingItem(path);
 
-                    File.Delete(outputPath);
-                    File.Move(lastItem.Path(), outputPath);
-                    SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
-                    lastItem.Remove();
-                }
-                else
+                if (item != null)
                 {
-                    item.Delete();
-                }
+                    var lastItem = FindLastProjectItem(path);
+                    if (lastItem != null && lastItem != item)
+                    {
+                        var outputPath = item.Path();
 
-                item.ContainingProject.Save();
+                        File.Delete(outputPath);
+                        File.Move(lastItem.Path(), outputPath);
+                        SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
+                        lastItem.Remove();
+                    }
+                    else
+                    {
+                        item.Delete();
+                    }
+
+                    projectItem.ContainingProject.Save();
+                }
             }
         }
 
         public void RenameFile(string oldPath, string newPath)
         {
+            lock(locker)
+            {
             var item = GetExistingItem(oldPath);
 
-            if (item != null)
-            {
-                if (Path.GetFileName(oldPath).Equals(Path.GetFileName(newPath)))
+                if (item != null)
                 {
-                    SetMappedSourceFile(item, newPath);
-                    item.ContainingProject.Save();
-                    return;
+                    if (Path.GetFileName(oldPath).Equals(Path.GetFileName(newPath)))
+                    {
+                        SetMappedSourceFile(item, newPath);
+                        projectItem.ContainingProject.Save();
+                        return;
+                    }
+
+                    var newOutputPath = GetOutputPath(newPath);
+                    var oldOutputPath = item.Path();
+                    var lastItem = FindLastProjectItem(oldPath);
+
+                    if (lastItem != null && lastItem != item)
+                    {
+                        File.Move(oldOutputPath, newOutputPath);
+                        var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
+                        SetMappedSourceFile(newItem, newPath);
+
+                        File.Move(lastItem.Path(), oldOutputPath);
+                        SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
+                        lastItem.Remove();
+
+                        projectItem.ContainingProject.Save();
+                    }
+                    else
+                    {
+                        item.SaveAs(newOutputPath);
+                        SetMappedSourceFile(item, newPath);
+                        projectItem.ContainingProject.Save();
+                    }
                 }
-
-                var newOutputPath = GetOutputPath(newPath);
-                var oldOutputPath = item.Path();
-                var lastItem = FindLastProjectItem(oldPath);
-
-                if (lastItem != null && lastItem != item)
-                {
-                    File.Move(oldOutputPath, newOutputPath);
-                    var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
-                    SetMappedSourceFile(newItem, newPath);
-
-                    File.Move(lastItem.Path(), oldOutputPath);
-                    SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
-                    lastItem.Remove();
-
-                    newItem.ContainingProject.Save();
-                }
-                else
-                {
-                    item.SaveAs(newOutputPath);
-                    SetMappedSourceFile(item, newPath);
-                    item.ContainingProject.Save();
-                }
-
             }
         }
 
@@ -133,6 +140,8 @@ namespace Typewriter.Generation
 
         private string GetMappedSourceFile(ProjectItem item)
         {
+            if (item == null) return null;
+
             var value = item.Properties.Item("CustomToolNamespace").Value as string;
             return string.IsNullOrWhiteSpace(value) ? null : Path.Combine(solutionPath, value);
         }

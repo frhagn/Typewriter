@@ -10,17 +10,10 @@ using Timer = System.Timers.Timer;
 
 namespace Typewriter.Generation.Controllers
 {
-    public interface IEventQueue : IDisposable
-    {
-        void QueueRender(string path, Action<string> action);
-        void QueueDelete(string path, Action<string> action);
-        void QueueRename(string oldPath, string newPath, Action<string, string> action);
-    }
-
-    public sealed class EventQueue : IEventQueue
+    public sealed class EventQueue : IDisposable
     {
         private readonly IVsStatusbar statusBar;
-        private readonly ICollection<RenderEvent> queue = new HashSet<RenderEvent>();
+        private readonly ICollection<GenerationEvent> queue = new HashSet<GenerationEvent>();
         private readonly object locker = new object();
         private Timer timer = new Timer(500);
 
@@ -32,69 +25,24 @@ namespace Typewriter.Generation.Controllers
             SetupTimer();
         }
 
-        public void QueueRender(string path, Action<string> action)
+        public void Enqueue(Action<GenerationEvent> action, GenerationType type, params string[] paths)
         {
-            if (CanHandle(path) == false) return;
+            if (paths[0].EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase) == false) return;
 
             lock (locker)
             {
-                timestamp = DateTime.Now;
-                if (queue.Any(i => i.Path == path)) return;
+                this.timestamp = DateTime.Now;
 
-                Log.Debug("Render queued {0}", path);
-                queue.Add(new RenderEvent
+                var generationEvent = new GenerationEvent { Action = action, Type = type, Paths = paths };
+                if (queue.Any(e => e.Equals(generationEvent)))
                 {
-                    EventType = EventType.Changed,
-                    Action = action,
-                    Path = path
-                });
+                    return;
+                }
+
+                queue.Add(generationEvent);
+
+                Log.Debug("{0} queued {1}", generationEvent.Type, string.Join(" -> ", generationEvent.Paths));
             }
-        }
-
-        public void QueueDelete(string path, Action<string> action)
-        {
-            if (CanHandle(path) == false) return;
-
-            lock (locker)
-            {
-                timestamp = DateTime.Now;
-                if (queue.Any(i => i.Path == path)) return;
-
-                Log.Debug("Delete queued {0}", path);
-                queue.Add(new RenderEvent
-                {
-                    EventType = EventType.Deleted,
-                    Action = action,
-                    Path = path
-                });
-            }
-        }
-
-        public void QueueRename(string oldPath, string newPath, Action<string, string> action)
-        {
-            if (CanHandle(oldPath) == false) return;
-
-            lock (locker)
-            {
-                timestamp = DateTime.Now;
-                if (queue.Any(i => i.Path == oldPath)) return;
-
-                Log.Debug("Rename queued {0} -> {1}", oldPath, newPath);
-                queue.Add(new RenderEvent
-                {
-                    EventType = EventType.Renamed,
-                    RenameAction = action,
-                    Path = oldPath,
-                    NewPath = newPath
-                });
-            }
-        }
-
-        private static bool CanHandle(string path)
-        {
-            if (path.EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase) == false) return false;
-
-            return true;
         }
 
         private void SetupTimer()
@@ -102,7 +50,7 @@ namespace Typewriter.Generation.Controllers
             this.timer.Enabled = true;
             this.timer.Elapsed += (sender, args) =>
             {
-                RenderEvent[] items;
+                GenerationEvent[] items;
 
                 lock (locker)
                 {
@@ -116,85 +64,55 @@ namespace Typewriter.Generation.Controllers
                 }
 
                 var count = (uint)items.Length;
-                if (count > 0)
+                if (count <= 0) return;
+
+
+                object icon;
+                uint cookie;
+                
+                PrepareStatusbar(out cookie, out icon);
+                
+                var stopwatch = Stopwatch.StartNew();
+
+                uint i = 0;
+                var parallellQueue = items.AsParallel();
+                parallellQueue.ForAll(item =>
                 {
-                    uint cookie = 0;
-                    object icon = (short)InteropConstants.SBAI_Save;
-                    int frozen;
-                    statusBar.IsFrozen(out frozen);
-                    if (frozen == 0)
-                    {
-                        statusBar.Progress(ref cookie, 1, "", 0, 0);
-                        statusBar.SetText("Rendering template...");
-                        statusBar.Animation(1, ref icon);
-                    }
+                    item.Action(item);
+                    statusBar.Progress(ref cookie, 1, string.Empty, ++i, count);
+                });
 
-                    var stopwatch = Stopwatch.StartNew();
-                    uint i = 0;
-                    var p = items.AsParallel();
-                    p.ForAll(item =>
-                    {
-                        switch (item.EventType)
-                        {
-                            case EventType.Changed:
-                                item.Action(item.Path);
-                                break;
-                            case EventType.Deleted:
-                                item.Action(item.Path);
-                                break;
-                            case EventType.Renamed:
-                                item.RenameAction(item.Path, item.NewPath);
-                                break;
-                        }
-                        i++;
-                        statusBar.Progress(ref cookie, 1, "", i, count);
-                    });
+                stopwatch.Stop();
+                Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
 
-                    statusBar.Animation(0, ref icon);
-                    statusBar.SetText("Rendering complete");
-
-                    Thread.Sleep(1000);
-
-                    // Clear the progress bar.
-                    statusBar.Progress(ref cookie, 0, "", 0, 0);
-                    //statusBar.FreezeOutput(0);
-                    //statusBar.Clear();
-
-                    stopwatch.Stop();
-                    Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
-                }
-                //foreach (var item in items)
-                //{
-                //    switch (item.EventType)
-                //    {
-                //        case EventType.Changed:
-                //            item.Action(item.Path);
-                //            break;
-                //        case EventType.Deleted:
-                //            item.Action(item.Path);
-                //            break;
-                //        case EventType.Renamed:
-                //            item.RenameAction(item.Path, item.NewPath);
-                //            break;
-                //    }
-                //}
+                ClearStatusbar(cookie, ref icon);
             };
         }
 
-        private class RenderEvent
+        private void PrepareStatusbar(out uint cookie, out object icon)
         {
-            public EventType EventType { get; set; }
-            public string Path { get; set; }
-            public string NewPath { get; set; }
-            public Action<string> Action { get; set; }
-            public Action<string, string> RenameAction { get; set; }
+            cookie = 0;
+            icon = (short)InteropConstants.SBAI_Save;
+            
+            int frozen;
+            statusBar.IsFrozen(out frozen);
+
+            if (frozen != 0) return;
+
+            statusBar.Progress(ref cookie, 1, string.Empty, 0, 0);
+            statusBar.SetText("Rendering template...");
+            statusBar.Animation(1, ref icon);
         }
 
-        private enum EventType
+        private void ClearStatusbar(uint cookie, ref object icon)
         {
-            Changed,
-            Deleted,
-            Renamed
+            //object icon = (short)InteropConstants.SBAI_Save;
+            statusBar.Animation(0, ref icon);
+            statusBar.SetText("Rendering complete");
+
+            Thread.Sleep(1000);
+
+            statusBar.Progress(ref cookie, 0, "", 0, 0);
         }
 
         private bool disposed;
@@ -208,6 +126,26 @@ namespace Typewriter.Generation.Controllers
                 this.timer.Dispose();
                 this.timer = null;
             }
+        }
+    }
+
+    public enum GenerationType
+    {
+        Render,
+        Delete,
+        Rename
+    }
+
+    public class GenerationEvent
+    {
+        public GenerationType Type { get; set; }
+        public string[] Paths { get; set; }
+        public Action<GenerationEvent> Action { get; set; }
+
+        public bool Equals(GenerationEvent other)
+        {
+            if (other == null) return false;
+            return (Type == other.Type) && Action == other.Action && (Paths.SequenceEqual(other.Paths));
         }
     }
 }

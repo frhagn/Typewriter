@@ -12,6 +12,11 @@ namespace Typewriter.Generation
 
         internal static Type Compile(string source)
         {
+            if (Directory.Exists(Constants.TempDirectory) == false)
+            {
+                Directory.CreateDirectory(Constants.TempDirectory);
+            }
+
             using (var codeProvider = CodeDomProvider.CreateProvider("CSharp"))
             {
                 var filname = string.Format("{0}.dll", Guid.NewGuid());

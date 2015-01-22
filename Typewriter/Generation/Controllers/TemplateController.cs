@@ -14,12 +14,12 @@ namespace Typewriter.Generation.Controllers
         private static readonly object locker = new object();
 
         private readonly DTE dte;
-        private readonly IEventQueue eventQueue;
+        private readonly EventQueue eventQueue;
 
         private bool solutionOpen;
         private ICollection<Template> templates;
 
-        public TemplateController(DTE dte, ISolutionMonitor solutionMonitor, IEventQueue eventQueue)
+        public TemplateController(DTE dte, ISolutionMonitor solutionMonitor, EventQueue eventQueue)
         {
             this.dte = dte;
             this.eventQueue = eventQueue;
@@ -77,14 +77,18 @@ namespace Typewriter.Generation.Controllers
 
             foreach (var item in GetReferencedProjectItems(projectItem, ".cs"))
             {
-                eventQueue.QueueRender(item.FileNames[1], s =>
+                eventQueue.Enqueue(generationEvent => Render(template, generationEvent), GenerationType.Render, item.Path());
+            }
+        }
+
+        private void Render(Template template, GenerationEvent generationEvent)
                 {
                     try
                     {
                         var stopwatch = Stopwatch.StartNew();
-                        Log.Debug("Render {0}", s);
+                        Log.Debug("Render {0}", generationEvent.Paths[0]);
 
-                        var file = new FileInfo(dte.Solution.FindProjectItem(s));
+                        var file = new FileInfo(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
                         template.Render(file);
 
                         stopwatch.Stop();
@@ -94,9 +98,7 @@ namespace Typewriter.Generation.Controllers
                     {
                         Log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
                     }
-                });
-            }
-        }
+                }
 
         public ICollection<Template> Templates
         {

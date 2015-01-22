@@ -113,10 +113,13 @@ namespace Typewriter.Generation
 
             try
             {
-                var c = customExtensions.GetMethod(identifier, new[] { type });
-                if (c != null)
+                if (customExtensions != null)
                 {
-                    return c.Invoke(null, new[] { context });
+                    var c = customExtensions.GetMethod(identifier, new[] { type });
+                    if (c != null)
+                    {
+                        return c.Invoke(null, new[] { context });
+                    }
                 }
 
                 var extension = standardExtensions.GetMethod(identifier, new[] { type });

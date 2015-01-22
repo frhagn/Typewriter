@@ -23,7 +23,7 @@ namespace Typewriter.VisualStudio
         private IVsStatusbar statusBar;
         private ISolutionMonitor solutionMonitor;
         private TemplateController templateController;
-        private IEventQueue eventQueue;
+        private EventQueue eventQueue;
         
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -99,8 +99,6 @@ namespace Typewriter.VisualStudio
                 {
                     Directory.Delete(Constants.TempDirectory, true);
                 }
-
-                Directory.CreateDirectory(Constants.TempDirectory);
             }
             catch
             {
