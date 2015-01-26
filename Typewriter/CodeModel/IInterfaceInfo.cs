@@ -4,7 +4,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    [Context("Interface")]
+    [Context("Interface", "Interfaces")]
     public interface IInterfaceInfo : IItemInfo
     {
         [Property("bool IsGeneric", "Determines if the $context is generic")]

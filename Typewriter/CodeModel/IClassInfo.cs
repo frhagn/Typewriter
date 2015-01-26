@@ -4,7 +4,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    [Context("Class")]
+    [Context("Class", "Classes")]
     public interface IClassInfo : IItemInfo
     {
         [Property("string Namespace", "The namespace of the $context")]

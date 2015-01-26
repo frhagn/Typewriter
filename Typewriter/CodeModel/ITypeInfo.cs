@@ -4,7 +4,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    [Context("Type")]
+    [Context("Type", "Types")]
     public interface ITypeInfo : IClassInfo
     {
         [Property("bool IsEnum", "Determines if the $context is an enum")]

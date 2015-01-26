@@ -3,7 +3,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    [Context("Property")]
+    [Context("Property", "Properties")]
     public interface IPropertyInfo : IFieldInfo
     {
         [Property("bool HasGetter", "Determines if the $context has a getter")]

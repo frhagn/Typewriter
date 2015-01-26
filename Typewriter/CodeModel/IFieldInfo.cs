@@ -3,7 +3,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    [Context("Field")]
+    [Context("Field", "Fields")]
     public interface IFieldInfo : IItemInfo
     {
         [Property("bool IsEnum", "Determines if the $context is an enum")]

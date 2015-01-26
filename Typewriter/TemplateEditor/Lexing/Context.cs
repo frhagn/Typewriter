@@ -10,12 +10,14 @@ namespace Typewriter.TemplateEditor.Lexing
 {
     public class Context 
     {
-        public Context(string name)
+        public Context(string name, Type type)
         {
             Name = name;
+            Type = type;
         }
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
+        public Type Type { get; private set; }
         public readonly Dictionary<string, Identifier> identifiers = new Dictionary<string, Identifier>();
         
         public Identifier GetIdentifier(string name)
@@ -48,9 +50,13 @@ namespace Typewriter.TemplateEditor.Lexing
     {
         private static readonly Type extensions = typeof(Extensions);
         private static readonly Dictionary<string, Context> items = new Dictionary<string, Context>();
+        private static readonly Dictionary<string, string> names = new Dictionary<string, string>();
 
         public static Context Find(string name)
         {
+            if (items.ContainsKey(name) == false)
+                name = names[name];
+
             return items[name];
         }
 
@@ -61,8 +67,9 @@ namespace Typewriter.TemplateEditor.Lexing
             foreach (var c in contexts)
             {
                 var name = c.GetCustomAttribute<ContextAttribute>().Name;
-                var item = new Context(name);
-
+                var collectionName = c.GetCustomAttribute<ContextAttribute>().CollectionName;
+                var item = new Context(name, c);
+                
                 var properties = c.GetProperties().Where(p => p.GetCustomAttribute<PropertyAttribute>() != null);
                 var inherited = c.GetInterfaces().SelectMany(i => i.GetProperties().Where(p => p.GetCustomAttribute<PropertyAttribute>() != null));
 
@@ -125,6 +132,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     item.identifiers.Add(m.Name, identifier);
                 }
 
+                names.Add(collectionName, name);
                 items.Add(name, item);
             }
         }

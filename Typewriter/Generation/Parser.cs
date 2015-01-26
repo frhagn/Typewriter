@@ -60,7 +60,32 @@ namespace Typewriter.Generation
                         var block = ParseBlock(stream, '[', ']');
                         var separator = ParseBlock(stream, '[', ']');
 
-                        var items = ItemFilter.Apply(collection, filter, ref matchFound);
+                        IEnumerable<object> items;
+                        if (filter != null && filter.StartsWith("$"))
+                        {
+                            var predicate = filter.Remove(0, 1);
+                            if (customExtensions != null)
+                            {
+                                var c = customExtensions.GetMethod(predicate);
+                                if (c != null)
+                                {
+                                    items = collection.Where(x => (bool)c.Invoke(null, new[] { x })).ToList();
+                                    matchFound = matchFound || items.Any();
+                                }
+                                else
+                                {
+                                    items = new object[0];
+                                }
+                            }
+                            else
+                            {
+                                items = new object[0];
+                            }
+                        }
+                        else
+                        {
+                            items = ItemFilter.Apply(collection, filter, ref matchFound);
+                        }
                         output += string.Join(ParseTemplate(separator, context), items.Select(item => ParseTemplate(block, item)));
                     }
                     else if (value is bool)

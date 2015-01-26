@@ -4,7 +4,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    [Context("File")]
+    [Context("File", "Files")]
     public interface IFileInfo
     {
         [Property("string Name", "The name of the $context")]
