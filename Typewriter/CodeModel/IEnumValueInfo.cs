@@ -3,7 +3,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    [Context("EnumValue", "EnumValues")]
+    [Context("EnumValue", "Values")]
     public interface IEnumValueInfo : IItemInfo
     {
         [Property("number Value", "The numeric value of the $context")]
