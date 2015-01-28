@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom

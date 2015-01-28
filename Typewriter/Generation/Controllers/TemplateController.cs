@@ -82,23 +82,23 @@ namespace Typewriter.Generation.Controllers
         }
 
         private void Render(Template template, GenerationEvent generationEvent)
-                {
-                    try
-                    {
-                        var stopwatch = Stopwatch.StartNew();
-                        Log.Debug("Render {0}", generationEvent.Paths[0]);
+        {
+            try
+            {
+                var stopwatch = Stopwatch.StartNew();
+                Log.Debug("Render {0}", generationEvent.Paths[0]);
 
-                        var file = new FileInfo(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
-                        template.Render(file);
+                var file = new FileInfo(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
+                template.Render(file);
 
-                        stopwatch.Stop();
-                        Log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
-                    }
-                    catch (Exception exception)
-                    {
-                        Log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
-                    }
-                }
+                stopwatch.Stop();
+                Log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);
+            }
+            catch (Exception exception)
+            {
+                Log.Error("Render Exception: {0}, {1}", exception.Message, exception.StackTrace);
+            }
+        }
 
         public ICollection<Template> Templates
         {

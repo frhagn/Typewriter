@@ -6,8 +6,9 @@ namespace Typewriter.Generation
     public static class TemplateParser
     {
         private static int counter;
+        private const string methodTemplate = "public static object {0}({1} {2}){{ try {{ {3} }} catch(Exception __exception) {{ Typewriter.VisualStudio.Log.Error(__exception.Message); throw; }} }}";
         private const string classTemplate = @"
-            namespace Typewriter{0}
+            namespace Typewriter
             {{
                 using System;
                 using System.Linq;
@@ -15,7 +16,7 @@ namespace Typewriter.Generation
 
                 public class Code
                 {{
-                    {1}
+                    {0}
                 }}
             }}";
 
@@ -36,7 +37,7 @@ namespace Typewriter.Generation
 
             if (code != string.Empty)
             {
-                extensions = Compiler.Compile(string.Format(classTemplate, DateTime.Now.Ticks, code));
+                extensions = Compiler.Compile(string.Format(classTemplate, code));
             }
 
             return output;
@@ -106,30 +107,8 @@ namespace Typewriter.Generation
                         continue;
                     }
 
-                    output += string.Format("public static object {0}({1} {2}){{ try {{ {3} }} catch(Exception __exception) {{ return __exception.Message; }} }}", name, type, parameter, body);
+                    output += string.Format(methodTemplate, name, type, parameter, body);
                 }
-
-                //if (code.PeekWord() == "declare")
-                //{
-                //    code.Advance(7);
-                //    ParseWhitespace(code);
-
-                //    var name = code.PeekWord(1);
-                //    if (name == null) continue;
-
-                //    code.Advance(name.Length);
-                //    ParseWhitespace(code);
-
-                //    var parameter = ParseBlock(code, '(', ')');
-                //    if (parameter == null) continue;
-
-                //    ParseWhitespace(code);
-
-                //    var body = ParseBlock(code, '{', '}');
-                //    if (body == null) continue;
-
-                //    output += string.Format("public static object {0}({1}){{ {2} }}", name, parameter, body);
-                //}
             }
 
             return true;
@@ -187,7 +166,7 @@ namespace Typewriter.Generation
                                 {
                                     var type = Contexts.Find(identifier).Type.FullName;
 
-                                    output += string.Format("public static object {0}({1} {2}){{ try {{ {3} }} catch(Exception __exception) {{ Typewriter.VisualStudio.Log.Error(__exception.Message); throw; }} }}", name, type, parameter, body);
+                                    output += string.Format(methodTemplate, name, type, parameter, body);
                                     stream.Advance(filter.Length + 2 + identifier.Length);
                                     template += string.Format("${0}(${1})", identifier, name);
                                 }
