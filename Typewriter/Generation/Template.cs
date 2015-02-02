@@ -89,9 +89,9 @@ namespace Typewriter.Generation
 
         public void RenameFile(string oldPath, string newPath)
         {
-            lock(locker)
+            lock (locker)
             {
-            var item = GetExistingItem(oldPath);
+                var item = GetExistingItem(oldPath);
 
                 if (item != null)
                 {
@@ -115,15 +115,16 @@ namespace Typewriter.Generation
                         File.Move(lastItem.Path(), oldOutputPath);
                         SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
                         lastItem.Remove();
-
-                        projectItem.ContainingProject.Save();
                     }
                     else
                     {
-                        item.SaveAs(newOutputPath);
-                        SetMappedSourceFile(item, newPath);
-                        projectItem.ContainingProject.Save();
+                        File.Move(oldOutputPath, newOutputPath);
+                        var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
+                        SetMappedSourceFile(newItem, newPath);
+                        item.Remove();
                     }
+
+                    projectItem.ContainingProject.Save();
                 }
             }
         }

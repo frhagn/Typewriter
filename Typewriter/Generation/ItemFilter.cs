@@ -65,14 +65,5 @@ namespace Typewriter.Generation
 
             return items.ToList();
         }
-
-        //private static MethodInfo containsMethod = typeof(string).GetMethod("Contains", new [] { typeof(string) });
-        //private static MethodInfo startsWithMethod = typeof(string).GetMethod("StartsWith", new [] { typeof(string) });
-        //private static MethodInfo endsWithMethod = typeof(string).GetMethod("EndsWith", new [] { typeof(string) });
-
-        //public void Test(ParameterExpression param, Func<ItemInfo, IEnumerable<string>> selector)
-        //{
-        //    Expression.Call(param, selector, constant);
-        //}
     }
 }
