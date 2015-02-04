@@ -2,13 +2,19 @@
 Automatic TypeScript template generation from C# source files
 
 ## Changelog
+* 0.9.9
+ * Fixed bug when renaming files
+* 0.9.8
+ * Support for lambda expressions in filters
+ * Changed syntax for custom methods
+ * Minor bug fixes
 * 0.9.7
  * Basic support for custom methods
 * 0.9.6
- * Support for IsDate eg. $IsDate[true template][false template]
+ * Support for IsDate eg. ```$IsDate[true template][false template]```
 * 0.9.5
- * Support for interface filters by starting filter string with ":" eg. $Classes(:IModel)[template]
- * Support for attribute filters by encapsulating filter string with "[]" eg. $Classes([Model])[template]
+ * Support for interface filters by starting filter string with ":" eg. ```$Classes(:IModel)[template]```
+ * Support for attribute filters by encapsulating filter string with "[]" eg. ```$Classes([Model])[template]```
  * Fixed bug when renaming files
  * The project file is now saved when rendering templates
 
@@ -46,14 +52,26 @@ Each time a class matching the filter in the template is saved a new TypeScript 
 You can add custom methods to your templates by placing a code block in the template file.
 ```typescript
 ${
-    declare LoudName(IClassInfo classInfo)
+    var LoudName = (Class c) => c.Name.ToUpper();
+    var QuietName = (Class c) => 
     {
-        return classInfo.Name.ToUpper();
+        return c.Name.ToLower();
     }
 }
 
 $Classes(*Model)[ // Loop all classes with a name ending with Model
     class $LoudName {
+        constructor($Properties[public $name: $Type][, ]) {
+        }
+    }
+]
+```
+
+## Lambda filters
+You can add custom lambda filter expressions in addition to the simple string based filters.
+```typescript
+$Classes(c => c.Attributes.Any(a => a.Name == "Model"))[
+    class $Name {
         constructor($Properties[public $name: $Type][, ]) {
         }
     }
