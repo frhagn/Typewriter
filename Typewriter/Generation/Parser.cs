@@ -10,16 +10,18 @@ namespace Typewriter.Generation
     {
         private static readonly Type standardExtensions = typeof(Extensions);
 
-        public static string Parse(string template, Type customExtensions, object context)
+        public static string Parse(string template, Type customExtensions, object context, out bool success)
         {
             var instance = new Parser(customExtensions);
             var output = instance.ParseTemplate(template, context);
+            success = instance.hasError == false;
 
             return instance.matchFound ? output : null;
         }
 
         private readonly Type customExtensions;
         private bool matchFound;
+        private bool hasError;
 
         private Parser(Type customExtensions)
         {
@@ -159,8 +161,9 @@ namespace Typewriter.Generation
                     return property.GetValue(context);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
+                hasError = true;
                 Log.Error(e.Message);
             }
 

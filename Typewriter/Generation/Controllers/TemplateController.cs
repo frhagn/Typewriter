@@ -14,14 +14,16 @@ namespace Typewriter.Generation.Controllers
         private static readonly object locker = new object();
 
         private readonly DTE dte;
+        private readonly SolutionMonitor solutionMonitor;
         private readonly EventQueue eventQueue;
 
         private bool solutionOpen;
         private ICollection<Template> templates;
 
-        public TemplateController(DTE dte, ISolutionMonitor solutionMonitor, EventQueue eventQueue)
+        public TemplateController(DTE dte, SolutionMonitor solutionMonitor, EventQueue eventQueue)
         {
             this.dte = dte;
+            this.solutionMonitor = solutionMonitor;
             this.eventQueue = eventQueue;
 
             solutionMonitor.SolutionOpened += (sender, args) => SolutionOpened();
@@ -86,10 +88,17 @@ namespace Typewriter.Generation.Controllers
             try
             {
                 var stopwatch = Stopwatch.StartNew();
-                Log.Debug("Render {0}", generationEvent.Paths[0]);
 
-                var file = new FileInfo(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
-                template.Render(file);
+                var path = generationEvent.Paths[0];
+                Log.Debug("Render {0}", path);
+
+                var file = new FileInfo(dte.Solution.FindProjectItem(path));
+                var success = template.Render(file, false);
+
+                if (success == false)
+                {
+                    solutionMonitor.TriggerFileChanged(path);
+                }
 
                 stopwatch.Stop();
                 Log.Debug("Render completed in {0} ms", stopwatch.ElapsedMilliseconds);

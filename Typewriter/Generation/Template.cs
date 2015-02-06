@@ -26,21 +26,24 @@ namespace Typewriter.Generation
             this.template = TemplateParser.Parse(code, ref this.extensions);
         }
 
-        public void Render(IFileInfo file)
+        public bool Render(IFileInfo file, bool saveProjectFile)
         {
-            var output = Parser.Parse(template, extensions, file);
+            bool success;
+            var output = Parser.Parse(template, extensions, file, out success);
 
             if (output == null)
             {
-                DeleteFile(file.FullName);
+                DeleteFile(file.FullName, saveProjectFile);
             }
             else
             {
-                SaveFile(file.FullName, output);
+                SaveFile(file.FullName, output, saveProjectFile);
             }
+
+            return success;
         }
 
-        private void SaveFile(string path, string output)
+        private void SaveFile(string path, string output, bool saveProjectFile)
         {
             ProjectItem item;
             var outputPath = GetOutputPath(path);
@@ -56,10 +59,11 @@ namespace Typewriter.Generation
             }
 
             SetMappedSourceFile(item, path);
-            projectItem.ContainingProject.Save();
+            if (saveProjectFile)
+                projectItem.ContainingProject.Save();
         }
 
-        public void DeleteFile(string path)
+        public void DeleteFile(string path, bool saveProjectFile)
         {
             lock (locker)
             {
@@ -82,12 +86,13 @@ namespace Typewriter.Generation
                         item.Delete();
                     }
 
-                    projectItem.ContainingProject.Save();
+                    if (saveProjectFile)
+                        projectItem.ContainingProject.Save();
                 }
             }
         }
 
-        public void RenameFile(string oldPath, string newPath)
+        public void RenameFile(string oldPath, string newPath, bool saveProjectFile)
         {
             lock (locker)
             {
@@ -98,7 +103,8 @@ namespace Typewriter.Generation
                     if (Path.GetFileName(oldPath).Equals(Path.GetFileName(newPath)))
                     {
                         SetMappedSourceFile(item, newPath);
-                        projectItem.ContainingProject.Save();
+                        if (saveProjectFile)
+                            projectItem.ContainingProject.Save();
                         return;
                     }
 
@@ -124,7 +130,8 @@ namespace Typewriter.Generation
                         item.Remove();
                     }
 
-                    projectItem.ContainingProject.Save();
+                    if (saveProjectFile)
+                        projectItem.ContainingProject.Save();
                 }
             }
         }

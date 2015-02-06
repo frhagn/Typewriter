@@ -7,19 +7,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Typewriter.Generation.Controllers
 {
-    public interface ISolutionMonitor
-    {
-        event SolutionOpenedEventHandler SolutionOpened;
-        event SolutionClosedEventHandler SolutionClosed;
-        event ProjectAddedEventHandler ProjectAdded;
-        event ProjectRemovedEventHandler ProjectRemoved;
-        event FileAddedEventHandler FileAdded;
-        event FileChangedEventHandler FileChanged;
-        event FileDeletedEventHandler FileDeleted;
-        event FileRenamedEventHandler FileRenamed;
-    }
-
-    public class SolutionMonitor : ISolutionMonitor, IVsSolutionEvents, IVsRunningDocTableEvents3, IVsTrackProjectDocumentsEvents2
+    public class SolutionMonitor : IVsSolutionEvents, IVsRunningDocTableEvents3, IVsTrackProjectDocumentsEvents2
     {
         private uint solutionCookie;
         private uint runningDocumentTableCookie;
@@ -41,6 +29,14 @@ namespace Typewriter.Generation.Controllers
         public SolutionMonitor()
         {
             AdviceSolutionEvents();
+        }
+
+        public void TriggerFileChanged(string path)
+        {
+            if (FileChanged != null)
+            {
+                FileChanged(this, new FileChangedEventArgs(path));
+            }
         }
 
         #region Event registration
@@ -217,10 +213,7 @@ namespace Typewriter.Generation.Controllers
             IntPtr docData;
             runningDocumentTable.GetDocumentInfo(docCookie, out flags, out readlocks, out editlocks, out name, out hier, out itemid, out docData);
 
-            if (FileChanged != null)
-            {
-                FileChanged(this, new FileChangedEventArgs(name));
-            }
+            TriggerFileChanged(name);
 
             return VSConstants.S_OK;
         }

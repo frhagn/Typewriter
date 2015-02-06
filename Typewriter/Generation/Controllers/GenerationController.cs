@@ -12,7 +12,7 @@ namespace Typewriter.Generation.Controllers
         private readonly DTE dte;
         private readonly TemplateController templateController;
 
-        public GenerationController(DTE dte, ISolutionMonitor solutionMonitor, TemplateController templateController, EventQueue eventQueue)
+        public GenerationController(DTE dte, SolutionMonitor solutionMonitor, TemplateController templateController, EventQueue eventQueue)
         {
             this.dte = dte;
             this.templateController = templateController;
@@ -39,21 +39,21 @@ namespace Typewriter.Generation.Controllers
                         var file = new FileInfo(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
                         foreach (var template in templates)
                         {
-                            template.Render(file);
+                            template.Render(file, true);
                         }
                         break;
 
                     case GenerationType.Delete:
                         foreach (var template in templates)
                         {
-                            template.DeleteFile(generationEvent.Paths[0]);
+                            template.DeleteFile(generationEvent.Paths[0], true);
                         }
                         break;
 
                     case GenerationType.Rename:
                         foreach (var template in templates)
                         {
-                            template.RenameFile(generationEvent.Paths[0], generationEvent.Paths[1]);
+                            template.RenameFile(generationEvent.Paths[0], generationEvent.Paths[1], true);
                         }
                         break;
                 }

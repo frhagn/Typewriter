@@ -21,7 +21,7 @@ namespace Typewriter.VisualStudio
     {
         private DTE dte;
         private IVsStatusbar statusBar;
-        private ISolutionMonitor solutionMonitor;
+        private SolutionMonitor solutionMonitor;
         private TemplateController templateController;
         private EventQueue eventQueue;
         
