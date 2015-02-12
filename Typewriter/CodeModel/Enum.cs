@@ -5,9 +5,9 @@ using Typewriter.CodeModel.Attributes;
 namespace Typewriter.CodeModel
 {
     [Context("Enum", "Enums")]
-    public interface IEnumInfo : IItemInfo
+    public interface Enum : Item
     {
         [Property("collection Values", "All values defined in the $context")]
-        ICollection<IEnumValueInfo> Values { get; }
+        ICollection<EnumValue> Values { get; }
     }
 }

@@ -5,7 +5,7 @@ using Typewriter.CodeModel.Attributes;
 namespace Typewriter.CodeModel
 {
     [Context("Type", "Types")]
-    public interface ITypeInfo : IClassInfo
+    public interface Type : Class
     {
         [Property("bool IsEnum", "Determines if the $context is an enum")]
         bool IsEnum { get; }
@@ -20,6 +20,6 @@ namespace Typewriter.CodeModel
         bool IsPrimitive { get; }
 
         [Property("collection GenericTypeArguments", "All generic type arguments of the $context")]
-        IEnumerable<ITypeInfo> GenericTypeArguments { get; }
+        IEnumerable<Type> GenericTypeArguments { get; }
     }
 }

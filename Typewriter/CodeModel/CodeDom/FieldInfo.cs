@@ -3,7 +3,7 @@ using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class FieldInfo : ItemInfo, IFieldInfo
+    public class FieldInfo : ItemInfo, Field
     {
         private readonly CodeVariable2 codeVariable;
 

@@ -3,7 +3,7 @@ using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class EnumValueInfo : ItemInfo, IEnumValueInfo
+    public class EnumValueInfo : ItemInfo, EnumValue
     {
         private readonly CodeVariable2 codeVariable;
         private readonly int index;

@@ -6,7 +6,7 @@ using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public abstract class ItemInfo : IItemInfo
+    public abstract class ItemInfo : Item
     {
         protected dynamic element;
         protected readonly FileInfo file;
@@ -29,50 +29,50 @@ namespace Typewriter.CodeModel.CodeDom
         public virtual bool IsNullable { get { return this.Type.IsNullable; } }
         public virtual bool IsPrimitive { get { return this.Type.IsPrimitive; } }
 
-        private IAttributeInfo[] attributes;
-        public virtual ICollection<IAttributeInfo> Attributes
+        private Attribute[] attributes;
+        public virtual ICollection<Attribute> Attributes
         {
             get
             {
                 if (attributes == null)
                 {
                     Load();
-                    attributes = Iterator<CodeAttribute2>.Select(() => element.Children, a => (IAttributeInfo)new AttributeInfo(a, this, file)).ToArray();
+                    attributes = Iterator<CodeAttribute2>.Select(() => element.Children, a => (Attribute)new AttributeInfo(a, this, file)).ToArray();
                 }
                 return attributes;
             }
         }
 
-        private IConstantInfo[] constants;
-        public virtual ICollection<IConstantInfo> Constants
+        private Constant[] constants;
+        public virtual ICollection<Constant> Constants
         {
             get
             {
                 if (constants == null)
                 {
                     Load();
-                    constants = Iterator<CodeVariable2>.Select(() => element.Children, v => v.IsConstant, f => (IConstantInfo)new ConstantInfo(f, this, file)).ToArray();
+                    constants = Iterator<CodeVariable2>.Select(() => element.Children, v => v.IsConstant, f => (Constant)new ConstantInfo(f, this, file)).ToArray();
                 }
                 return constants;
             }
         }
 
-        private IFieldInfo[] fields;
-        public virtual ICollection<IFieldInfo> Fields
+        private Field[] fields;
+        public virtual ICollection<Field> Fields
         {
             get
             {
                 if (fields == null)
                 {
                     Load();
-                    fields = Iterator<CodeVariable2>.Select(() => element.Children, v => v.IsConstant == false, f => (IFieldInfo)new FieldInfo(f, this, file)).ToArray();
+                    fields = Iterator<CodeVariable2>.Select(() => element.Children, v => v.IsConstant == false, f => (Field)new FieldInfo(f, this, file)).ToArray();
                 }
                 return fields;
             }
         }
 
-        private IInterfaceInfo[] interfaces;
-        public virtual ICollection<IInterfaceInfo> Interfaces
+        private Interface[] interfaces;
+        public virtual ICollection<Interface> Interfaces
         {
             get
             {
@@ -95,56 +95,56 @@ namespace Typewriter.CodeModel.CodeDom
                         return elements;
                     };
 
-                    interfaces = Iterator<CodeInterface2>.Select(func, i => (IInterfaceInfo)new InterfaceInfo(i, this, file)).ToArray();
+                    interfaces = Iterator<CodeInterface2>.Select(func, i => (Interface)new InterfaceInfo(i, this, file)).ToArray();
                 }
                 return interfaces;
             }
         }
 
-        private IMethodInfo[] methods;
-        public virtual ICollection<IMethodInfo> Methods
+        private Method[] methods;
+        public virtual ICollection<Method> Methods
         {
             get
             {
                 if (methods == null)
                 {
                     Load();
-                    methods = Iterator<CodeFunction2>.Select(() => element.Children, m => m.FunctionKind != vsCMFunction.vsCMFunctionConstructor, f => (IMethodInfo)new MethodInfo(f, this, file)).ToArray();
+                    methods = Iterator<CodeFunction2>.Select(() => element.Children, m => m.FunctionKind != vsCMFunction.vsCMFunctionConstructor, f => (Method)new MethodInfo(f, this, file)).ToArray();
                 }
                 return methods;
             }
         }
 
-        private IParameterInfo[] parameters;
-        public virtual ICollection<IParameterInfo> Parameters
+        private Parameter[] parameters;
+        public virtual ICollection<Parameter> Parameters
         {
             get
             {
                 if (parameters == null)
                 {
                     Load();
-                    parameters = Iterator<CodeParameter2>.Select(() => element.Children, p => (IParameterInfo)new ParameterInfo(p, this, file)).ToArray();
+                    parameters = Iterator<CodeParameter2>.Select(() => element.Children, p => (Parameter)new ParameterInfo(p, this, file)).ToArray();
                 }
                 return parameters;
             }
         }
 
-        private IPropertyInfo[] properties;
-        public virtual ICollection<IPropertyInfo> Properties
+        private Property[] properties;
+        public virtual ICollection<Property> Properties
         {
             get
             {
                 if (properties == null)
                 {
                     Load();
-                    properties = Iterator<CodeProperty2>.Select(() => element.Children, p => (IPropertyInfo)new PropertyInfo(p, this, file)).ToArray();
+                    properties = Iterator<CodeProperty2>.Select(() => element.Children, p => (Property)new PropertyInfo(p, this, file)).ToArray();
                 }
                 return properties;
             }
         }
 
-        private ITypeInfo type;
-        public virtual ITypeInfo Type
+        private Type type;
+        public virtual Type Type
         {
             get
             {

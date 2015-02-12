@@ -5,9 +5,9 @@ using Typewriter.CodeModel.Attributes;
 namespace Typewriter.CodeModel
 {
     [Context("Method", "Methods")]
-    public interface IMethodInfo : IFieldInfo
+    public interface Method : Field
     {
         [Property("collection Parameters", "All parameters defined in the $context")]
-        ICollection<IParameterInfo> Parameters { get; }
+        ICollection<Parameter> Parameters { get; }
     }
 }

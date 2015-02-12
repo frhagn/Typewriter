@@ -4,7 +4,7 @@ using Typewriter.CodeModel.Attributes;
 namespace Typewriter.CodeModel
 {
     [Context("Property", "Properties")]
-    public interface IPropertyInfo : IFieldInfo
+    public interface Property : Field
     {
         [Property("bool HasGetter", "Determines if the $context has a getter")]
         bool HasGetter { get; }

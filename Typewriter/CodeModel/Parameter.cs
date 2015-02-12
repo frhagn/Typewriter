@@ -3,8 +3,8 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    [Context("Constant", "Constants")]
-    public interface IConstantInfo : IFieldInfo
+    [Context("Parameter", "Parameters")]
+    public interface Parameter : Field
     {
     }
 }

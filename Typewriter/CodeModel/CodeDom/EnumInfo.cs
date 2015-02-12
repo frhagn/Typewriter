@@ -6,7 +6,7 @@ using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class EnumInfo : ItemInfo, IEnumInfo
+    public class EnumInfo : ItemInfo, Enum
     {
         private readonly CodeEnum codeEnum;
 
@@ -15,7 +15,7 @@ namespace Typewriter.CodeModel.CodeDom
             this.codeEnum = codeEnum;
         }
 
-        public ICollection<IEnumValueInfo> Values
+        public ICollection<EnumValue> Values
         {
             get { return Iterator<CodeVariable2>.Select(() => codeEnum.Members, (v, i) => new EnumValueInfo(v, this, file, i)).ToArray(); }
         }

@@ -2,7 +2,7 @@
 
 namespace Typewriter.CodeModel.Attributes
 {
-    public class PropertyAttribute : Attribute
+    public class PropertyAttribute : System.Attribute
     {
         public string Name { get; set; }
         public string Description { get; set; }

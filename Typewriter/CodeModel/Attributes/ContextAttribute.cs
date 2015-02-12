@@ -2,7 +2,7 @@
 
 namespace Typewriter.CodeModel.Attributes
 {
-    public class ContextAttribute : Attribute
+    public class ContextAttribute : System.Attribute
     {
         public string Name { get; set; }
         public string CollectionName { get; set; }

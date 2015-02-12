@@ -4,7 +4,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
-    public interface IItemInfo
+    public interface Item
     {
         object Parent { get; }
 
@@ -15,6 +15,6 @@ namespace Typewriter.CodeModel
         string FullName { get; }
 
         [Property("collection Attributes", "All attributes defined on the $context")]
-        ICollection<IAttributeInfo> Attributes { get; }
+        ICollection<Attribute> Attributes { get; }
     }
 }

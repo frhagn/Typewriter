@@ -4,7 +4,7 @@ using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class InterfaceInfo : ItemInfo, IInterfaceInfo
+    public class InterfaceInfo : ItemInfo, Interface
     {
         private readonly CodeInterface2 codeInterface;
 

@@ -3,7 +3,7 @@ using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class ParameterInfo : ItemInfo, IParameterInfo
+    public class ParameterInfo : ItemInfo, Parameter
     {
         private readonly CodeParameter2 codeParameter;
 

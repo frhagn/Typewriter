@@ -3,7 +3,7 @@ using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class ConstantInfo : ItemInfo, IConstantInfo
+    public class ConstantInfo : ItemInfo, Constant
     {
         private readonly CodeVariable2 codeVariable;
 

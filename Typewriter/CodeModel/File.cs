@@ -5,7 +5,7 @@ using Typewriter.CodeModel.Attributes;
 namespace Typewriter.CodeModel
 {
     [Context("File", "Files")]
-    public interface IFileInfo
+    public interface File
     {
         [Property("string Name", "The name of the $context")]
         string Name { get; }
@@ -14,12 +14,12 @@ namespace Typewriter.CodeModel
         string FullName { get; }
 
         [Property("collection Classes", "All classes defined in the $context")]
-        ICollection<IClassInfo> Classes { get; }
+        ICollection<Class> Classes { get; }
 
         [Property("collection Enums", "All enums defined in the $context")]
-        ICollection<IEnumInfo> Enums { get; }
+        ICollection<Enum> Enums { get; }
 
         [Property("collection Interfaces", "All interfaces defined in the $context")]
-        ICollection<IInterfaceInfo> Interfaces { get; }
+        ICollection<Interface> Interfaces { get; }
     }
 }

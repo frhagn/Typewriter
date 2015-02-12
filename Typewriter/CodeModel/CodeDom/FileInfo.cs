@@ -8,7 +8,7 @@ using Typewriter.VisualStudio;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class FileInfo : IFileInfo
+    public class FileInfo : File
     {
         private static readonly object locker = new object();
 
@@ -35,40 +35,40 @@ namespace Typewriter.CodeModel.CodeDom
             get { return projectItem.FileNames[1]; }
         }
 
-        private IClassInfo[] classes;
-        public ICollection<IClassInfo> Classes
+        private Class[] classes;
+        public ICollection<Class> Classes
         {
             get 
             {
                 if (classes == null)
                 {
-                    classes = GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Members, c => (IClassInfo)new ClassInfo(c, this, this))).ToArray();
+                    classes = GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Members, c => (Class)new ClassInfo(c, this, this))).ToArray();
                 }
                 return classes;
             }
         }
 
-        private IEnumInfo[] enums;
-        public ICollection<IEnumInfo> Enums
+        private Enum[] enums;
+        public ICollection<Enum> Enums
         {
             get
             {
                 if (enums == null)
                 {
-                    enums = GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Members, e => (IEnumInfo)new EnumInfo(e, this, this))).ToArray();
+                    enums = GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Members, e => (Enum)new EnumInfo(e, this, this))).ToArray();
                 }
                 return enums;
             }
         }
 
-        private IInterfaceInfo[] interfaces;
-        public ICollection<IInterfaceInfo> Interfaces
+        private Interface[] interfaces;
+        public ICollection<Interface> Interfaces
         {
             get
             {
                 if (interfaces == null)
                 {
-                    interfaces = GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Members, i => (IInterfaceInfo)new InterfaceInfo(i, this, this))).ToArray();
+                    interfaces = GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Members, i => (Interface)new InterfaceInfo(i, this, this))).ToArray();
                 }
                 return interfaces;
             }

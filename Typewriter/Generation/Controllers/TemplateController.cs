@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using EnvDTE;
-using Typewriter.CodeModel.CodeDom;
 using Typewriter.VisualStudio;
 using VSLangProj;
+using FileInfo = Typewriter.CodeModel.CodeDom.FileInfo;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -118,31 +119,31 @@ namespace Typewriter.Generation.Controllers
         {
             var stopwatch = Stopwatch.StartNew();
 
-            lock (locker)
+            //lock (locker)
+            //{
+            if (this.templates == null)
             {
-                if (this.templates == null)
+                var items = GetProjectItems();
+                this.templates = items.Select(i => new Template(i)).ToList();
+            }
+            else
+            {
+                foreach (var template in this.templates)
                 {
-                    var items = GetProjectItems(Constants.Extension);
-                    this.templates = items.Select(i => new Template(i)).ToList();
-                }
-                else
-                {
-                    foreach (var template in this.templates)
+                    try
                     {
-                        try
-                        {
-                            template.VerifyProjectItem();
-                        }
-                        catch
-                        {
-                            Log.Debug("Invalid template");
-                            this.templates = null;
+                        template.VerifyProjectItem();
+                    }
+                    catch
+                    {
+                        Log.Debug("Invalid template");
+                        this.templates = null;
 
-                            return LoadTemplates();
-                        }
+                        return LoadTemplates();
                     }
                 }
             }
+            //}
 
             stopwatch.Stop();
             Log.Debug("Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds);
@@ -174,10 +175,18 @@ namespace Typewriter.Generation.Controllers
             }
         }
 
-        private IEnumerable<ProjectItem> GetProjectItems(string extension)
+        //private IEnumerable<ProjectItem> GetProjectItems(string extension)
+        //{
+        //    return dte.Solution.AllProjetcs().SelectMany(p => p.AllProjectItems())
+        //        .Where(i => i.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase));
+        //}
+
+        private IEnumerable<ProjectItem> GetProjectItems()
         {
-            return dte.Solution.AllProjetcs().SelectMany(p => p.AllProjectItems())
-                .Where(i => i.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase));
+            var projects = dte.Solution.AllProjetcs().Select(p => p.FileName);
+            var files = projects.Where(p => string.IsNullOrWhiteSpace(p) == false)
+                .SelectMany(p => new System.IO.FileInfo(p).Directory.GetFiles("*.tst", SearchOption.AllDirectories));
+            return files.Select(a => dte.Solution.FindProjectItem(a.FullName));
         }
     }
 }

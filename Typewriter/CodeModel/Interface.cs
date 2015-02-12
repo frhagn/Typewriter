@@ -5,18 +5,18 @@ using Typewriter.CodeModel.Attributes;
 namespace Typewriter.CodeModel
 {
     [Context("Interface", "Interfaces")]
-    public interface IInterfaceInfo : IItemInfo
+    public interface Interface : Item
     {
         [Property("bool IsGeneric", "Determines if the $context is generic")]
         bool IsGeneric { get; }
 
         [Property("collection Interfaces", "All interfaces implemented by the $context")]
-        ICollection<IInterfaceInfo> Interfaces { get; }
+        ICollection<Interface> Interfaces { get; }
 
         [Property("collection Methods", "All methods defined in the $context")]
-        ICollection<IMethodInfo> Methods { get; }
+        ICollection<Method> Methods { get; }
 
         [Property("collection Properties", "All properties defined in the $context")]
-        ICollection<IPropertyInfo> Properties { get; }
+        ICollection<Property> Properties { get; }
     }
 }

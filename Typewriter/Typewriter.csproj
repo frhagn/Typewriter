@@ -153,43 +153,43 @@
     <Compile Include="CodeModel\CodeDom\ItemInfo.cs" />
     <Compile Include="CodeModel\CodeDom\FileInfo.cs" />
     <Compile Include="CodeModel\Attributes\ContextAttribute.cs" />
-    <Compile Include="CodeModel\IAttributeInfo.cs">
+    <Compile Include="CodeModel\Attribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IClassInfo.cs">
+    <Compile Include="CodeModel\Class.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IConstantInfo.cs">
+    <Compile Include="CodeModel\Constant.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IEnumInfo.cs">
+    <Compile Include="CodeModel\Enum.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IEnumValueInfo.cs">
+    <Compile Include="CodeModel\EnumValue.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IFieldInfo.cs">
+    <Compile Include="CodeModel\Field.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IFileInfo.cs">
+    <Compile Include="CodeModel\File.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IInterfaceInfo.cs">
+    <Compile Include="CodeModel\Interface.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IItemInfo.cs">
+    <Compile Include="CodeModel\Item.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IMethodInfo.cs">
+    <Compile Include="CodeModel\Method.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IParameterInfo.cs">
+    <Compile Include="CodeModel\Parameter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\IPropertyInfo.cs">
+    <Compile Include="CodeModel\Property.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeModel\ITypeInfo.cs">
+    <Compile Include="CodeModel\Type.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeModel\Attributes\PropertyAttribute.cs" />

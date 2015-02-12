@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using EnvDTE;
-using Typewriter.CodeModel;
 using Typewriter.Generation.Controllers;
+using Typewriter.VisualStudio;
+using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.Generation
 {
@@ -18,15 +20,20 @@ namespace Typewriter.Generation
 
         public Template(ProjectItem projectItem)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             this.projectItem = projectItem;
             this.templatePath = projectItem.Path();
             this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
-
-            var code = File.ReadAllText(templatePath);
+            
+            var code = System.IO.File.ReadAllText(templatePath);
             this.template = TemplateParser.Parse(code, ref this.extensions);
+
+            stopwatch.Stop();
+            Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
         }
 
-        public bool Render(IFileInfo file, bool saveProjectFile)
+        public bool Render(File file, bool saveProjectFile)
         {
             bool success;
             var output = Parser.Parse(template, extensions, file, out success);
@@ -50,7 +57,7 @@ namespace Typewriter.Generation
 
             if (HasChanged(outputPath, output))
             {
-                File.WriteAllText(outputPath, output);
+                System.IO.File.WriteAllText(outputPath, output);
                 item = FindProjectItem(outputPath) ?? projectItem.ProjectItems.AddFromFile(outputPath);
             }
             else
@@ -76,8 +83,8 @@ namespace Typewriter.Generation
                     {
                         var outputPath = item.Path();
 
-                        File.Delete(outputPath);
-                        File.Move(lastItem.Path(), outputPath);
+                        System.IO.File.Delete(outputPath);
+                        System.IO.File.Move(lastItem.Path(), outputPath);
                         SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
                         lastItem.Remove();
                     }
@@ -114,17 +121,17 @@ namespace Typewriter.Generation
 
                     if (lastItem != null && lastItem != item)
                     {
-                        File.Move(oldOutputPath, newOutputPath);
+                        System.IO.File.Move(oldOutputPath, newOutputPath);
                         var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
                         SetMappedSourceFile(newItem, newPath);
 
-                        File.Move(lastItem.Path(), oldOutputPath);
+                        System.IO.File.Move(lastItem.Path(), oldOutputPath);
                         SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
                         lastItem.Remove();
                     }
                     else
                     {
-                        File.Move(oldOutputPath, newOutputPath);
+                        System.IO.File.Move(oldOutputPath, newOutputPath);
                         var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
                         SetMappedSourceFile(newItem, newPath);
                         item.Remove();
@@ -205,9 +212,9 @@ namespace Typewriter.Generation
 
         private static bool HasChanged(string path, string output)
         {
-            if (File.Exists(path))
+            if (System.IO.File.Exists(path))
             {
-                var current = File.ReadAllText(path);
+                var current = System.IO.File.ReadAllText(path);
                 if (current == output)
                 {
                     return false;

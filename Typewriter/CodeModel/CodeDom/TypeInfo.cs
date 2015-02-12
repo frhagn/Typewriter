@@ -6,7 +6,7 @@ using EnvDTE;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class TypeInfo : ItemInfo, ITypeInfo
+    public class TypeInfo : ItemInfo, Type
     {
         private static readonly string[] primitiveTypes = { "string", "number", "boolean", "Date" };
 
@@ -88,11 +88,11 @@ namespace Typewriter.CodeModel.CodeDom
             get { return FullName != "System.String" && FullName.StartsWith("System.Collections."); }
         }
 
-        public IEnumerable<ITypeInfo> GenericTypeArguments
+        public IEnumerable<Type> GenericTypeArguments
         {
             get
             {
-                if (IsGeneric == false) return new ITypeInfo[0];
+                if (IsGeneric == false) return new Type[0];
                 if (IsNullable && FullName.EndsWith("?")) return new[] { new TypeInfo(FullName.TrimEnd('?'), this, file) };
 
                 return ExtractGenericTypeNames(FullName).Select(n =>
@@ -147,7 +147,7 @@ namespace Typewriter.CodeModel.CodeDom
 
         public override string ToString()
         {
-            var type = this as ITypeInfo;
+            var type = this as Type;
 
             if (type.IsNullable)
             {
