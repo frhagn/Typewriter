@@ -2,6 +2,8 @@
 Automatic TypeScript template generation from C# source files
 
 ## Changelog
+* 0.9.11
+ * Performance optimizations when scanning solution for template files
 * 0.9.10
  * Performance optimizations when saving template file with advanced filters
  * Added one retry when failing to render when saving template file
