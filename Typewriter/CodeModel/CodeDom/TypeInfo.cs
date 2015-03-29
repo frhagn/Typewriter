@@ -13,13 +13,15 @@ namespace Typewriter.CodeModel.CodeDom
         private readonly string fullName;
         private CodeType codeType;
 
-        public TypeInfo(CodeType codeType, object parent, FileInfo file) : base(codeType, parent, file)
+        public TypeInfo(CodeType codeType, object parent, FileInfo file)
+            : base(codeType, parent, file)
         {
             this.codeType = codeType;
             this.fullName = codeType.FullName;
         }
 
-        public TypeInfo(string fullName, object parent, FileInfo file) : base(null, parent, file)
+        public TypeInfo(string fullName, object parent, FileInfo file)
+            : base(null, parent, file)
         {
             this.fullName = fullName;
         }
@@ -153,6 +155,11 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 type = type.GenericTypeArguments.FirstOrDefault();
             }
+            else if (type.IsGeneric && !type.IsEnumerable)
+            {
+                var types = type.GenericTypeArguments.Select(t => t.ToString());
+                return string.Format("{0}<{1}>", GetTypeScriptType(type.Name), string.Join(", ", types));
+            }
             else if (type.IsEnumerable)
             {
                 if (type.Name.EndsWith("[]")) return GetTypeScriptType(type.Name.Substring(0, type.Name.Length - 2)) + "[]";
@@ -164,8 +171,8 @@ namespace Typewriter.CodeModel.CodeDom
                     {
                         type = type.GenericTypeArguments.FirstOrDefault();
                     }
-                    
-                    return GetTypeScriptType(type.Name) + "[]";
+
+                    return type.ToString() + "[]";
                 }
 
                 return "any[]";
