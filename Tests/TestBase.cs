@@ -15,7 +15,7 @@ namespace Tests
 {
     public abstract class TestBase
     {
-        public void VerifyExplicit(string name, string template, string expectedOutput)
+        protected ProjectItem GetProjectItem(string name)
         {
             EnvDTE80.DTE2 dte2;
             dte2 = (EnvDTE80.DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject("VisualStudio.DTE.12.0");
@@ -24,9 +24,20 @@ namespace Tests
                 .Single(p => p.Name == "Tests")
                 .AllProjectItems();
 
-            var projectItem = projectItems.Single(p => p.Path().EndsWith("Models\\" + name + ".cs"));
+            return projectItems.Single(p => p.Path().EndsWith("Models\\" + name + ".cs"));
+        }
+
+        protected FileInfo GetFileInfo(string name)
+        {
+            var projectItem = GetProjectItem(name);
+            return new FileInfo(projectItem);
+        }
+
+        public void VerifyExplicit(string name, string template, string expectedOutput)
+        {
+            var fileInfo = GetFileInfo(name);
             bool success = false;
-            var output = Parser.Parse(template, null, new FileInfo(projectItem), out success);
+            var output = Parser.Parse(template, null, fileInfo, out success);
 
             Assert.AreEqual(expectedOutput, output);
         }

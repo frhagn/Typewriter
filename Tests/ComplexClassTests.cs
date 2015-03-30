@@ -31,15 +31,23 @@ namespace Tests
         public void test_complex_generic_class()
         {
             VerifyExplicit("ComplexGenericModel",
-                "$Classes(*Model)[$Name$IsGeneric[<T>][]]",
+                "$Classes(*Model)[$Name$IsGeneric[<$GenericTypeArguments[$Type][, ]>][]]",
                 "ComplexGenericModel<T>");
+        }
+
+        [TestMethod]
+        public void test_stuff()
+        {
+            //Tests.Models.ComplexGenericModel<T>
+            var projectItem = GetFileInfo("ComplexGenericModel");
+            var args = projectItem.Classes.Single().GenericTypeArguments;
         }
 
         [TestMethod]
         public void test_complex_multi_generic_class()
         {
             VerifyExplicit("ComplexMultiGenericModel",
-                "$Classes(*Model)[$Name$IsGeneric[<$Type[$GenericTypeArguments[$Type][, ]]>][]]",
+                "$Classes(*Model)[$Name$IsGeneric[<$GenericTypeArguments[$Type][,]>][]]",
                 "ComplexMultiGenericModel<T1, T2, T3>");
         }
 
