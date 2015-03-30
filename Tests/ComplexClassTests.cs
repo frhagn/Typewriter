@@ -36,6 +36,21 @@ namespace Tests
         }
 
         [TestMethod]
+        public void test_complex_multi_generic_class()
+        {
+            VerifyExplicit("ComplexMultiGenericModel",
+                "$Classes(*Model)[$Name$IsGeneric[<$Type[$GenericTypeArguments[$Type][, ]]>][]]",
+                "ComplexMultiGenericModel<T1, T2, T3>");
+        }
+
+        [TestMethod]
+        public void test_complex_generic_property()
+        {
+            VerifyExplicit("ComplexGenericModel",
+                "$Classes(*Model)[$Properties[$Type]",
+                "T");
+        }
+        [TestMethod]
         public void test_complex_generic_properties()
         {
             Verify<ComplexGenericUseModel>(

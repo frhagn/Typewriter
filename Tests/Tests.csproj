@@ -63,12 +63,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CompleteTests.cs" />
     <Compile Include="ComplexClassTests.cs" />
     <Compile Include="EnumTests.cs" />
+    <Compile Include="Models\CompleteModel.cs" />
     <Compile Include="Models\ComplexClass.cs" />
     <Compile Include="Models\ComplexClassModel.cs" />
     <Compile Include="Models\ComplexGenericModel.cs" />
     <Compile Include="Models\ComplexGenericUseModel.cs" />
+    <Compile Include="Models\ComplexMultiGenericModel.cs" />
     <Compile Include="Models\ComplexTaskModel.cs" />
     <Compile Include="Models\EnumClassModel.cs" />
     <Compile Include="Models\EnumModel.cs" />
