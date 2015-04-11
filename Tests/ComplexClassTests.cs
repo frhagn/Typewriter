@@ -23,7 +23,7 @@ namespace Tests
         public void test_task_complex_classes()
         {
             Verify<ComplexTaskModel>(
-                "$Classes(*Model)[$Properties[$Name $Type ]",
+                "$Classes(*Model)[$Properties[$Name $Type[$GenericTypeArguments[$Type]] ]",
                 "Task ComplexClass ");
         }
 

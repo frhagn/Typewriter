@@ -37,8 +37,12 @@ namespace Tests
         {
             var fileInfo = GetFileInfo(name);
             bool success = false;
-            var output = Parser.Parse(template, null, fileInfo, out success);
+            
+            System.Type extensions = null;
+            var t = TemplateParser.Parse(template, ref extensions);
 
+            var output = Parser.Parse(t, extensions, fileInfo, out success);
+            
             Assert.AreEqual(expectedOutput, output);
         }
         public void Verify<T>(string template, string expectedOutput)
