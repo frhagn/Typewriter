@@ -1,5 +1,7 @@
 using System;
 using EnvDTE80;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Typewriter.CodeModel.CodeDom
 {
@@ -16,5 +18,14 @@ namespace Typewriter.CodeModel.CodeDom
         {
             get { return codeClass.IsGeneric; }
         }
+
+        public override bool IsNullable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
     }
 }

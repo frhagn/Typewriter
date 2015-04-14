@@ -13,13 +13,15 @@ namespace Typewriter.CodeModel.CodeDom
         private readonly string fullName;
         private CodeType codeType;
 
-        public TypeInfo(CodeType codeType, object parent, FileInfo file) : base(codeType, parent, file)
+        public TypeInfo(CodeType codeType, object parent, FileInfo file)
+            : base(codeType, parent, file)
         {
             this.codeType = codeType;
             this.fullName = codeType.FullName;
         }
 
-        public TypeInfo(string fullName, object parent, FileInfo file) : base(null, parent, file)
+        public TypeInfo(string fullName, object parent, FileInfo file)
+            : base(null, parent, file)
         {
             this.fullName = fullName;
         }
@@ -88,63 +90,6 @@ namespace Typewriter.CodeModel.CodeDom
             get { return FullName != "System.String" && FullName.StartsWith("System.Collections."); }
         }
 
-        public IEnumerable<Type> GenericTypeArguments
-        {
-            get
-            {
-                if (IsGeneric == false) return new Type[0];
-                if (IsNullable && FullName.EndsWith("?")) return new[] { new TypeInfo(FullName.TrimEnd('?'), this, file) };
-
-                return ExtractGenericTypeNames(FullName).Select(n =>
-                {
-                    if (n.EndsWith("[]"))
-                    {
-                        n = string.Format("System.Collections.Generic.ICollection<{0}>", n);
-                    }
-                    return new TypeInfo(n, this, file);
-                });
-            }
-        }
-
-        private static IEnumerable<string> ExtractGenericTypeNames(string name)
-        {
-            var list = new List<string>();
-            var start = name.IndexOf("<", StringComparison.Ordinal);
-            var end = name.LastIndexOf(">", StringComparison.Ordinal) - (start + 1);
-
-            if (start < 0)
-            {
-                return list;
-            }
-
-            var arguments = name.Substring(start + 1, end);
-
-            var current = new StringBuilder();
-            var level = 0;
-            foreach (var character in arguments)
-            {
-                if (character == ',' && level == 0)
-                {
-                    list.Add(current.ToString());
-                    current = new StringBuilder();
-                }
-                else
-                {
-                    if (character == '<')
-                        level++;
-                    else if (character == '>')
-                        level--;
-
-                    current.Append(character);
-                }
-            }
-
-            if (current.Length > 0)
-                list.Add(current.ToString());
-
-            return list;
-        }
-
         public override string ToString()
         {
             var type = this as Type;
@@ -152,6 +97,11 @@ namespace Typewriter.CodeModel.CodeDom
             if (type.IsNullable)
             {
                 type = type.GenericTypeArguments.FirstOrDefault();
+            }
+            else if (type.IsGeneric && !type.IsEnumerable)
+            {
+                var types = type.GenericTypeArguments.Select(t => t.ToString());
+                return string.Format("{0}<{1}>", GetTypeScriptType(type.Name), string.Join(", ", types));
             }
             else if (type.IsEnumerable)
             {
@@ -164,8 +114,8 @@ namespace Typewriter.CodeModel.CodeDom
                     {
                         type = type.GenericTypeArguments.FirstOrDefault();
                     }
-                    
-                    return GetTypeScriptType(type.Name) + "[]";
+
+                    return type.ToString() + "[]";
                 }
 
                 return "any[]";
