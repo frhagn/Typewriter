@@ -62,6 +62,10 @@ $Classes(c => c.Attributes.Any(a => a.Name == "Model"))[
 ```
 
 ## Changelog
+* 0.9.12
+ * Added support for Visual Studio 2015 RC
+ * Changed the source file path mapping to be relative to the project directory instead of the solution directory 
+ * Minor bug fixes
 * 0.9.11
  * Performance optimizations when scanning solution for template files
 * 0.9.10
