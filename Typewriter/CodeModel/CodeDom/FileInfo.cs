@@ -42,7 +42,7 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 if (classes == null)
                 {
-                    classes = GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Members, c => (Class)new ClassInfo(c, this, this))).ToArray();
+                    classes = GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Members, c => c.Access == vsCMAccess.vsCMAccessPublic, c => (Class)new ClassInfo(c, this, this))).ToArray();
                 }
                 return classes;
             }
@@ -55,7 +55,7 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 if (enums == null)
                 {
-                    enums = GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Members, e => (Enum)new EnumInfo(e, this, this))).ToArray();
+                    enums = GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Members, e => e.Access == vsCMAccess.vsCMAccessPublic, e => (Enum)new EnumInfo(e, this, this))).ToArray();
                 }
                 return enums;
             }
@@ -68,7 +68,7 @@ namespace Typewriter.CodeModel.CodeDom
             {
                 if (interfaces == null)
                 {
-                    interfaces = GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Members, i => (Interface)new InterfaceInfo(i, this, this))).ToArray();
+                    interfaces = GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Members, i => i.Access == vsCMAccess.vsCMAccessPublic, i => (Interface)new InterfaceInfo(i, this, this))).ToArray();
                 }
                 return interfaces;
             }

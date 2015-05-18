@@ -66,11 +66,11 @@ namespace Typewriter.Generation
         {
             var parent = methodInfo.Parent as Item;
             var route = methodInfo.Attributes.FirstOrDefault(a => a.Name == "Route");
-            var routePrefix = parent != null ? parent.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix") : null;
+            var routePrefix = parent?.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix");
 
             if (route == null && routePrefix == null) return null;
             
-            return string.Concat(routePrefix != null ? routePrefix.Value + "/" : null, route != null ? route.Value : null);
+            return string.Concat(routePrefix != null ? routePrefix.Value + "/" : null, route?.Value);
         }
     }
 }

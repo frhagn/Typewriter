@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>TypeScript Template Models File</Name>
+    <Description>TypeScript Template file for creating strongly typed model classes</Description>
+    <Icon>tst.ico</Icon>
+    <TemplateID>bbf556a6-677e-4c55-9550-4563e5829809</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <NumberOfParentCategoriesToRollUp>0</NumberOfParentCategoriesToRollUp>
+    <DefaultName>Models.tst</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <References/>
+    <ProjectItem ReplaceParameters="true" ItemType="None">Models.tst</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

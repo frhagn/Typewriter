@@ -94,7 +94,7 @@ namespace Typewriter.Generation.Controllers
                 Log.Debug("Render {0}", path);
 
                 var file = new FileInfo(dte.Solution.FindProjectItem(path));
-                var success = template.Render(file, false);
+                var success = template.RenderFile(file, false);
 
                 if (success == false)
                 {
@@ -183,7 +183,18 @@ namespace Typewriter.Generation.Controllers
 
         private IEnumerable<ProjectItem> GetProjectItems()
         {
-            var projects = dte.Solution.AllProjetcs().Select(p => p.FileName);
+            var projects = dte.Solution.AllProjetcs().Select(p =>
+            {
+                try
+                {
+                    return p.FileName;
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug("Error finding project file name ({0})", ex.Message);
+                    return null;
+                }
+            });
             var files = projects.Where(p => string.IsNullOrWhiteSpace(p) == false)
                 .SelectMany(p => new System.IO.FileInfo(p).Directory.GetFiles("*.tst", SearchOption.AllDirectories));
             return files.Select(a => dte.Solution.FindProjectItem(a.FullName));

@@ -15,6 +15,7 @@ namespace Typewriter.Generation
         private readonly Type extensions;
         private readonly string template;
         private readonly string templatePath;
+        private readonly string projectPath;
         private readonly string solutionPath;
         private readonly ProjectItem projectItem;
 
@@ -24,6 +25,7 @@ namespace Typewriter.Generation
 
             this.projectItem = projectItem;
             this.templatePath = projectItem.Path();
+            this.projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
             this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
             
             var code = System.IO.File.ReadAllText(templatePath);
@@ -33,18 +35,26 @@ namespace Typewriter.Generation
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
         }
 
-        public bool Render(File file, bool saveProjectFile)
+        public string Render(File file, out bool success)
+        {
+            return Parser.Parse(template, extensions, file, out success);
+        }
+
+        public bool RenderFile(File file, bool saveProjectFile)
         {
             bool success;
-            var output = Parser.Parse(template, extensions, file, out success);
+            var output = Render(file, out success);
 
-            if (output == null)
+            if (success)
             {
-                DeleteFile(file.FullName, saveProjectFile);
-            }
-            else
-            {
-                SaveFile(file.FullName, output, saveProjectFile);
+                if (output == null)
+                {
+                    DeleteFile(file.FullName, saveProjectFile);
+                }
+                else
+                {
+                    SaveFile(file.FullName, output, saveProjectFile);
+                }
             }
 
             return success;
@@ -143,33 +153,34 @@ namespace Typewriter.Generation
             }
         }
 
-        private string GetRelativeSourcePath(string path)
-        {
-            if (path.StartsWith(solutionPath, StringComparison.InvariantCultureIgnoreCase))
-            {
-                path = path.Remove(0, solutionPath.Length);
-            }
-
-            return path;
-        }
-
         private string GetMappedSourceFile(ProjectItem item)
         {
             if (item == null) return null;
 
             var value = item.Properties.Item("CustomToolNamespace").Value as string;
-            return string.IsNullOrWhiteSpace(value) ? null : Path.Combine(solutionPath, value);
+            var path = string.IsNullOrWhiteSpace(value) ? null : Path.GetFullPath(Path.Combine(projectPath, value));
+
+            // Handle files created using older Typewriter versions
+            if (path != null && System.IO.File.Exists(path) == false)
+            {
+                return Path.Combine(solutionPath, value);
+            }
+
+            return path;
         }
 
         private void SetMappedSourceFile(ProjectItem item, string path)
         {
-            var relativeSourcePath = GetRelativeSourcePath(path);
+            var pathUri = new Uri(path);
+            var folderUri = new Uri(projectPath.Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar);
+            var relativeSourcePath = Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
+
             if (relativeSourcePath.Equals(GetMappedSourceFile(item), StringComparison.InvariantCultureIgnoreCase) == false)
             {
                 item.Properties.Item("CustomToolNamespace").Value = relativeSourcePath;
             }
         }
-
+        
         private ProjectItem GetExistingItem(string path)
         {
             foreach (ProjectItem item in projectItem.ProjectItems)
@@ -204,7 +215,7 @@ namespace Typewriter.Generation
                 var mappedSourceFile = GetMappedSourceFile(item);
                 if (mappedSourceFile == null || path.Equals(mappedSourceFile, StringComparison.InvariantCultureIgnoreCase)) return outputPath;
 
-                outputPath = Path.Combine(directory, string.Format("{0} ({1}).ts", fileName, i));
+                outputPath = Path.Combine(directory, $"{fileName} ({i}).ts");
             }
 
             throw new Exception("GetOutputPath");

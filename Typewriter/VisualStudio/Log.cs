@@ -20,18 +20,18 @@ namespace Typewriter.VisualStudio
         public static void Debug(string message, params object[] parameters)
         {
 #if DEBUG
-            instance.Write("DEBUG", message, parameters);
+            instance?.Write("DEBUG", message, parameters);
 #endif
         }
 
         public static void Error(string message, params object[] parameters)
         {
-            instance.Write("ERROR", message, parameters);
+            instance?.Write("ERROR", message, parameters);
         }
 
         private void Write(string type, string message, object[] parameters)
         {
-            message = string.Format("{0:HH:mm:ss} {1}: ", DateTime.Now, type) + message;
+            message = $"{DateTime.Now:HH:mm:ss} {type}: {message}";
 
             try
             {

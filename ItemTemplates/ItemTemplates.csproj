@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>12.0</OldToolsVersion>
-    <UpgradeBackupLocation />
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -77,11 +78,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Template.tst" />
+    <None Include="Models\Models.tst" />
+    <None Include="Empty\Template.tst" />
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="CSharp.vstemplate">
-      <OutputSubPath>Web</OutputSubPath>
+    <VSTemplate Include="Empty\EmptyCSharp.vstemplate">
+      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
+      <SubType>Designer</SubType>
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>
@@ -102,12 +105,38 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="tst.ico" />
+    <None Include="Empty\tst.ico" />
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Web.vstemplate">
-      <OutputSubPath>Web\Scripts</OutputSubPath>
+    <VSTemplate Include="Empty\EmptyWeb.vstemplate">
+      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
+      <SubType>Designer</SubType>
     </VSTemplate>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Empty\EmptyAspNet5.vstemplate">
+      <OutputSubPath>ASP.NET 5 Preview/TypeScript/TypeScript Templates</OutputSubPath>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Models\ModelsAspNet5.vstemplate">
+      <OutputSubPath>ASP.NET 5 Preview/TypeScript/TypeScript Templates</OutputSubPath>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <VSTemplate Include="Models\ModelsCSharp.vstemplate">
+      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
+    </VSTemplate>
+  </ItemGroup>
+  <ItemGroup>
+    <VSTemplate Include="Models\ModelsWeb.vstemplate">
+      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
+    </VSTemplate>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Models\tst.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

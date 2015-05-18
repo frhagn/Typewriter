@@ -168,7 +168,7 @@ namespace Typewriter.Generation
 
                                     output += string.Format(methodTemplate, name, type, parameter, body);
                                     stream.Advance(filter.Length + 2 + identifier.Length);
-                                    template += string.Format("${0}(${1})", identifier, name);
+                                    template += $"${identifier}(${name})";
                                 }
                                 catch
                                 {

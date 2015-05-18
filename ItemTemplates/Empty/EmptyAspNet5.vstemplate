@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>TypeScript Template</Name>
+    <Name>TypeScript Template File</Name>
     <Description>Empty TypeScript Template file</Description>
     <Icon>tst.ico</Icon>
-    <TemplateID>65cefb29-7a4a-416f-82cf-128c9521e195</TemplateID>
-    <ProjectType>Web</ProjectType>
-    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+    <TemplateID>aacefb29-7a4a-416f-82cf-128c9521e195</TemplateID>
+    <ProjectType>ProjectK</ProjectType>
     <NumberOfParentCategoriesToRollUp>2</NumberOfParentCategoriesToRollUp>
     <DefaultName>Template.tst</DefaultName>
   </TemplateData>

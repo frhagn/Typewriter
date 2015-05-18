@@ -184,6 +184,7 @@ namespace Typewriter.CodeModel.CodeDom
                 case "Char":
                     return "string";
                 case "Byte":
+                case "SByte":
                 case "Int16":
                 case "Int32":
                 case "Int64":
