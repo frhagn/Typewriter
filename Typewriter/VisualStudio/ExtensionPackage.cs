@@ -15,7 +15,7 @@ namespace Typewriter.VisualStudio
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    [ProvideLanguageService(typeof(LanguageService), Constants.LanguageName, 100)]
+    [ProvideLanguageService(typeof(LanguageService), Constants.LanguageName, 100, DefaultToInsertSpaces = true)]
     [ProvideLanguageExtension(typeof(LanguageService), Constants.Extension)]
     public sealed class ExtensionPackage : Package, IDisposable
     {
@@ -24,7 +24,7 @@ namespace Typewriter.VisualStudio
         private SolutionMonitor solutionMonitor;
         private TemplateController templateController;
         private EventQueue eventQueue;
-        
+
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
