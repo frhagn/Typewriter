@@ -11,7 +11,7 @@
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <TypeScriptToolsVersion>1.1</TypeScriptToolsVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -20,14 +20,48 @@
   <ItemGroup>
     <Content Include="css\bootstrap.css" />
     <Content Include="css\font-awesome.min.css" />
+    <Content Include="css\prism.css" />
+    <Content Include="css\site.css">
+      <DependentUpon>site.less</DependentUpon>
+    </Content>
+    <Content Include="css\site.min.css">
+      <DependentUpon>site.css</DependentUpon>
+    </Content>
     <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="img\header.jpg" />
     <Content Include="index.html" />
+    <Content Include="js\bootstrap.min.js" />
+    <Content Include="js\jquery-2.1.3.min.js" />
+    <Content Include="js\prism.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\FontAwesome.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="css\site.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="css\site.css.map">
+      <DependentUpon>site.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Examples\Models\Models.tst" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Examples\Controllers\Controllers.tst" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Examples\Controllers\EmployeeController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Examples\Controllers\EmployeeController.ts">
+      <DependentUpon>Controllers.tst</DependentUpon>
+      <CustomToolNamespace>Examples\Controllers\EmployeeController.cs</CustomToolNamespace>
+    </TypeScriptCompile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
@@ -45,7 +79,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>65108</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:65108/</IISUrl>
+          <IISUrl>http://localhost/Typewriter</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

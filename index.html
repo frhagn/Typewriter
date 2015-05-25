@@ -5,56 +5,227 @@
 <head>
     <meta charset="utf-8">
     <title>Typewriter</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/prism.css" />
+    <link rel="stylesheet" href="css/site.css" />
+
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
 </head>
 
 <body>
-
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
+    <div class="navbar navbar-themed navbar-fixed-top">
+        <div class="container-fluid">
             <div class="navbar-header">
-                <a href="index.html" class="navbar-brand">Typewriter</a>
+                <a href="#" class="navbar-brand">Typewriter</a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <i class="fa fa-bars"></i>
                 </button>
             </div>
             <div class="navbar-collapse collapse" id="navbar-main">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li>
-                        <a href="#">Getting started</a>
-                    </li>
-                    <li>
-                        <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" target="_blank">Download</a>
-                    </li>
-                </ul>
-
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="https://github.com/frhagn/Typewriter"><i class="fa fa-github"></i> Github</a></li>
+                    <li><a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" target="_blank">Download</a></li>
+                    <li><a href="#getting-started">Getting started</a></li>
+                    <li><a href="#examples">Examples</a></li>
+                    <li><a href="#docs">Docs</a></li>
+                    <li><a href="https://github.com/frhagn/Typewriter" target="_blank"><i class="fa fa-github"></i><span class="visible-xs-inline">&nbsp;&nbsp;Github</span></a></li>
                 </ul>
-
             </div>
         </div>
     </div>
 
-    <div class="container">
-
-        <div class="jumbotron">
+    <section class="header">
+        <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-8 col-md-7 col-sm-6">
+                <div class="col-sm-12 text-center">
                     <h1>Typewriter</h1>
-                    <p class="lead">Automatic TypeScript Template generation</p>
-                    <p><a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" class="btn btn-primary" target="_blank"><i class="fa fa-download"></i> Download</a>
+                    <p class="lead">En bra tagline på två meningar. En bra tagline på två meningar.</p>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <p>
+                        <a href="#getting-started" class="btn btn-default btn-lg">Getting started</a>
+                        <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" class="btn btn-primary btn-lg" target="_blank"><i class="fa fa-fw fa-download"></i>&nbsp;&nbsp;Download Typewriter</a>
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section>
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <h1 class="text-center text-primary"><i class="fa fa-rocket fa-3x"></i></h1>
+                    <h2 class="text-center">Fast</h2>
+                    <p>Compile your server side code to Typescript on the fly. No waiting required!</p>
+                    <p>Compile your server side code to Typescript on the fly. No waiting required!</p>
+                </div>
+                <div class="col-sm-4">
+                    <h1 class="text-center text-primary"><i class="fa fa-cog fa-3x"></i></h1>
+                    <h2 class="text-center">Flexible</h2>
+                    <p>Create custom templates that fits the technology in your project.</p>
+                    <p>Create custom templates that fits the technology in your project.</p>
+                </div>
+                <div class="col-sm-4">
+
+                    <h1 class="text-center text-primary"><i class="fa fa-thumbs-up fa-3x"></i></h1>
+                    <h2 class="text-center">It just works&trade;</h2>
+                    <p>Compiles your server side code to Typescript on the fly. No waiting required!</p>
+                    <p>Compiles your server side code to Typescript on the fly. No waiting required!</p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </section>
+
+    <div class="container-fluid"><div class="row"><div class="col-sm-8 col-sm-offset-2"><hr /></div></div></div>
+    <a id="getting-started"></a>
+
+    <section>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h2>Getting started</h2>
+                    <h3>Install Typewriter and start adding templates</h3>
+                </div>
+                <div class="col-sm-8 col-sm-offset-2">
+                    Typewriter doesn't require any configuration. When you install Typewriter in Visual Studio it will monitor source files in solutions that contain template files.
+                    If Typewriter detects that a source file has changed it will be transformed through all matching templates.
+                </div>
+                <div class="col-sm-4 col-sm-offset-4">
+                    <ol>
+                        <li>Install...</li>
+                        <li>Etc..</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid"><div class="row"><div class="col-sm-8 col-sm-offset-2"><hr /></div></div></div>
+    <a id="examples"></a>
+
+    <section>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h2>Examples</h2>
+                    <h3>Models</h3>
+                </div>
+
+                <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+                    Typesafe client representations of your models in an MVC-like environment.
+<pre><code class="language-typescript">
+// Models.tst
+$Classes(c => c.Name.EndsWith("Model"))[
+class $Name {
+    $Properties[
+    public $name: $Type = $IsEnumerable[[]][$Default];
+	]
+	    
+    constructor(json: any) {
+        $Properties[
+		this.$name = json.$name;
+		]    
+    }
+}]
+</code></pre>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+<pre><code class="language-clike">
+// EmployeeModel.cs
+public class EmployeeModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+</code></pre>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+                    <pre><code class="language-typescript">
+// EmployeeModel.ts (generated)
+class EmployeeModel {
+    public id:number = null;
+    public name: string = null;
+    
+    constructor(json:any) {
+        this.id = json.id;
+        this.name = json.name;
+    }             
+}
+</code></pre>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h3>Controllers</h3>
+                </div>
+
+                <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+                    Call restful JSON interfaces (MVC controllers) with easy async promises (featuring <a href="http://www.google.com?q=Q promise" target="_blank">Q</a>).
+<pre><code class="language-typescript">
+$Classes(c => c.Name.EndsWith("Model"))[
+class $Name {
+    $Properties[
+    public $name: $Type = $IsEnumerable[[]][$Default];
+	]
+	    
+    constructor(json: any) {
+        $Properties[
+		this.$name = json.$name;
+		]    
+    }
+}]</code></pre>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+<pre><code class="language-clike">
+public class EmployeeModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+<pre><code class="language-typescript">
+class EmployeeModel {
+    public id:number = null;
+    public name: string = null;
+    
+    constructor(json:any) {
+        this.id = json.id;
+        this.name = json.name;
+    }             
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
 
 </body>
 
