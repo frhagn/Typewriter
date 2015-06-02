@@ -6,6 +6,8 @@
 *.user
 *.sln.docstates
 
+bower_components/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
