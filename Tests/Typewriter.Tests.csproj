@@ -60,9 +60,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenericClassTests.cs" />
     <Compile Include="CodeModel\ClassInfo.cs" />
     <Compile Include="CodeModel\EnumInfo.cs" />
     <Compile Include="CodeModel\FileInfo.cs" />
+    <Compile Include="CodeModel\GenericClassInfo.cs" />
     <Compile Include="CodeModel\TestAttribute.cs" />
     <Compile Include="ClassTests.cs" />
     <Compile Include="EnumTests.cs" />
@@ -70,12 +72,20 @@
     <Compile Include="RenderTests.cs" />
     <Compile Include="Models\TestModel1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Render\WebApiController\Support\ComplexClassModel.cs" />
+    <Compile Include="Render\WebApiController\Support\HttpDeleteAttribute.cs" />
+    <Compile Include="Render\WebApiController\Support\HttpGetAttribute.cs" />
+    <Compile Include="Render\WebApiController\Support\HttpPostAttribute.cs" />
+    <Compile Include="Render\WebApiController\Support\HttpPutAttribute.cs" />
+    <Compile Include="Render\WebApiController\Support\IHttpActionResult.cs" />
+    <Compile Include="Render\WebApiController\WebApiController.cs" />
     <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\TestModel1.result" />
     <None Include="Models\TestModel1.tstemplate" />
     <None Include="packages.config" />
+    <None Include="Render\WebApiController\WebApiController.result" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Typewriter\Typewriter.csproj">
@@ -83,7 +93,9 @@
       <Name>Typewriter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Render\WebApiController\WebApiController.tstemplate" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

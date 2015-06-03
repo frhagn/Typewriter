@@ -167,6 +167,7 @@
     <Compile Include="CodeModel\CodeDom\ClassInfo.cs" />
     <Compile Include="CodeModel\CodeDom\EnumInfo.cs" />
     <Compile Include="CodeModel\CodeDom\EnumValueInfo.cs" />
+    <Compile Include="CodeModel\CodeDom\GenericTypeInfo.cs" />
     <Compile Include="CodeModel\CodeDom\InterfaceInfo.cs" />
     <Compile Include="CodeModel\CodeDom\ConstantInfo.cs" />
     <Compile Include="CodeModel\CodeDom\FieldInfo.cs" />

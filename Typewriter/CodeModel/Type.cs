@@ -18,8 +18,5 @@ namespace Typewriter.CodeModel
 
         [Property("bool IsPrimitive", "Determines if the $context is primitive")]
         bool IsPrimitive { get; }
-
-        [Property("collection GenericTypeArguments", "All generic type arguments of the $context")]
-        IEnumerable<Type> GenericTypeArguments { get; }
     }
 }
