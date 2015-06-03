@@ -269,7 +269,5 @@ namespace Tests
             typeProperty.FullName.ShouldEqual("Tests.CodeModel.Class1.Class11");
             typeProperty.Parent.ShouldEqual(generic);
         }
-
-        
     }
 }

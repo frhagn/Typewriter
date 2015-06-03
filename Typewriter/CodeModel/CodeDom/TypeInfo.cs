@@ -106,44 +106,6 @@ namespace Typewriter.CodeModel.CodeDom
             }
         }
 
-        private static IEnumerable<string> ExtractGenericTypeNames(string name)
-        {
-            var list = new List<string>();
-            var start = name.IndexOf("<", StringComparison.Ordinal);
-            var end = name.LastIndexOf(">", StringComparison.Ordinal) - (start + 1);
-
-            if (start < 0)
-            {
-                return list;
-            }
-
-            var arguments = name.Substring(start + 1, end);
-
-            var current = new StringBuilder();
-            var level = 0;
-            foreach (var character in arguments)
-            {
-                if (character == ',' && level == 0)
-                {
-                    list.Add(current.ToString());
-                    current = new StringBuilder();
-                }
-                else
-                {
-                    if (character == '<')
-                        level++;
-                    else if (character == '>')
-                        level--;
-
-                    current.Append(character);
-                }
-            }
-
-            if (current.Length > 0)
-                list.Add(current.ToString());
-
-            return list;
-        }
 
         public override string ToString()
         {

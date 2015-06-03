@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
+using System.Text;
 
 namespace Typewriter.CodeModel.CodeDom
 {
@@ -153,9 +154,26 @@ namespace Typewriter.CodeModel.CodeDom
                     Load();
                     try
                     {
-                        type = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray ?
-                            new TypeInfo(string.Format("System.Collections.Generic.ICollection<{0}>", element.Type.ElementType.AsFullName), this, file) :
-                            new TypeInfo(element.Type.CodeType, this, file);
+                        var typeKind = element.Type.TypeKind;
+                        var isArray = typeKind == (int)vsCMTypeRef.vsCMTypeRefArray;
+                        var isGenericTypeArgument = typeKind == (int)vsCMTypeRef.vsCMTypeRefOther
+                             && element.Type.AsFullName.Split('.').Length == 1;
+
+                        if (isGenericTypeArgument)
+                        {
+                            type = new GenericTypeInfo(element.Type.AsFullName, this, file);
+                        }
+                        else if (isArray)
+                        {
+                            var underlyingType = element.Type.ElementType.AsFullName;
+                            var collectionFormat = "System.Collections.Generic.ICollection<{0}>";
+
+                            type = new TypeInfo(string.Format(collectionFormat, underlyingType), this, file);
+                        }
+                        else
+                        {
+                            type = new TypeInfo(element.Type.CodeType, this, file);
+                        }
                     }
                     catch (NotImplementedException)
                     {
@@ -168,6 +186,46 @@ namespace Typewriter.CodeModel.CodeDom
 
         protected virtual void Load()
         {
+        }
+
+
+        protected static IEnumerable<string> ExtractGenericTypeNames(string name)
+        {
+            var list = new List<string>();
+            var start = name.IndexOf("<", StringComparison.Ordinal);
+            var end = name.LastIndexOf(">", StringComparison.Ordinal) - (start + 1);
+
+            if (start < 0)
+            {
+                return list;
+            }
+
+            var arguments = name.Substring(start + 1, end);
+
+            var current = new StringBuilder();
+            var level = 0;
+            foreach (var character in arguments)
+            {
+                if (character == ',' && level == 0)
+                {
+                    list.Add(current.ToString());
+                    current = new StringBuilder();
+                }
+                else
+                {
+                    if (character == '<')
+                        level++;
+                    else if (character == '>')
+                        level--;
+
+                    current.Append(character);
+                }
+            }
+
+            if (current.Length > 0)
+                list.Add(current.ToString());
+
+            return list;
         }
     }
 }

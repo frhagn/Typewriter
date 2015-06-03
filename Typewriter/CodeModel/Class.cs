@@ -27,5 +27,8 @@ namespace Typewriter.CodeModel
 
         [Property("collection Properties", "All properties defined in the $context")]
         ICollection<Property> Properties { get; }
+
+        [Property("collection GenericTypeArguments", "All generic type arguments of the $context")]
+        IEnumerable<Type> GenericTypeArguments { get; }
     }
 }
