@@ -102,6 +102,35 @@ namespace Typewriter.CodeModel.CodeDom
             }
         }
 
+        private bool baseClassLoaded = false;
+        private Class baseClass;
+        public virtual Class BaseClass
+        {
+            get
+            {
+                if (baseClassLoaded == false)
+                {
+                    Load();
+                    Func<CodeElements> func = () =>
+                    {
+                        var elements = element.Children;
+
+                        var codeType = element as CodeType;
+                        if (codeType != null) elements = codeType.Bases;
+
+                        var codeClass = element as CodeClass2;
+                        if (codeClass != null) elements = codeClass.Bases;
+
+                        return elements;
+                    };
+
+                    baseClass = Iterator<CodeClass2>.Select(func, i => (Class)new ClassInfo(i, this, file)).FirstOrDefault();
+                    baseClassLoaded = true;
+                }
+                return baseClass;
+            }
+        }
+
         private Method[] methods;
         public virtual ICollection<Method> Methods
         {

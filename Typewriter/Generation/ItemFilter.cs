@@ -23,7 +23,18 @@ namespace Typewriter.Generation
             else if (filter.StartsWith(":"))
             {
                 filter = filter.Remove(0, 1).Trim();
-                selector = i => i.Interfaces.SelectMany(a => new[] { a.Name, a.FullName });
+                selector = i =>
+                {
+                    var names = new List<string>();
+
+                    if (i.BaseClass != null)
+                    {
+                        names.Add(i.BaseClass.Name);
+                        names.Add(i.BaseClass.FullName);
+                    }
+
+                    return names.Concat(i.Interfaces.SelectMany(a => new[] { a.Name, a.FullName }));
+                };
             }
             else
             {
