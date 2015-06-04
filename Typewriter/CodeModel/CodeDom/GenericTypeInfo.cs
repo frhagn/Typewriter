@@ -5,9 +5,9 @@ namespace Typewriter.CodeModel.CodeDom
 {
     internal class GenericTypeInfo : Type
     {
-        private string fullName;
-        private object parent;
-        private FileInfo file;
+        private readonly string fullName;
+        private readonly object parent;
+        private readonly FileInfo file;
 
         public GenericTypeInfo(string fullName, object parent, FileInfo file)
         {
@@ -16,84 +16,22 @@ namespace Typewriter.CodeModel.CodeDom
             this.file = file;
         }
 
-        public ICollection<Attribute> Attributes
-        {
-            get { return new Attribute[0]; }
-        }
-
-        public ICollection<Constant> Constants
-        {
-            get { return new Constant[0]; }
-        }
-
-        public ICollection<Field> Fields
-        {
-            get { return new Field[0]; }
-        }
-
-        public string FullName
-        {
-            get { return fullName; }
-        }
-
-        public IEnumerable<Type> GenericTypeArguments
-        {
-            get { return new Type[0]; }
-        }
-
-        public ICollection<Interface> Interfaces
-        {
-            get { return new Interface[0]; }
-        }
-
-        public bool IsEnum
-        {
-            get { return false; }
-        }
-
-        public bool IsEnumerable
-        {
-            get { return false; }
-        }
-
-        public bool IsGeneric
-        {
-            get { return false; }
-        }
-
-        public bool IsNullable
-        {
-            get { return false; }
-        }
-
-        public bool IsPrimitive
-        {
-            get { return false; }
-        }
-
-        public ICollection<Method> Methods
-        {
-            get { return new Method[0]; }
-        }
-
-        public string Name
-        {
-            get { return fullName; }
-        }
-
-        public string Namespace
-        {
-            get { return null; }
-        }
-
-        public object Parent
-        {
-            get { return parent; }
-        }
-
-        public ICollection<Property> Properties
-        {
-            get { return new Property[0]; }
-        }
+        public ICollection<Attribute> Attributes => new Attribute[0];
+        public ICollection<Constant> Constants => new Constant[0];
+        public ICollection<Field> Fields => new Field[0];
+        public Class BaseClass => null;
+        public string FullName => fullName;
+        public IEnumerable<Type> GenericTypeArguments => new Type[0];
+        public ICollection<Interface> Interfaces => new Interface[0];
+        public bool IsEnum => false;
+        public bool IsEnumerable => false;
+        public bool IsGeneric => false;
+        public bool IsNullable => false;
+        public bool IsPrimitive => false;
+        public ICollection<Method> Methods => new Method[0];
+        public string Name => fullName;
+        public string Namespace => null;
+        public object Parent => parent;
+        public ICollection<Property> Properties => new Property[0];
     }
 }
