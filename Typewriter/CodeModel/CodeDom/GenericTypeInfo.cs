@@ -33,5 +33,10 @@ namespace Typewriter.CodeModel.CodeDom
         public string Namespace => null;
         public object Parent => parent;
         public ICollection<Property> Properties => new Property[0];
+
+        public override string ToString()
+        {
+            return fullName;
+        }
     }
 }
