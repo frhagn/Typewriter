@@ -13,6 +13,7 @@ namespace Typewriter.Generation
                 using System;
                 using System.Linq;
                 using Typewriter.CodeModel;
+                using Typewriter.Generation;
 
                 public class Code
                 {{
