@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Tests.Render.Support;
 using Tests.Render.WebApiController.Support;
 
 namespace Tests.Render.WebApiController

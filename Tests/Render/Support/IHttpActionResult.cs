@@ -1,4 +1,4 @@
-﻿namespace Tests.Render.WebApiController.Support
+﻿namespace Tests.Render.Support
 {
     public interface IHttpActionResult<T>
     {

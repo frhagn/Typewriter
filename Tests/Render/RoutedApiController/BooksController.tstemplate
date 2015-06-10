@@ -1,0 +1,21 @@
+﻿${
+	var verb = (Method m) => {
+		var attribute = m.Attributes.FirstOrDefault(a => a.Name.Contains("Http"));
+		if(attribute == null) return string.Empty;
+		return attribute.Name
+			.Replace("Http", "")
+			.ToLower();
+	}
+	var adjustedRoute = (Method m) => {
+		var route = Extensions.Route(m);
+		return route;
+	}
+}
+module App {$Classes(*Controller)[    
+    export class $Name {
+		$Methods[
+		public $name = ($Parameters[$name: $Type][, ]) : Promise<$Type> => {
+            return ajax("$verb", "$adjustedRoute");
+        }]
+    }]
+}
