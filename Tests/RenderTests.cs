@@ -6,7 +6,6 @@ using Typewriter.Generation;
 using Tests.Models;
 using Tests.Render.WebApiController;
 using Tests.Render.RoutedApiController;
-using System.Diagnostics;
 
 namespace Tests
 {

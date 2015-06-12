@@ -14,6 +14,7 @@ namespace Typewriter.Generation
                 using System.Linq;
                 using Typewriter.CodeModel;
                 using Typewriter.Generation;
+                using System.Collections.Generic;
 
                 public class Code
                 {{
