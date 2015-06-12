@@ -6,61 +6,6 @@ using System.Collections.Generic;
 using Typewriter.Generation;
 namespace Tests
 {
-    public class TestTests : TestBase
-    {
-        private readonly File fileInfo = GetFile(@"Tests\Render\RoutedApiController\BooksController.cs");
-
-        public void Test()
-        {
-            var classInfo = fileInfo.Classes.First();
-
-            GetValue(classInfo.Methods.First()).ShouldEqual("libraryId: number");
-        }
-
-        private string GetValue(Method method)
-        {
-            var parameters = method.Parameters.Select(p => new KeyValuePair<string, string>(p.Name, p.Type.ToString())).ToList();
-            var matches = new System.Text.RegularExpressions.Regex(@"\{(\w+\:?\w+)\}").Matches(Extensions.Route(method));
-
-            foreach (System.Text.RegularExpressions.Match match in matches)
-            {
-                var values = match.Groups[1].Value.Split(':');
-                if (parameters.Any(p => p.Key == values[0])) continue;
-                var type = "any";
-                if (new[] { "decimal", "double", "float", "int", "long" }.Contains(values[1])) type = "number";
-                else if (new[] { "string", "guid", "datetime" }.Contains(values[1])) type = "string";
-                parameters.Add(new KeyValuePair<string, string>(values[0], type));
-            }
-            return string.Join(", ", parameters.Select(p => string.Format("{0}: {1}", p.Key, p.Value)));
-        }
-
-        public void Test2()
-        {
-            var classInfo = fileInfo.Classes.First();
-
-            DoStuff(classInfo.Methods.ToArray()[1]).ShouldEqual("\"api/library/\" + libraryId + \"/books/\" + id");
-            DoStuff(classInfo.Methods.ToArray()[3])
-                .ShouldEqual("\"api/library/\" + libraryId + \"/books/\" + \"?query1=\" + query1 + \"&query2=\" + query2");
-
-            System.Text.RegularExpressions.Regex.IsMatch("api/library/{libraryId:int}/books/{id}", @"\{libraryId:?\w?\}");
-        }
-
-        private string DoStuff(Method method)
-        {
-            var route = Extensions.Route(method);
-            var queryString = string.Join(" + \"&", method.Parameters.Where(p => p.Attributes.Any(a => a.Name == "FromBody") == false
-            && System.Text.RegularExpressions.Regex.IsMatch(route, "\\{" + p.Name + ":?\\w?") == false)
-                .Select(p => string.Format("{0}=\" + {0}", p.Name)));
-
-            var routeExpression = "\"" + System.Text.RegularExpressions.Regex.Replace(route, @"\{(\w+):?\w*\}", delegate (System.Text.RegularExpressions.Match match)
-            {
-                return string.Format("\" + {0} + \"", match.Groups[1].Value);
-            }) + "\"";
-            if (routeExpression.EndsWith(" + \"\"")) routeExpression = routeExpression.Remove(routeExpression.Length - 5);
-            return routeExpression + (string.IsNullOrEmpty(queryString) ? "" : " + \"?" + queryString);
-        }
-
-    }
     public class ClassTests : TestBase
     {
         private readonly File fileInfo = GetFile(@"Tests\CodeModel\ClassInfo.cs");
