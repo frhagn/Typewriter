@@ -110,7 +110,7 @@ namespace Typewriter.CodeModel.CodeDom
                 if (methods == null)
                 {
                     Load();
-                    methods = Iterator<CodeFunction2>.Select(() => element.Children, m => m.FunctionKind != vsCMFunction.vsCMFunctionConstructor, f => (Method)new MethodInfo(f, this, file)).ToArray();
+                    methods = Iterator<CodeFunction2>.Select(() => element.Children, m => m.Access == vsCMAccess.vsCMAccessPublic && m.FunctionKind != vsCMFunction.vsCMFunctionConstructor, f => (Method)new MethodInfo(f, this, file)).ToArray();
                 }
                 return methods;
             }

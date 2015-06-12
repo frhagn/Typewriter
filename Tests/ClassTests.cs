@@ -30,6 +30,16 @@ namespace Tests
             classInfo.Attributes.First().Value.ShouldEqual("classParameter");
         }
 
+        public void Methods()
+        {
+            var classInfo = fileInfo.Classes.First();
+
+            classInfo.Methods.Count.ShouldEqual(1);
+
+            var method = classInfo.Methods.Single();
+            method.Name.ShouldEqual("Method1");
+        }
+
         #region Primitive properties
 
         public void BoolProperties()
@@ -200,7 +210,7 @@ namespace Tests
 
             property.Type.Attributes.Count.ShouldEqual(1);
             property.Type.Properties.Any().ShouldBeTrue();
-            property.Type.Methods.Any().ShouldBeFalse();
+            property.Type.Methods.Count().ShouldEqual(1);
 
             var typeProperty = property.Type.Properties.First(p => p.Name == "Class11");
             typeProperty.Name.ShouldEqual("Class11");
@@ -263,7 +273,7 @@ namespace Tests
 
             generic.Attributes.Count.ShouldEqual(1);
             generic.Properties.Any().ShouldBeTrue();
-            generic.Methods.Any().ShouldBeFalse();
+            generic.Methods.Count().ShouldEqual(1);
 
             var typeProperty = generic.Properties.First(p => p.Name == "Class11");
             typeProperty.Name.ShouldEqual("Class11");
