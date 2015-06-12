@@ -18,6 +18,6 @@ namespace Tests.Render.RoutedApiController
         public Book GetByLibraryAndId(int libraryId, int id) { throw new NotImplementedException(); }
 
         [Route(""), HttpPost]
-        public HttpStatusCode Post([FromBody]Book book) { throw new NotImplementedException(); }
+        public HttpStatusCode Post([FromBody]Book book, string query1, bool query2) { throw new NotImplementedException(); }
     }
 }
