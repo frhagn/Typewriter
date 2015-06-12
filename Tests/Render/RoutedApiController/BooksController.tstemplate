@@ -7,15 +7,31 @@
 			.ToLower();
 	}
 	var adjustedRoute = (Method m) => {
-		var route = Extensions.Route(m);
-		return route;
+        var routeExpression = "\"" + System.Text.RegularExpressions.Regex.Replace(Extensions.Route(m), @"\{(\w+):?\w*\}", delegate (System.Text.RegularExpressions.Match match)
+        {
+            return string.Format("\" + {0} + \"", match.Groups[1].Value);
+        });
+        if (routeExpression.EndsWith(" + \"")) return routeExpression.Remove(routeExpression.Length - 4);
+        return routeExpression + "\"";
+	}
+	var adjustedParameters = (Method m) => {
+		var parameters = m.Parameters.Select(p => new KeyValuePair<string, string>(p.Name, p.Type.ToString())).ToList();
+        var matches = new System.Text.RegularExpressions.Regex(@"\{(\w+\:?\w+)\}").Matches(Extensions.Route(m));
+
+        foreach (System.Text.RegularExpressions.Match match in matches)
+        {
+            var values = match.Groups[1].Value.Split(':');
+            if (parameters.Any(p => p.Key == values[0])) continue;
+            var type = "any";
+            if (new[] { "decimal", "double", "float", "int", "long" }.Contains(values[1])) type = "number";
+            else if (new[] { "string", "guid", "datetime" }.Contains(values[1])) type = "string";
+            parameters.Add(new KeyValuePair<string, string>(values[0], type));
+        }
+        return string.Join(", ", parameters.Select(p => string.Format("{0}: {1}", p.Key, p.Value)));
 	}
 }
-module App {$Classes(*Controller)[    
-    export class $Name {
-		$Methods[
-		public $name = ($Parameters[$name: $Type][, ]) : Promise<$Type> => {
-            return ajax("$verb", "$adjustedRoute");
-        }]
-    }]
+module App {$Classes(*Controller)[
+	export class $Name {$Methods[
+		public $name = ($adjustedParameters) : Promise<$Type> => ajax("$verb", $adjustedRoute, { $Parameters([FromBody])[$name: $name][, ] });]
+	}]
 }

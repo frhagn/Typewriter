@@ -2,51 +2,10 @@
 using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using System.Collections.Generic;
-using Typewriter.Generation;
-using NUnit.Framework;
+
 
 namespace Tests
 {
-    [TestFixture]
-    public class TestTests: TestBase
-    {
-        private readonly File fileInfo = GetFile(@"Tests\Render\RoutedApiController\BooksController.cs");
-
-        [Test]
-        public void Test()
-        {
-            var classInfo = fileInfo.Classes.First();
-
-            var v = GetValue(classInfo.Methods.First());
-            v.Single().Key.ShouldEqual("libraryId");
-            v.Single().Value.ShouldEqual("number");
-        }
-
-        private List<KeyValuePair<string, string>> GetValue(Method method)
-        {
-            var numbers = new[] { "decimal", "double", "float", "int", "long" };
-            var strings = new[] { "string", "guid", "datetime" };
-            var parameters = method.Parameters
-                .Select(p => new KeyValuePair<string, string>(p.Name, p.Type.ToString()))
-                .ToList();
-            var route = Extensions.Route(method);
-            var matches = new System.Text.RegularExpressions.Regex(@"\{(\w+\:?\w+)\}").Matches(route);
-
-            foreach (System.Text.RegularExpressions.Match match in matches)
-            {
-                var values = match.Groups[0].Captures[0].Value.Split(':');
-                if (parameters.Any(p => p.Key == values[0])) continue;
-                var type = "any";
-                if (numbers.Contains(values[1])) type = "number";
-                else if (strings.Contains(values[1])) type = "string";
-                parameters.Add(new KeyValuePair<string, string>(
-                    values[0], 
-                    values[1]));
-            }
-            return parameters;
-        }
-    }
     public class ClassTests : TestBase
     {
         private readonly File fileInfo = GetFile(@"Tests\CodeModel\ClassInfo.cs");

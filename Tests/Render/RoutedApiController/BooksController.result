@@ -1,21 +1,9 @@
 ﻿
-module App {    
-    export class BooksController {
-		
-		public get = (libraryId: number) : Promise<Book[]> => {
-			return ajax("get", "api/library/" + libraryId + "/books/");
-        }
-
-		public getById = (libraryId: number, id: number) : Promise<Book> => {
-			return ajax("get", "api/library/" + libraryId + "/books/" + id);
-        }
-
-		public getByLibraryAndId = (libraryId: number, id: number) : Promise<Book> => {
-			return ajax("get", "api/library/" + libraryId + "/books/" + id);
-        }
-
-		public post = (libraryId: number, book: Book) : Promise<HttpStatusCode> => {
-			return ajax("post", "api/books", book);
-        }
-    }
+module App {
+	export class BooksController {
+		public get = (libraryId: number) : Promise<Book[]> => ajax("get", "api/library/" + libraryId + "/books/", {  });
+		public getById = (id: number, libraryId: number) : Promise<Book> => ajax("get", "api/library/" + libraryId + "/books/" + id, {  });
+		public getByLibraryAndId = (libraryId: number, id: number) : Promise<Book> => ajax("get", "api/library/" + libraryId + "/books/" + id, {  });
+		public post = (book: Book, libraryId: number) : Promise<HttpStatusCode> => ajax("post", "api/library/" + libraryId + "/books/", { book: book });
+	}
 }
