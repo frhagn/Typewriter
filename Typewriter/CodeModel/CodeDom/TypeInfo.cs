@@ -144,7 +144,7 @@ namespace Typewriter.CodeModel.CodeDom
                     return "boolean";
                 case "String":
                 case "Char":
-                case "Guid"
+                case "Guid":
                     return "string";
                 case "Byte":
                 case "SByte":
