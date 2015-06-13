@@ -34,12 +34,7 @@ namespace Typewriter.CodeModel.CodeDom
         public string Namespace => null;
         public ICollection<Property> Properties => new Property[0];
 
-        public override string ToString()
-        {
-            return fullName;
-        }
-
-        public static IEnumerable<Type> FromFullName(string fullName, Item parent)
+        internal static IEnumerable<Type> FromFullName(string fullName, Item parent)
         {
             return ExtractGenericTypeNames(fullName).Select(n => new GenericTypeInfo(n, parent));
         }

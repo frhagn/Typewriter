@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
@@ -11,7 +10,7 @@ namespace Typewriter.CodeModel.CodeDom
         private readonly CodeVariable2 codeVariable;
         private readonly Item parent;
 
-        public FieldInfo(CodeVariable2 codeVariable, Item parent)
+        protected FieldInfo(CodeVariable2 codeVariable, Item parent)
         {
             this.codeVariable = codeVariable;
             this.parent = parent;

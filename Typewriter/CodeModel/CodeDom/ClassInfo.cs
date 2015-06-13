@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
-using EnvDTE80;
 using System.Linq;
 using EnvDTE;
+using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
@@ -11,7 +10,7 @@ namespace Typewriter.CodeModel.CodeDom
         private readonly CodeClass2 codeClass;
         private readonly Item parent;
 
-        public ClassInfo(CodeClass2 codeClass, Item parent)
+        private ClassInfo(CodeClass2 codeClass, Item parent)
         {
             this.codeClass = codeClass;
             this.parent = parent;
@@ -24,7 +23,7 @@ namespace Typewriter.CodeModel.CodeDom
         public bool IsGeneric => codeClass.IsGeneric;
 
         private Class  baseClass;
-        public Class BaseClass => baseClass ?? (baseClass = ClassInfo.FromCodeElements(codeClass.Bases, this).FirstOrDefault());
+        public Class BaseClass => baseClass ?? (baseClass = FromCodeElements(codeClass.Bases, this).FirstOrDefault());
 
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeClass.Attributes, this).ToArray());

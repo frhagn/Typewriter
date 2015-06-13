@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
@@ -8,7 +7,7 @@ namespace Typewriter.CodeModel.CodeDom
 {
     public class ConstantInfo : FieldInfo, Constant
     {
-        public ConstantInfo(CodeVariable2 codeVariable, Item parent) : base(codeVariable, parent)
+        private ConstantInfo(CodeVariable2 codeVariable, Item parent) : base(codeVariable, parent)
         {
         }
 

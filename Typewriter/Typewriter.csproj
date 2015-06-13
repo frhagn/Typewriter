@@ -169,6 +169,8 @@
     <Compile Include="CodeModel\Class.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeModel\CodeDom\LazyTypeInfo.cs" />
+    <Compile Include="CodeModel\CodeDom\TypeFactory.cs" />
     <Compile Include="CodeModel\Constant.cs">
       <SubType>Code</SubType>
     </Compile>

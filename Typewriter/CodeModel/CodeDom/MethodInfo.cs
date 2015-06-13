@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
@@ -38,7 +37,7 @@ namespace Typewriter.CodeModel.CodeDom
 
         internal static IEnumerable<Method> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            return codeElements.OfType<CodeFunction2>().Where(f => f.FunctionKind != vsCMFunction.vsCMFunctionConstructor).Select(f => new MethodInfo(f, parent));
+            return codeElements.OfType<CodeFunction2>().Where(f => f.FunctionKind != vsCMFunction.vsCMFunctionConstructor && f.Access == vsCMAccess.vsCMAccessPublic).Select(f => new MethodInfo(f, parent));
         }
     }
 }

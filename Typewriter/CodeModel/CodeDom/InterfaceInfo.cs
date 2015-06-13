@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
@@ -30,7 +29,7 @@ namespace Typewriter.CodeModel.CodeDom
         public ICollection<Type> GenericTypeArguments => genericTypeArguments ?? (genericTypeArguments = GenericTypeInfo.FromFullName(codeInterface.FullName, this).ToArray());
 
         private Interface[] interfaces;
-        public ICollection<Interface> Interfaces => interfaces ?? (interfaces = InterfaceInfo.FromCodeElements(codeInterface.Bases, this).ToArray());
+        public ICollection<Interface> Interfaces => interfaces ?? (interfaces = FromCodeElements(codeInterface.Bases, this).ToArray());
 
         private Method[] methods;
         public ICollection<Method> Methods => methods ?? (methods = MethodInfo.FromCodeElements(codeInterface.Children, this).ToArray());

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
@@ -38,7 +37,7 @@ namespace Typewriter.CodeModel.CodeDom
         
         internal static IEnumerable<Property> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            return codeElements.OfType<CodeProperty2>().Select(p => new PropertyInfo(p, parent));
+            return codeElements.OfType<CodeProperty2>().Where(p => p.Access == vsCMAccess.vsCMAccessPublic).Select(p => new PropertyInfo(p, parent));
         }
     }
 }

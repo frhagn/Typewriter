@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
@@ -23,9 +22,9 @@ namespace Typewriter.CodeModel.CodeDom
         public string Value => codeAttribute.Value?.Trim('"');
 
         private Attribute[] attributes;
-        public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeAttribute.Children, this).ToArray());
-        
-        public static IEnumerable<Attribute> FromCodeElements(CodeElements codeElements, Item parent)
+        public ICollection<Attribute> Attributes => attributes ?? (attributes = FromCodeElements(codeAttribute.Children, this).ToArray());
+
+        internal static IEnumerable<Attribute> FromCodeElements(CodeElements codeElements, Item parent)
         {
             return codeElements.OfType<CodeAttribute2>().Select(a => new AttributeInfo(a, parent));
         }
