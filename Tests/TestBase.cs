@@ -1,29 +1,30 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
+using Tests.VisualStudio;
+using Xunit;
 using File = Typewriter.CodeModel.File;
+
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace Tests
 {
-    public abstract class TestBase
+    public abstract class TestBase : IDisposable
     {
-        protected static DTE dte;
-
-        [DllImport("ole32.dll")]
-        public static extern int GetRunningObjectTable(uint dwReserved, out IRunningObjectTable pprot);
-
-        [DllImport("ole32.dll")]
-        public static extern int CreateBindCtx(uint dwReserved, out IBindCtx ppbc);
+        private static readonly DTE dte;
 
         static TestBase()
         {
-            dte = GetDte("Typewriter.sln");
+            dte = Dte.GetInstance("Typewriter.sln");
         }
 
-        private static string solutionDirectory;
-        protected static string SolutionDirectory => solutionDirectory ?? (solutionDirectory = new FileInfo(dte.Solution.FileName).Directory.FullName);
+        protected TestBase()
+        {
+            // Handle threading errors when calling into Visual Studio.
+            MessageFilter.Register();
+        }
+        
+        protected static string SolutionDirectory => new FileInfo(dte.Solution.FileName).Directory?.FullName;
 
         protected static ProjectItem GetProjectItem(string path)
         {
@@ -40,59 +41,9 @@ namespace Tests
             return new Typewriter.CodeModel.CodeDom.FileInfo(GetProjectItem(path));
         }
 
-        private static DTE GetDte(string solution)
+        public void Dispose()
         {
-            const string visualStudioProgId = "!VisualStudio.DTE.";
-
-            IRunningObjectTable runningObjectTable = null;
-            IEnumMoniker enumMoniker = null;
-            IBindCtx bindCtx = null;
-
-            try
-            {
-                Marshal.ThrowExceptionForHR(GetRunningObjectTable(0, out runningObjectTable));
-                runningObjectTable.EnumRunning(out enumMoniker);
-
-                IMoniker[] monikers = new IMoniker[1];
-                enumMoniker.Reset();
-
-                Marshal.ThrowExceptionForHR(CreateBindCtx(0, out bindCtx));
-
-                while (enumMoniker.Next(1, monikers, IntPtr.Zero) == 0)
-                {
-                    string displayName;
-                    monikers[0].GetDisplayName(bindCtx, null, out displayName);
-
-                    if (displayName.StartsWith(visualStudioProgId))
-                    {
-                        object o;
-                        Marshal.ThrowExceptionForHR(runningObjectTable.GetObject(monikers[0], out o));
-
-                        var d = (DTE)o;
-
-                        if (d.Solution.FullName.EndsWith(solution, StringComparison.InvariantCultureIgnoreCase)) return d;
-                    }
-                }
-            }
-            finally
-            {
-                if (runningObjectTable != null)
-                {
-                    Marshal.ReleaseComObject(runningObjectTable);
-                }
-
-                if (enumMoniker != null)
-                {
-                    Marshal.ReleaseComObject(enumMoniker);
-                }
-
-                if (bindCtx != null)
-                {
-                    Marshal.ReleaseComObject(bindCtx);
-                }
-            }
-
-            return null;
+            MessageFilter.Revoke();
         }
     }
 }

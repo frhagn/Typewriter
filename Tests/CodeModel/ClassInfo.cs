@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Fixie;
-using Fixie.Execution;
 
 namespace Tests.CodeModel
 {
@@ -51,10 +49,10 @@ namespace Tests.CodeModel
         public Action Action1 { get; set; } // Delegate
 
         // Referenced dll types
-        public Case Case1 { get; set; } // Class
-        public CaseBehavior CaseBehavior1 { get; set; } // Interface
-        public CaseStatus CaseStatus1 { get; set; } // Enum
-        public CaseBehaviorAction CaseBehaviorAction1 { get; set; } // Delegate
+        //public Case Case1 { get; set; } // Class
+        //public CaseBehavior CaseBehavior1 { get; set; } // Interface
+        //public CaseStatus CaseStatus1 { get; set; } // Enum
+        //public CaseBehaviorAction CaseBehaviorAction1 { get; set; } // Delegate
 
         // Defined types
         public Class1 Class11 { get; set; } // Class

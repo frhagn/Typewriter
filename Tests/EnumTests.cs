@@ -2,6 +2,7 @@
 using System.Linq;
 using Should;
 using Typewriter.CodeModel;
+using Xunit;
 
 namespace Tests
 {
@@ -9,6 +10,7 @@ namespace Tests
     {
         private readonly File fileInfo = GetFile(@"Tests\CodeModel\EnumInfo.cs");
 
+        [Fact]
         public void Info()
         {
             var enumInfo = fileInfo.Enums.First();
@@ -18,6 +20,7 @@ namespace Tests
             enumInfo.Parent.ShouldEqual(fileInfo);
         }
 
+        [Fact]
         public void Attributes()
         {
             var enumInfo = fileInfo.Enums.First();
@@ -32,6 +35,7 @@ namespace Tests
             enumInfo.Attributes.Skip(1).First().FullName.ShouldEqual("System.FlagsAttribute");
         }
 
+        [Fact]
         public void Values()
         {
             var enumInfo = fileInfo.Enums.First();

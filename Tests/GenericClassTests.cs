@@ -2,6 +2,7 @@
 using System.Linq;
 using Should;
 using Typewriter.CodeModel;
+using Xunit;
 
 namespace Tests
 {
@@ -9,6 +10,7 @@ namespace Tests
     {
         private readonly File fileInfo = GetFile(@"Tests\CodeModel\GenericClassInfo.cs");
 
+        [Fact]
         public void Info()
         {
             var classInfo = fileInfo.Classes.First();
@@ -21,6 +23,7 @@ namespace Tests
             classInfo.GenericTypeArguments.Any().ShouldBeTrue("Class GenericTypeArguments");
         }
 
+        [Fact]
         public void PrimitiveGenericProperties()
         {
             var classInfo = fileInfo.Classes.First();
@@ -51,6 +54,7 @@ namespace Tests
             property.Type.Parent.ShouldEqual(property);
         }
 
+        [Fact]
         public void EnumerableGenericProperties()
         {
             var classInfo = fileInfo.Classes.First();
@@ -65,7 +69,8 @@ namespace Tests
 
             VerifyEnumerableProperty(property);
         }
-        
+
+        [Fact]
         public void ArrayGenericProperties()
         {
             var classInfo = fileInfo.Classes.First();
@@ -80,7 +85,7 @@ namespace Tests
 
             VerifyEnumerableProperty(property);
         }
-
+        
         private static void VerifyEnumerableProperty(Property property)
         {
             property.HasGetter.ShouldBeTrue("HasGetter");

@@ -3,13 +3,15 @@ using System.Linq;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Generation;
+using Xunit;
 
 namespace Tests
 {
     public class ClassTests : TestBase
     {
         private readonly File fileInfo = GetFile(@"Tests\CodeModel\ClassInfo.cs");
-
+        
+        [Fact]
         public void Info()
         {
             var classInfo = fileInfo.Classes.First();
@@ -19,6 +21,7 @@ namespace Tests
             classInfo.Parent.ShouldEqual(fileInfo);
         }
 
+        [Fact]
         public void Attributes()
         {
             var classInfo = fileInfo.Classes.First();
@@ -32,76 +35,91 @@ namespace Tests
 
         #region Primitive properties
 
+        [Fact]
         public void BoolProperties()
         {
             TestPrimitiveProperty("Bool1", "Boolean");
         }
 
+        [Fact]
         public void CharProperties()
         {
             TestPrimitiveProperty("Char1", "Char");
         }
 
+        [Fact]
         public void StringProperties()
         {
             TestPrimitiveProperty("String1", "String");
         }
 
+        [Fact]
         public void ByteProperties()
         {
             TestPrimitiveProperty("Byte1", "Byte");
         }
 
+        [Fact]
         public void SbyteProperties()
         {
             TestPrimitiveProperty("Sbyte1", "SByte");
         }
 
+        [Fact]
         public void IntProperties()
         {
             TestPrimitiveProperty("Int1", "Int32");
         }
 
+        [Fact]
         public void UintProperties()
         {
             TestPrimitiveProperty("Uint1", "UInt32");
         }
 
+        [Fact]
         public void ShortProperties()
         {
             TestPrimitiveProperty("Short1", "Int16");
         }
 
+        [Fact]
         public void UshortProperties()
         {
             TestPrimitiveProperty("Ushort1", "UInt16");
         }
 
+        [Fact]
         public void LongProperties()
         {
             TestPrimitiveProperty("Long1", "Int64");
         }
 
+        [Fact]
         public void UlongProperties()
         {
             TestPrimitiveProperty("Ulong1", "UInt64");
         }
 
+        [Fact]
         public void FloatProperties()
         {
             TestPrimitiveProperty("Float1", "Single");
         }
 
+        [Fact]
         public void DoubleProperties()
         {
             TestPrimitiveProperty("Double1", "Double");
         }
 
+        [Fact]
         public void DecimalProperties()
         {
             TestPrimitiveProperty("Decimal1", "Decimal");
         }
 
+        [Fact]
         public void DateProperties()
         {
             TestPrimitiveProperty("DateTime1", "DateTime");
@@ -139,6 +157,7 @@ namespace Tests
 
         #endregion
 
+        [Fact]
         public void ObjectProperties()
         {
             var classInfo = fileInfo.Classes.First();
@@ -169,6 +188,7 @@ namespace Tests
             property.Type.Parent.ShouldEqual(property);
         }
 
+        [Fact]
         public void DefinedClassProperties()
         {
             var classInfo = fileInfo.Classes.First();
@@ -208,6 +228,7 @@ namespace Tests
             typeProperty.Parent.ShouldEqual(property.Type);
         }
 
+        [Fact]
         public void DefinedEnumProperties()
         {
             var classInfo = fileInfo.Classes.First();
@@ -227,6 +248,7 @@ namespace Tests
             property.IsPrimitive.ShouldBeTrue("IsPrimitive");
         }
 
+        [Fact]
         public void EnumerableDefinedClassProperties()
         {
             var classInfo = fileInfo.Classes.First();
@@ -273,6 +295,7 @@ namespace Tests
             Extensions.Type(property.Type).ShouldEqual("Class1[]");
         }
 
+        [Fact]
         public void EnumerableEnumerablePrimitiveProperties()
         {
             var classInfo = fileInfo.Classes.First();
@@ -315,6 +338,7 @@ namespace Tests
             Extensions.Type(property.Type).ShouldEqual("string[][]");
         }
 
+        [Fact]
         public void EnumerableEnumerableEnumerablePrimitiveProperties()
         {
             var classInfo = fileInfo.Classes.First();
