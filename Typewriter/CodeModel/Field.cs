@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
     [Context("Field", "Fields")]
-    public interface Field : Item
+    public interface Field : CodeItem
     {
         [Property("bool IsEnum", "Determines if the $context is an enum")]
         bool IsEnum { get; }

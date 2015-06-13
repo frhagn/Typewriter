@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ItemInfo = Typewriter.CodeModel.CodeDom.ItemInfo;
+using Typewriter.CodeModel;
 
 namespace Typewriter.Generation
 {
     internal static class ItemFilter
     {
-        internal static IEnumerable<object> Apply(IEnumerable<object> items, string filter, ref bool matchFound)
+        internal static IEnumerable<CodeItem> Apply(IEnumerable<CodeItem> items, string filter, ref bool matchFound)
         {
             if (string.IsNullOrWhiteSpace(filter)) return items;
 
-            Func<ItemInfo, IEnumerable<string>> selector;
+            Func<CodeItem, IEnumerable<string>> selector;
 
             filter = filter.Trim();
 
@@ -27,13 +27,19 @@ namespace Typewriter.Generation
                 {
                     var names = new List<string>();
 
-                    if (i.BaseClass != null)
+                    var classInfo = i as Class;
+                    if (classInfo?.BaseClass != null)
                     {
-                        names.Add(i.BaseClass.Name);
-                        names.Add(i.BaseClass.FullName);
+                        names.Add(classInfo.BaseClass.Name);
+                        names.Add(classInfo.BaseClass.FullName);
                     }
 
-                    return names.Concat(i.Interfaces.SelectMany(a => new[] { a.Name, a.FullName }));
+                    if (i.GetType().GetProperty("Interfaces") != null) // Todo: Fix hack
+                    {
+                        return names.Concat(((ICollection<CodeItem>)((dynamic)i).Interfaces).SelectMany(a => new[] { a.Name, a.FullName }));
+                    }
+
+                    return names;
                 };
             }
             else
@@ -48,7 +54,7 @@ namespace Typewriter.Generation
             return filtered;
         }
 
-        private static ICollection<object> ApplyFilter(IEnumerable<object> items, string filter, Func<ItemInfo, IEnumerable<string>> selector)
+        private static ICollection<CodeItem> ApplyFilter(IEnumerable<CodeItem> items, string filter, Func<CodeItem, IEnumerable<string>> selector)
         {
             var parts = filter.Split('*');
 
@@ -58,19 +64,19 @@ namespace Typewriter.Generation
 
                 if (parts.Length == 1)
                 {
-                    items = items.Cast<ItemInfo>().Where(item => selector(item).Any(p => p == part));
+                    items = items.Where(item => selector(item).Any(p => p == part));
                 }
                 else if (i == 0 && string.IsNullOrWhiteSpace(part) == false)
                 {
-                    items = items.Cast<ItemInfo>().Where(item => selector(item).Any(p => p.StartsWith(part)));
+                    items = items.Where(item => selector(item).Any(p => p.StartsWith(part)));
                 }
                 else if (i == parts.Length - 1 && string.IsNullOrWhiteSpace(part) == false)
                 {
-                    items = items.Cast<ItemInfo>().Where(item => selector(item).Any(p => p.EndsWith(part)));
+                    items = items.Where(item => selector(item).Any(p => p.EndsWith(part)));
                 }
                 else if (i > 0 && i < parts.Length - 1 && string.IsNullOrWhiteSpace(part) == false)
                 {
-                    items = items.Cast<ItemInfo>().Where(item => selector(item).Any(p => p.Contains(part)));
+                    items = items.Where(item => selector(item).Any(p => p.Contains(part)));
                 }
             }
 

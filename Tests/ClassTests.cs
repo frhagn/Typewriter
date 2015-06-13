@@ -2,8 +2,8 @@
 using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using System.Collections.Generic;
 using Typewriter.Generation;
+
 namespace Tests
 {
     public class ClassTests : TestBase
@@ -28,16 +28,6 @@ namespace Tests
             classInfo.Attributes.First().Name.ShouldEqual("Test");
             classInfo.Attributes.First().FullName.ShouldEqual("Tests.CodeModel.TestAttribute");
             classInfo.Attributes.First().Value.ShouldEqual("classParameter");
-        }
-
-        public void Methods()
-        {
-            var classInfo = fileInfo.Classes.First();
-
-            classInfo.Methods.Count.ShouldEqual(1);
-
-            var method = classInfo.Methods.Single();
-            method.Name.ShouldEqual("Method1");
         }
 
         #region Primitive properties
@@ -210,7 +200,7 @@ namespace Tests
 
             property.Type.Attributes.Count.ShouldEqual(1);
             property.Type.Properties.Any().ShouldBeTrue();
-            property.Type.Methods.Count().ShouldEqual(1);
+            property.Type.Methods.Any().ShouldBeFalse();
 
             var typeProperty = property.Type.Properties.First(p => p.Name == "Class11");
             typeProperty.Name.ShouldEqual("Class11");
@@ -273,12 +263,68 @@ namespace Tests
 
             generic.Attributes.Count.ShouldEqual(1);
             generic.Properties.Any().ShouldBeTrue();
-            generic.Methods.Count().ShouldEqual(1);
+            generic.Methods.Any().ShouldBeFalse();
 
             var typeProperty = generic.Properties.First(p => p.Name == "Class11");
             typeProperty.Name.ShouldEqual("Class11");
             typeProperty.FullName.ShouldEqual("Tests.CodeModel.Class1.Class11");
             typeProperty.Parent.ShouldEqual(generic);
+
+            Extensions.Type(property.Type).ShouldEqual("Class1[]");
+        }
+
+        public void EnumerableEnumerablePrimitiveProperties()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var property = classInfo.Properties.First(p => p.Name == "IEnumerableIEnumerableClass11");
+
+            property.Name.ShouldEqual("IEnumerableIEnumerableClass11");
+            property.FullName.ShouldEqual("Tests.CodeModel.Class1.IEnumerableIEnumerableClass11");
+            property.Parent.ShouldEqual(classInfo);
+
+            property.HasGetter.ShouldBeTrue("HasGetter");
+            property.HasSetter.ShouldBeTrue("HasSetter");
+
+            property.IsEnum.ShouldBeFalse("IsEnum");
+            property.IsEnumerable.ShouldBeTrue("IsEnumerable");
+            property.IsGeneric.ShouldBeTrue("IsGeneric");
+            property.IsNullable.ShouldBeFalse("IsNullable");
+            property.IsPrimitive.ShouldBeFalse("IsPrimitive");
+
+            property.Type.Name.ShouldEqual("IEnumerable");
+            property.Type.FullName.ShouldEqual("System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<System.String>>");
+
+            property.Type.IsEnum.ShouldBeFalse("IsEnum");
+            property.Type.IsEnumerable.ShouldBeTrue("IsEnumerable");
+            property.Type.IsGeneric.ShouldBeTrue("IsGeneric");
+            property.Type.IsNullable.ShouldBeFalse("IsNullable");
+            property.Type.IsPrimitive.ShouldBeFalse("IsPrimitive");
+            property.Type.GenericTypeArguments.Any().ShouldBeTrue("GenericTypeArguments");
+            property.Type.Parent.ShouldEqual(property);
+
+            var generic = property.Type.GenericTypeArguments.First();
+            generic.Name.ShouldEqual("IEnumerable");
+            generic.FullName.ShouldEqual("System.Collections.Generic.IEnumerable<System.String>");
+            generic.Parent.ShouldEqual(property.Type);
+
+            var inner = generic.GenericTypeArguments.First();
+            inner.Name.ShouldEqual("String");
+            inner.FullName.ShouldEqual("System.String");
+            inner.Parent.ShouldEqual(generic);
+
+            Extensions.Type(property.Type).ShouldEqual("string[][]");
+        }
+
+        public void EnumerableEnumerableEnumerablePrimitiveProperties()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var property = classInfo.Properties.First(p => p.Name == "IEnumerableIEnumerableIEnumerableClass11");
+
+            property.Name.ShouldEqual("IEnumerableIEnumerableIEnumerableClass11");
+            property.FullName.ShouldEqual("Tests.CodeModel.Class1.IEnumerableIEnumerableIEnumerableClass11");
+            property.Parent.ShouldEqual(classInfo);
+
+            Extensions.Type(property.Type).ShouldEqual("string[][][]");
         }
     }
 }

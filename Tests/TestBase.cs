@@ -21,22 +21,18 @@ namespace Tests
         {
             dte = GetDte("Typewriter.sln");
         }
-        
-        protected static string GetSolutionDirectory()
-        {
-            return new FileInfo(dte.Solution.FileName).Directory.FullName;
-        }
+
+        private static string solutionDirectory;
+        protected static string SolutionDirectory => solutionDirectory ?? (solutionDirectory = new FileInfo(dte.Solution.FileName).Directory.FullName);
 
         protected static ProjectItem GetProjectItem(string path)
         {
-            var solution = GetSolutionDirectory();
-            return dte.Solution.FindProjectItem(Path.Combine(solution, path));
+            return dte.Solution.FindProjectItem(Path.Combine(SolutionDirectory, path));
         }
 
         protected static string GetFileContents(string path)
         {
-            var solution = GetSolutionDirectory();
-            return System.IO.File.ReadAllText(Path.Combine(solution, path));
+            return System.IO.File.ReadAllText(Path.Combine(SolutionDirectory, path));
         }
 
         protected static File GetFile(string path)

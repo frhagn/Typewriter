@@ -1,42 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EnvDTE;
+using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class TypeInfo : ItemInfo, Type
+    public class LazyTypeInfo : TypeInfo
     {
-        private static readonly string[] primitiveTypes = { "string", "number", "boolean", "Date" };
-
         private readonly string fullName;
-        private CodeType codeType;
 
-        public TypeInfo(CodeType codeType, object parent, FileInfo file) : base(codeType, parent, file)
-        {
-            this.codeType = codeType;
-            this.fullName = codeType.FullName;
-        }
-
-        public TypeInfo(string fullName, object parent, FileInfo file) : base(null, parent, file)
+        public LazyTypeInfo(string fullName, Item parent) : base(null, parent)
         {
             this.fullName = fullName;
         }
 
-        protected override void Load()
-        {
-            if (this.codeType != null) return;
+        protected override CodeType CodeType => base.CodeType ?? (codeType = LoadType());
 
-            this.codeType = file.GetType(fullName);
-            this.element = this.codeType;
+        private CodeType LoadType()
+        {
+            var parent = Parent;
+            while (parent is CodeItem)
+            {
+                parent = ((CodeItem)parent).Parent;
+            }
+
+            return ((FileInfo)parent).GetType(fullName);
         }
+
+        public override string FullName => fullName;
 
         public override string Name
         {
             get
             {
-                var name = this.fullName.Split('<')[0];
+                var name = FullName.Split('<')[0];
                 return name.Substring(name.LastIndexOf('.') + 1);
             }
         }
@@ -45,126 +43,147 @@ namespace Typewriter.CodeModel.CodeDom
         {
             get
             {
-                var name = this.fullName.Split('<')[0];
+                var name = FullName.Split('<')[0];
                 return name.Substring(0, name.LastIndexOf('.'));
             }
         }
+    }
 
-        public override string FullName
+    public class TypeInfo : Type
+    {
+        private static readonly string[] primitiveTypes = { "System.Boolean", "System.Char", "System.String", "System.Byte", "System.SByte", "System.Int32", "System.UInt32", "System.Int16", "System.UInt16", "System.Int64", "System.UInt64", "System.Single", "System.Double", "System.Decimal", "System.DateTime" };
+
+        protected CodeType codeType;
+        private readonly Item parent;
+        protected virtual CodeType CodeType => codeType;
+
+        protected TypeInfo(CodeType codeType, Item parent)
         {
-            get { return this.fullName; }
+            this.codeType = codeType;
+            this.parent = parent;
         }
 
-        public override bool IsGeneric
+        public Item Parent => parent;
+        public virtual string Name => CodeType.Name;
+        public virtual string FullName => CodeType.FullName;
+        public virtual string Namespace => CodeType.Namespace.FullName;
+        
+        public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 || IsNullable;
+        public bool IsNullable => FullName.StartsWith("System.Nullable<") || FullName.EndsWith("?");
+        public bool IsEnum => CodeType.Kind == vsCMElement.vsCMElementEnum;
+        public bool IsEnumerable => FullName != "System.String" && FullName.StartsWith("System.Collections.");
+
+        private Class baseClass;
+        public Class BaseClass => baseClass ?? (baseClass = ClassInfo.FromCodeElements(CodeType.Bases, this).FirstOrDefault());
+
+        private Attribute[] attributes;
+        public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(CodeType.Attributes, this).ToArray());
+
+        private Constant[] constants;
+        public ICollection<Constant> Constants => constants ?? (constants = ConstantInfo.FromCodeElements(CodeType.Children, this).ToArray());
+
+        private Field[] fields;
+        public ICollection<Field> Fields => fields ?? (fields = FieldInfo.FromCodeElements(CodeType.Children, this).ToArray());
+
+        private Type[] genericTypeArguments;
+        public ICollection<Type> GenericTypeArguments => genericTypeArguments ?? (genericTypeArguments = LoadGenericTypeArguments().ToArray());
+
+        private Interface[] interfaces;
+        public ICollection<Interface> Interfaces => interfaces ?? (interfaces = InterfaceInfo.FromCodeElements(CodeType.Bases, this).ToArray());
+
+        private Method[] methods;
+        public ICollection<Method> Methods => methods ?? (methods = MethodInfo.FromCodeElements(CodeType.Children, this).ToArray());
+
+        private Property[] properties;
+        public ICollection<Property> Properties => properties ?? (properties = PropertyInfo.FromCodeElements(CodeType.Children, this).ToArray());
+
+
+        private IEnumerable<Type> LoadGenericTypeArguments()
         {
-            get { return FullName.IndexOf("<", StringComparison.Ordinal) > -1 || IsNullable; }
+            if (IsGeneric == false) return new Type[0];
+            if (FullName.EndsWith("?")) return new[] { new LazyTypeInfo(FullName.TrimEnd('?'), this) };
+
+            return GenericTypeInfo.ExtractGenericTypeNames(FullName).Select(fullName =>
+            {
+                if (fullName.EndsWith("[]"))
+                    fullName = $"System.Collections.Generic.ICollection<{fullName.TrimEnd('[', ']')}>";
+
+                return new LazyTypeInfo(fullName, this);
+            });
         }
 
-        public override bool IsNullable
-        {
-            get { return FullName.StartsWith("System.Nullable<") || FullName.EndsWith("?"); }
-        }
-
-        public override bool IsPrimitive
+        public bool IsPrimitive
         {
             get
             {
-                var type = this.ToString().TrimEnd('[', ']');
-                return this.IsEnum || primitiveTypes.Any(t => t == type);
-            }
-        }
+                var fullName = FullName;
 
-        public override bool IsEnum
-        {
-            get
-            {
-                Load();
-                return codeType.Kind == vsCMElement.vsCMElementEnum;
-            }
-        }
-
-        public override bool IsEnumerable
-        {
-            get { return FullName != "System.String" && FullName.StartsWith("System.Collections."); }
-        }
-
-        public IEnumerable<Type> GenericTypeArguments
-        {
-            get
-            {
-                if (IsGeneric == false) return new Type[0];
-                if (IsNullable && FullName.EndsWith("?")) return new[] { new TypeInfo(FullName.TrimEnd('?'), this, file) };
-
-                return ExtractGenericTypeNames(FullName).Select(n =>
+                if (IsNullable)
                 {
-                    if (n.EndsWith("[]"))
-                    {
-                        n = string.Format("System.Collections.Generic.ICollection<{0}>", n);
-                    }
-                    return new TypeInfo(n, this, file);
-                });
-            }
-        }
-
-
-        public override string ToString()
-        {
-            var type = this as Type;
-
-            if (type.IsNullable)
-            {
-                type = type.GenericTypeArguments.FirstOrDefault();
-            }
-            else if (type.IsEnumerable)
-            {
-                if (type.Name.EndsWith("[]")) return GetTypeScriptType(type.Name.Substring(0, type.Name.Length - 2)) + "[]";
-
-                type = type.GenericTypeArguments.FirstOrDefault();
-                if (type != null)
-                {
-                    if (type.IsNullable)
-                    {
-                        type = type.GenericTypeArguments.FirstOrDefault();
-                    }
-                    
-                    return GetTypeScriptType(type.Name) + "[]";
+                    fullName = GenericTypeArguments.First().FullName;
                 }
-
-                return "any[]";
+                else if (IsEnumerable)
+                {
+                    var innerType = GenericTypeArguments.FirstOrDefault();
+                    if (innerType != null)
+                    {
+                        fullName = IsNullable ? innerType.GenericTypeArguments.First().FullName : innerType.FullName;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                
+                return IsEnum || primitiveTypes.Any(t => t == fullName);
             }
-
-            return GetTypeScriptType(type.Name);
         }
 
-        private static string GetTypeScriptType(string type)
+        private static Type GetType(dynamic element, Item parent)
         {
-            switch (type)
+            //try
+            //{
+            var isGenericTypeArgument = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefOther && element.Type.AsFullName.Split('.').Length == 1;
+            if (isGenericTypeArgument)
             {
-                case "Boolean":
-                    return "boolean";
-                case "String":
-                case "Char":
-                case "Guid":
-                    return "string";
-                case "Byte":
-                case "SByte":
-                case "Int16":
-                case "Int32":
-                case "Int64":
-                case "UInt16":
-                case "UInt32":
-                case "UInt64":
-                case "Single":
-                case "Double":
-                case "Decimal":
-                    return "number";
-                case "DateTime":
-                    return "Date";
-                case "Void":
-                    return "void";
-                default:
-                    return type;
+                return new GenericTypeInfo(element.Type.AsFullName, parent);
             }
+
+            var isArray = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray;
+            if (isArray)
+            {
+                var underlyingType = element.Type.ElementType.AsFullName;
+                var collectionFormat = "System.Collections.Generic.ICollection<{0}>";
+
+                return new LazyTypeInfo(string.Format(collectionFormat, underlyingType), parent);
+            }
+
+            return new TypeInfo(element.Type.CodeType, parent);
+            //}
+            //catch (NotImplementedException)
+            //{
+            //    return new LazyTypeInfo<T>(fullName, parent);
+            //}
+        }
+
+        public static Type FromCodeElement(CodeVariable2 codeVariable, Item parent)
+        {
+            return GetType(codeVariable, parent);
+        }
+
+        public static Type FromCodeElement(CodeFunction2 codeVariable, Item parent)
+        {
+            return GetType(codeVariable, parent);
+        }
+
+        public static Type FromCodeElement(CodeProperty2 codeVariable, Item parent)
+        {
+            return GetType(codeVariable, parent);
+        }
+
+        public static Type FromCodeElement(CodeParameter2 codeVariable, Item parent)
+        {
+            return GetType(codeVariable, parent);
         }
     }
 }

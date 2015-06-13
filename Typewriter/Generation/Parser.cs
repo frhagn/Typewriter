@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Typewriter.CodeModel;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.VisualStudio;
+using Type = System.Type;
 
 namespace Typewriter.Generation
 {
@@ -55,14 +57,14 @@ namespace Typewriter.Generation
                 {
                     stream.Advance(identifier.Length);
 
-                    var collection = value as IEnumerable<object>;
+                    var collection = value as IEnumerable<CodeItem>;
                     if (collection != null)
                     {
                         var filter = ParseBlock(stream, '(', ')');
                         var block = ParseBlock(stream, '[', ']');
                         var separator = ParseBlock(stream, '[', ']');
 
-                        IEnumerable<object> items;
+                        IEnumerable<CodeItem> items;
                         if (filter != null && filter.StartsWith("$"))
                         {
                             var predicate = filter.Remove(0, 1);
@@ -71,17 +73,17 @@ namespace Typewriter.Generation
                                 var c = customExtensions.GetMethod(predicate);
                                 if (c != null)
                                 {
-                                    items = collection.Where(x => (bool)c.Invoke(null, new[] { x })).ToList();
+                                    items = collection.Where(x => (bool)c.Invoke(null, new object[] { x })).ToList();
                                     matchFound = matchFound || items.Any();
                                 }
                                 else
                                 {
-                                    items = new object[0];
+                                    items = new CodeItem[0];
                                 }
                             }
                             else
                             {
-                                items = new object[0];
+                                items = new CodeItem[0];
                             }
                         }
                         else
@@ -106,6 +108,12 @@ namespace Typewriter.Generation
                         }
                         else
                         {
+                            var extension = standardExtensions.GetMethod(identifier, new[] { value.GetType() });
+                            if (extension != null && extension.ReturnType == typeof (string))
+                            {
+                                value = extension.Invoke(null, new[] { value });
+                            }
+
                             output += value.ToString();
                         }
                     }
@@ -140,16 +148,7 @@ namespace Typewriter.Generation
 
             try
             {
-                if (customExtensions != null)
-                {
-                    var c = customExtensions.GetMethod(identifier, new[] { type });
-                    if (c != null)
-                    {
-                        return c.Invoke(null, new[] { context });
-                    }
-                }
-
-                var extension = standardExtensions.GetMethod(identifier, new[] { type });
+                var extension = customExtensions?.GetMethod(identifier, new[] { type });
                 if (extension != null)
                 {
                     return extension.Invoke(null, new[] { context });
@@ -159,6 +158,12 @@ namespace Typewriter.Generation
                 if (property != null)
                 {
                     return property.GetValue(context);
+                }
+
+                extension = standardExtensions.GetMethod(identifier, new[] { type });
+                if (extension != null)
+                {
+                    return extension.Invoke(null, new[] { context });
                 }
             }
             catch (Exception e)

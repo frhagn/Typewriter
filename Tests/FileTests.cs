@@ -13,7 +13,7 @@ namespace Tests
         public void Info()
         {
             fileInfo.Name.ShouldEqual("FileInfo.cs");
-            fileInfo.FullName.ShouldEqual(Path.Combine(GetSolutionDirectory(), @"Tests\CodeModel\FileInfo.cs"));
+            fileInfo.FullName.ShouldEqual(Path.Combine(SolutionDirectory, @"Tests\CodeModel\FileInfo.cs"));
         }
 
         public void Classes()

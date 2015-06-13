@@ -1,15 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using EnvDTE;
 using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class ConstantInfo : ItemInfo, Constant
+    public class ConstantInfo : FieldInfo, Constant
     {
-        private readonly CodeVariable2 codeVariable;
-
-        public ConstantInfo(CodeVariable2 codeVariable, object parent, FileInfo file) : base(codeVariable, parent, file)
+        public ConstantInfo(CodeVariable2 codeVariable, Item parent) : base(codeVariable, parent)
         {
-            this.codeVariable = codeVariable;
+        }
+
+        internal new static IEnumerable<Constant> FromCodeElements(CodeElements codeElements, Item parent)
+        {
+            return codeElements.OfType<CodeVariable2>().Where(v => v.IsConstant && v.Access == vsCMAccess.vsCMAccessPublic).Select(v => new ConstantInfo(v, parent));
         }
     }
 }

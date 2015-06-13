@@ -5,7 +5,7 @@ using Typewriter.CodeModel.Attributes;
 namespace Typewriter.CodeModel
 {
     [Context("Class", "Classes")]
-    public interface Class : Item
+    public interface Class : CodeItem
     {
         [Property("string Namespace", "The namespace of the $context")]
         string Namespace { get; }
@@ -32,6 +32,6 @@ namespace Typewriter.CodeModel
         ICollection<Property> Properties { get; }
 
         [Property("collection GenericTypeArguments", "All generic type arguments of the $context")]
-        IEnumerable<Type> GenericTypeArguments { get; }
+        ICollection<Type> GenericTypeArguments { get; }
     }
 }

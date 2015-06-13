@@ -2,22 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
-using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class EnumInfo : ItemInfo, Enum
+    public class EnumInfo : Enum
     {
         private readonly CodeEnum codeEnum;
+        private readonly Item parent;
 
-        public EnumInfo(CodeEnum codeEnum, object parent, FileInfo file) : base(codeEnum, parent, file)
+        private EnumInfo(CodeEnum codeEnum, Item parent)
         {
             this.codeEnum = codeEnum;
+            this.parent = parent;
         }
 
-        public ICollection<EnumValue> Values
+        public Item Parent => parent;
+        public string Name => codeEnum.Name;
+        public string FullName => codeEnum.FullName;
+
+        private Attribute[] attributes;
+        public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeEnum.Attributes, this).ToArray());
+
+        private EnumValue[] values;
+        public ICollection<EnumValue> Values => values ?? (values = EnumValueInfo.FromCodeElements(codeEnum.Members, this).ToArray());
+
+        internal static IEnumerable<Enum> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            get { return Iterator<CodeVariable2>.Select(() => codeEnum.Members, (v, i) => new EnumValueInfo(v, this, file, i)).ToArray(); }
+            return codeElements.OfType<CodeEnum>().Where(e => e.Access == vsCMAccess.vsCMAccessPublic).Select(e => new EnumInfo(e, parent));
         }
     }
 }

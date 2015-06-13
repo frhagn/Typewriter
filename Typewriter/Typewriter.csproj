@@ -161,7 +161,6 @@
     <Compile Include="CodeModel\CodeDom\InterfaceInfo.cs" />
     <Compile Include="CodeModel\CodeDom\ConstantInfo.cs" />
     <Compile Include="CodeModel\CodeDom\FieldInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\ItemInfo.cs" />
     <Compile Include="CodeModel\CodeDom\FileInfo.cs" />
     <Compile Include="CodeModel\Attributes\ContextAttribute.cs" />
     <Compile Include="CodeModel\Attribute.cs">
@@ -206,7 +205,6 @@
     <Compile Include="CodeModel\Attributes\PropertyAttribute.cs" />
     <Compile Include="Generation\Compiler.cs" />
     <Compile Include="Generation\Controllers\EventQueue.cs" />
-    <Compile Include="CodeModel\CodeDom\Iterator.cs" />
     <Compile Include="CodeModel\CodeDom\MethodInfo.cs" />
     <Compile Include="CodeModel\CodeDom\ParameterInfo.cs" />
     <Compile Include="CodeModel\CodeDom\PropertyInfo.cs" />

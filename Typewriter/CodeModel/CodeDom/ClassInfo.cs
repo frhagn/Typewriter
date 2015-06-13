@@ -2,30 +2,54 @@ using System;
 using System.Collections.Generic;
 using EnvDTE80;
 using System.Linq;
+using EnvDTE;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class ClassInfo : ItemInfo, Class
+    public class ClassInfo : Class
     {
         private readonly CodeClass2 codeClass;
+        private readonly Item parent;
 
-        public ClassInfo(CodeClass2 codeClass, object parent, FileInfo file) : base(codeClass, parent, file)
+        public ClassInfo(CodeClass2 codeClass, Item parent)
         {
             this.codeClass = codeClass;
+            this.parent = parent;
         }
 
-        public IEnumerable<Type> GenericTypeArguments
-        {
-            get
-            {
-                if (IsGeneric == false) return new Type[0];
-                return ExtractGenericTypeNames(FullName).Select(n => new GenericTypeInfo(n, this, file));
-            }
-        }
+        public Item Parent => parent;
+        public string Name => codeClass.Name;
+        public string FullName => codeClass.FullName;
+        public string Namespace => codeClass.Namespace.FullName;
+        public bool IsGeneric => codeClass.IsGeneric;
 
-        public override bool IsGeneric
+        private Class  baseClass;
+        public Class BaseClass => baseClass ?? (baseClass = ClassInfo.FromCodeElements(codeClass.Bases, this).FirstOrDefault());
+
+        private Attribute[] attributes;
+        public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeClass.Attributes, this).ToArray());
+
+        private Constant[] constants;
+        public ICollection<Constant> Constants => constants ?? (constants = ConstantInfo.FromCodeElements(codeClass.Children, this).ToArray());
+
+        private Field[] fields;
+        public ICollection<Field> Fields => fields ?? (fields = FieldInfo.FromCodeElements(codeClass.Children, this).ToArray());
+
+        private Type[] genericTypeArguments;
+        public ICollection<Type> GenericTypeArguments => genericTypeArguments ?? (genericTypeArguments = GenericTypeInfo.FromFullName(codeClass.FullName, this).ToArray());
+
+        private Interface[] interfaces;
+        public ICollection<Interface> Interfaces => interfaces ?? (interfaces = InterfaceInfo.FromCodeElements(codeClass.ImplementedInterfaces, this).ToArray());
+
+        private Method[] methods;
+        public ICollection<Method> Methods => methods ?? (methods = MethodInfo.FromCodeElements(codeClass.Children, this).ToArray());
+
+        private Property[] properties;
+        public ICollection<Property> Properties => properties ?? (properties = PropertyInfo.FromCodeElements(codeClass.Children, this).ToArray());
+
+        internal static IEnumerable<Class> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            get { return codeClass.IsGeneric; }
+            return codeElements.OfType<CodeClass2>().Where(c => c.Access == vsCMAccess.vsCMAccessPublic).Select(c => new ClassInfo(c, parent));
         }
     }
 }

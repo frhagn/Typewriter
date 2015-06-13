@@ -1,8 +1,8 @@
-﻿using Fixie;
-using Fixie.Execution;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Fixie;
+using Fixie.Execution;
 
 namespace Tests.CodeModel
 {
@@ -61,9 +61,7 @@ namespace Tests.CodeModel
         public Enum1 Enum11 { get; set; }
 
         public IEnumerable<Class1> IEnumerableClass11 { get; set; }
-
-        public void Method1() { }
-
-        private void Method2() { }
+        public IEnumerable<IEnumerable<string>> IEnumerableIEnumerableClass11 { get; set; }
+        public IEnumerable<IEnumerable<IEnumerable<string>>> IEnumerableIEnumerableIEnumerableClass11 { get; set; }
     }
 }

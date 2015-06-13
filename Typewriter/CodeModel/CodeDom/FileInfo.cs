@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
-using EnvDTE80;
 using Typewriter.VisualStudio;
 
 namespace Typewriter.CodeModel.CodeDom
@@ -21,59 +20,20 @@ namespace Typewriter.CodeModel.CodeDom
         {
             this.projectItem = projectItem;
             this.typeCache = new Dictionary<string, CodeType>();
-
-            var x = this.Classes;
         }
 
-        public string Name
-        {
-            get { return projectItem.Name; }
-        }
-
-        public string FullName
-        {
-            get { return projectItem.FileNames[1]; }
-        }
+        public string Name => projectItem.Name;
+        public string FullName => projectItem.FileNames[1];
 
         private Class[] classes;
-        public ICollection<Class> Classes
-        {
-            get 
-            {
-                if (classes == null)
-                {
-                    classes = GetNamespaces().SelectMany(n => Iterator<CodeClass2>.Select(() => n.Members, c => c.Access == vsCMAccess.vsCMAccessPublic, c => (Class)new ClassInfo(c, this, this))).ToArray();
-                }
-                return classes;
-            }
-        }
+        public ICollection<Class> Classes => classes ?? (classes = GetNamespaces().SelectMany(n => ClassInfo.FromCodeElements(n.Members, this)).ToArray());
 
         private Enum[] enums;
-        public ICollection<Enum> Enums
-        {
-            get
-            {
-                if (enums == null)
-                {
-                    enums = GetNamespaces().SelectMany(n => Iterator<CodeEnum>.Select(() => n.Members, e => e.Access == vsCMAccess.vsCMAccessPublic, e => (Enum)new EnumInfo(e, this, this))).ToArray();
-                }
-                return enums;
-            }
-        }
-
+        public ICollection<Enum> Enums => enums ?? (enums = GetNamespaces().SelectMany(n => EnumInfo.FromCodeElements(n.Members, this)).ToArray());
+        
         private Interface[] interfaces;
-        public ICollection<Interface> Interfaces
-        {
-            get
-            {
-                if (interfaces == null)
-                {
-                    interfaces = GetNamespaces().SelectMany(n => Iterator<CodeInterface2>.Select(() => n.Members, i => i.Access == vsCMAccess.vsCMAccessPublic, i => (Interface)new InterfaceInfo(i, this, this))).ToArray();
-                }
-                return interfaces;
-            }
-        }
-
+        public ICollection<Interface> Interfaces => interfaces ?? (interfaces = GetNamespaces().SelectMany(n => InterfaceInfo.FromCodeElements(n.Members, this)).ToArray());
+        
         public CodeType GetType(string fullName)
         {
             lock (locker)
@@ -94,7 +54,7 @@ namespace Typewriter.CodeModel.CodeDom
                     var classAdded = false;
                     var name = Guid.NewGuid().ToString("N");
 
-                    var codeClass = new Iterator<CodeClass>(currentNamespace.Children).FirstOrDefault();
+                    var codeClass = currentNamespace.Children.OfType<CodeClass>().FirstOrDefault();
 
                     if (codeClass == null)
                     {
@@ -138,7 +98,7 @@ namespace Typewriter.CodeModel.CodeDom
 
         private IEnumerable<CodeNamespace> GetNamespaces()
         {
-            return new Iterator<CodeNamespace>(projectItem.FileCodeModel.CodeElements).Select(ns =>
+            return projectItem.FileCodeModel.CodeElements.OfType<CodeNamespace>().Select(ns =>
             {
                 this.currentNamespace = ns;
                 return ns;
