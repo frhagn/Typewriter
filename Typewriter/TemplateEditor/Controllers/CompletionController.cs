@@ -142,10 +142,13 @@ namespace Typewriter.TemplateEditor.Controllers
 
                         //broker.TriggerSignatureHelp(textView);
 
-                        return VSConstants.S_OK;
+                        if (command == VSCommand.RETURN || command == VSCommand.TAB)
+                            return VSConstants.S_OK;
                     }
-
-                    session.Dismiss();
+                    else
+                    {
+                        session.Dismiss();
+                    }
                 }
             }
 
@@ -194,7 +197,7 @@ namespace Typewriter.TemplateEditor.Controllers
             }
 
             session = provider.CompletionBroker.CreateCompletionSession(textView, caretPoint.Value.Snapshot.CreateTrackingPoint(caretPoint.Value.Position, PointTrackingMode.Positive), true);
-
+            
             session.Dismissed += this.OnSessionDismissed;
             session.Start();
 
