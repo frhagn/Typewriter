@@ -18,16 +18,28 @@ namespace Typewriter.TemplateEditor.Lexing
         public string Name { get; private set; }
         public Type Type { get; private set; }
         public readonly Dictionary<string, Identifier> identifiers = new Dictionary<string, Identifier>();
-        
+        public readonly Dictionary<string, Identifier> tempIdentifiers = new Dictionary<string, Identifier>();
+
+        public void AddTempIdentifier(string name, string quickInfo = null)
+        {
+            if (tempIdentifiers.ContainsKey(name) == false)
+                tempIdentifiers.Add(name, new Identifier { Name = name, QuickInfo = quickInfo });
+        }
+
         public Identifier GetIdentifier(string name)
         {
+            if (name == null) return null;
+
             Identifier i;
-            return name != null && identifiers.TryGetValue(name, out i) ? i : null;
+            if (identifiers.TryGetValue(name, out i)) return i;
+            if (tempIdentifiers.TryGetValue(name, out i)) return i;
+
+            return null;
         }
 
         public ICollection<Identifier> Identifiers
         {
-            get { return identifiers.Values.OrderBy(i => i.Name).ToArray(); }
+            get { return tempIdentifiers.Values.Concat(identifiers.Values.Where(i => tempIdentifiers.Values.All(t => t.Name != i.Name))).OrderBy(i => i.Name).ToArray(); }
         }
     }
 
@@ -51,10 +63,23 @@ namespace Typewriter.TemplateEditor.Lexing
         private static readonly Dictionary<string, Context> items = new Dictionary<string, Context>();
         private static readonly Dictionary<string, string> names = new Dictionary<string, string>();
 
+        public static void ClearTempIdentifiers()
+        {
+            foreach (var context in items.Values)
+            {
+                context.tempIdentifiers.Clear();
+            }
+        }
+
         public static Context Find(string name)
         {
             if (items.ContainsKey(name) == false)
+            {
+                if (names.ContainsKey(name) == false)
+                    return null;
+
                 name = names[name];
+            }
 
             return items[name];
         }

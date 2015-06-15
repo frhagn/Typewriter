@@ -8,7 +8,11 @@ namespace Typewriter.TemplateEditor.Lexing
         public Tokens Tokenize(string code)
         {
             var tokens = new Tokens();
-            Parse(code, tokens, Contexts.Find("File"), 0, 0);
+            var context = Contexts.Find("File");
+
+            Contexts.ClearTempIdentifiers();
+
+            Parse(code, tokens, context, 0, 0);
 
             return tokens;
         }
@@ -17,6 +21,8 @@ namespace Typewriter.TemplateEditor.Lexing
         {
             var stream = new Stream(template, offset, lineOffset);
             var braces = new BraceStack();
+
+            if (offset == 0) ParseCodeBlock(stream, tokens);
 
             do
             {
@@ -32,6 +38,109 @@ namespace Typewriter.TemplateEditor.Lexing
             while (stream.Advance());
 
             tokens.AddContext(context, offset, stream.Position);
+        }
+
+        private void ParseCodeBlock(Stream stream, Tokens tokens)
+        {
+            stream.SkipWhitespace();
+
+            if (stream.Current == '$')
+            {
+                if (stream.Peek() == '{')
+                {
+                    var braces = new BraceStack();
+
+                    tokens.AddToken(Classifications.Property, stream.Line, stream.Position);
+                    stream.Advance();
+                    tokens.AddBrace(braces, stream, Classifications.Property);
+
+                    var block = stream.PeekBlock(1, '{', '}');
+
+                    var code = new Stream(block, stream.Position + 1, stream.Line);
+
+                    do
+                    {
+                        if (code.PeekWord() == "var")
+                        {
+                            tokens.AddToken(Classifications.Keyword, code.Line, code.Position, 3);
+                            code.Advance(3);
+                            code.SkipWhitespace();
+
+                            var name = code.PeekWord();
+                            if (name == null) continue;
+
+                            code.Advance(name.Length);
+                            code.SkipWhitespace();
+
+                            if (code.Current != '=') continue;
+                            code.Advance();
+
+                            code.SkipWhitespace();
+                            
+                            if (code.Current != '(') continue;
+                            tokens.AddBrace(braces, code);
+                            code.Advance();
+
+                            code.SkipWhitespace();
+
+                            var type = code.PeekWord();
+                            if (type == null) continue;
+
+                            var context = Contexts.Find(type);
+                            if(context == null) continue;
+
+                            tokens.AddToken(Classifications.Property, code.Line, code.Position, type.Length);
+                            code.Advance(type.Length);
+
+                            context.AddTempIdentifier(name, "(extension) " + name);
+
+                            do
+                            {
+                                if (code.Current == ')')
+                                {
+                                    tokens.AddBrace(braces, code);
+                                    break;
+                                }
+                            } while (code.Advance());
+
+                            code.Advance();
+                            code.SkipWhitespace();
+
+                            if (code.Current != '=' && code.Peek() != '>') continue;
+                            code.Advance(2);
+
+                            code.SkipWhitespace();
+
+                            if (code.Current == '{')
+                            {
+                                tokens.AddBrace(braces, code);
+                                var body = code.PeekBlock(1, '{', '}');
+                                code.Advance(body.Length+1);
+                                tokens.AddBrace(braces, code);
+                            }
+                            else
+                            {
+                                do
+                                {
+                                    if (code.Current == ';') break;
+                                } while (code.Advance());
+                            }
+                        }
+                    } while (code.Advance());
+
+                    stream.Advance(block.Length);
+                    
+                    if (stream.Peek() == '}')
+                    {
+                        stream.Advance();
+                        tokens.AddBrace(braces, stream, Classifications.Property);
+                    }
+                }
+                else
+                {
+                    Contexts.Find("File").AddTempIdentifier("{");
+                }
+            }
         }
 
         private bool ParseDollar(Stream stream, Tokens tokens, Context context, BraceStack braces)
@@ -98,7 +207,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 stream.Advance();
                 tokens.AddBrace(braces, stream, Classifications.Property);
 
-                var block = stream.PeekBlock(1);
+                var block = stream.PeekBlock(1, '[', ']');
                 Parse(block, tokens, context, stream.Position + 1, stream.Line);
                 stream.Advance(block.Length);
 

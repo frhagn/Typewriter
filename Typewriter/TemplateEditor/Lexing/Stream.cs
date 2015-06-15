@@ -79,7 +79,7 @@ namespace Typewriter.TemplateEditor.Lexing
             return identifier.ToString();
         }
 
-        public string PeekBlock(int start = 0, char open = '[', char close = ']')
+        public string PeekBlock(int start, char open, char close)
         {
             var i = start;
             var depth = 1;
@@ -98,6 +98,18 @@ namespace Typewriter.TemplateEditor.Lexing
             }
 
             return identifier.ToString();
+        }
+
+        public bool SkipWhitespace()
+        {
+            if (position < 0) Advance();
+
+            while (char.IsWhiteSpace(Current))
+            {
+                Advance();
+            }
+
+            return position < template.Length;
         }
     }
 }
