@@ -28,7 +28,7 @@ namespace Typewriter.CodeModel.CodeDom
         public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 || IsNullable;
         public bool IsNullable => FullName.StartsWith("System.Nullable<") || FullName.EndsWith("?");
         public bool IsEnum => CodeType.Kind == vsCMElement.vsCMElementEnum;
-        public bool IsEnumerable => FullName != "System.String" && FullName.StartsWith("System.Collections.");
+        public bool IsEnumerable => FullName != "System.String" && (FullName.StartsWith("System.Collections.") || FullName == "System.Array");
 
         private Class baseClass;
         public Class BaseClass => baseClass ?? (baseClass = ClassInfo.FromCodeElements(CodeType.Bases, this).FirstOrDefault());
@@ -53,6 +53,15 @@ namespace Typewriter.CodeModel.CodeDom
 
         private Property[] properties;
         public ICollection<Property> Properties => properties ?? (properties = PropertyInfo.FromCodeElements(CodeType.Children, this).ToArray());
+
+        private Class[] nestedClasses;
+        public ICollection<Class> NestedClasses => nestedClasses ?? (nestedClasses = ClassInfo.FromCodeElements(CodeType.Members, this).ToArray());
+
+        private Enum[] nestedEnums;
+        public ICollection<Enum> NestedEnums => nestedEnums ?? (nestedEnums = EnumInfo.FromCodeElements(CodeType.Members, this).ToArray());
+
+        private Interface[] nestedInterfaces;
+        public ICollection<Interface> NestedInterfaces => nestedInterfaces ?? (nestedInterfaces = InterfaceInfo.FromCodeElements(CodeType.Members, this).ToArray());
 
 
         private IEnumerable<Type> LoadGenericTypeArguments()

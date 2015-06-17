@@ -20,8 +20,8 @@ namespace Typewriter.CodeModel.CodeDom
         public string Name => codeProperty.Name;
         public string FullName => codeProperty.FullName;
 
-        public bool HasGetter => codeProperty.Getter != null;
-        public bool HasSetter => codeProperty.Setter != null;
+        public bool HasGetter => codeProperty.Getter != null && codeProperty.Getter.Access == vsCMAccess.vsCMAccessPublic;
+        public bool HasSetter => codeProperty.Setter != null && codeProperty.Setter.Access == vsCMAccess.vsCMAccessPublic;
 
         public bool IsEnum => Type.IsEnum;
         public bool IsEnumerable => Type.IsEnumerable;
@@ -37,7 +37,7 @@ namespace Typewriter.CodeModel.CodeDom
         
         internal static IEnumerable<Property> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            return codeElements.OfType<CodeProperty2>().Where(p => p.Access == vsCMAccess.vsCMAccessPublic).Select(p => new PropertyInfo(p, parent));
+            return codeElements.OfType<CodeProperty2>().Where(p => p.Access == vsCMAccess.vsCMAccessPublic && p.IsShared == false).Select(p => new PropertyInfo(p, parent));
         }
     }
 }

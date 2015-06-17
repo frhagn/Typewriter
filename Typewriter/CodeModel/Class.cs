@@ -33,5 +33,14 @@ namespace Typewriter.CodeModel
 
         [Property("collection GenericTypeArguments", "All generic type arguments of the $context")]
         ICollection<Type> GenericTypeArguments { get; }
+
+        [Property("collection NestedClasses", "All classes defined in the $context")]
+        ICollection<Class> NestedClasses { get; }
+
+        [Property("collection NestedEnums", "All enums defined in the $context")]
+        ICollection<Enum> NestedEnums { get; }
+
+        [Property("collection NestedInterfaces", "All interfaces defined in the $context")]
+        ICollection<Interface> NestedInterfaces { get; }
     }
 }

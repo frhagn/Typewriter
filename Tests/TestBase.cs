@@ -41,6 +41,12 @@ namespace Tests
             return new Typewriter.CodeModel.CodeDom.FileInfo(GetProjectItem(path));
         }
 
+        protected static File GetFile<T>()
+        {
+            var path = typeof(T).FullName.Replace(".", "\\") + ".cs";
+            return new Typewriter.CodeModel.CodeDom.FileInfo(GetProjectItem(path));
+        }
+
         public void Dispose()
         {
             MessageFilter.Revoke();

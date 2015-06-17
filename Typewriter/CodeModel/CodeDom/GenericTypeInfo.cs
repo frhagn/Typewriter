@@ -33,6 +33,9 @@ namespace Typewriter.CodeModel.CodeDom
         public string Name => fullName;
         public string Namespace => null;
         public ICollection<Property> Properties => new Property[0];
+        public ICollection<Class> NestedClasses => new Class[0];
+        public ICollection<Enum> NestedEnums => new Enum[0];
+        public ICollection<Interface> NestedInterfaces => new Interface[0];
 
         internal static IEnumerable<Type> FromFullName(string fullName, Item parent)
         {

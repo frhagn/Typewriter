@@ -46,9 +46,18 @@ namespace Typewriter.CodeModel.CodeDom
         private Property[] properties;
         public ICollection<Property> Properties => properties ?? (properties = PropertyInfo.FromCodeElements(codeClass.Children, this).ToArray());
 
+        private Class[] nestedClasses;
+        public ICollection<Class> NestedClasses => nestedClasses ?? (nestedClasses = ClassInfo.FromCodeElements(codeClass.Members, this).ToArray());
+
+        private Enum[] nestedEnums;
+        public ICollection<Enum> NestedEnums => nestedEnums ?? (nestedEnums = EnumInfo.FromCodeElements(codeClass.Members, this).ToArray());
+
+        private Interface[] nestedInterfaces;
+        public ICollection<Interface> NestedInterfaces => nestedInterfaces ?? (nestedInterfaces = InterfaceInfo.FromCodeElements(codeClass.Members, this).ToArray());
+
         internal static IEnumerable<Class> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            return codeElements.OfType<CodeClass2>().Where(c => c.Access == vsCMAccess.vsCMAccessPublic).Select(c => new ClassInfo(c, parent));
+            return codeElements.OfType<CodeClass2>().Where(c => c.Access == vsCMAccess.vsCMAccessPublic && c.FullName != "System.Object").Select(c => new ClassInfo(c, parent));
         }
     }
 }

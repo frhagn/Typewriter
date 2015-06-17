@@ -72,15 +72,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeModel\PropertyTests.cs" />
+    <Compile Include="CodeModel\InterfaceTests.cs" />
+    <Compile Include="CodeModel\ClassTests.cs" />
+    <Compile Include="CodeModel\TestData\PropertyInfo.cs" />
+    <Compile Include="CodeModel\TestData\IInterfaceInfo.cs" />
     <Compile Include="GenericClassTests.cs" />
-    <Compile Include="CodeModel\ClassInfo.cs" />
-    <Compile Include="CodeModel\EnumInfo.cs" />
-    <Compile Include="CodeModel\FileInfo.cs" />
-    <Compile Include="CodeModel\GenericClassInfo.cs" />
-    <Compile Include="CodeModel\TestAttribute.cs" />
+    <Compile Include="CodeModel\TestData\ClassInfo.cs" />
+    <Compile Include="CodeModel\TestData\EnumInfo.cs" />
+    <Compile Include="CodeModel\TestData\FileInfo.cs" />
+    <Compile Include="CodeModel\TestData\GenericClassInfo.cs" />
+    <Compile Include="CodeModel\TestData\AttributeInfoAttribute.cs" />
     <Compile Include="ClassTests.cs" />
     <Compile Include="EnumTests.cs" />
-    <Compile Include="FileTests.cs" />
+    <Compile Include="CodeModel\FileTests.cs" />
     <Compile Include="VisualStudio\Dte.cs" />
     <Compile Include="VisualStudio\MessageFilter.cs" />
     <Compile Include="RenderTests.cs" />
@@ -120,6 +125,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

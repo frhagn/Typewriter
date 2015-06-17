@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Tests.CodeModel
+namespace Tests.CodeModel.TestData
 {
     public class PublicClass
     {
+        public class PublicNestedClass
+        {
+        }
     }
 
     internal class InternalClass

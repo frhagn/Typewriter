@@ -34,7 +34,7 @@ namespace Typewriter.CodeModel.CodeDom
 
         internal static IEnumerable<Field> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            return codeElements.OfType<CodeVariable2>().Where(v => v.IsConstant == false && v.Access == vsCMAccess.vsCMAccessPublic).Select(v => new FieldInfo(v, parent));
+            return codeElements.OfType<CodeVariable2>().Where(v => v.Access == vsCMAccess.vsCMAccessPublic && v.IsConstant == false && v.IsShared == false).Select(v => new FieldInfo(v, parent));
         }
     }
 }

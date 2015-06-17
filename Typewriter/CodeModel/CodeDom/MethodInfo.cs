@@ -37,7 +37,7 @@ namespace Typewriter.CodeModel.CodeDom
 
         internal static IEnumerable<Method> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            return codeElements.OfType<CodeFunction2>().Where(f => f.FunctionKind != vsCMFunction.vsCMFunctionConstructor && f.Access == vsCMAccess.vsCMAccessPublic).Select(f => new MethodInfo(f, parent));
+            return codeElements.OfType<CodeFunction2>().Where(f => f.Access == vsCMAccess.vsCMAccessPublic && f.FunctionKind != vsCMFunction.vsCMFunctionConstructor && f.IsShared == false).Select(f => new MethodInfo(f, parent));
         }
     }
 }
