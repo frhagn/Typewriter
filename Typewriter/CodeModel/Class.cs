@@ -19,6 +19,9 @@ namespace Typewriter.CodeModel
         [Property("collection Fields", "All fields defined in the $context")]
         ICollection<Field> Fields { get; }
 
+        [Property("class BaseClass", "The base class of the $context")]
+        Class BaseClass { get; }
+
         [Property("collection Interfaces", "All interfaces implemented by the $context")]
         ICollection<Interface> Interfaces { get; }
 
