@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Should;
 using Tests.CodeModel.TestData;
+using Tests.TestInfrastructure;
 using Xunit;
 using Typewriter.CodeModel;
 

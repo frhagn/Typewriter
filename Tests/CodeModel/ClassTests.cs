@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Should;
-using Tests.CodeModel.TestData;
+using Tests.TestInfrastructure;
 using Xunit;
 using Typewriter.CodeModel;
 
@@ -9,7 +9,7 @@ namespace Tests.CodeModel
     [Trait("CodeModel", "Classes")]
     public class ClassTests : TestBase
     {
-        private readonly File fileInfo = GetFile<ClassInfo>();
+        private readonly File fileInfo = GetFile(@"Tests\CodeModel\TestData\ClassInfo.cs");
 
         [Fact]
         public void Expect_name_to_match_class_name()

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using EnvDTE;
-using Tests.VisualStudio;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
-namespace Tests
+namespace Tests.TestInfrastructure
 {
     public abstract class TestBase : IDisposable
     {
@@ -38,12 +37,6 @@ namespace Tests
 
         protected static File GetFile(string path)
         {
-            return new Typewriter.CodeModel.CodeDom.FileInfo(GetProjectItem(path));
-        }
-
-        protected static File GetFile<T>()
-        {
-            var path = typeof(T).FullName.Replace(".", "\\") + ".cs";
             return new Typewriter.CodeModel.CodeDom.FileInfo(GetProjectItem(path));
         }
 

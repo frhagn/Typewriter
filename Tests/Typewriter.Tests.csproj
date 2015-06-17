@@ -81,13 +81,12 @@
     <Compile Include="CodeModel\TestData\ClassInfo.cs" />
     <Compile Include="CodeModel\TestData\EnumInfo.cs" />
     <Compile Include="CodeModel\TestData\FileInfo.cs" />
-    <Compile Include="CodeModel\TestData\GenericClassInfo.cs" />
     <Compile Include="CodeModel\TestData\AttributeInfoAttribute.cs" />
     <Compile Include="ClassTests.cs" />
     <Compile Include="EnumTests.cs" />
     <Compile Include="CodeModel\FileTests.cs" />
-    <Compile Include="VisualStudio\Dte.cs" />
-    <Compile Include="VisualStudio\MessageFilter.cs" />
+    <Compile Include="TestInfrastructure\Dte.cs" />
+    <Compile Include="TestInfrastructure\MessageFilter.cs" />
     <Compile Include="RenderTests.cs" />
     <Compile Include="Models\TestModel1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -103,7 +102,7 @@
     <Compile Include="Render\Support\HttpPutAttribute.cs" />
     <Compile Include="Render\Support\IHttpActionResult.cs" />
     <Compile Include="Render\WebApiController\WebApiController.cs" />
-    <Compile Include="TestBase.cs" />
+    <Compile Include="TestInfrastructure\TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\TestModel1.result" />

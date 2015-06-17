@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Should;
+using Tests.TestInfrastructure;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 

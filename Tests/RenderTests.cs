@@ -1,6 +1,5 @@
-﻿using System;
-using EnvDTE;
-using Should;
+﻿using Should;
+using Tests.TestInfrastructure;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.Generation;
 using Tests.Models;

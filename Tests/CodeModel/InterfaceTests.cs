@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Should;
-using Tests.CodeModel.TestData;
+using Tests.TestInfrastructure;
 using Xunit;
 using Typewriter.CodeModel;
 
@@ -9,7 +9,7 @@ namespace Tests.CodeModel
     [Trait("CodeModel", "Interfaces")]
     public class InterfaceTests : TestBase
     {
-        private readonly File fileInfo = GetFile<IInterfaceInfo>();
+        private readonly File fileInfo = GetFile(@"Tests\CodeModel\TestData\IInterfaceInfo.cs");
 
         [Fact]
         public void Expect_name_to_match_interface_name()
