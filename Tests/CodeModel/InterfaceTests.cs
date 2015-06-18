@@ -9,7 +9,7 @@ namespace Tests.CodeModel
     [Trait("CodeModel", "Interfaces")]
     public class InterfaceTests : TestBase
     {
-        private readonly File fileInfo = GetFile(@"Tests\CodeModel\TestData\IInterfaceInfo.cs");
+        private readonly File fileInfo = GetFile(@"Tests\CodeModel\Support\IInterfaceInfo.cs");
 
         [Fact]
         public void Expect_name_to_match_interface_name()
@@ -17,8 +17,8 @@ namespace Tests.CodeModel
             var interfaceInfo = fileInfo.Interfaces.First();
 
             interfaceInfo.Name.ShouldEqual("IInterfaceInfo");
-            interfaceInfo.FullName.ShouldEqual("Tests.CodeModel.TestData.IInterfaceInfo");
-            interfaceInfo.Namespace.ShouldEqual("Tests.CodeModel.TestData");
+            interfaceInfo.FullName.ShouldEqual("Tests.CodeModel.Support.IInterfaceInfo");
+            interfaceInfo.Namespace.ShouldEqual("Tests.CodeModel.Support");
             interfaceInfo.Parent.ShouldEqual(fileInfo);
         }
 

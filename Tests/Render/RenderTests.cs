@@ -1,13 +1,13 @@
 ﻿using Should;
+using Tests.Render.RoutedApiController;
 using Tests.TestInfrastructure;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.Generation;
-using Tests.Models;
-using Tests.Render.WebApiController;
-using Tests.Render.RoutedApiController;
+using Xunit;
 
-namespace Tests
+namespace Tests.Render
 {
+    [Trait("Render", null)]
     public class RenderTests : TestBase
     {
         private void Assert<T>()
@@ -28,16 +28,13 @@ namespace Tests
             output.ShouldEqual(result);
         }
 
-        public void Test1()
-        {
-            Assert<TestModel1>();
-        }
-
+        [Fact]
         public void webapi_controller_to_angular_service()
         {
-            Assert<WebApiController>();
+            Assert<WebApiController.WebApiController>();
         }
 
+        [Fact]
         public void routed_webapi_controller()
         {
             Assert<BooksController>();

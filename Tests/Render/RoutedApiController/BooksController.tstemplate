@@ -18,7 +18,7 @@
         return routeExpression + (string.IsNullOrEmpty(queryString) ? "" : " + \"?" + queryString);
     }
 	var adjustedParameters = (Method m) => {
-		var parameters = m.Parameters.Select(p => new KeyValuePair<string, string>(p.Name, p.Type.ToString())).ToList();
+		var parameters = m.Parameters.Select(p => new KeyValuePair<string, string>(p.Name, p.Type.Type())).ToList();
         var matches = new System.Text.RegularExpressions.Regex(@"\{(\w+\:?\w+)\}").Matches(Extensions.Route(m));
 
         foreach (System.Text.RegularExpressions.Match match in matches)

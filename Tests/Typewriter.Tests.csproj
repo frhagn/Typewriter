@@ -72,23 +72,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeModel\EnumTests.cs" />
     <Compile Include="CodeModel\PropertyTests.cs" />
     <Compile Include="CodeModel\InterfaceTests.cs" />
     <Compile Include="CodeModel\ClassTests.cs" />
-    <Compile Include="CodeModel\TestData\PropertyInfo.cs" />
-    <Compile Include="CodeModel\TestData\IInterfaceInfo.cs" />
+    <Compile Include="CodeModel\Support\PropertyInfo.cs" />
+    <Compile Include="CodeModel\Support\IInterfaceInfo.cs" />
     <Compile Include="GenericClassTests.cs" />
-    <Compile Include="CodeModel\TestData\ClassInfo.cs" />
-    <Compile Include="CodeModel\TestData\EnumInfo.cs" />
-    <Compile Include="CodeModel\TestData\FileInfo.cs" />
-    <Compile Include="CodeModel\TestData\AttributeInfoAttribute.cs" />
+    <Compile Include="CodeModel\Support\ClassInfo.cs" />
+    <Compile Include="CodeModel\Support\EnumInfo.cs" />
+    <Compile Include="CodeModel\Support\FileInfo.cs" />
+    <Compile Include="CodeModel\Support\AttributeInfoAttribute.cs" />
     <Compile Include="ClassTests.cs" />
     <Compile Include="EnumTests.cs" />
     <Compile Include="CodeModel\FileTests.cs" />
     <Compile Include="TestInfrastructure\Dte.cs" />
     <Compile Include="TestInfrastructure\MessageFilter.cs" />
-    <Compile Include="RenderTests.cs" />
-    <Compile Include="Models\TestModel1.cs" />
+    <Compile Include="Render\RenderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\Support\FromBodyAttribute.cs" />
     <Compile Include="Render\RoutedApiController\Support\Book.cs" />
@@ -105,8 +105,6 @@
     <Compile Include="TestInfrastructure\TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Models\TestModel1.result" />
-    <None Include="Models\TestModel1.tstemplate" />
     <None Include="packages.config" />
     <None Include="Render\RoutedApiController\BooksController.result" />
     <None Include="Render\RoutedApiController\BooksController.tstemplate" />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tests.CodeModel.TestData
+namespace Tests.CodeModel.Support
 {
     public class AttributeInfoAttribute : Attribute
     {

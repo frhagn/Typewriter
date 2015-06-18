@@ -9,7 +9,7 @@ namespace Tests.CodeModel
     [Trait("CodeModel", "Classes")]
     public class ClassTests : TestBase
     {
-        private readonly File fileInfo = GetFile(@"Tests\CodeModel\TestData\ClassInfo.cs");
+        private readonly File fileInfo = GetFile(@"Tests\CodeModel\Support\ClassInfo.cs");
 
         [Fact]
         public void Expect_name_to_match_class_name()
@@ -17,8 +17,8 @@ namespace Tests.CodeModel
             var classInfo = fileInfo.Classes.First();
 
             classInfo.Name.ShouldEqual("ClassInfo");
-            classInfo.FullName.ShouldEqual("Tests.CodeModel.TestData.ClassInfo");
-            classInfo.Namespace.ShouldEqual("Tests.CodeModel.TestData");
+            classInfo.FullName.ShouldEqual("Tests.CodeModel.Support.ClassInfo");
+            classInfo.Namespace.ShouldEqual("Tests.CodeModel.Support");
             classInfo.Parent.ShouldEqual(fileInfo);
         }
 

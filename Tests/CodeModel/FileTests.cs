@@ -10,13 +10,13 @@ namespace Tests.CodeModel
     [Trait("CodeModel", "Files")]
     public class FileTests : TestBase
     {
-        private readonly File fileInfo = GetFile(@"Tests\CodeModel\TestData\FileInfo.cs");
+        private readonly File fileInfo = GetFile(@"Tests\CodeModel\Support\FileInfo.cs");
 
         [Fact]
         public void Expect_name_to_match_filename()
         {
             fileInfo.Name.ShouldEqual("FileInfo.cs");
-            fileInfo.FullName.ShouldEqual(Path.Combine(SolutionDirectory, @"Tests\CodeModel\TestData\FileInfo.cs"));
+            fileInfo.FullName.ShouldEqual(Path.Combine(SolutionDirectory, @"Tests\CodeModel\Support\FileInfo.cs"));
         }
 
         [Fact]

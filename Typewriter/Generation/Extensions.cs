@@ -4,7 +4,7 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.Generation
 {
-    public class Extensions
+    public static class Extensions
     {
         [Property("(extension) string name", "The name of the $context (camelCased)")]
         public static string name(CodeItem itemInfo)
@@ -27,7 +27,7 @@ namespace Typewriter.Generation
         }
 
         [Property("(extension) string Type", "The type name")]
-        public static string Type(Type typeInfo)
+        public static string Type(this Type typeInfo)
         {
             if (typeInfo.IsNullable)
                 typeInfo = typeInfo.GenericTypeArguments.First();
@@ -56,6 +56,7 @@ namespace Typewriter.Generation
                     return "boolean";
                 case "String":
                 case "Char":
+                case "Guid":
                     return "string";
                 case "Byte":
                 case "SByte":

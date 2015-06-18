@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tests.CodeModel.TestData
+﻿namespace Tests.CodeModel.Support
 {
     [AttributeInfo]
     public class ClassInfo : BaseClassInfo, IInterfaceInfo

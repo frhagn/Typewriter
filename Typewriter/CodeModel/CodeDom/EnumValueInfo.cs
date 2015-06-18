@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
@@ -9,13 +10,13 @@ namespace Typewriter.CodeModel.CodeDom
     {
         private readonly CodeVariable2 codeVariable;
         private readonly Item parent;
-        private readonly int index;
+        private readonly int value;
 
-        private EnumValueInfo(CodeVariable2 codeVariable, Item parent, int index)
+        private EnumValueInfo(CodeVariable2 codeVariable, Item parent, int value)
         {
             this.codeVariable = codeVariable;
             this.parent = parent;
-            this.index = index;
+            this.value = value;
         }
 
         public Item Parent => parent;
@@ -25,11 +26,21 @@ namespace Typewriter.CodeModel.CodeDom
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeVariable.Attributes, this).ToArray());
 
-        public int Value => codeVariable.InitExpression == null ? index : int.Parse(codeVariable.InitExpression.ToString());
+        public int Value => value;
 
         internal static IEnumerable<EnumValue> FromCodeElements(CodeElements codeElements, Item parent)
         {
-            return codeElements.OfType<CodeVariable2>().Select((v, i) => new EnumValueInfo(v, parent, i));
+            var value = -1;
+
+            foreach (var codeVariable in codeElements.OfType<CodeVariable2>())
+            {
+                if (codeVariable.InitExpression == null)
+                    value++;
+                else
+                    value = Convert.ToInt32(codeVariable.InitExpression);
+
+                yield return new EnumValueInfo(codeVariable, parent, value);
+            }
         }
     }
 }

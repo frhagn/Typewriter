@@ -18,6 +18,10 @@ namespace Typewriter.CodeModel.CodeDom
         public Item Parent => parent;
         public string Name => codeEnum.Name;
         public string FullName => codeEnum.FullName;
+        public string Namespace => codeEnum.Namespace.FullName;
+
+        private bool? isFlags;
+        public bool IsFlags => isFlags ?? (isFlags = Attributes.Any(a => a.FullName == "System.FlagsAttribute")).Value;
 
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeEnum.Attributes, this).ToArray());

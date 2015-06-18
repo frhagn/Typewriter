@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Tests.CodeModel.TestData
+namespace Tests.CodeModel.Support
 {
     public class PropertyInfo
     {

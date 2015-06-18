@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Should;
-using Tests.CodeModel.TestData;
 using Tests.TestInfrastructure;
 using Xunit;
 using Typewriter.CodeModel;
@@ -10,7 +9,7 @@ namespace Tests.CodeModel
     [Trait("CodeModel", "Properties")]
     public class PropertyTests : TestBase
     {
-        private readonly File fileInfo = GetFile(@"Tests\CodeModel\TestData\PropertyInfo.cs");
+        private readonly File fileInfo = GetFile(@"Tests\CodeModel\Support\PropertyInfo.cs");
 
         [Fact]
         public void Expect_name_to_match_property_name()
@@ -19,7 +18,7 @@ namespace Tests.CodeModel
             var propertyInfo = classInfo.Properties.First(p => p.Name == "Bool");
 
             propertyInfo.Name.ShouldEqual("Bool");
-            propertyInfo.FullName.ShouldEqual("Tests.CodeModel.TestData.PropertyInfo.Bool");
+            propertyInfo.FullName.ShouldEqual("Tests.CodeModel.Support.PropertyInfo.Bool");
             propertyInfo.Parent.ShouldEqual(classInfo);
         }
 
