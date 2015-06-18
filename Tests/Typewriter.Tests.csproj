@@ -78,13 +78,10 @@
     <Compile Include="CodeModel\ClassTests.cs" />
     <Compile Include="CodeModel\Support\PropertyInfo.cs" />
     <Compile Include="CodeModel\Support\IInterfaceInfo.cs" />
-    <Compile Include="GenericClassTests.cs" />
     <Compile Include="CodeModel\Support\ClassInfo.cs" />
     <Compile Include="CodeModel\Support\EnumInfo.cs" />
     <Compile Include="CodeModel\Support\FileInfo.cs" />
     <Compile Include="CodeModel\Support\AttributeInfoAttribute.cs" />
-    <Compile Include="ClassTests.cs" />
-    <Compile Include="EnumTests.cs" />
     <Compile Include="CodeModel\FileTests.cs" />
     <Compile Include="TestInfrastructure\Dte.cs" />
     <Compile Include="TestInfrastructure\MessageFilter.cs" />
