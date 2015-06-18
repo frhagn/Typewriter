@@ -2,7 +2,8 @@
 using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-
+using System.Collections.Generic;
+using Typewriter.Generation;
 namespace Tests
 {
     public class ClassTests : TestBase
@@ -27,6 +28,16 @@ namespace Tests
             classInfo.Attributes.First().Name.ShouldEqual("Test");
             classInfo.Attributes.First().FullName.ShouldEqual("Tests.CodeModel.TestAttribute");
             classInfo.Attributes.First().Value.ShouldEqual("classParameter");
+        }
+
+        public void Methods()
+        {
+            var classInfo = fileInfo.Classes.First();
+
+            classInfo.Methods.Count.ShouldEqual(1);
+
+            var method = classInfo.Methods.Single();
+            method.Name.ShouldEqual("Method1");
         }
 
         #region Primitive properties
@@ -199,7 +210,7 @@ namespace Tests
 
             property.Type.Attributes.Count.ShouldEqual(1);
             property.Type.Properties.Any().ShouldBeTrue();
-            property.Type.Methods.Any().ShouldBeFalse();
+            property.Type.Methods.Count().ShouldEqual(1);
 
             var typeProperty = property.Type.Properties.First(p => p.Name == "Class11");
             typeProperty.Name.ShouldEqual("Class11");
@@ -262,7 +273,7 @@ namespace Tests
 
             generic.Attributes.Count.ShouldEqual(1);
             generic.Properties.Any().ShouldBeTrue();
-            generic.Methods.Any().ShouldBeFalse();
+            generic.Methods.Count().ShouldEqual(1);
 
             var typeProperty = generic.Properties.First(p => p.Name == "Class11");
             typeProperty.Name.ShouldEqual("Class11");

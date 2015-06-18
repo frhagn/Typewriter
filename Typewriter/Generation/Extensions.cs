@@ -72,5 +72,6 @@ namespace Typewriter.Generation
             
             return string.Concat(routePrefix != null ? routePrefix.Value + "/" : null, route?.Value);
         }
+   
     }
 }

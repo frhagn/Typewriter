@@ -3,35 +3,45 @@ using EnvDTE;
 using Should;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.Generation;
+using Tests.Models;
+using Tests.Render.WebApiController;
+using Tests.Render.RoutedApiController;
 
 namespace Tests
 {
     public class RenderTests : TestBase
     {
-        public void Test1()
+        private void Assert<T>()
         {
-            var template = new Template(GetProjectItem(@"Tests\Models\TestModel1.tstemplate"));
-            var model = new FileInfo(GetProjectItem(@"Tests\Models\TestModel1.cs"));
-            var result = GetFileContents(@"Tests\Models\TestModel1.result");
+            var type = typeof(T);
+            var nsParts = type.FullName.Split('.');
+
+            var path = string.Join(@"\", nsParts);
+
+            var template = new Template(GetProjectItem(path + ".tstemplate"));
+            var model = new FileInfo(GetProjectItem(path + ".cs"));
+            var result = GetFileContents(path + ".result");
 
             bool success;
             var output = template.Render(model, out success);
-
+            
             success.ShouldBeTrue();
             output.ShouldEqual(result);
         }
 
+        public void Test1()
+        {
+            Assert<TestModel1>();
+        }
+
         public void webapi_controller_to_angular_service()
         {
-            var template = new Template(GetProjectItem(@"Tests\Render\WebApiController\WebApiController.tstemplate"));
-            var model = new FileInfo(GetProjectItem(@"Tests\Render\WebApiController\WebApiController.cs"));
-            var result = GetFileContents(@"Tests\Render\WebApiController\WebApiController.result");
+            Assert<WebApiController>();
+        }
 
-            bool success;
-            var output = template.Render(model, out success);
-
-            success.ShouldBeTrue();
-            output.ShouldEqual(result);
+        public void routed_webapi_controller()
+        {
+            Assert<BooksController>();
         }
     }
 }
