@@ -6,7 +6,7 @@ using File = Typewriter.CodeModel.File;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
-namespace Tests.TestInfrastructure
+namespace Typewriter.Tests.TestInfrastructure
 {
     public abstract class TestBase : IDisposable
     {

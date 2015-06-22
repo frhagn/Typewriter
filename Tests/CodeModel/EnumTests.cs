@@ -1,11 +1,10 @@
 ﻿using System.Linq;
 using Should;
-using Tests.CodeModel.Support;
-using Tests.TestInfrastructure;
 using Typewriter.CodeModel;
+using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
-namespace Tests.CodeModel
+namespace Typewriter.Tests.CodeModel
 {
     [Trait("CodeModel", "Enums")]
     public class EnumTests : TestBase
@@ -18,8 +17,8 @@ namespace Tests.CodeModel
             var enumInfo = fileInfo.Enums.First();
 
             enumInfo.Name.ShouldEqual("EnumInfo");
-            enumInfo.FullName.ShouldEqual("Tests.CodeModel.Support.EnumInfo");
-            enumInfo.Namespace.ShouldEqual("Tests.CodeModel.Support");
+            enumInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.EnumInfo");
+            enumInfo.Namespace.ShouldEqual("Typewriter.Tests.CodeModel.Support");
             enumInfo.Parent.ShouldEqual(fileInfo);
         }
 
@@ -31,6 +30,7 @@ namespace Tests.CodeModel
 
             enumInfo.Attributes.Count.ShouldEqual(1);
             attributeInfo.Name.ShouldEqual("AttributeInfo");
+            attributeInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.AttributeInfoAttribute");
         }
 
         [Fact]
@@ -42,6 +42,7 @@ namespace Tests.CodeModel
 
             enumInfo.Attributes.Count.ShouldEqual(1);
             attributeInfo.Name.ShouldEqual("AttributeInfo");
+            attributeInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.AttributeInfoAttribute");
         }
 
         [Fact]

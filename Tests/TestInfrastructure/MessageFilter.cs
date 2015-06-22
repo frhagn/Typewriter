@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Tests.TestInfrastructure
+namespace Typewriter.Tests.TestInfrastructure
 {
     public class MessageFilter : IOleMessageFilter
     {

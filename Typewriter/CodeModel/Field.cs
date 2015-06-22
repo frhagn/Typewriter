@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Typewriter.CodeModel.Attributes;
+﻿using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
@@ -13,8 +11,8 @@ namespace Typewriter.CodeModel
         [Property("bool IsEnumerable", "Determines if the $context is enumerable")]
         bool IsEnumerable { get; }
         
-        [Property("bool IsGeneric", "Determines if the $context is generic")]
-        bool IsGeneric { get; }
+        //[Property("bool IsGeneric", "Determines if the $context is generic")]
+        //bool IsGeneric { get; }
 
         [Property("bool IsNullable", "Determines if the $context is nullable")]
         bool IsNullable { get; }

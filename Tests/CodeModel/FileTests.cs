@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
 using Should;
-using Tests.TestInfrastructure;
+using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 
-namespace Tests.CodeModel
+namespace Typewriter.Tests.CodeModel
 {
     [Trait("CodeModel", "Files")]
     public class FileTests : TestBase

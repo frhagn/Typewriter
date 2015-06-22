@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using Should;
-using Tests.TestInfrastructure;
-using Xunit;
 using Typewriter.CodeModel;
+using Typewriter.Tests.TestInfrastructure;
+using Xunit;
 
-namespace Tests.CodeModel
+namespace Typewriter.Tests.CodeModel
 {
     [Trait("CodeModel", "Classes")]
     public class ClassTests : TestBase
@@ -17,8 +17,8 @@ namespace Tests.CodeModel
             var classInfo = fileInfo.Classes.First();
 
             classInfo.Name.ShouldEqual("ClassInfo");
-            classInfo.FullName.ShouldEqual("Tests.CodeModel.Support.ClassInfo");
-            classInfo.Namespace.ShouldEqual("Tests.CodeModel.Support");
+            classInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.ClassInfo");
+            classInfo.Namespace.ShouldEqual("Typewriter.Tests.CodeModel.Support");
             classInfo.Parent.ShouldEqual(fileInfo);
         }
 
@@ -30,6 +30,7 @@ namespace Tests.CodeModel
 
             classInfo.Attributes.Count.ShouldEqual(1);
             attributeInfo.Name.ShouldEqual("AttributeInfo");
+            attributeInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.AttributeInfoAttribute");
         }
 
         [Fact]

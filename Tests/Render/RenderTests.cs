@@ -1,11 +1,11 @@
 ﻿using Should;
-using Tests.Render.RoutedApiController;
-using Tests.TestInfrastructure;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.Generation;
+using Typewriter.Tests.Render.RoutedApiController;
+using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
-namespace Tests.Render
+namespace Typewriter.Tests.Render
 {
     [Trait("Render", null)]
     public class RenderTests : TestBase
@@ -13,7 +13,7 @@ namespace Tests.Render
         private void Assert<T>()
         {
             var type = typeof(T);
-            var nsParts = type.FullName.Split('.');
+            var nsParts = type.FullName.Remove(0, 11).Split('.');
 
             var path = string.Join(@"\", nsParts);
 

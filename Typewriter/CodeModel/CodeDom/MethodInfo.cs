@@ -22,13 +22,16 @@ namespace Typewriter.CodeModel.CodeDom
 
         public bool IsEnum => Type.IsEnum;
         public bool IsEnumerable => Type.IsEnumerable;
-        public bool IsGeneric => Type.IsGeneric;
+        public bool IsGeneric => codeFunction.IsGeneric;
         public bool IsNullable => Type.IsNullable;
         public bool IsPrimitive => Type.IsPrimitive;
 
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeFunction.Attributes, this).ToArray());
-        
+
+        private Type[] genericTypeArguments;
+        public ICollection<Type> GenericTypeArguments => genericTypeArguments ?? (genericTypeArguments = GenericTypeInfo.FromFullName(codeFunction.FullName.Remove(0, parent.FullName.Length + 1), this).ToArray());
+
         private Parameter[] parameters;
         public ICollection<Parameter> Parameters => parameters ?? (parameters = ParameterInfo.FromCodeElements(codeFunction.Parameters, this).ToArray());
 

@@ -1,4 +1,4 @@
-﻿namespace Tests.CodeModel.Support
+﻿namespace Typewriter.Tests.CodeModel.Support
 {
     [AttributeInfo]
     public class ClassInfo : BaseClassInfo, IInterfaceInfo

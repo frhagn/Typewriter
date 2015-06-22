@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using Should;
-using Tests.TestInfrastructure;
-using Xunit;
 using Typewriter.CodeModel;
+using Typewriter.Tests.TestInfrastructure;
+using Xunit;
 
-namespace Tests.CodeModel
+namespace Typewriter.Tests.CodeModel
 {
     [Trait("CodeModel", "Interfaces")]
     public class InterfaceTests : TestBase
@@ -17,8 +17,8 @@ namespace Tests.CodeModel
             var interfaceInfo = fileInfo.Interfaces.First();
 
             interfaceInfo.Name.ShouldEqual("IInterfaceInfo");
-            interfaceInfo.FullName.ShouldEqual("Tests.CodeModel.Support.IInterfaceInfo");
-            interfaceInfo.Namespace.ShouldEqual("Tests.CodeModel.Support");
+            interfaceInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.IInterfaceInfo");
+            interfaceInfo.Namespace.ShouldEqual("Typewriter.Tests.CodeModel.Support");
             interfaceInfo.Parent.ShouldEqual(fileInfo);
         }
 
@@ -30,6 +30,7 @@ namespace Tests.CodeModel
 
             interfaceInfo.Attributes.Count.ShouldEqual(1);
             attributeInfo.Name.ShouldEqual("AttributeInfo");
+            attributeInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.AttributeInfoAttribute");
         }
 
         [Fact]

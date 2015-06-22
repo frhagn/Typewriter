@@ -9,8 +9,8 @@
     <ProjectGuid>{F583276A-51A1-4DDD-B225-11A5F9A01217}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
+    <RootNamespace>Typewriter.Tests</RootNamespace>
+    <AssemblyName>Typewriter.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -73,15 +73,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeModel\EnumTests.cs" />
+    <Compile Include="CodeModel\MethodTests.cs" />
     <Compile Include="CodeModel\PropertyTests.cs" />
     <Compile Include="CodeModel\InterfaceTests.cs" />
     <Compile Include="CodeModel\ClassTests.cs" />
+    <Compile Include="CodeModel\Support\MethodInfo.cs" />
     <Compile Include="CodeModel\Support\PropertyInfo.cs" />
     <Compile Include="CodeModel\Support\IInterfaceInfo.cs" />
     <Compile Include="CodeModel\Support\ClassInfo.cs" />
     <Compile Include="CodeModel\Support\EnumInfo.cs" />
     <Compile Include="CodeModel\Support\FileInfo.cs" />
-    <Compile Include="CodeModel\Support\AttributeInfoAttribute.cs" />
+    <Compile Include="CodeModel\Support\AttributeInfo.cs" />
     <Compile Include="CodeModel\FileTests.cs" />
     <Compile Include="TestInfrastructure\Dte.cs" />
     <Compile Include="TestInfrastructure\MessageFilter.cs" />

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tests.CodeModel.Support
+﻿namespace Typewriter.Tests.CodeModel.Support
 {
     public class PublicClass
     {

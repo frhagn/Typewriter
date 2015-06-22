@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
 
-namespace Tests.TestInfrastructure
+namespace Typewriter.Tests.TestInfrastructure
 {
     internal static class Dte
     {

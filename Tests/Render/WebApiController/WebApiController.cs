@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using Tests.Render.Support;
-using Tests.Render.WebApiController.Support;
+using Typewriter.Tests.Render.Support;
+using Typewriter.Tests.Render.WebApiController.Support;
 
-namespace Tests.Render.WebApiController
+namespace Typewriter.Tests.Render.WebApiController
 {
     public class WebApiController
     {

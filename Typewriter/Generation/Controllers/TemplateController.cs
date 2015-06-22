@@ -175,12 +175,6 @@ namespace Typewriter.Generation.Controllers
             }
         }
 
-        //private IEnumerable<ProjectItem> GetProjectItems(string extension)
-        //{
-        //    return dte.Solution.AllProjetcs().SelectMany(p => p.AllProjectItems())
-        //        .Where(i => i.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase));
-        //}
-
         private IEnumerable<ProjectItem> GetProjectItems()
         {
             var projects = dte.Solution.AllProjetcs().Select(p =>
@@ -195,8 +189,11 @@ namespace Typewriter.Generation.Controllers
                     return null;
                 }
             });
+
             var files = projects.Where(p => string.IsNullOrWhiteSpace(p) == false)
-                .SelectMany(p => new System.IO.FileInfo(p).Directory.GetFiles("*.tst", SearchOption.AllDirectories));
+                .SelectMany(p => new System.IO.FileInfo(p).Directory?.GetFiles("*.tst", SearchOption.AllDirectories))
+                .Where(f => f != null);
+
             return files.Select(a => dte.Solution.FindProjectItem(a.FullName));
         }
     }
