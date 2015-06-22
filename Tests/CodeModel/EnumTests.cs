@@ -80,5 +80,24 @@ namespace Typewriter.Tests.CodeModel
             var enumInfo = fileInfo.Enums.First();
             enumInfo.IsFlags.ShouldBeFalse();
         }
+
+        [Fact]
+        public void Expect_to_find_containing_class_on_nested_enum()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var nestedEnumInfo = classInfo.NestedEnums.First();
+            var containingClassInfo = nestedEnumInfo.ContainingClass;
+
+            containingClassInfo.Name.ShouldEqual("EnumContiningClassInfo");
+        }
+
+        [Fact]
+        public void Expect_not_to_find_containing_class_on_top_level_enum()
+        {
+            var enumInfo = fileInfo.Enums.First();
+            var containingClassInfo = enumInfo.ContainingClass;
+
+            containingClassInfo.ShouldBeNull();
+        }
     }
 }

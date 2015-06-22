@@ -20,11 +20,11 @@ namespace Typewriter.CodeModel.CodeDom
         public string Name => codeFunction.Name;
         public string FullName => codeFunction.FullName;
 
-        public bool IsEnum => Type.IsEnum;
-        public bool IsEnumerable => Type.IsEnumerable;
+        //public bool IsEnum => Type.IsEnum;
+        //public bool IsEnumerable => Type.IsEnumerable;
         public bool IsGeneric => codeFunction.IsGeneric;
-        public bool IsNullable => Type.IsNullable;
-        public bool IsPrimitive => Type.IsPrimitive;
+        //public bool IsNullable => Type.IsNullable;
+        //public bool IsPrimitive => Type.IsPrimitive;
 
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeFunction.Attributes, this).ToArray());

@@ -20,11 +20,11 @@ namespace Typewriter.CodeModel.CodeDom
         public string Name => codeParameter.Name;
         public string FullName => codeParameter.FullName;
 
-        public bool IsEnum => Type.IsEnum;
-        public bool IsEnumerable => Type.IsEnumerable;
-        public bool IsGeneric => Type.IsGeneric;
-        public bool IsNullable => Type.IsNullable;
-        public bool IsPrimitive => Type.IsPrimitive;
+        //public bool IsEnum => Type.IsEnum;
+        //public bool IsEnumerable => Type.IsEnumerable;
+        //public bool IsGeneric => Type.IsGeneric;
+        //public bool IsNullable => Type.IsNullable;
+        //public bool IsPrimitive => Type.IsPrimitive;
 
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeParameter.Attributes, this).ToArray());

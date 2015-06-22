@@ -15,5 +15,8 @@ namespace Typewriter.CodeModel
 
         [Property("collection Values", "All values defined in the $context")]
         ICollection<EnumValue> Values { get; }
+
+        [Property("class ContainingClass", "The containing class of the $context if it is nested")]
+        Class ContainingClass { get; }
     }
 }

@@ -15,4 +15,11 @@
     public interface IGenericInterface<T>
     {
     }
+
+    public class InterfaceContiningClassInfo
+    {
+        public interface INestedInterfaceInfo
+        {
+        }
+    }
 }

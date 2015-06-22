@@ -25,6 +25,9 @@ namespace Typewriter.CodeModel.CodeDom
         private Class  baseClass;
         public Class BaseClass => baseClass ?? (baseClass = FromCodeElements(codeClass.Bases, this).FirstOrDefault());
 
+        private Class containingClass;
+        public Class ContainingClass => containingClass ?? (containingClass = ClassInfo.FromCodeClass(codeClass.Parent as CodeClass2, this));
+
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeClass.Attributes, this).ToArray());
 
@@ -58,6 +61,11 @@ namespace Typewriter.CodeModel.CodeDom
         internal static IEnumerable<Class> FromCodeElements(CodeElements codeElements, Item parent)
         {
             return codeElements.OfType<CodeClass2>().Where(c => c.Access == vsCMAccess.vsCMAccessPublic && c.FullName != "System.Object").Select(c => new ClassInfo(c, parent));
+        }
+
+        internal static Class FromCodeClass(CodeClass2 codeClass, Item parent)
+        {
+            return codeClass == null ? null : new ClassInfo(codeClass, parent);
         }
     }
 }

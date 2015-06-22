@@ -57,6 +57,7 @@ namespace Typewriter.Generation
                 case "String":
                 case "Char":
                 case "Guid":
+                case "TimeSpan":
                     return "string";
                 case "Byte":
                 case "SByte":
@@ -71,6 +72,7 @@ namespace Typewriter.Generation
                 case "Decimal":
                     return "number";
                 case "DateTime":
+                case "DateTimeOffset":
                     return "Date";
                 case "Void":
                     return "void";

@@ -80,11 +80,11 @@ namespace Typewriter.Tests.CodeModel
             {
                 var propertyInfo = classInfo.Properties.First(p => p.Name == property);
 
-                propertyInfo.IsEnum.ShouldBeFalse($"IsEnum {property}");
-                propertyInfo.IsEnumerable.ShouldBeFalse($"IsEnumerable {property}");
-                //propertyInfo.IsGeneric.ShouldBeFalse($"IsGeneric {property}");
-                propertyInfo.IsNullable.ShouldBeFalse($"IsNullable {property}");
-                propertyInfo.IsPrimitive.ShouldBeTrue($"IsPrimitive {property}");
+                propertyInfo.Type.IsEnum.ShouldBeFalse($"IsEnum {property}");
+                propertyInfo.Type.IsEnumerable.ShouldBeFalse($"IsEnumerable {property}");
+                propertyInfo.Type.IsGeneric.ShouldBeFalse($"IsGeneric {property}");
+                propertyInfo.Type.IsNullable.ShouldBeFalse($"IsNullable {property}");
+                propertyInfo.Type.IsPrimitive.ShouldBeTrue($"IsPrimitive {property}");
             }
         }
 
@@ -94,7 +94,7 @@ namespace Typewriter.Tests.CodeModel
             var classInfo = fileInfo.Classes.First();
             var propertyInfo = classInfo.Properties.First(p => p.Name == "Exception");
 
-            propertyInfo.IsPrimitive.ShouldBeFalse();
+            propertyInfo.Type.IsPrimitive.ShouldBeFalse();
         }
 
         [Fact]
@@ -106,10 +106,10 @@ namespace Typewriter.Tests.CodeModel
             var stringArrayInfo = classInfo.Properties.First(p => p.Name == "StringArray");
             var enumerableStringInfo = classInfo.Properties.First(p => p.Name == "EnumerableString");
 
-            arrayInfo.IsEnumerable.ShouldBeTrue();
-            enumerableInfo.IsEnumerable.ShouldBeTrue();
-            stringArrayInfo.IsEnumerable.ShouldBeTrue();
-            enumerableStringInfo.IsEnumerable.ShouldBeTrue();
+            arrayInfo.Type.IsEnumerable.ShouldBeTrue();
+            enumerableInfo.Type.IsEnumerable.ShouldBeTrue();
+            stringArrayInfo.Type.IsEnumerable.ShouldBeTrue();
+            enumerableStringInfo.Type.IsEnumerable.ShouldBeTrue();
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Typewriter.Tests.CodeModel
             var classInfo = fileInfo.Classes.First();
             var stringInfo = classInfo.Properties.First(p => p.Name == "String");
 
-            stringInfo.IsEnumerable.ShouldBeFalse();
+            stringInfo.Type.IsEnumerable.ShouldBeFalse();
         }
 
         [Fact]
@@ -138,8 +138,8 @@ namespace Typewriter.Tests.CodeModel
             var genericInfo = classInfo.Properties.First(p => p.Name == "EnumerableGeneric");
             var innerType = genericInfo.Type.GenericTypeArguments.First();
 
-            genericInfo.IsEnumerable.ShouldBeTrue();
-            //genericInfo.IsGeneric.ShouldBeTrue();
+            genericInfo.Type.IsEnumerable.ShouldBeTrue();
+            genericInfo.Type.IsGeneric.ShouldBeTrue();
 
             genericInfo.Type.Name.ShouldEqual("IEnumerable");
             genericInfo.Type.FullName.ShouldEqual("System.Collections.Generic.IEnumerable<T>");

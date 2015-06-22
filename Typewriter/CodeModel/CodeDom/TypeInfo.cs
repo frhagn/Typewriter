@@ -33,6 +33,9 @@ namespace Typewriter.CodeModel.CodeDom
         private Class baseClass;
         public Class BaseClass => baseClass ?? (baseClass = ClassInfo.FromCodeElements(CodeType.Bases, this).FirstOrDefault());
 
+        private Class containingClass;
+        public Class ContainingClass => containingClass ?? (containingClass = ClassInfo.FromCodeClass(codeType.Parent as CodeClass2, this));
+
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(CodeType.Attributes, this).ToArray());
 
@@ -62,8 +65,7 @@ namespace Typewriter.CodeModel.CodeDom
 
         private Interface[] nestedInterfaces;
         public ICollection<Interface> NestedInterfaces => nestedInterfaces ?? (nestedInterfaces = InterfaceInfo.FromCodeElements(CodeType.Members, this).ToArray());
-
-
+        
         private IEnumerable<Type> LoadGenericTypeArguments()
         {
             if (IsGeneric == false) return new Type[0];

@@ -23,11 +23,11 @@ namespace Typewriter.CodeModel.CodeDom
         public bool HasGetter => codeProperty.Getter != null && codeProperty.Getter.Access == vsCMAccess.vsCMAccessPublic;
         public bool HasSetter => codeProperty.Setter != null && codeProperty.Setter.Access == vsCMAccess.vsCMAccessPublic;
 
-        public bool IsEnum => Type.IsEnum;
-        public bool IsEnumerable => Type.IsEnumerable;
-        public bool IsGeneric => Type.IsGeneric;
-        public bool IsNullable => Type.IsNullable;
-        public bool IsPrimitive => Type.IsPrimitive;
+        //public bool IsEnum => Type.IsEnum;
+        //public bool IsEnumerable => Type.IsEnumerable;
+        //public bool IsGeneric => Type.IsGeneric;
+        //public bool IsNullable => Type.IsNullable;
+        //public bool IsPrimitive => Type.IsPrimitive;
 
         private Attribute[] attributes;
         public ICollection<Attribute> Attributes => attributes ?? (attributes = AttributeInfo.FromCodeElements(codeProperty.Attributes, this).ToArray());

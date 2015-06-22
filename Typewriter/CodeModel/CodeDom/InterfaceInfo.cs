@@ -36,7 +36,10 @@ namespace Typewriter.CodeModel.CodeDom
 
         private Property[] properties;
         public ICollection<Property> Properties => properties ?? (properties = PropertyInfo.FromCodeElements(codeInterface.Children, this).ToArray());
-        
+
+        private Class containingClass;
+        public Class ContainingClass => containingClass ?? (containingClass = ClassInfo.FromCodeClass(codeInterface.Parent as CodeClass2, this));
+
         internal static IEnumerable<Interface> FromCodeElements(CodeElements codeElements, Item parent)
         {
             return codeElements.OfType<CodeInterface2>().Where(i => i.Access == vsCMAccess.vsCMAccessPublic).Select(i => new InterfaceInfo(i, parent));

@@ -24,5 +24,8 @@ namespace Typewriter.CodeModel
 
         [Property("collection Properties", "All properties defined in the $context")]
         ICollection<Property> Properties { get; }
+
+        [Property("class ContainingClass", "The containing class of the $context if it is nested")]
+        Class ContainingClass { get; }
     }
 }

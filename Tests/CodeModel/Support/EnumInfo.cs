@@ -19,4 +19,11 @@ namespace Typewriter.Tests.CodeModel.Support
         ValueB = 2,
         ValueC = 4
     }
+
+    public class EnumContiningClassInfo
+    {
+        public enum NestedEnumInfo
+        {
+        }
+    }
 }

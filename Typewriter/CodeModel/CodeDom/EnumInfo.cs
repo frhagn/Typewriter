@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
+using EnvDTE80;
 
 namespace Typewriter.CodeModel.CodeDom
 {
@@ -28,6 +29,9 @@ namespace Typewriter.CodeModel.CodeDom
 
         private EnumValue[] values;
         public ICollection<EnumValue> Values => values ?? (values = EnumValueInfo.FromCodeElements(codeEnum.Members, this).ToArray());
+
+        private Class containingClass;
+        public Class ContainingClass => containingClass ?? (containingClass = ClassInfo.FromCodeClass(codeEnum.Parent as CodeClass2, this));
 
         internal static IEnumerable<Enum> FromCodeElements(CodeElements codeElements, Item parent)
         {

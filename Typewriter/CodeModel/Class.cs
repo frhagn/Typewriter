@@ -22,6 +22,9 @@ namespace Typewriter.CodeModel
         [Property("class BaseClass", "The base class of the $context")]
         Class BaseClass { get; }
 
+        [Property("class ContainingClass", "The containing class of the $context if it is nested")]
+        Class ContainingClass { get; }
+
         [Property("collection Interfaces", "All interfaces implemented by the $context")]
         ICollection<Interface> Interfaces { get; }
 

@@ -169,5 +169,24 @@ namespace Typewriter.Tests.CodeModel
             nestedInterfaceInfo.Properties.Count.ShouldEqual(1);
             propertyInfo.Name.ShouldEqual("PublicNestedProperty");
         }
+
+        [Fact]
+        public void Expect_to_find_containing_class_on_nested_class()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var nestedClassInfo = classInfo.NestedClasses.First();
+            var containingClassInfo = nestedClassInfo.ContainingClass;
+
+            containingClassInfo.Name.ShouldEqual("ClassInfo");
+        }
+
+        [Fact]
+        public void Expect_not_to_find_containing_class_on_top_level_class()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var containingClassInfo = classInfo.ContainingClass;
+
+            containingClassInfo.ShouldBeNull();
+        }
     }
 }

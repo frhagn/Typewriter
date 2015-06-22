@@ -21,6 +21,7 @@ namespace Typewriter.CodeModel.CodeDom
         public ICollection<Constant> Constants => new Constant[0];
         public ICollection<Field> Fields => new Field[0];
         public Class BaseClass => null;
+        public Class ContainingClass => null;
         public string FullName => fullName;
         public ICollection<Type> GenericTypeArguments => new Type[0];
         public ICollection<Interface> Interfaces => new Interface[0];
