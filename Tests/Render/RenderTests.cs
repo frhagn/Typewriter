@@ -29,13 +29,13 @@ namespace Typewriter.Tests.Render
         }
 
         [Fact]
-        public void webapi_controller_to_angular_service()
+        public void Expect_webapi_controller_to_angular_service_to_render_correctly()
         {
             Assert<WebApiController.WebApiController>();
         }
 
         [Fact]
-        public void routed_webapi_controller()
+        public void Expect_routed_webapi_controller_to_render_correctly()
         {
             Assert<BooksController>();
         }
