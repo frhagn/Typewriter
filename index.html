@@ -29,9 +29,9 @@
                 <div class="navbar-collapse collapse" id="navbar-main">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" target="_blank">Download</a>
+                            <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" target="_blank"><i class="fa fa-fw fa-download"></i>&nbsp;&nbsp;Download</a>
                         </li>
-                        <li>
+                        <!--<li>
                             <a href="#getting-started">Getting started</a>
                         </li>
                         <li>
@@ -39,9 +39,9 @@
                         </li>
                         <li>
                             <a href="#docs">Docs</a>
-                        </li>
+                        </li>-->
                         <li>
-                            <a href="https://github.com/frhagn/Typewriter" target="_blank"><i class="fa fa-github"></i><span class="visible-xs-inline">&nbsp;&nbsp;Github</span></a>
+                            <a href="https://github.com/frhagn/Typewriter" target="_blank"><i class="fa fa-github"></i>&nbsp;&nbsp;Github</a>
                         </li>
                     </ul>
                 </div>
@@ -59,9 +59,82 @@
                     <div class="col-sm-12 text-center">
                         <p>
                             <a href="#getting-started" class="btn btn-default btn-lg">Getting started</a>
-                            <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" class="btn btn-primary btn-lg"
+                            <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" class="btn btn-default btn-lg"
                             target="_blank"><i class="fa fa-fw fa-download"></i>&nbsp;&nbsp;Download Typewriter</a>
                         </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-gray">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1 class="text-center">Features</h1>
+                        <p class="lead text-center">Increase the development speed and quality of your applications.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="feature-item">
+                            <i class="fa fa-magic"></i>
+                            <div style="margin-left: 50px;">
+                                <h4>Fully Automatic</h4>
+                                <p>Typewriter always keeps your gererated code up to date without any interaction. As soon as a change is detected all templates
+                                    are automatically re-rendered.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="feature-item">
+                            <i class="fa fa-info-circle"></i>
+                            <div style="margin-left: 50px;">
+                                <h4>IntelliSense</h4>
+                                <p>The template editor provides context-aware statement completion as you type, auto-completing to increase speed and accuracy.
+                                    Quick Info tool tips let you inspect the metadata definitions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="feature-item">
+                            <i class="fa fa-pencil"></i>
+                            <div style="margin-left: 50px;">
+                                <h4>Extensible</h4>
+                                <p>Create custom extensions to your templates using c#. This enables you to generate rich content without breaking a sweat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="feature-item">
+                            <i class="fa fa-exclamation-circle"></i>
+                            <div style="margin-left: 50px;">
+                                <h4>Compile-time errors</h4>
+                                <p>Leverage TypeScript's type support to get compile-time errors and warnings when your client-side and server-side code is
+                                    out of sync.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="feature-item">
+                            <i class="fa fa-cogs"></i>
+                            <div style="margin-left: 50px;">
+                                <h4>Flexible</h4>
+                                <p>Create custom templates that fits the technology in your project. Typewriter doesn't care whether you're using Angular,
+                                    Aurelia, jQuery, Knockout, SignalR or whatevers-next.js.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="feature-item">
+                            <i class="fa fa-code-fork"></i>
+                            <div style="margin-left: 50px;">
+                                <h4>Free and Open Source</h4>
+                                <p>Typewriter is available for free from the Visual Studio Gallery and under the Extensions and Updates menu in Visual Studio.
+                                    The source code is available on GitHub.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,37 +142,141 @@
         <section>
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-4">
-                        <h1 class="text-center text-primary">
-                            <i class="fa fa-rocket fa-3x"></i>
-                        </h1>
-                        <h2 class="text-center">Fast</h2>
-                        <p>Compile your server side code to Typescript on the fly. No waiting required!</p>
+                    <div class="col-sm-12">
+                        <h1 class="text-center">About</h1>
+                        <p class="lead text-center">Typewriter extends the functionality of Visual Studio.</p>
                     </div>
-                    <div class="col-sm-4">
-                        <h1 class="text-center text-primary">
-                            <i class="fa fa-cog fa-3x"></i>
-                        </h1>
-                        <h2 class="text-center">Flexible</h2>
-                        <p>Create custom templates that fits the technology in your project.</p>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3>What is it?</h3>
+                        <p>Typewriter is a free extension for Visual Studio that generates TypeScript files from c# code files using TypeScript Templates.</p>
+                        <p>This allows you to create fully typed TypeScript representations of server side API, models, controllers, SignalR hubs etc.
+                            that automatically updates when you make changes to your c# code.</p>
+                        <p>By doing this you get TypeScript Intellisense and compile-time errors when the client- and server side code differs. This
+                            speeds up your development pace and increases the quality of your applications.</p>
                     </div>
-                    <div class="col-sm-4">
-                        <h1 class="text-center text-primary">
-                            <i class="fa fa-thumbs-up fa-3x"></i>
-                        </h1>
-                        <h2 class="text-center">It just works&trade;</h2>
-                        <p>Compiles your server side code to Typescript on the fly. No waiting required!</p>
+                    <div class="col-sm-6">
+                        <h3>How does it work?</h3>
+                        <p>Typewriter works by adding support for TypeScript Template files (.tst) in Visual Studio.</p>
+                        <p>A TypeScript Template file is essentially a TypeScript file with some extra features for extracting meta data about your
+                            c# source code such as classes, interfaces, properties and methods. The meta data in combination with the template files
+                            are then used to create TypeScript files that are kept in sync with the c# source files.</p>
+                        <p>So if you add, remove or modify your c# code, the changes will be reflected in the generated TypeScript files automatically.</p>
                     </div>
                 </div>
             </div>
         </section>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-8 col-sm-offset-2">
-                    <hr />
+        <section class="bg-gray">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1 class="text-center">Screenshots</h1>
+                        <p class="lead text-center"></p>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 25px;">
+                    <div class="col-sm-3">
+                        <img src="images/add-item.png" class="img-responsive" />
+                        <p>Add item</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <img src="images/intellisense.png" class="img-responsive" />
+                        <p>IntelliSense</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <img src="images/quick-info.png" class="img-responsive" />
+                        <p>Quick Info</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <img src="images/rendered.png" class="img-responsive" />
+                        <p>Generated TypeScript output</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+        
+        <section>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1 class="text-center">Example</h1>
+                        <p class="lead text-center">Below is an example of a TypeScript Template for generating simple model classes.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p><code>$Classes("*Model")</code> will find public classes with a name ending in "Model" defined in the same project as the template
+                            or in a project referenced by that project.</p>
+                        <p>The section between the brackets (<code>[]</code>) is repeated for each class.
+                            <code>$Name</code> will print the name of the class and
+                            <code>$Properties</code> will loop each public property of the class.
+                            <code>$name</code> is the name of the property (by using the lower case
+                            <code>$name</code> the property name will be printed in camel case) and
+                            <code>$Type</code> is a TypeScript friendly version of the property type.</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a href="#models" aria-controls="models" role="tab" data-toggle="tab">Models.tst</a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#customer-model-cs" aria-controls="customer-model-cs" role="tab" data-toggle="tab">CustomerModel.cs</a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#customer-model-ts" aria-controls="customer-model-ts" role="tab" data-toggle="tab">CustomerModel.ts</a>
+                                </li>                                
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="models">
+                                    <pre><code class="ts">module App { <span class="tst">$Classes(</span>"*Model"<span class="tst">)[</span>
+    export class <span class="tst">$Name</span> { <span class="tst">$Properties[</span>
+        public <span class="tst">$name</span>: <span class="tst">$Type</span>;<span class="tst">]</span>
+    }<span class="tst">]</span>
+}</code></pre>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="customer-model-cs">
+                                    <pre><code class="cs">using System;
+using System.Collections.Generic;
+
+namespace Demo 
+{
+    public class CustomerModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public ICollection&lt;OrderModel&gt; Orders { get; set; }
+    }
+}</code></pre>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="customer-model-ts">
+                                    <pre><code class="ts">module App { 
+    export class CustomerModel {
+        public id: number;
+        public name: string;
+        public orders: OrderModel[];
+    }
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!--<footer class="bg-gray">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p class="text-center">Copyright 2015</p>
+                    </div>
+                </div>
+            </div>
+        </footer>-->
+        
+        <!-- <div class="container-fluid"></div>
         <section>
             <div class="container-fluid">
                 <div class="row">
@@ -118,22 +295,22 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h1>How does it work?</h1>
-                        <p>
-                            Typewriter works by adding support for TypeScript Template files (.tst) in Visual Studio. 
-                            A TypeScript Template file is essentially a TypeScript file with some extra features for extracting meta data about your c# source code such as classes, interfaces, properties and methods. 
-                            The meta data in combination with the template files are then used to create TypeScript files that are kept in sync with the c# source files. 
-                            So if you add, remove or modify your c# code, the changes will be reflected in the generated TypeScript files automatically.
-                        </p>
+                        <p>Typewriter works by adding support for TypeScript Template files (.tst) in Visual Studio. A TypeScript Template file is
+                            essentially a TypeScript file with some extra features for extracting meta data about your c# source code such as classes,
+                            interfaces, properties and methods. The meta data in combination with the template files are then used to create TypeScript
+                            files that are kept in sync with the c# source files. So if you add, remove or modify your c# code, the changes will be reflected
+                            in the generated TypeScript files automatically.</p>
                         <h2>Example</h2>
-                        <p>
-                            Below is an example of a TypeScript Template for generating simple model classes.
-                            <code>$Classes("*Model")</code> will find public classes with a name ending in "Model" defined in the same project as the template or in a project referenced by that project.</p>
-                        <p>The section between the brackets (<code>[]</code>) is repeated for each class.
-                            <code>$Name</code> will print the name of the class and
-                            <code>$Properties</code> will loop each public property of the class.
-                            <code>$name</code> is the name of the property (by using the lower case
-                            <code>$name</code> the property name will be printed in camel case) and
-                            <code>$Type</code> is a TypeScript friendly version of the property type.</p>
+                        <p>Below is an example of a TypeScript Template for generating simple model classes.
+                            <code>$Classes("*Model")</code>will find public classes with a name ending in "Model" defined in the same project as the template
+                            or in a project referenced by that project.</p>
+                        <p>The section between the brackets (
+                            <code>[]</code>) is repeated for each class.
+                            <code>$Name</code>will print the name of the class and
+                            <code>$Properties</code>will loop each public property of the class.
+                            <code>$name</code>is the name of the property (by using the lower case
+                            <code>$name</code>the property name will be printed in camel case) and
+                            <code>$Type</code>is a TypeScript friendly version of the property type.</p>
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li role="presentation" class="active">
@@ -154,54 +331,39 @@
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="models">
-                                    <pre class="pre-scrollable"><code class="ts">module App { <span class="tst">$Classes(</span>"*Model"<span class="tst">)[</span>
-    export class <span class="tst">$Name</span> { <span class="tst">$Properties[</span>
-        public <span class="tst">$name</span>: <span class="tst">$Type</span>;<span class="tst">]</span>
-    }<span class="tst">]</span>
-}</code></pre>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="customer-model-cs">
-                                    <pre class="pre-scrollable"><code class="cs">using System;
-using System.Collections.Generic;
-                     
-namespace Demo 
-{
-    public class CustomerModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection&lt;OrderModel&gt; Orders { get; set; }
-    }
-}</code></pre>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="order-model-cs">
-                            <pre class="pre-scrollable"><code class="cs">using System;
-                     
-namespace Demo 
-{
-    public class OrderModel
-    {
-        public int Id { get; set; }
-        public DateTime ShippingDate { get; set; }
-    }
-}</code></pre>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="customer-model-ts">
-                            <pre class="pre-scrollable"><code class="ts">module App {
-    export class CustomerModel {
-        public id: number;
-        public name: string;
-        public orders: OrderModel[];
-    }
-}</code></pre>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="order-model-ts">
-                            <pre class="pre-scrollable"><code class="ts">module App {
-    export class AddressModel {
-        public id: number;
-        public shippingDate: Date;
-    }
-}</code></pre>
+                                    <pre class="pre-scrollable">
+                                        <code class="ts">module App {
+                                            <span class="tst">$Classes(</span>"*Model"
+                                            <span class="tst">)[</span>export class
+                                            <span class="tst">$Name</span>{
+                                            <span class="tst">$Properties[</span>public
+                                            <span class="tst">$name</span>:
+                                            <span class="tst">$Type</span>;
+                                            <span class="tst">]</span>}
+                                            <span class="tst">]</span>}</code>
+                                    </pre>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="customer-model-cs">
+                                    <pre class="pre-scrollable">
+                                        <code class="cs">using System; using System.Collections.Generic; namespace Demo { public class CustomerModel { public int Id { get; set;
+                                            } public string Name { get; set; } public ICollection&lt;OrderModel&gt; Orders { get; set; } } }</code>
+                                    </pre>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="order-model-cs">
+                                    <pre class="pre-scrollable">
+                                        <code class="cs">using System; namespace Demo { public class OrderModel { public int Id { get; set; } public DateTime ShippingDate { get;
+                                            set; } } }</code>
+                                    </pre>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="customer-model-ts">
+                                    <pre class="pre-scrollable">
+                                        <code class="ts">module App { export class CustomerModel { public id: number; public name: string; public orders: OrderModel[]; } }</code>
+                                    </pre>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="order-model-ts">
+                                    <pre class="pre-scrollable">
+                                        <code class="ts">module App { export class AddressModel { public id: number; public shippingDate: Date; } }</code>
+                                    </pre>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +372,15 @@ namespace Demo
             </div>
             </div>
         </section>
-<!--        <div class="container-fluid">
+            
+            
+            
+            
+            
+            
+            
+            
+             <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
                     <hr />
