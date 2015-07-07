@@ -13,8 +13,8 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "bootstrap": "*",
+  "dependencies": {    
+    "bootswatch": "*",
     "font-awesome": "*"
   }
 }

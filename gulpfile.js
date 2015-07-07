@@ -5,13 +5,22 @@ var font = require("./gulp/font.js");
 var css = require("./gulp/css.js");
 var js = require("./gulp/js.js");
 var dts = require("./gulp/dts.js");
+var bower = require('gulp-bower');
+ 
+gulp.task('bower', function() {
+  return bower()
+    .pipe(gulp.dest('bower_components/'))
+});
 
 gulp.task("copy-content", function () {
 
     font("font-awesome/fonts/*");
 
-    css("bootstrap/dist/css/bootstrap.*");
     css("font-awesome/css/*.css");
+    // css("bootstrap/dist/css/bootstrap.*");
+    css("bootswatch/superhero/bootstrap.css");
+    css("bootswatch/superhero/bootstrap.min.css");
+    
     //css("toastr/*.css");
     //css("awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css", "bootstrap_awesome-checkbox.css");
     //css("awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css", "bootstrap_awesome-checkbox.min.css", true);
