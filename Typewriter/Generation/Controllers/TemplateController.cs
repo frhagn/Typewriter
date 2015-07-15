@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using EnvDTE;
+using Typewriter.CodeModel.CodeDom;
 using Typewriter.VisualStudio;
 using VSLangProj;
-using FileInfo = Typewriter.CodeModel.CodeDom.FileInfo;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -93,7 +93,7 @@ namespace Typewriter.Generation.Controllers
                 var path = generationEvent.Paths[0];
                 Log.Debug("Render {0}", path);
 
-                var file = new FileInfo(dte.Solution.FindProjectItem(path));
+                var file = new CodeDomFile(dte.Solution.FindProjectItem(path));
                 var success = template.RenderFile(file, false);
 
                 if (success == false)

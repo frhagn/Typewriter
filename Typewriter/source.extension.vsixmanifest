@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="45b6b392-ce2f-409c-a39f-bbf90b34349e" Version="0.9.13" Language="en-US" Publisher="frhagn" />
+    <Identity Id="45b6b392-ce2f-409c-a39f-bbf90b34349e" Version="1.0.0" Language="en-US" Publisher="frhagn" />
     <DisplayName>Typewriter</DisplayName>
-    <Description xml:space="preserve">Provides automatic TypeScript Template generation from C# source files. (preview)</Description>
+    <Description xml:space="preserve">Automatic TypeScript Template generation from C# source files. (beta)</Description>
     <MoreInfo>http://frhagn.github.io/Typewriter/</MoreInfo>
     <License>Resources\License.txt</License>
+    <GettingStartedGuide>http://frhagn.github.io/Typewriter/</GettingStartedGuide>
+    <ReleaseNotes>http://frhagn.github.io/Typewriter/</ReleaseNotes>
     <Icon>Resources\light.ico</Icon>
     <PreviewImage>Resources\Package.ico</PreviewImage>
     <Tags>Code Generator, TypeScript, TypeScript Code generation, Templates</Tags>

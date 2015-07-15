@@ -29,7 +29,7 @@ namespace Typewriter.Generation
             this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
             
             var code = System.IO.File.ReadAllText(templatePath);
-            this.template = TemplateParser.Parse(code, ref this.extensions);
+            this.template = TemplateCodeParser.Parse(code, ref this.extensions);
 
             stopwatch.Stop();
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);

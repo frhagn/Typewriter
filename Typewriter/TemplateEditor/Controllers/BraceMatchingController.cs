@@ -17,7 +17,7 @@ namespace Typewriter.TemplateEditor.Controllers
             if (textView == null || textView.TextBuffer != buffer)
                 return null;
 
-            return new BraceMatchingController(textView, buffer) as ITagger<T>;
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new BraceMatchingController(textView, buffer) as ITagger<T>);
         }
     }
 
@@ -55,10 +55,7 @@ namespace Typewriter.TemplateEditor.Controllers
             if (snapshotPoint.HasValue == false) return;
 
             var tempEvent = TagsChanged;
-            if (tempEvent != null)
-            {
-                tempEvent(this, new SnapshotSpanEventArgs(new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length)));
-            }
+            tempEvent?.Invoke(this, new SnapshotSpanEventArgs(new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length)));
         }
 
         public IEnumerable<ITagSpan<TextMarkerTag>> GetTags(NormalizedSnapshotSpanCollection spans)

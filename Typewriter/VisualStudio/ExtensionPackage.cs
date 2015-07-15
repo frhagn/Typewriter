@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
@@ -20,6 +21,7 @@ namespace Typewriter.VisualStudio
     public sealed class ExtensionPackage : Package, IDisposable
     {
         private DTE dte;
+        private Log log;
         private IVsStatusbar statusBar;
         private SolutionMonitor solutionMonitor;
         private TemplateController templateController;
@@ -38,28 +40,48 @@ namespace Typewriter.VisualStudio
             RegisterLanguageService();
             RegisterIcons();
             ClearTempDirectory();
-
-            var log = new Log(dte);
+            
             this.eventQueue = new EventQueue(statusBar);
             this.solutionMonitor = new SolutionMonitor();
             this.templateController = new TemplateController(dte, solutionMonitor, eventQueue);
-            var generationController = new GenerationController(dte, solutionMonitor, templateController, eventQueue);
+            var generationController = new GenerationController(this, dte, solutionMonitor, templateController, eventQueue);
         }
 
         private void GetDte()
         {
             this.dte = GetService(typeof(DTE)) as DTE;
+            this.log = new Log(dte);
 
             if (this.dte == null)
                 ErrorHandler.ThrowOnFailure(1);
         }
-
+        
         private void GetStatusbar()
         {
             this.statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
 
             if (this.statusBar == null)
                 ErrorHandler.ThrowOnFailure(1);
+        }
+
+        public void Debug(string message)
+        {
+            Log.Debug(message);
+        }
+
+        public T GetWorkspace<T>() where T : class
+        {
+            try
+            {
+                var componentModel = GetService(typeof (SComponentModel)) as IComponentModel;
+                return componentModel?.GetService<T>();
+            }
+            catch(Exception exception)
+            {
+                Log.Debug(exception.Message);
+            }
+
+            return default(T);
         }
 
         private void RegisterLanguageService()

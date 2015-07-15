@@ -1,0 +1,558 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Typewriter.CodeModel</name>
+    </assembly>
+    <members>
+        <member name="T:Typewriter.CodeModel.Attribute">
+            <summary>
+            Represents an attribute.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Attribute.Value">
+            <summary>
+            The value of the attribute as string.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.AttributeCollection">
+            <summary>
+            Represents a collection of attributes.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Attributes.ContextAttribute">
+            <summary>
+            Marks context metadata classes.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Attributes.ContextAttribute.Name">
+            <summary>
+            The name of the context.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Attributes.ContextAttribute.CollectionName">
+            <summary>
+            The name of collections of the context.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Attributes.ContextAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the ContextAttribute.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Attributes.PropertyAttribute">
+            <summary>
+            Marks metadata properties with QuickInfo.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Attributes.PropertyAttribute.Name">
+            <summary>
+            The name of the marked property.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Attributes.PropertyAttribute.Description">
+            <summary>
+            The description of the marked property.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Attributes.PropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the PropertyAttribute.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Class">
+            <summary>
+            Represents a class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Namespace">
+            <summary>
+            The namespace of the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.IsGeneric">
+            <summary>
+            Determines if the class is generic.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Constants">
+            <summary>
+            All constants defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Fields">
+            <summary>
+            All fields defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.BaseClass">
+            <summary>
+            The base class of the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.ContainingClass">
+            <summary>
+            The containing class of the class if it's nested.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Interfaces">
+            <summary>
+            All interfaces implemented by the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Methods">
+            <summary>
+            All methods defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Properties">
+            <summary>
+            All properties defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.GenericTypeArguments">
+            <summary>
+            All generic type arguments of the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.NestedClasses">
+            <summary>
+            All classes defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.NestedEnums">
+            <summary>
+            All enums defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.NestedInterfaces">
+            <summary>
+            All interfaces defined in the class.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.ClassCollection">
+            <summary>
+            Represents a collection of classes.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.AttributeCollectionImpl">
+            <summary>
+            Represents a collection of attributes.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.AttributeCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.AttributeCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Attribute})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.ClassCollectionImpl">
+            <summary>
+            Represents a collection of classes.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.ClassCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.ClassCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Class})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.ConstantCollectionImpl">
+            <summary>
+            Represents a collection of constants.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.ConstantCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.ConstantCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Constant})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.EnumCollectionImpl">
+            <summary>
+            Represents a collection of enums.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.EnumCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.EnumCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Enum})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.EnumValueCollectionImpl">
+            <summary>
+            Represents a collection of enum values.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.EnumValueCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.EnumValueCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.EnumValue})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.FieldCollectionImpl">
+            <summary>
+            Represents a collection of fields.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.FieldCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.FieldCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Field})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.InterfaceCollectionImpl">
+            <summary>
+            Represents a collection of interfaces.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.InterfaceCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.InterfaceCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Interface})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.MethodCollectionImpl">
+            <summary>
+            Represents a collection of methods.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.MethodCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.MethodCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Method})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.ParameterCollectionImpl">
+            <summary>
+            Represents a collection of parameters.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.ParameterCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.ParameterCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Parameter})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.PropertyCollectionImpl">
+            <summary>
+            Represents a collection of properties.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.PropertyCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.PropertyCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Property})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Collections.TypeCollectionImpl">
+            <summary>
+            Represents a collection of types.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.TypeCollectionImpl.#ctor">
+            <summary>
+            Creates a new instance with no items.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Collections.TypeCollectionImpl.#ctor(System.Collections.Generic.IEnumerable{Typewriter.CodeModel.Type})">
+            <summary>
+            Creates a new instance with the supplied items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Constant">
+            <summary>
+            Represents a constant.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.ConstantCollection">
+            <summary>
+            Represents a collection of constants.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Enum">
+            <summary>
+            Represents an enum.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.Namespace">
+            <summary>
+            The namespace of the enum.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.IsFlags">
+            <summary>
+            Determines if the enum is decorated with the Flags attribute.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.Values">
+            <summary>
+            All values defined in the enum.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.ContainingClass">
+            <summary>
+            The containing class of the enum if it is nested.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.EnumCollection">
+            <summary>
+            Represents a collection of enums.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.EnumValue">
+            <summary>
+            Represents an enum value.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.EnumValue.Value">
+            <summary>
+            The numeric value.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.EnumValueCollection">
+            <summary>
+            Represents a collection of enum values.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Field">
+            <summary>
+            Represents a field.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Field.Type">
+            <summary>
+            The type of the field
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.FieldCollection">
+            <summary>
+            Represents a collection of fields.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.File">
+            <summary>
+            Represents a file.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.File.Classes">
+            <summary>
+            All classes defined in the file.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.File.Enums">
+            <summary>
+            All enums defined in the file.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.File.Interfaces">
+            <summary>
+            All interfaces defined in the file.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Interface">
+            <summary>
+            Represents an interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.Namespace">
+            <summary>
+            The namespace of the interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.IsGeneric">
+            <summary>
+            Determines if the interface is generic.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.GenericTypeArguments">
+            <summary>
+            All generic type arguments of the interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.Interfaces">
+            <summary>
+            All interfaces implemented by the interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.Methods">
+            <summary>
+            All methods defined in the interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.Properties">
+            <summary>
+            All properties defined in the interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.ContainingClass">
+            <summary>
+            The containing class of the interface if it is nested.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.InterfaceCollection">
+            <summary>
+            Represents a collection of interfaces.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Item">
+            <summary>
+            Represents ann item.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Item.Name">
+            <summary>
+            The name of the item.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Item.FullName">
+            <summary>
+            The namespace and name of the item.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.CodeItem">
+            <summary>
+            Represents a code item.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.CodeItem.Parent">
+            <summary>
+            The parent context ot the code item.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.CodeItem.Attributes">
+            <summary>
+            All attributes defined on the code item.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.ItemCollection`1">
+            <summary>
+            Represents a collection of items.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Method">
+            <summary>
+            Represents a method.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Method.IsGeneric">
+            <summary>
+            Determines if the method is generic.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Method.GenericTypeArguments">
+            <summary>
+            All generic type arguments of the method.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Method.Parameters">
+            <summary>
+            All parameters of the method.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.MethodCollection">
+            <summary>
+            Represents a collection of methods.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Parameter">
+            <summary>
+            Represents a parameter.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.ParameterCollection">
+            <summary>
+            Represents a collection of parameters.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Property">
+            <summary>
+            Represents a property.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Property.HasGetter">
+            <summary>
+            Determines if the property has a getter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Property.HasSetter">
+            <summary>
+            Determines if the property has a setter.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.PropertyCollection">
+            <summary>
+            Represents a collection of properties.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Type">
+            <summary>
+            Represents a type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.IsEnum">
+            <summary>
+            Determines if the type is an enum.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.IsEnumerable">
+            <summary>
+            Determines if the type is enumerable.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.IsNullable">
+            <summary>
+            Determines if the type is nullable.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.IsPrimitive">
+            <summary>
+            Determines if the type is primitive.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.TypeCollection">
+            <summary>
+            Represents a collection of types.
+            </summary>
+        </member>
+    </members>
+</doc>

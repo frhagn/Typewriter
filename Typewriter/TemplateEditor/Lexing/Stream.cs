@@ -6,16 +6,13 @@ namespace Typewriter.TemplateEditor.Lexing
     internal class Stream
     {
         private readonly int offset;
-        private readonly int lineOffset;
         private readonly string template;
         private int position = -1;
-        private int line;
         private char current = char.MinValue;
 
-        public Stream(string template, int offset = 0, int lineOffset = 0)
+        public Stream(string template, int offset = 0)
         {
             this.offset = offset;
-            this.lineOffset = lineOffset;
             this.template = template ?? string.Empty;
         }
 
@@ -27,10 +24,6 @@ namespace Typewriter.TemplateEditor.Lexing
         public char Current
         {
             get { return current; }
-        }
-
-        public int Line {
-            get { return line + lineOffset; }
         }
 
         public bool Advance(int offset = 1)
@@ -46,7 +39,6 @@ namespace Typewriter.TemplateEditor.Lexing
                 }
 
                 current = template[position];
-                if (current == Constants.NewLine) line++;
             }
 
             return true;
@@ -77,6 +69,21 @@ namespace Typewriter.TemplateEditor.Lexing
             }
 
             return identifier.ToString();
+        }
+
+        public string PeekLine(int start = 0)
+        {
+            var line = new StringBuilder();
+            var i = start;
+            do
+            {
+                line.Append(Peek(i));
+                i++;
+            } while (Peek(i) != '\n');
+
+            line.Append('\n');
+
+            return line.ToString();
         }
 
         public string PeekBlock(int start, char open, char close)

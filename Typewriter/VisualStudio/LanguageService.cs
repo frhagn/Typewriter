@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace Typewriter.VisualStudio
 {
-    [GuidAttribute(Constants.LanguageServiceId)]
+    [Guid(Constants.LanguageServiceId)]
     internal class LanguageService : IVsLanguageInfo, IVsLanguageTextOps
     {
         [Export, Name(Constants.ContentType), BaseDefinition(Constants.BaseDefinition)]

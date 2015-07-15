@@ -18,7 +18,7 @@ namespace Typewriter.Tests.Render
             var path = string.Join(@"\", nsParts);
 
             var template = new Template(GetProjectItem(path + ".tstemplate"));
-            var model = new FileInfo(GetProjectItem(path + ".cs"));
+            var model = new CodeDomFile(GetProjectItem(path + ".cs"));
             var result = GetFileContents(path + ".result");
 
             bool success;

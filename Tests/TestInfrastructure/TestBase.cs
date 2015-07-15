@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using EnvDTE;
+using Typewriter.CodeModel.CodeDom;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 
@@ -37,7 +38,7 @@ namespace Typewriter.Tests.TestInfrastructure
 
         protected static File GetFile(string path)
         {
-            return new Typewriter.CodeModel.CodeDom.FileInfo(GetProjectItem(path));
+            return new CodeDomFile(GetProjectItem(path));
         }
 
         public void Dispose()

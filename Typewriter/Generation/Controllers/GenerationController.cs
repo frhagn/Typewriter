@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.VisualStudio;
@@ -11,8 +13,9 @@ namespace Typewriter.Generation.Controllers
     {
         private readonly DTE dte;
         private readonly TemplateController templateController;
+        private readonly object x;
 
-        public GenerationController(DTE dte, SolutionMonitor solutionMonitor, TemplateController templateController, EventQueue eventQueue)
+        public GenerationController(ExtensionPackage package, DTE dte, SolutionMonitor solutionMonitor, TemplateController templateController, EventQueue eventQueue)
         {
             this.dte = dte;
             this.templateController = templateController;
@@ -21,12 +24,38 @@ namespace Typewriter.Generation.Controllers
             solutionMonitor.FileChanged += (sender, args) => eventQueue.Enqueue(Render, GenerationType.Render, args.Path);
             solutionMonitor.FileDeleted += (sender, args) => eventQueue.Enqueue(Render, GenerationType.Delete, args.Path);
             solutionMonitor.FileRenamed += (sender, args) => eventQueue.Enqueue(Render, GenerationType.Rename, args.OldPath, args.NewPath);
+
+            //try
+            //{
+            //    //var assembly = Assembly.LoadFrom(@"C:\Dev\Typewriter\Typewriter\Workspace\bin\Debug\Typewriter.CodeModel.Workspace.dll");
+            //    var assembly = Assembly.LoadFrom(Path.Combine(Path.GetDirectoryName(typeof(GenerationController).Assembly.Location), "Resources", "Typewriter.CodeModel.Workspace.dll"));
+            //    var test = assembly.GetType("Typewriter.CodeModel.Workspace.Test");
+            //    var create = test.GetMethod("Create");
+            //    x = Activator.CreateInstance(test);
+            //    create.Invoke(x, new object[] { package });
+            //}
+            //catch (Exception e)
+            //{
+            //    var a = 1;
+            //}
         }
 
         private void Render(GenerationEvent generationEvent)
         {
             try
             {
+                //var projectItem = dte.Solution.FindProjectItem(generationEvent.Paths[0]);
+                //var go = x.GetType().GetMethod("Go");
+                //var f = go.Invoke(x, new object[] { projectItem }) as CodeModel.File;
+
+                //if (f != null)
+                //{
+                //    Log.Debug(f.Name);
+                //    Log.Debug(f.FullName);
+                //}
+                //else
+                //    Log.Debug("Fail");
+
                 var templates = templateController.Templates;
                 if (templates.Any() == false) return;
 
@@ -36,7 +65,7 @@ namespace Typewriter.Generation.Controllers
                 switch (generationEvent.Type)
                 {
                     case GenerationType.Render:
-                        var file = new FileInfo(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
+                        var file = new CodeDomFile(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
                         foreach (var template in templates)
                         {
                             template.RenderFile(file, true);

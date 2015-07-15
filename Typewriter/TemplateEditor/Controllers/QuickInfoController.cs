@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
@@ -16,32 +15,9 @@ namespace Typewriter.TemplateEditor.Controllers
     {
         [Import]
         internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
-        
-
-        //[ImportMany]
-        //IEnumerable<EditorFormatDefinition> EditorFormats { get; set; }
-
-        //static void PrintNameAttribute(Type t, string displayName)
-        //{
-        //    NameAttribute MyAttribute = (NameAttribute)Attribute.GetCustomAttribute(t, typeof(NameAttribute));
-        //    if (MyAttribute == null)
-        //    {
-        //        Log.Print(String.Format("'{0}' = null", displayName));
-        //    }
-        //    else
-        //    {
-        //        Log.Print(String.Format("'{0}' = '{1}'", displayName, MyAttribute.Name));
-        //    }
-        //}
 
         public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
-            //Log.Print("Predefined EditorFormatDefinition");
-            //foreach (EditorFormatDefinition element in EditorFormats)
-            //{
-            //    PrintNameAttribute(element.GetType(), element.DisplayName);
-            //}
-            //Log.Print("Done!");
             return new QuickInfoSource(this, textBuffer);
         }
     }
@@ -114,7 +90,7 @@ namespace Typewriter.TemplateEditor.Controllers
             this.buffers = buffers;
             this.provider = provider;
 
-            view.MouseHover += this.OnTextViewMouseHover;
+            view.MouseHover += OnTextViewMouseHover;
         }
 
         private void OnTextViewMouseHover(object sender, MouseHoverEventArgs e)
@@ -133,10 +109,10 @@ namespace Typewriter.TemplateEditor.Controllers
 
         public void Detach(ITextView textView)
         {
-            if (this.view != textView) return;
+            if (view != textView) return;
 
-            textView.MouseHover -= this.OnTextViewMouseHover;
-            this.view = null;
+            textView.MouseHover -= OnTextViewMouseHover;
+            view = null;
         }
 
         public void ConnectSubjectBuffer(ITextBuffer subjectBuffer)

@@ -34,7 +34,9 @@ namespace Typewriter.TemplateEditor.Controllers
             this.buffer.Changed += (sender, args) =>
             {
                 var span = new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length);
-                ClassificationChanged(this, new ClassificationChangedEventArgs(span));
+
+                var tempEvent = ClassificationChanged;
+                tempEvent?.Invoke(this, new ClassificationChangedEventArgs(span));
             };
         }
 

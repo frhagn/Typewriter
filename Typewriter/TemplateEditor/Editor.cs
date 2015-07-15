@@ -1,46 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
+using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
 using Typewriter.TemplateEditor.Lexing;
+using Typewriter.TemplateEditor.Lexing.Roslyn;
+using Typewriter.VisualStudio;
+using SemanticModel = Typewriter.TemplateEditor.Lexing.SemanticModel;
 
 namespace Typewriter.TemplateEditor
 {
     public class Editor
     {
-        private static readonly Editor instance = new Editor();
+        public static Editor Instance { get; } = new Editor();
 
-        public static Editor Instance
+        private readonly ShadowClass shadowClass = new ShadowClass();
+        private readonly CodeLexer codeLexer = new CodeLexer();
+        private readonly TemplateLexer templateLexer = new TemplateLexer();
+
+        private ITextSnapshot currentSnapshot;
+        private SemanticModel semanticModelCache;
+
+        private Editor()
         {
-            get { return instance; }
         }
 
-        private readonly Lexer lexer = new Lexer();
-        private ITextSnapshot snapshot;
-        private Tokens cachedTokens;
-
-        private Tokens GetTokens(ITextBuffer buffer)
+        private SemanticModel GetSemanticModel(ITextBuffer buffer)
         {
-            if (snapshot == buffer.CurrentSnapshot)
-                return cachedTokens;
+            if (currentSnapshot == buffer.CurrentSnapshot)
+                return semanticModelCache;
 
-            snapshot = buffer.CurrentSnapshot;
-            cachedTokens = lexer.Tokenize(snapshot.GetText());
+            currentSnapshot = buffer.CurrentSnapshot;
+            semanticModelCache = new SemanticModel(shadowClass);
 
-            return cachedTokens;
+            var code = currentSnapshot.GetText();
+
+            codeLexer.Tokenize(semanticModelCache, code);
+            templateLexer.Tokenize(semanticModelCache, code);
+            
+            return semanticModelCache;
+        }
+
+        // Outlining
+        public IEnumerable<SnapshotSpan> GetCodeBlocks(ITextBuffer buffer)
+        {
+            var tokens = GetSemanticModel(buffer);
+            var contextSpans = tokens.GetContextSpans(ContextType.CodeBlock);
+
+            return contextSpans.Select(s => new SnapshotSpan(buffer.CurrentSnapshot, s.Start, s.End - s.Start));
         }
 
         // Brace matching
         public IEnumerable<ITagSpan<TextMarkerTag>> GetBraceTags(ITextBuffer buffer, SnapshotPoint point)
         {
-            var tokens = GetTokens(buffer);
+            var tokens = GetSemanticModel(buffer);
             var token = tokens.GetToken(point.Position - 1);
             var tag = new TextMarkerTag(Classifications.BraceHighlight);
 
-            if (token != null && token.MatchingToken != null && token.IsOpen == false)
+            if (token?.MatchingToken != null && token.IsOpen == false)
             {
                 yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
                 yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
@@ -49,7 +71,7 @@ namespace Typewriter.TemplateEditor
             {
                 token = tokens.GetToken(point.Position);
 
-                if (token != null && token.MatchingToken != null && token.IsOpen)
+                if (token?.MatchingToken != null && token.IsOpen)
                 {
                     yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.Start, 1), tag);
                     yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(point.Snapshot, token.MatchingToken.Start, 1), tag);
@@ -60,10 +82,9 @@ namespace Typewriter.TemplateEditor
         // Classification
         public IEnumerable<ClassificationSpan> GetClassificationSpans(ITextBuffer buffer, SnapshotSpan span, IClassificationTypeRegistryService classificationRegistry)
         {
-            var tokens = GetTokens(buffer);
-            var line = span.Start.GetContainingLine().LineNumber;
+            var tokens = GetSemanticModel(buffer);
 
-            foreach (var token in tokens.GetTokensForLine(line))
+            foreach (var token in tokens.GetTokens(span.Span))
             {
                 if (token.Classification != null)
                 {
@@ -74,32 +95,50 @@ namespace Typewriter.TemplateEditor
         }
 
         // Statement completion
+        public bool EnableFullIntelliSense(ITextBuffer buffer, SnapshotPoint point)
+        {
+            var tokens = GetSemanticModel(buffer);
+            var type = tokens.GetContextSpan(point).Type;
+            
+            return type == ContextType.CodeBlock || type == ContextType.Lambda;
+        }
+
         public IEnumerable<Completion> GetCompletions(ITextBuffer buffer, SnapshotSpan span, IGlyphService glyphService)
         {
-            var tokens = GetTokens(buffer);
-            var imageSource = glyphService.GetGlyph(StandardGlyphGroup.GlyphGroupProperty, StandardGlyphItem.GlyphItemPublic);
+            var semanticModel = GetSemanticModel(buffer);
+            var identifiers = semanticModel.GetIdentifiers(span.Start);
+            var contextSpan = semanticModel.GetContextSpan(span.Start);
+            var prefix = contextSpan.Type == ContextType.Template ? "$" : "";
 
-            var context = tokens.GetContext(span.Start);
-            if (context != null)
+            return identifiers.Select(i =>
             {
-                return context.Identifiers.Select(i => new Completion("$" + i.Name, "$" + i.Name, i.QuickInfo, imageSource, null));
-            }
+                var imageSource = glyphService.GetGlyph(i.Glyph, StandardGlyphItem.GlyphItemPublic);
+                var quickInfo = i.IsParent ? i.QuickInfo.Replace("$parent", contextSpan.ParentContext?.Name.ToLowerInvariant()) : i.QuickInfo;
 
-            return new Completion[0];
+                return new Completion(prefix + i.Name, prefix + i.Name, quickInfo, imageSource, null);
+            });
         }
 
         // Quick info
         public string GetQuickInfo(ITextBuffer buffer, SnapshotSpan span)
         {
-            var tokens = GetTokens(buffer);
-            var token = tokens.GetToken(span.Start);
+            var semanticModel = GetSemanticModel(buffer);
+            return semanticModel.GetQuickInfo(span.Start);
+        }
 
-            if (token != null && token.QuickInfo != null)
-            {
-                return token.QuickInfo;
-            }
+        public void FormatDocument(ITextBuffer buffer)
+        {
+            //var SemanticModel = GetSemanticModel(buffer);
+            //var section = SemanticModel.GetTokenSection(ContextType.CodeBlock);
+            //var formatted = templateLexer.shadowClass.FormatDocument(section.Start, section.End);
 
-            return null;
+            //var length = section.End - section.Start;
+
+            //using (var edit = buffer.CreateEdit())
+            //{
+            //    edit.Replace(section.Start, length, formatted);
+            //    edit.Apply();
+            //}
         }
     }
 }

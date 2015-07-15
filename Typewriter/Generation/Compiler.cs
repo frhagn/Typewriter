@@ -3,6 +3,9 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Typewriter.CodeModel;
+using Typewriter.CodeModel.CodeDom;
+using Type = System.Type;
 
 namespace Typewriter.Generation
 {
@@ -33,8 +36,10 @@ namespace Typewriter.Generation
         private static string[] GetReferencedAssemblies()
         {
             var assemblies = typeof(Compiler).Assembly.GetReferencedAssemblies().ToList();
-            var assemblyLocations = assemblies.Select(a => Assembly.ReflectionOnlyLoad(a.FullName).Location).ToList();
+            var assemblyLocations = assemblies.Where(a => a.FullName.StartsWith("Typewriter") == false).Select(a => Assembly.ReflectionOnlyLoad(a.FullName).Location).ToList();
 
+            assemblyLocations.Add(typeof(Class).Assembly.Location);
+            assemblyLocations.Add(typeof(CodeDomClass).Assembly.Location);
             assemblyLocations.Add(typeof(Compiler).Assembly.Location);
 
             return assemblyLocations.ToArray();
