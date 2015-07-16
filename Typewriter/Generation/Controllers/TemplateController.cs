@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
+using Typewriter.CodeModel.Providers;
 using Typewriter.VisualStudio;
 using VSLangProj;
 
@@ -15,15 +16,17 @@ namespace Typewriter.Generation.Controllers
         private static readonly object locker = new object();
 
         private readonly DTE dte;
+        private readonly ICodeModelProvider codeModelProvider;
         private readonly SolutionMonitor solutionMonitor;
         private readonly EventQueue eventQueue;
 
         private bool solutionOpen;
         private ICollection<Template> templates;
 
-        public TemplateController(DTE dte, SolutionMonitor solutionMonitor, EventQueue eventQueue)
+        public TemplateController(DTE dte, ICodeModelProvider codeModelProvider, SolutionMonitor solutionMonitor, EventQueue eventQueue)
         {
             this.dte = dte;
+            this.codeModelProvider = codeModelProvider;
             this.solutionMonitor = solutionMonitor;
             this.eventQueue = eventQueue;
 
@@ -93,7 +96,7 @@ namespace Typewriter.Generation.Controllers
                 var path = generationEvent.Paths[0];
                 Log.Debug("Render {0}", path);
 
-                var file = new CodeDomFile(dte.Solution.FindProjectItem(path));
+                var file = codeModelProvider.GetFile(dte.Solution.FindProjectItem(path));
                 var success = template.RenderFile(file, false);
 
                 if (success == false)

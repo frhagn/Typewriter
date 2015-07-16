@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Typewriter.CodeModel;
 using Typewriter.CodeModel.CodeDom;
+using CodeDomProvider = System.CodeDom.Compiler.CodeDomProvider;
 using Type = System.Type;
 
 namespace Typewriter.Generation

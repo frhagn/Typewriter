@@ -2,6 +2,8 @@
 using System.IO;
 using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
+using Typewriter.CodeModel.Providers;
+using Typewriter.CodeModel.Workspace;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 
@@ -12,6 +14,7 @@ namespace Typewriter.Tests.TestInfrastructure
     public abstract class TestBase : IDisposable
     {
         private static readonly DTE dte;
+        private static ICodeModelProvider codeModelProvider = new CodeDomProvider(); // new WorkspaceProvider();
 
         static TestBase()
         {
@@ -38,7 +41,7 @@ namespace Typewriter.Tests.TestInfrastructure
 
         protected static File GetFile(string path)
         {
-            return new CodeDomFile(GetProjectItem(path));
+            return codeModelProvider.GetFile(GetProjectItem(path));
         }
 
         public void Dispose()

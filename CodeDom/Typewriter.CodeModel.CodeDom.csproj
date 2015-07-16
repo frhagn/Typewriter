@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -53,6 +53,7 @@
     <Compile Include="CodeDomEnumValue.cs" />
     <Compile Include="CodeDomField.cs" />
     <Compile Include="CodeDomFile.cs" />
+    <Compile Include="CodeDomProvider.cs" />
     <Compile Include="GenericTypeInfo.cs" />
     <Compile Include="CodeDomInterface.cs" />
     <Compile Include="LazyCodeDomType.cs" />

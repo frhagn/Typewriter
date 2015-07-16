@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio;
@@ -8,6 +9,8 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using Typewriter.CodeModel.CodeDom;
+using Typewriter.CodeModel.Providers;
 using Typewriter.Generation.Controllers;
 
 namespace Typewriter.VisualStudio
@@ -26,6 +29,7 @@ namespace Typewriter.VisualStudio
         private SolutionMonitor solutionMonitor;
         private TemplateController templateController;
         private EventQueue eventQueue;
+        private ICodeModelProvider codeModelProvider;
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -37,16 +41,17 @@ namespace Typewriter.VisualStudio
 
             GetDte();
             GetStatusbar();
+            GetCodeModelProvider();
             RegisterLanguageService();
             RegisterIcons();
             ClearTempDirectory();
             
             this.eventQueue = new EventQueue(statusBar);
             this.solutionMonitor = new SolutionMonitor();
-            this.templateController = new TemplateController(dte, solutionMonitor, eventQueue);
-            var generationController = new GenerationController(this, dte, solutionMonitor, templateController, eventQueue);
+            this.templateController = new TemplateController(dte, codeModelProvider, solutionMonitor, eventQueue);
+            var generationController = new GenerationController(dte, codeModelProvider, solutionMonitor, templateController, eventQueue);
         }
-
+        
         private void GetDte()
         {
             this.dte = GetService(typeof(DTE)) as DTE;
@@ -64,25 +69,41 @@ namespace Typewriter.VisualStudio
                 ErrorHandler.ThrowOnFailure(1);
         }
 
-        public void Debug(string message)
+        // Hack to load unreferenced assembly for Roslyn Workspace, consider using MEF instead
+        private void GetCodeModelProvider()
         {
-            Log.Debug(message);
+            //try
+            //{
+            //    var assemblyLocation = Path.GetDirectoryName(typeof(GenerationController).Assembly.Location);
+            //    var assembly = Assembly.LoadFrom(Path.Combine(assemblyLocation, "Resources", "Typewriter.CodeModel.Workspace.dll"));
+            //    var type = assembly.GetType("Typewriter.CodeModel.Workspace.WorkspaceProvider");
+            //    var provider = Activator.CreateInstance(type) as ICodeModelProvider;
+
+            //    Log.Debug("Using Workspace");
+            //    this.codeModelProvider = provider;
+            //}
+            //catch
+            {
+                Log.Debug("Using CodeDom");
+                this.codeModelProvider = new CodeDomProvider();
+            }
         }
 
-        public T GetWorkspace<T>() where T : class
-        {
-            try
-            {
-                var componentModel = GetService(typeof (SComponentModel)) as IComponentModel;
-                return componentModel?.GetService<T>();
-            }
-            catch(Exception exception)
-            {
-                Log.Debug(exception.Message);
-            }
+        //// Used by Roslyn CodeModelProvider
+        //public T GetWorkspace<T>() where T : class
+        //{
+        //    try
+        //    {
+        //        var componentModel = ServiceProvider.GlobalProvider.GetService(typeof (SComponentModel)) as IComponentModel;
+        //        return componentModel?.GetService<T>();
+        //    }
+        //    catch(Exception exception)
+        //    {
+        //        Log.Debug(exception.Message);
+        //    }
 
-            return default(T);
-        }
+        //    return default(T);
+        //}
 
         private void RegisterLanguageService()
         {

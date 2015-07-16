@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
+using Typewriter.CodeModel.Providers;
 using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation.Controllers
@@ -12,12 +13,13 @@ namespace Typewriter.Generation.Controllers
     public class GenerationController
     {
         private readonly DTE dte;
+        private readonly ICodeModelProvider codeModelProvider;
         private readonly TemplateController templateController;
-        private readonly object x;
 
-        public GenerationController(ExtensionPackage package, DTE dte, SolutionMonitor solutionMonitor, TemplateController templateController, EventQueue eventQueue)
+        public GenerationController(DTE dte, ICodeModelProvider codeModelProvider, SolutionMonitor solutionMonitor, TemplateController templateController, EventQueue eventQueue)
         {
             this.dte = dte;
+            this.codeModelProvider = codeModelProvider;
             this.templateController = templateController;
 
             solutionMonitor.FileAdded += (sender, args) => eventQueue.Enqueue(Render, GenerationType.Render, args.Path);
@@ -65,7 +67,10 @@ namespace Typewriter.Generation.Controllers
                 switch (generationEvent.Type)
                 {
                     case GenerationType.Render:
-                        var file = new CodeDomFile(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
+                        var file = codeModelProvider.GetFile(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
+
+                        Log.Debug("Roslyn: " + file.Name);
+
                         foreach (var template in templates)
                         {
                             template.RenderFile(file, true);

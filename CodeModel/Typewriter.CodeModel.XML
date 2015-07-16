@@ -524,6 +524,16 @@
             Represents a collection of properties.
             </summary>
         </member>
+        <member name="T:Typewriter.CodeModel.Providers.ICodeModelProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Providers.ICodeModelProvider.GetFile(EnvDTE.ProjectItem)">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.Type">
             <summary>
             Represents a type.
