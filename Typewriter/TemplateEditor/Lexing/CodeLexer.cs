@@ -24,7 +24,7 @@ namespace Typewriter.TemplateEditor.Lexing
             semanticModel.ShadowClass.Parse();
             
             semanticModel.Tokens.AddRange(semanticModel.ShadowClass.GetTokens());
-            semanticModel.Identifiers.Add(semanticModel.ShadowClass.GetIdentifiers());
+            semanticModel.TempIdentifiers.Add(semanticModel.ShadowClass.GetIdentifiers());
         }
 
         private void Parse(string template, int offset)
