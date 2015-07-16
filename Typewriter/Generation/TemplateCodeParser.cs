@@ -2,12 +2,12 @@
 using System.Text;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation
 {
     public static class TemplateCodeParser
     {
-        private static readonly ShadowClass shadowClass = new ShadowClass();
         private static int counter;
 
         public static string Parse(string template, ref Type extensions)
@@ -16,25 +16,34 @@ namespace Typewriter.Generation
 
             var output = string.Empty;
             var stream = new Stream(template);
+            var shadowClass = new ShadowClass();
 
             shadowClass.Clear();
 
             while (stream.Advance())
             {
-                if (ParseCodeBlock(stream)) continue;
-                if (ParseLambda(stream, ref output)) continue;
+                if (ParseCodeBlock(stream, shadowClass)) continue;
+                if (ParseLambda(stream, shadowClass, ref output)) continue;
                 output += stream.Current;
             }
 
             shadowClass.Parse();
-            var source = shadowClass.GetClass();
+            //var source = shadowClass.GetClass();
 
-            extensions = Compiler.Compile(source);
+            try
+            {
+                //extensions = Compiler.Compile(source);
+                extensions = Compiler.Compile(shadowClass);
+            }
+            catch (Exception e)
+            {
+                Log.Debug(e.Message);
+            }
 
             return output;
         }
         
-        private static bool ParseCodeBlock(Stream stream)
+        private static bool ParseCodeBlock(Stream stream, ShadowClass shadowClass)
         {
             if (stream.Current == '$' && stream.Peek() == '{')
             {
@@ -43,8 +52,8 @@ namespace Typewriter.Generation
                 var block = stream.PeekBlock(1, '{', '}');
                 var codeStream = new Stream(block, stream.Position + 1);
 
-                ParseUsings(codeStream);
-                ParseCode(codeStream);
+                ParseUsings(codeStream, shadowClass);
+                ParseCode(codeStream, shadowClass);
 
                 stream.Advance(block.Length + 1);
 
@@ -54,7 +63,7 @@ namespace Typewriter.Generation
             return false;
         }
 
-        private static void ParseUsings(Stream stream)
+        private static void ParseUsings(Stream stream, ShadowClass shadowClass)
         {
             stream.Advance();
 
@@ -75,7 +84,7 @@ namespace Typewriter.Generation
             }
         }
 
-        private static void ParseCode(Stream stream)
+        private static void ParseCode(Stream stream, ShadowClass shadowClass)
         {
             var code = new StringBuilder();
 
@@ -88,7 +97,7 @@ namespace Typewriter.Generation
             shadowClass.AddBlock(code.ToString(), 0);
         }
 
-        private static bool ParseLambda(Stream stream, ref string template)
+        private static bool ParseLambda(Stream stream, ShadowClass shadowClass, ref string template)
         {
             if (stream.Current == '$')
             {

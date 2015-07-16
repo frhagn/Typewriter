@@ -9,17 +9,21 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Recommendations;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CSharp.RuntimeBinder;
 using Typewriter.CodeModel;
+using Typewriter.VisualStudio;
+using File = System.IO.File;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
 {
     internal class ShadowWorkspace : Workspace
     {
+        private static int counter;
         private static readonly Assembly[] defaultReferences =
         {
             typeof (int).Assembly, // mscorelib
@@ -41,11 +45,11 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         public DocumentId AddProjectWithDocument(string documentFileName, string text)
         {
             var fileName = Path.GetFileName(documentFileName);
-            var name = Path.GetFileNameWithoutExtension(documentFileName);
+            var name = Path.GetFileNameWithoutExtension(documentFileName) + counter++;
 
             var projectId = ProjectId.CreateNewId();
             var references = defaultReferences.Select(CreateReference).ToList();
-            var projectInfo = ProjectInfo.Create(projectId, new VersionStamp(), name, name + ".dll", LanguageNames.CSharp, metadataReferences: references);
+            var projectInfo = ProjectInfo.Create(projectId, new VersionStamp(), name, name + ".dll", LanguageNames.CSharp, metadataReferences: references, compilationOptions: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             OnProjectAdded(projectInfo);
 
@@ -94,15 +98,15 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             return root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToArray();
         }
 
-        public string GetClassWithAllPublicStaticMethods(DocumentId documentId)
+        public void ChangeAllMethodsToPublicStatic(DocumentId documentId)
         {
             var document = CurrentSolution.GetDocument(documentId);
             var semanticModel = document.GetSemanticModelAsync().Result;
 
             var root = semanticModel.SyntaxTree.GetRoot();
             var count = root.DescendantNodes().OfType<MethodDeclarationSyntax>().Count();
-            
-            for(var i = 0; i < count; i++)
+
+            for (var i = 0; i < count; i++)
             {
                 var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToArray()[i];
                 var trivia = method.ReturnType.GetTrailingTrivia();
@@ -113,7 +117,18 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             document = document.WithSyntaxRoot(root);
             var text = document.GetTextAsync().Result;
 
-            return text.ToString();
+            UpdateText(documentId, text.ToString());
+        }
+
+        public EmitResult Compile(DocumentId documentId, string path)
+        {
+            var document = CurrentSolution.GetDocument(documentId);
+            var compilation = document.Project.GetCompilationAsync().Result;
+
+            using (var fileStream = File.Create(path))
+            {
+                return compilation.Emit(fileStream);
+            }
         }
 
         public ISymbol GetSymbol(DocumentId documentId, int position)

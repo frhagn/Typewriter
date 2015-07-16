@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
 {
@@ -179,9 +180,10 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             return workspace.GetRecommendedSymbols(documentId, snippet.ToShadowIndex(position)).Where(s => s.Name.StartsWith("__") == false);
         }
 
-        public string GetClass()
+        public EmitResult Compile(string outputPath)
         {
-            return workspace.GetClassWithAllPublicStaticMethods(documentId);
+            workspace.ChangeAllMethodsToPublicStatic(documentId);
+            return workspace.Compile(documentId, outputPath);
         }
 
         private static string GetClassification(string classificationType)
