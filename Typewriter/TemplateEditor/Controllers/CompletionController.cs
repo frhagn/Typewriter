@@ -66,8 +66,14 @@ namespace Typewriter.TemplateEditor.Controllers
                 for (var i = index; i > 0; i--)
                 {
                     var current = text[i - 1];
-                    if (current != '$' && current != '_' && char.IsLetterOrDigit(current) == false)
+                    if (current == '$')
+                    {
+                        start = i - 1;
                         break;
+                    }
+
+                    if (current != '_' && char.IsLetterOrDigit(current) == false) break;
+
                     start = i - 1;
                 }
             }
