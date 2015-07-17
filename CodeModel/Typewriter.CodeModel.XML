@@ -354,6 +354,51 @@
             Represents a collection of enum values.
             </summary>
         </member>
+        <member name="T:Typewriter.CodeModel.Extensions">
+            <summary>
+            Extension methods for working with the Typewriter CodeModel.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Extensions.name(Typewriter.CodeModel.CodeItem)">
+            <summary>
+            The name of the item (camelCased).
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Extensions.Class(Typewriter.CodeModel.Field)">
+            <summary>
+            The class name of the return type.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Extensions.Default(Typewriter.CodeModel.Field)">
+            <summary>
+            The default value of the return type.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Extensions.Type(Typewriter.CodeModel.Type)">
+            <summary>
+            The type name.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Extensions.Class(Typewriter.CodeModel.Type)">
+            <summary>
+            The class name of the type.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Extensions.IsDate(Typewriter.CodeModel.Field)">
+            <summary>
+            Determined if the return type is a DateTime.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Extensions.Default(Typewriter.CodeModel.Type)">
+            <summary>
+            The default value of the type.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Extensions.Route(Typewriter.CodeModel.Method)">
+            <summary>
+            Returns the value of the RouteAttribute of the method and the RoutePrefixAttribute of the current class
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.Field">
             <summary>
             Represents a field.

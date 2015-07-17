@@ -3,8 +3,14 @@ using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
+    /// <summary>
+    /// Extension methods for working with the Typewriter CodeModel.
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// The name of the item (camelCased).
+        /// </summary>
         [Property("(extension) string name", "The name of the $context (camelCased)")]
         public static string name(CodeItem itemInfo)
         {
@@ -13,18 +19,27 @@ namespace Typewriter.CodeModel
             return itemInfo.Name.ToLowerInvariant();
         }
 
+        /// <summary>
+        /// The class name of the return type.
+        /// </summary>
         [Property("(extension) string Class", "The class name of the $context")]
         public static string Class(Field fieldInfo)
         {
             return Class(fieldInfo.Type);
         }
 
+        /// <summary>
+        /// The default value of the return type.
+        /// </summary>
         [Property("(extension) string Default", "The default value of the $context")]
         public static string Default(Field fieldInfo)
         {
             return Default(fieldInfo.Type);
         }
 
+        /// <summary>
+        /// The type name.
+        /// </summary>
         [Property("(extension) string Type", "The type name")]
         public static string Type(this Type typeInfo)
         {
@@ -80,6 +95,9 @@ namespace Typewriter.CodeModel
             }
         }
 
+        /// <summary>
+        /// The class name of the type.
+        /// </summary>
         [Property("(extension) string Class", "The class name of the $context")]
         public static string Class(Type typeInfo)
         {
@@ -87,6 +105,9 @@ namespace Typewriter.CodeModel
             return type.EndsWith("[]") ? type.Substring(0, type.Length - 2) : type;
         }
 
+        /// <summary>
+        /// Determined if the return type is a DateTime.
+        /// </summary>
         [Property("(extension) bool IsDate", "Determines if the $context is a DateTime")]
         public static bool IsDate(Field fieldInfo)
         {
@@ -94,6 +115,9 @@ namespace Typewriter.CodeModel
             return type == "Date";
         }
 
+        /// <summary>
+        /// The default value of the type.
+        /// </summary>
         [Property("(extension) string Default", "The default value of the $context")]
         public static string Default(Type typeInfo)
         {
@@ -107,6 +131,9 @@ namespace Typewriter.CodeModel
             return "null";
         }
 
+        /// <summary>
+        /// Returns the value of the RouteAttribute of the method and the RoutePrefixAttribute of the current class
+        /// </summary>
         [Property("(extension) string Route", "Returns the value of the RouteAttribute of the $context and the RoutePrefixAttribute of the current class")]
         public static string Route(Method methodInfo)
         {

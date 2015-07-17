@@ -27,10 +27,17 @@ namespace Typewriter.TemplateEditor.Controllers
             this.buffer = buffer;
         }
 
-        public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
+        public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection normalizedSnapshotSpans)
         {
-            var span = Editor.Instance.GetCodeBlocks(buffer);
-            return span.Select(s => new TagSpan<IOutliningRegionTag>(s, new OutliningRegionTag(false, false, "...", s.GetText())));
+            var spans = Editor.Instance.GetCodeBlocks(buffer).ToList();
+
+            foreach (var tag in spans)
+            {
+                var temp = TagsChanged;
+                temp?.Invoke(this, new SnapshotSpanEventArgs(tag));
+            }
+
+            return spans.Select(s => new TagSpan<IOutliningRegionTag>(s, new OutliningRegionTag(false, false, "...", s.GetText())));
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
