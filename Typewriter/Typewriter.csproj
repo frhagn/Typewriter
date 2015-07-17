@@ -265,8 +265,8 @@
       <Link>Resources\Typewriter.CodeModel.XML</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\Workspace\bin\Debug\Typewriter.CodeModel.Workspace.dll">
-      <Link>Resources\Typewriter.CodeModel.Workspace.dll</Link>
+    <Content Include="..\Workspace\bin\Debug\Typewriter.CodeModel.Roslyn.dll">
+      <Link>Resources\Typewriter.CodeModel.Roslyn.dll</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Icons.pkgdef">
