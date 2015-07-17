@@ -75,7 +75,7 @@ namespace Typewriter.VisualStudio
             //try
             //{
             //    var assemblyLocation = Path.GetDirectoryName(typeof(GenerationController).Assembly.Location);
-            //    var assembly = Assembly.LoadFrom(Path.Combine(assemblyLocation, "Resources", "Typewriter.CodeModel.Workspace.dll"));
+            //    var assembly = Assembly.LoadFrom(Path.Combine(assemblyLocation, "Resources", "Typewriter.CodeModel.Roslyn.dll"));
             //    var type = assembly.GetType("Typewriter.CodeModel.Workspace.WorkspaceProvider");
             //    var provider = Activator.CreateInstance(type) as ICodeModelProvider;
 
@@ -85,7 +85,7 @@ namespace Typewriter.VisualStudio
             //catch
             {
                 Log.Debug("Using CodeDom");
-                this.codeModelProvider = new CodeDomProvider();
+                this.codeModelProvider = new CodeDomCodeModelProvider();
             }
         }
 

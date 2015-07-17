@@ -53,7 +53,7 @@
     <Compile Include="CodeDomEnumValue.cs" />
     <Compile Include="CodeDomField.cs" />
     <Compile Include="CodeDomFile.cs" />
-    <Compile Include="CodeDomProvider.cs" />
+    <Compile Include="CodeDomCodeModelProvider.cs" />
     <Compile Include="GenericTypeInfo.cs" />
     <Compile Include="CodeDomInterface.cs" />
     <Compile Include="LazyCodeDomType.cs" />

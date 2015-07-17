@@ -63,6 +63,7 @@
     <Compile Include="Constant.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="EnumValue.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="File.cs" />
     <Compile Include="Interface.cs" />

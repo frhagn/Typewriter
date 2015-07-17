@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Tests", "Tests\T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.CodeModel", "CodeModel\Typewriter.CodeModel.csproj", "{4EC6C920-D234-49F1-B17B-98A4DE24FF87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.CodeModel.Workspace", "Workspace\Typewriter.CodeModel.Workspace.csproj", "{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.CodeModel.Roslyn", "Workspace\Typewriter.CodeModel.Roslyn.csproj", "{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.CodeModel.CodeDom", "CodeDom\Typewriter.CodeModel.CodeDom.csproj", "{C822D1A9-4C43-4067-A01E-EA38F3138282}"
 EndProject

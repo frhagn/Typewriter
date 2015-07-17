@@ -159,6 +159,7 @@
     <Compile Include="Render\Support\IHttpActionResult.cs" />
     <Compile Include="Render\WebApiController\WebApiController.cs" />
     <Compile Include="TestInfrastructure\TestBase.cs" />
+    <Compile Include="TestInfrastructure\RoslynProviderStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -179,9 +180,9 @@
       <Project>{0427c151-9b9d-4c77-8a64-68bf2c929595}</Project>
       <Name>Typewriter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Workspace\Typewriter.CodeModel.Workspace.csproj">
+    <ProjectReference Include="..\Workspace\Typewriter.CodeModel.Roslyn.csproj">
       <Project>{3d74f5ff-ad4c-40a5-9577-5ed378031ff6}</Project>
-      <Name>Typewriter.CodeModel.Workspace</Name>
+      <Name>Typewriter.CodeModel.Roslyn</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

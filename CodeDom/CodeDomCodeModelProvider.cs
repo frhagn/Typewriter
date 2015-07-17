@@ -3,7 +3,7 @@ using Typewriter.CodeModel.Providers;
 
 namespace Typewriter.CodeModel.CodeDom
 {
-    public class CodeDomProvider : ICodeModelProvider
+    public class CodeDomCodeModelProvider : ICodeModelProvider
     {
         public File GetFile(ProjectItem projectItem)
         {

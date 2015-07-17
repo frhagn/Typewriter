@@ -234,7 +234,6 @@
     <Compile Include="TemplateEditor\Controllers\CompletionController.cs" />
     <Compile Include="TemplateEditor\Lexing\Stream.cs" />
     <Compile Include="TemplateEditor\Lexing\Token.cs" />
-    <Compile Include="Generation\Extensions.cs" />
     <Compile Include="Generation\Parser.cs" />
     <Compile Include="Generation\Template.cs" />
     <Compile Include="Generation\Controllers\SolutionEvents.cs" />

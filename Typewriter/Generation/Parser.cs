@@ -51,9 +51,9 @@ namespace Typewriter.Generation
             if (stream.Current == '$')
             {
                 var identifier = stream.PeekWord(1);
-                var value = GetIdentifier(identifier, context);
-
-                if (value != null)
+                object value;
+                
+                if (TryGetIdentifier(identifier, context, out value))
                 {
                     stream.Advance(identifier.Length);
 
@@ -102,19 +102,22 @@ namespace Typewriter.Generation
                     else
                     {
                         var block = ParseBlock(stream, '[', ']');
-                        if (block != null)
+                        if (value != null)
                         {
-                            output += ParseTemplate(block, value);
-                        }
-                        else
-                        {
-                            var extension = standardExtensions.GetMethod(identifier, new[] { value.GetType() });
-                            if (extension != null && extension.ReturnType == typeof (string))
+                            if (block != null)
                             {
-                                value = extension.Invoke(null, new[] { value });
+                                output += ParseTemplate(block, value);
                             }
+                            else
+                            {
+                                var extension = standardExtensions.GetMethod(identifier, new[] { value.GetType() });
+                                if (extension != null && extension.ReturnType == typeof (string))
+                                {
+                                    value = extension.Invoke(null, new[] { value });
+                                }
 
-                            output += value.ToString();
+                                output += value.ToString();
+                            }
                         }
                     }
 
@@ -140,9 +143,11 @@ namespace Typewriter.Generation
             return null;
         }
 
-        private object GetIdentifier(string identifier, object context)
+        private bool TryGetIdentifier(string identifier, object context, out object value)
         {
-            if (identifier == null) return null;
+            value = null;
+
+            if (identifier == null) return false;
 
             var type = context.GetType();
 
@@ -151,19 +156,22 @@ namespace Typewriter.Generation
                 var extension = customExtensions?.GetMethod(identifier, new[] { type });
                 if (extension != null)
                 {
-                    return extension.Invoke(null, new[] { context });
+                    value = extension.Invoke(null, new[] { context });
+                    return true;
                 }
 
                 var property = type.GetProperty(identifier);
                 if (property != null)
                 {
-                    return property.GetValue(context);
+                    value = property.GetValue(context);
+                    return true;
                 }
 
                 extension = standardExtensions.GetMethod(identifier, new[] { type });
                 if (extension != null)
                 {
-                    return extension.Invoke(null, new[] { context });
+                    value = extension.Invoke(null, new[] { context });
+                    return true;
                 }
             }
             catch (Exception e)
@@ -172,7 +180,7 @@ namespace Typewriter.Generation
                 Log.Error(e.Message);
             }
 
-            return null;
+            return false;
         }
     }
 }

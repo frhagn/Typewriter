@@ -1,8 +1,7 @@
 ﻿using System.Linq;
-using Typewriter.CodeModel;
 using Typewriter.CodeModel.Attributes;
 
-namespace Typewriter.Generation
+namespace Typewriter.CodeModel
 {
     public static class Extensions
     {

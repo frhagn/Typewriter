@@ -3,7 +3,6 @@ using System.IO;
 using EnvDTE;
 using Typewriter.CodeModel.CodeDom;
 using Typewriter.CodeModel.Providers;
-using Typewriter.CodeModel.Workspace;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 
@@ -11,35 +10,49 @@ using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.Tests.TestInfrastructure
 {
-    public abstract class TestBase : IDisposable
-    {
-        private static readonly DTE dte;
-        private static ICodeModelProvider codeModelProvider = new CodeDomProvider(); // new WorkspaceProvider();
+    //public abstract class CodeDomTestBase : TestBase
+    //{
+    //    protected CodeDomTestBase()
+    //    {
+    //        //if (codeModelProvider == null) codeModelProvider = new CodeDomCodeModelProvider();
+    //    }
+    //}
 
-        static TestBase()
-        {
-            dte = Dte.GetInstance("Typewriter.sln");
-        }
+    //public abstract class RoslynTestBase : TestBase
+    //{
+    //    protected RoslynTestBase()
+    //    {
+    //        if (codeModelProvider == null) codeModelProvider = new RoslynProviderStub();
+    //    }
+    //}
+
+    public abstract class TestBase<T> : IDisposable where T : ICodeModelProvider, new()
+    {
+        private static DTE dte;
+        protected static ICodeModelProvider codeModelProvider;// = new CodeDomCodeModelProvider();
 
         protected TestBase()
         {
+            if(dte == null) dte = Dte.GetInstance("Typewriter.sln");
+            if (codeModelProvider == null) codeModelProvider = new T();
+            
             // Handle threading errors when calling into Visual Studio.
             MessageFilter.Register();
         }
         
-        protected static string SolutionDirectory => new FileInfo(dte.Solution.FileName).Directory?.FullName;
+        protected string SolutionDirectory => new FileInfo(dte.Solution.FileName).Directory?.FullName;
 
-        protected static ProjectItem GetProjectItem(string path)
+        protected ProjectItem GetProjectItem(string path)
         {
             return dte.Solution.FindProjectItem(Path.Combine(SolutionDirectory, path));
         }
 
-        protected static string GetFileContents(string path)
+        protected string GetFileContents(string path)
         {
             return System.IO.File.ReadAllText(Path.Combine(SolutionDirectory, path));
         }
 
-        protected static File GetFile(string path)
+        protected File GetFile(string path)
         {
             return codeModelProvider.GetFile(GetProjectItem(path));
         }

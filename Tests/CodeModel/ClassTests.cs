@@ -1,15 +1,31 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
+using Typewriter.CodeModel.CodeDom;
+using Typewriter.CodeModel.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("CodeModel", "Classes")]
-    public class ClassTests : TestBase
+    [Trait("Classes", "CodeDom")]
+    public class CodeDomClassTests : ClassTests<CodeDomCodeModelProvider>
     {
-        private readonly File fileInfo = GetFile(@"Tests\CodeModel\Support\ClassInfo.cs");
+    }
+
+    [Trait("Classes", "Roslyn")]
+    public class RoslynClassTests : ClassTests<RoslynProviderStub>
+    {
+    }
+
+    public abstract class ClassTests<T> : TestBase<T> where T : ICodeModelProvider, new()
+    {
+        private readonly File fileInfo;
+
+        protected ClassTests()
+        {
+            fileInfo = GetFile(@"Tests\CodeModel\Support\ClassInfo.cs");
+        }
 
         [Fact]
         public void Expect_name_to_match_class_name()

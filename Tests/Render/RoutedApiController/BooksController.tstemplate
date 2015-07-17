@@ -1,6 +1,4 @@
 ﻿${
-	using Typewriter.Generation;
-
 	string Verb(Method m) 
 	{
 		var attribute = m.Attributes.FirstOrDefault(a => a.Name.Contains("Http"));

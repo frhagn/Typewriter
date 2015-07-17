@@ -7,8 +7,8 @@
     <ProjectGuid>{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Typewriter.CodeModel.Workspace</RootNamespace>
-    <AssemblyName>Typewriter.CodeModel.Workspace</AssemblyName>
+    <RootNamespace>Typewriter.CodeModel.Roslyn</RootNamespace>
+    <AssemblyName>Typewriter.CodeModel.Roslyn</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -107,9 +107,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileImpl.cs" />
+    <Compile Include="RoslynClass.cs" />
+    <Compile Include="RoslynFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WorkspaceProvider.cs" />
+    <Compile Include="RoslynCodeModelProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

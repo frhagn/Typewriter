@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Typewriter.CodeModel;
 using Typewriter.CodeModel.Attributes;
 using Typewriter.Generation;
+using Type = System.Type;
 
 namespace Typewriter.TemplateEditor.Lexing
 {

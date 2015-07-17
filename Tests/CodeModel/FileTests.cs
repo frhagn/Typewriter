@@ -1,16 +1,33 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Should;
+using Typewriter.CodeModel.CodeDom;
+using Typewriter.CodeModel.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("CodeModel", "Files")]
-    public class FileTests : TestBase
+    [Trait("Files", "CodeDom")]
+    public class CodeDomFileTests : FileTests<CodeDomCodeModelProvider>
     {
-        private readonly File fileInfo = GetFile(@"Tests\CodeModel\Support\FileInfo.cs");
+    }
+
+    [Trait("Files", "Roslyn")]
+    public class RoslynFileTests : FileTests<RoslynProviderStub>
+    {
+    }
+
+    public abstract class FileTests<T> : TestBase<T> where T : ICodeModelProvider, new()
+    {
+        private readonly File fileInfo;
+
+        protected FileTests()
+        {
+            fileInfo = GetFile(@"Tests\CodeModel\Support\FileInfo.cs");
+        }
 
         [Fact]
         public void Expect_name_to_match_filename()

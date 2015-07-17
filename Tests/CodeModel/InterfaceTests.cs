@@ -1,15 +1,31 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
+using Typewriter.CodeModel.CodeDom;
+using Typewriter.CodeModel.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("CodeModel", "Interfaces")]
-    public class InterfaceTests : TestBase
+    [Trait("Interfaces", "CodeDom")]
+    public class CodeDomInterfaceTests : InterfaceTests<CodeDomCodeModelProvider>
     {
-        private readonly File fileInfo = GetFile(@"Tests\CodeModel\Support\IInterfaceInfo.cs");
+    }
+
+    [Trait("Interfaces", "Roslyn")]
+    public class RoslynInterfaceTests : InterfaceTests<RoslynProviderStub>
+    {
+    }
+
+    public abstract class InterfaceTests<T> : TestBase<T> where T : ICodeModelProvider, new()
+    {
+        private readonly File fileInfo;
+
+        protected InterfaceTests()
+        {
+            fileInfo = GetFile(@"Tests\CodeModel\Support\IInterfaceInfo.cs");
+        }
 
         [Fact]
         public void Expect_name_to_match_interface_name()

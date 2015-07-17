@@ -35,7 +35,7 @@ namespace Typewriter.CodeModel.CodeDom
         public Class BaseClass => baseClass ?? (baseClass = CodeDomClass.FromCodeElements(CodeType.Bases, this).FirstOrDefault());
 
         private Class containingClass;
-        public Class ContainingClass => containingClass ?? (containingClass = CodeDomClass.FromCodeClass(codeType.Parent as CodeClass2, this));
+        public Class ContainingClass => containingClass ?? (containingClass = CodeDomClass.FromCodeClass(CodeType.Parent as CodeClass2, this));
 
         private AttributeCollection attributes;
         public AttributeCollection Attributes => attributes ?? (attributes = new AttributeCollectionImpl(CodeDomAttribute.FromCodeElements(CodeType.Attributes, this)));

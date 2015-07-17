@@ -1,21 +1,20 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.Shell;
 using Typewriter.CodeModel.Providers;
 
-namespace Typewriter.CodeModel.Workspace
+namespace Typewriter.CodeModel.Roslyn
 {
-    public class WorkspaceProvider : ICodeModelProvider
+    public class RoslynCodeModelProvider : ICodeModelProvider
     {
-        private readonly VisualStudioWorkspace workspace;
+        private readonly Microsoft.CodeAnalysis.Workspace workspace;
 
-        public WorkspaceProvider()
+        public RoslynCodeModelProvider()
         {
             var componentModel = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
-            this.workspace = componentModel?.GetService<VisualStudioWorkspace>();
+            this.workspace = componentModel.GetService<VisualStudioWorkspace>();
         }
 
         public File GetFile(ProjectItem projectItem)
@@ -23,7 +22,7 @@ namespace Typewriter.CodeModel.Workspace
             var project = workspace.CurrentSolution.Projects.FirstOrDefault(p => p.FilePath == projectItem.ContainingProject.FullName);
             var document = project?.Documents.FirstOrDefault(d => d.FilePath == projectItem.FileNames[1]);
 
-            return new FileImpl(document);
+            return new RoslynFile(document);
         }
     }
 }
