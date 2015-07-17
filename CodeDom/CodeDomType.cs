@@ -29,7 +29,7 @@ namespace Typewriter.CodeModel.CodeDom
         public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 || IsNullable;
         public bool IsNullable => FullName.StartsWith("System.Nullable<") || FullName.EndsWith("?");
         public bool IsEnum => CodeType.Kind == vsCMElement.vsCMElementEnum;
-        public bool IsEnumerable => FullName != "System.String" && (FullName.StartsWith("System.Collections.") || FullName == "System.Array");
+        public bool IsEnumerable => FullName != "System.String" && (FullName == "System.Array" || IsCollection(FullName));
 
         private Class baseClass;
         public Class BaseClass => baseClass ?? (baseClass = CodeDomClass.FromCodeElements(CodeType.Bases, this).FirstOrDefault());
@@ -133,6 +133,21 @@ namespace Typewriter.CodeModel.CodeDom
             //{
             //    return new LazyCodeDomType<T>(fullName, parent);
             //}
+        }
+
+        private static bool IsCollection(string fullName)
+        {
+            if (fullName.StartsWith("System.Collections.") == false) return false;
+
+            if (fullName.Contains("Comparer")) return false;
+            if (fullName.Contains("Enumerator")) return false;
+            if (fullName.Contains("Provider")) return false;
+            if (fullName.Contains("Partitioner")) return false;
+            if (fullName.Contains("Structural")) return false;
+            if (fullName.Contains("KeyNotFoundException")) return false;
+            if (fullName.Contains("KeyValuePair")) return false;
+
+            return true;
         }
 
         public static Type FromCodeElement(CodeVariable2 codeVariable, Item parent)
