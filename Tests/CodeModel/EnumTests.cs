@@ -1,24 +1,24 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using Typewriter.CodeModel.CodeDom;
-using Typewriter.CodeModel.Providers;
+using Typewriter.Metadata.CodeDom;
+using Typewriter.Metadata.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
     [Trait("Enums", "CodeDom")]
-    public class CodeDomEnumTests : EnumTests<CodeDomCodeModelProvider>
+    public class CodeDomEnumTests : EnumTests<CodeDomMetadataProvider>
     {
     }
 
-    [Trait("Enums", "Roslyn")]
-    public class RoslynEnumTests : EnumTests<RoslynProviderStub>
-    {
-    }
+    //[Trait("Enums", "Roslyn")]
+    //public class RoslynEnumTests : EnumTests<RoslynProviderStub>
+    //{
+    //}
 
-    public abstract class EnumTests<T> : TestBase<T> where T : ICodeModelProvider, new()
+    public abstract class EnumTests<T> : TestBase<T> where T : IMetadataProvider, new()
     {
         private readonly File fileInfo;
 

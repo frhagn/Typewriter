@@ -202,6 +202,29 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeModel\Collections\AttributeCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ClassCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ConstantCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\EnumCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\EnumValueCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\FieldCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\InterfaceCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\MethodCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ParameterCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\PropertyCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\TypeCollectionImpl.cs" />
+    <Compile Include="CodeModel\Implementation\AttributeImpl.cs" />
+    <Compile Include="CodeModel\Implementation\ClassImpl.cs" />
+    <Compile Include="CodeModel\Implementation\ConstantImpl.cs" />
+    <Compile Include="CodeModel\Implementation\EnumImpl.cs" />
+    <Compile Include="CodeModel\Implementation\EnumValueImpl.cs" />
+    <Compile Include="CodeModel\Implementation\FieldImpl.cs" />
+    <Compile Include="CodeModel\Implementation\FileImpl.cs" />
+    <Compile Include="CodeModel\Implementation\InterfaceImpl.cs" />
+    <Compile Include="CodeModel\Implementation\MethodImpl.cs" />
+    <Compile Include="CodeModel\Implementation\ParameterImpl.cs" />
+    <Compile Include="CodeModel\Implementation\PropertyImpl.cs" />
+    <Compile Include="CodeModel\Implementation\TypeImpl.cs" />
     <Compile Include="Generation\Compiler.cs" />
     <Compile Include="Generation\Controllers\EventQueue.cs" />
     <Compile Include="Generation\ItemFilter.cs" />
@@ -265,8 +288,8 @@
       <Link>Resources\Typewriter.CodeModel.XML</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\Workspace\bin\Debug\Typewriter.CodeModel.Roslyn.dll">
-      <Link>Resources\Typewriter.CodeModel.Roslyn.dll</Link>
+    <Content Include="..\Roslyn\bin\Debug\Typewriter.Metadata.Roslyn.dll">
+      <Link>Resources\Typewriter.Metadata.Roslyn.dll</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Icons.pkgdef">
@@ -291,9 +314,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeDom\Typewriter.CodeModel.CodeDom.csproj">
+    <ProjectReference Include="..\CodeDom\Typewriter.Metadata.CodeDom.csproj">
       <Project>{c822d1a9-4c43-4067-a01e-ea38f3138282}</Project>
-      <Name>Typewriter.CodeModel.CodeDom</Name>
+      <Name>Typewriter.Metadata.CodeDom</Name>
     </ProjectReference>
     <ProjectReference Include="..\CodeModel\Typewriter.CodeModel.csproj">
       <Project>{4ec6c920-d234-49f1-b17b-98a4de24ff87}</Project>
@@ -305,6 +328,10 @@
       <VSIXSubPath>ItemTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\Metadata\Typewriter.Metadata.csproj">
+      <Project>{511e50cc-6073-43ee-9e8b-dd6f584c81a8}</Project>
+      <Name>Typewriter.Metadata</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +346,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

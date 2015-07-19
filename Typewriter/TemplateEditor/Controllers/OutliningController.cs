@@ -30,13 +30,6 @@ namespace Typewriter.TemplateEditor.Controllers
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection normalizedSnapshotSpans)
         {
             var spans = Editor.Instance.GetCodeBlocks(buffer).ToList();
-
-            foreach (var tag in spans)
-            {
-                var temp = TagsChanged;
-                temp?.Invoke(this, new SnapshotSpanEventArgs(tag));
-            }
-
             return spans.Select(s => new TagSpan<IOutliningRegionTag>(s, new OutliningRegionTag(false, false, "...", s.GetText())));
         }
 

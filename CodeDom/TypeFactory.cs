@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
-//using Typewriter.VisualStudio;
 
-namespace Typewriter.CodeModel.CodeDom
+namespace Typewriter.Metadata.CodeDom
 {
     public class TypeFactory
     {

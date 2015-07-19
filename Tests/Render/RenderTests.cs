@@ -1,7 +1,9 @@
 ﻿using Should;
-using Typewriter.CodeModel.CodeDom;
-using Typewriter.CodeModel.Providers;
+using Typewriter.CodeModel;
+using Typewriter.CodeModel.Implementation;
 using Typewriter.Generation;
+using Typewriter.Metadata.CodeDom;
+using Typewriter.Metadata.Providers;
 using Typewriter.Tests.Render.RoutedApiController;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
@@ -9,16 +11,16 @@ using Xunit;
 namespace Typewriter.Tests.Render
 {
     [Trait("Render", "CodeDom")]
-    public class CodeDomRenderTests : RenderTests<CodeDomCodeModelProvider>
+    public class CodeDomRenderTests : RenderTests<CodeDomMetadataProvider>
     {
     }
 
-    [Trait("Render", "Roslyn")]
-    public class RoslynRenderTests : RenderTests<RoslynProviderStub>
-    {
-    }
+    //[Trait("Render", "Roslyn")]
+    //public class RoslynRenderTests : RenderTests<RoslynProviderStub>
+    //{
+    //}
 
-    public abstract class RenderTests<T> : TestBase<T> where T : ICodeModelProvider, new()
+    public abstract class RenderTests<T> : TestBase<T> where T : IMetadataProvider, new()
     {
         private void Assert<TClass>()
         {
@@ -28,11 +30,12 @@ namespace Typewriter.Tests.Render
             var path = string.Join(@"\", nsParts);
 
             var template = new Template(GetProjectItem(path + ".tstemplate"));
-            var model = codeModelProvider.GetFile(GetProjectItem(path + ".cs"));
+            var metadata = metadataProvider.GetFile(GetProjectItem(path + ".cs"));
+            var file = new FileImpl(metadata);
             var result = GetFileContents(path + ".result");
 
             bool success;
-            var output = template.Render(model, out success);
+            var output = template.Render(file, out success);
             
             success.ShouldBeTrue();
             output.ShouldEqual(result);

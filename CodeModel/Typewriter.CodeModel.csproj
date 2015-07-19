@@ -49,17 +49,6 @@
     <Compile Include="Attributes\ContextAttribute.cs" />
     <Compile Include="Attributes\PropertyAttribute.cs" />
     <Compile Include="Class.cs" />
-    <Compile Include="Collections\AttributeCollectionImpl.cs" />
-    <Compile Include="Collections\ClassCollectionImpl.cs" />
-    <Compile Include="Collections\ConstantCollectionImpl.cs" />
-    <Compile Include="Collections\EnumCollectionImpl.cs" />
-    <Compile Include="Collections\EnumValueCollectionImpl.cs" />
-    <Compile Include="Collections\FieldCollectionImpl.cs" />
-    <Compile Include="Collections\InterfaceCollectionImpl.cs" />
-    <Compile Include="Collections\MethodCollectionImpl.cs" />
-    <Compile Include="Collections\ParameterCollectionImpl.cs" />
-    <Compile Include="Collections\PropertyCollectionImpl.cs" />
-    <Compile Include="Collections\TypeCollectionImpl.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="EnumValue.cs" />
@@ -73,7 +62,6 @@
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Property.cs" />
-    <Compile Include="Providers\ICodeModelProvider.cs" />
     <Compile Include="Type.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

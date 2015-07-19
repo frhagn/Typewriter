@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using EnvDTE;
 using Microsoft.CodeAnalysis.MSBuild;
-using Typewriter.CodeModel;
-using Typewriter.CodeModel.Providers;
-using Typewriter.CodeModel.Roslyn;
+using Typewriter.Metadata.Interfaces;
+using Typewriter.Metadata.Providers;
+using Typewriter.Metadata.Roslyn;
 
 namespace Typewriter.Tests.TestInfrastructure
 {
-    public class RoslynProviderStub : ICodeModelProvider
+    public class RoslynProviderStub : IMetadataProvider
     {
         private readonly Microsoft.CodeAnalysis.Workspace workspace;
 
@@ -23,12 +23,12 @@ namespace Typewriter.Tests.TestInfrastructure
             this.workspace = msBuildWorkspace;
         }
 
-        public File GetFile(ProjectItem projectItem)
+        public IFileMetadata GetFile(ProjectItem projectItem)
         {
             var project = workspace.CurrentSolution.Projects.FirstOrDefault(p => p.FilePath == projectItem.ContainingProject.FullName);
             var document = project?.Documents.FirstOrDefault(d => d.FilePath == projectItem.FileNames[1]);
 
-            return new RoslynFile(document);
+            return new RoslynFileMetadata(document);
         }
     }
 }

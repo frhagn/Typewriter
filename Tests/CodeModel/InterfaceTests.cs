@@ -1,24 +1,24 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using Typewriter.CodeModel.CodeDom;
-using Typewriter.CodeModel.Providers;
+using Typewriter.Metadata.CodeDom;
+using Typewriter.Metadata.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
     [Trait("Interfaces", "CodeDom")]
-    public class CodeDomInterfaceTests : InterfaceTests<CodeDomCodeModelProvider>
+    public class CodeDomInterfaceTests : InterfaceTests<CodeDomMetadataProvider>
     {
     }
 
-    [Trait("Interfaces", "Roslyn")]
-    public class RoslynInterfaceTests : InterfaceTests<RoslynProviderStub>
-    {
-    }
+    //[Trait("Interfaces", "Roslyn")]
+    //public class RoslynInterfaceTests : InterfaceTests<RoslynProviderStub>
+    //{
+    //}
 
-    public abstract class InterfaceTests<T> : TestBase<T> where T : ICodeModelProvider, new()
+    public abstract class InterfaceTests<T> : TestBase<T> where T : IMetadataProvider, new()
     {
         private readonly File fileInfo;
 

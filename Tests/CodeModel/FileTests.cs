@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using Should;
-using Typewriter.CodeModel.CodeDom;
-using Typewriter.CodeModel.Providers;
+using Typewriter.Metadata.CodeDom;
+using Typewriter.Metadata.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 using File = Typewriter.CodeModel.File;
@@ -11,16 +11,16 @@ using File = Typewriter.CodeModel.File;
 namespace Typewriter.Tests.CodeModel
 {
     [Trait("Files", "CodeDom")]
-    public class CodeDomFileTests : FileTests<CodeDomCodeModelProvider>
+    public class CodeDomFileTests : FileTests<CodeDomMetadataProvider>
     {
     }
 
-    [Trait("Files", "Roslyn")]
-    public class RoslynFileTests : FileTests<RoslynProviderStub>
-    {
-    }
+    //[Trait("Files", "Roslyn")]
+    //public class RoslynFileTests : FileTests<RoslynProviderStub>
+    //{
+    //}
 
-    public abstract class FileTests<T> : TestBase<T> where T : ICodeModelProvider, new()
+    public abstract class FileTests<T> : TestBase<T> where T : IMetadataProvider, new()
     {
         private readonly File fileInfo;
 

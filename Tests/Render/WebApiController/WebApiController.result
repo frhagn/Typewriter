@@ -4,19 +4,19 @@ module App {
 		
 		public read = () : Promise<ComplexClassModel[]> => {
             var verb = 'get';
-            var route = '$Route';
+            var route = '';
         };
 		public create = (user: ComplexClassModel) : Promise<ComplexClassModel> => {
             var verb = 'post';
-            var route = '$Route';
+            var route = '';
         };
 		public update = (user: ComplexClassModel, id: number) : Promise<ComplexClassModel> => {
             var verb = 'put';
-            var route = '$Route';
+            var route = '';
         };
 		public delete = (id: number) : Promise<HttpStatusCode> => {
             var verb = 'delete';
-            var route = '$Route';
+            var route = '';
         };
     }
 }

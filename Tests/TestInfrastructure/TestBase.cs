@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using EnvDTE;
-using Typewriter.CodeModel.CodeDom;
-using Typewriter.CodeModel.Providers;
+using Typewriter.CodeModel.Implementation;
+using Typewriter.Metadata.Providers;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 
@@ -14,7 +14,7 @@ namespace Typewriter.Tests.TestInfrastructure
     //{
     //    protected CodeDomTestBase()
     //    {
-    //        //if (codeModelProvider == null) codeModelProvider = new CodeDomCodeModelProvider();
+    //        //if (codeModelProvider == null) codeModelProvider = new CodeDomMetadataProvider();
     //    }
     //}
 
@@ -26,15 +26,15 @@ namespace Typewriter.Tests.TestInfrastructure
     //    }
     //}
 
-    public abstract class TestBase<T> : IDisposable where T : ICodeModelProvider, new()
+    public abstract class TestBase<T> : IDisposable where T : IMetadataProvider, new()
     {
         private static DTE dte;
-        protected static ICodeModelProvider codeModelProvider;// = new CodeDomCodeModelProvider();
+        protected static IMetadataProvider metadataProvider;// = new CodeDomMetadataProvider();
 
         protected TestBase()
         {
             if(dte == null) dte = Dte.GetInstance("Typewriter.sln");
-            if (codeModelProvider == null) codeModelProvider = new T();
+            if (metadataProvider == null) metadataProvider = new T();
             
             // Handle threading errors when calling into Visual Studio.
             MessageFilter.Register();
@@ -54,7 +54,8 @@ namespace Typewriter.Tests.TestInfrastructure
 
         protected File GetFile(string path)
         {
-            return codeModelProvider.GetFile(GetProjectItem(path));
+            var metadata = metadataProvider.GetFile(GetProjectItem(path));
+            return new FileImpl(metadata);
         }
 
         public void Dispose()

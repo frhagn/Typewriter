@@ -9,9 +9,9 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
-using Typewriter.CodeModel.CodeDom;
-using Typewriter.CodeModel.Providers;
 using Typewriter.Generation.Controllers;
+using Typewriter.Metadata.CodeDom;
+using Typewriter.Metadata.Providers;
 
 namespace Typewriter.VisualStudio
 {
@@ -29,7 +29,7 @@ namespace Typewriter.VisualStudio
         private SolutionMonitor solutionMonitor;
         private TemplateController templateController;
         private EventQueue eventQueue;
-        private ICodeModelProvider codeModelProvider;
+        private IMetadataProvider metadataProvider;
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -48,8 +48,8 @@ namespace Typewriter.VisualStudio
             
             this.eventQueue = new EventQueue(statusBar);
             this.solutionMonitor = new SolutionMonitor();
-            this.templateController = new TemplateController(dte, codeModelProvider, solutionMonitor, eventQueue);
-            var generationController = new GenerationController(dte, codeModelProvider, solutionMonitor, templateController, eventQueue);
+            this.templateController = new TemplateController(dte, metadataProvider, solutionMonitor, eventQueue);
+            var generationController = new GenerationController(dte, metadataProvider, solutionMonitor, templateController, eventQueue);
         }
         
         private void GetDte()
@@ -75,17 +75,17 @@ namespace Typewriter.VisualStudio
             //try
             //{
             //    var assemblyLocation = Path.GetDirectoryName(typeof(GenerationController).Assembly.Location);
-            //    var assembly = Assembly.LoadFrom(Path.Combine(assemblyLocation, "Resources", "Typewriter.CodeModel.Roslyn.dll"));
-            //    var type = assembly.GetType("Typewriter.CodeModel.Workspace.WorkspaceProvider");
-            //    var provider = Activator.CreateInstance(type) as ICodeModelProvider;
+            //    var assembly = Assembly.LoadFrom(Path.Combine(assemblyLocation, "Resources", "Typewriter.Metadata.Roslyn.dll"));
+            //    var type = assembly.GetType("Typewriter.Metadata.Roslyn.RoslynMetadataProvider");
+            //    var provider = Activator.CreateInstance(type) as IMetadataProvider;
 
-            //    Log.Debug("Using Workspace");
-            //    this.codeModelProvider = provider;
+            //    Log.Debug("Using Roslyn");
+            //    this.metadataProvider = provider;
             //}
             //catch
             {
                 Log.Debug("Using CodeDom");
-                this.codeModelProvider = new CodeDomCodeModelProvider();
+                this.metadataProvider = new CodeDomMetadataProvider();
             }
         }
 
