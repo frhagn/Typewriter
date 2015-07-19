@@ -139,6 +139,8 @@ namespace Typewriter.CodeModel.CodeDom
         {
             if (fullName.StartsWith("System.Collections.") == false) return false;
 
+            fullName = fullName.Split('<')[0];
+
             if (fullName.Contains("Comparer")) return false;
             if (fullName.Contains("Enumerator")) return false;
             if (fullName.Contains("Provider")) return false;
