@@ -55,6 +55,14 @@ namespace Typewriter.CodeModel
         /// </summary>
         [Property("type Type", "The type of the $context.")]
         public abstract Type Type { get; }
+
+        /// <summary>
+        /// Converts the current instance to string.
+        /// </summary>
+        public static implicit operator string (Method instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>

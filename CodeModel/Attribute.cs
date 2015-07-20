@@ -31,6 +31,14 @@ namespace Typewriter.CodeModel
         /// </summary>
         [Property("string Value", "The value of the $context as string.")]
         public abstract string Value { get; }
+
+        /// <summary>
+        /// Converts the current instance to string.
+        /// </summary>
+        public static implicit operator string (Attribute instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>

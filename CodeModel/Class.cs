@@ -109,6 +109,14 @@ namespace Typewriter.CodeModel
         /// </summary>
         [Property("collection NestedInterfaces", "All interfaces defined in the $context.")]
         public abstract InterfaceCollection NestedInterfaces { get; }
+
+        /// <summary>
+        /// Converts the current instance to string.
+        /// </summary>
+        public static implicit operator string (Class instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>

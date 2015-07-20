@@ -8,6 +8,13 @@ namespace Typewriter.CodeModel
     [Context("Parameter", "Parameters")]
     public abstract class Parameter : Field
     {
+        /// <summary>
+        /// Converts the current instance to string.
+        /// </summary>
+        public static implicit operator string (Parameter instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>

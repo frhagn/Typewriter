@@ -29,6 +29,11 @@
             The value of the attribute as string.
             </summary>
         </member>
+        <member name="M:Typewriter.CodeModel.Attribute.op_Implicit(Typewriter.CodeModel.Attribute)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.AttributeCollection">
             <summary>
             Represents a collection of attributes.
@@ -169,6 +174,11 @@
             All interfaces defined in the class.
             </summary>
         </member>
+        <member name="M:Typewriter.CodeModel.Class.op_Implicit(Typewriter.CodeModel.Class)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.ClassCollection">
             <summary>
             Represents a collection of classes.
@@ -177,6 +187,11 @@
         <member name="T:Typewriter.CodeModel.Constant">
             <summary>
             Represents a constant.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Constant.op_Implicit(Typewriter.CodeModel.Constant)~System.String">
+            <summary>
+            Converts the current instance to string.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.ConstantCollection">
@@ -309,6 +324,11 @@
             The type of the field
             </summary>
         </member>
+        <member name="M:Typewriter.CodeModel.Field.op_Implicit(Typewriter.CodeModel.Field)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.FieldCollection">
             <summary>
             Represents a collection of fields.
@@ -404,6 +424,11 @@
             The containing class of the interface if it is nested.
             </summary>
         </member>
+        <member name="M:Typewriter.CodeModel.Interface.op_Implicit(Typewriter.CodeModel.Interface)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.InterfaceCollection">
             <summary>
             Represents a collection of interfaces.
@@ -494,6 +519,11 @@
             The type of the method.
             </summary>
         </member>
+        <member name="M:Typewriter.CodeModel.Method.op_Implicit(Typewriter.CodeModel.Method)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.MethodCollection">
             <summary>
             Represents a collection of methods.
@@ -502,6 +532,11 @@
         <member name="T:Typewriter.CodeModel.Parameter">
             <summary>
             Represents a parameter.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Parameter.op_Implicit(Typewriter.CodeModel.Parameter)~System.String">
+            <summary>
+            Converts the current instance to string.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.ParameterCollection">
@@ -522,6 +557,11 @@
         <member name="P:Typewriter.CodeModel.Property.HasSetter">
             <summary>
             Determines if the property has a setter.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Property.op_Implicit(Typewriter.CodeModel.Property)~System.String">
+            <summary>
+            Converts the current instance to string.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.PropertyCollection">

@@ -8,6 +8,13 @@ namespace Typewriter.CodeModel
     [Context("Constant", "Constants")]
     public abstract class Constant : Field
     {
+        /// <summary>
+        /// Converts the current instance to string.
+        /// </summary>
+        public static implicit operator string (Constant instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>

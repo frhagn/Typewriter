@@ -19,6 +19,14 @@ namespace Typewriter.CodeModel
         /// </summary>
         [Property("bool HasSetter", "Determines if the $context has a setter")]
         public abstract bool HasSetter { get; }
+
+        /// <summary>
+        /// Converts the current instance to string.
+        /// </summary>
+        public static implicit operator string (Property instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>

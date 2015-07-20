@@ -73,6 +73,14 @@ namespace Typewriter.CodeModel
         /// </summary>
         [Property("class ContainingClass", "The containing class of the $context if it is nested.")]
         public abstract Class ContainingClass { get; }
+
+        /// <summary>
+        /// Converts the current instance to string.
+        /// </summary>
+        public static implicit operator string (Interface instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>
