@@ -11,16 +11,21 @@ namespace Typewriter.CodeModel.Implementation
             this.metadata = metadata;
         }
 
-        public string Name => metadata.Name;
-        public string FullName => metadata.FullName;
+        public override string Name => metadata.Name;
+        public override string FullName => metadata.FullName;
 
         private ClassCollection classes;
-        public ClassCollection Classes => classes ?? (classes = ClassImpl.FromMetadata(metadata.Classes, this));
+        public override ClassCollection Classes => classes ?? (classes = ClassImpl.FromMetadata(metadata.Classes, this));
 
         private EnumCollection enums;
-        public EnumCollection Enums => enums ?? (enums = EnumImpl.FromMetadata(metadata.Enums, this));
+        public override EnumCollection Enums => enums ?? (enums = EnumImpl.FromMetadata(metadata.Enums, this));
 
         private InterfaceCollection interfaces;
-        public InterfaceCollection Interfaces => interfaces ?? (interfaces = InterfaceImpl.FromMetadata(metadata.Interfaces, this));
+        public override InterfaceCollection Interfaces => interfaces ?? (interfaces = InterfaceImpl.FromMetadata(metadata.Interfaces, this));
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

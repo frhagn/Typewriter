@@ -1,5 +1,4 @@
 using EnvDTE;
-using Typewriter.Metadata.Interfaces;
 
 namespace Typewriter.Metadata.CodeDom
 {

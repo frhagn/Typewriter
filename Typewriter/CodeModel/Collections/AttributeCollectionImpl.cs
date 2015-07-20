@@ -2,14 +2,16 @@ using System.Collections.Generic;
 
 namespace Typewriter.CodeModel.Collections
 {
-    public class AttributeCollectionImpl : List<Attribute>, AttributeCollection
+    public class AttributeCollectionImpl : ItemCollectionImpl<Attribute>, AttributeCollection
     {
-        public AttributeCollectionImpl()
+        public AttributeCollectionImpl(IEnumerable<Attribute> values) : base(values)
         {
         }
 
-        public AttributeCollectionImpl(IEnumerable<Attribute> values) : base(values)
+        protected override IEnumerable<string> GetItemFilter(Attribute item)
         {
+            yield return item.Name;
+            yield return item.FullName;
         }
     }
 }

@@ -23,11 +23,11 @@ namespace Typewriter.Metadata.CodeDom
 
         public virtual string Name => CodeType.Name;
         public virtual string FullName => CodeType.FullName;
-        public virtual string Namespace => CodeType.Namespace.FullName;
+        public virtual string Namespace => GetNamespace();
         
         public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 || IsNullable;
         public bool IsNullable => FullName.StartsWith("System.Nullable<") || FullName.EndsWith("?");
-        public bool IsEnum => CodeType.Kind == vsCMElement.vsCMElementEnum;
+        public bool IsEnum => CodeType.Kind == vsCMElement.vsCMElementEnum || (IsNullable && GenericTypeArguments.First().IsEnum);
         public bool IsEnumerable => FullName != "System.String" && (FullName == "System.Array" || IsCollection(FullName));
 
         public IClassMetadata BaseClass => CodeDomClassMetadata.FromCodeElements(CodeType.Bases, file).FirstOrDefault();
@@ -42,13 +42,19 @@ namespace Typewriter.Metadata.CodeDom
         public IEnumerable<IEnumMetadata> NestedEnums => CodeDomEnumMetadata.FromCodeElements(CodeType.Members, file);
         public IEnumerable<IInterfaceMetadata> NestedInterfaces => CodeDomInterfaceMetadata.FromCodeElements(CodeType.Members, file);
         public IEnumerable<ITypeMetadata> GenericTypeArguments => LoadGenericTypeArguments();
-        
+
+        private string GetNamespace()
+        {
+            var parent = CodeType.Parent as CodeClass2;
+            return parent != null ? parent.FullName : CodeType.Namespace.FullName;
+        }
+
         private IEnumerable<ITypeMetadata> LoadGenericTypeArguments()
         {
             if (IsGeneric == false) return new ITypeMetadata[0];
             if (FullName.EndsWith("?")) return new[] { new LazyCodeDomTypeMetadata(FullName.TrimEnd('?'), file) };
 
-            return GenericTypeMetadataInfo.ExtractGenericTypeNames(FullName).Select(fullName =>
+            return GenericTypeMetadata.ExtractGenericTypeNames(FullName).Select(fullName =>
             {
                 if (fullName.EndsWith("[]"))
                     fullName = $"System.Collections.Generic.ICollection<{fullName.TrimEnd('[', ']')}>";
@@ -91,7 +97,7 @@ namespace Typewriter.Metadata.CodeDom
             var isGenericTypeArgument = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefOther && element.Type.AsFullName.Split('.').Length == 1;
             if (isGenericTypeArgument)
             {
-                return new GenericTypeMetadataInfo(element.Type.AsFullName, file);
+                return new GenericTypeMetadata(element.Type.AsFullName, file);
             }
 
             var isArray = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray;

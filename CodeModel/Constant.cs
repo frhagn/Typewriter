@@ -6,7 +6,7 @@ namespace Typewriter.CodeModel
     /// Represents a constant.
     /// </summary>
     [Context("Constant", "Constants")]
-    public interface Constant : Field
+    public abstract class Constant : Field
     {
     }
 

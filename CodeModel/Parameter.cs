@@ -6,7 +6,7 @@ namespace Typewriter.CodeModel
     /// Represents a parameter.
     /// </summary>
     [Context("Parameter", "Parameters")]
-    public interface Parameter : Field
+    public abstract class Parameter : Field
     {
     }
 

@@ -371,7 +371,7 @@ namespace Typewriter.TemplateEditor.Lexing
             if (identifier.IsBoolean && next == '[')
                 return identifier;
 
-            if (identifier.IsCollection && (next == '[' || next == '('))
+            if (identifier.IsCollection && (identifier.RequireTemplate == false || next == '[' || next == '('))
                 return identifier;
 
             return null;

@@ -209,10 +209,12 @@
     <Compile Include="CodeModel\Collections\EnumValueCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\FieldCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\InterfaceCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ItemCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\MethodCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\ParameterCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\PropertyCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\TypeCollectionImpl.cs" />
+    <Compile Include="CodeModel\Helpers.cs" />
     <Compile Include="CodeModel\Implementation\AttributeImpl.cs" />
     <Compile Include="CodeModel\Implementation\ClassImpl.cs" />
     <Compile Include="CodeModel\Implementation\ConstantImpl.cs" />

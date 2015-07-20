@@ -19,14 +19,17 @@ namespace Typewriter.Metadata.CodeDom
 
         public string Name => codeEnum.Name;
         public string FullName => codeEnum.FullName;
-        public string Namespace => codeEnum.Namespace.FullName;
+        public string Namespace => GetNamespace();
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeEnum.Attributes, file);
         public IEnumerable<IEnumValueMetadata> Values => CodeDomEnumValueMetadata.FromCodeElements(codeEnum.Members, file);
         public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeEnum.Parent as CodeClass2, file);
 
-        //private bool? isFlags;
-        //public bool IsFlags => isFlags ?? (isFlags = Attributes.Any(a => a.FullName == "System.FlagsAttribute")).Value;
-        
+        private string GetNamespace()
+        {
+            var parent = codeEnum.Parent as CodeClass2;
+            return parent != null ? parent.FullName : codeEnum.Namespace.FullName;
+        }
+
         internal static IEnumerable<IEnumMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)
         {
             return codeElements.OfType<CodeEnum>().Where(e => e.Access == vsCMAccess.vsCMAccessPublic).Select(e => new CodeDomEnumMetadata(e, file));

@@ -1,15 +1,13 @@
 ﻿${
-	string Verb(Method m) 
-	{
-		var attribute = m.Attributes.FirstOrDefault(a => a.Name.Contains("Http"));
-		if(attribute == null) return string.Empty;
-		return attribute.Name
-			.Replace("Http", "")
-			.ToLower();
-	}
+    string Verb(Method m) 
+    {
+        var attribute = m.Attributes.FirstOrDefault(a => a.Name.Contains("Http"));
+        if(attribute == null) return string.Empty;
+        return attribute.Name.Replace("Http", "").ToLower();
+    }
 
-	string AdjustedRoute(Method method)
-	{
+    string AdjustedRoute(Method method)
+    {
         var route = Extensions.Route(method);
         var queryString = string.Join(" + \"&", method.Parameters.Where(p => p.Attributes.Any(a => a.Name == "FromBody") == false && route.Contains(p.Name) == false)
             .Select(p => string.Format("{0}=\" + {0}", p.Name)));
@@ -21,9 +19,9 @@
         return routeExpression + (string.IsNullOrEmpty(queryString) ? "" : " + \"?" + queryString);
     }
 
-	string AdjustedParameters(Method m)
-	{
-		var parameters = m.Parameters.Select(p => new KeyValuePair<string, string>(p.Name, p.Type.Type())).ToList();
+    string AdjustedParameters(Method m)
+    {
+        var parameters = m.Parameters.Select(p => new KeyValuePair<string, string>(p.Name, p.Type)).ToList();
         var matches = new System.Text.RegularExpressions.Regex(@"\{(\w+\:?\w+)\}").Matches(Extensions.Route(m));
 
         foreach (System.Text.RegularExpressions.Match match in matches)
@@ -36,10 +34,10 @@
             parameters.Add(new KeyValuePair<string, string>(values[0], type));
         }
         return string.Join(", ", parameters.Select(p => string.Format("{0}: {1}", p.Key, p.Value)));
-	}
+    }
 }
 module App {$Classes(*Controller)[
-	export class $Name {$Methods[
-		public $name = ($AdjustedParameters) : Promise<$Type> => ajax("$Verb", $AdjustedRoute, { $Parameters([FromBody])[$name: $name][, ] });]
-	}]
+    export class $Name {$Methods[
+        public $name = ($AdjustedParameters) : Promise<$Type> => ajax("$Verb", $AdjustedRoute, { $Parameters([FromBody])[$name: $name][, ] });]
+    }]
 }

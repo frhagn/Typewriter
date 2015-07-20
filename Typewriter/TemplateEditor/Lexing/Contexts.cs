@@ -53,6 +53,7 @@ namespace Typewriter.TemplateEditor.Lexing
                         var ctxn = ctx.GetCustomAttribute<ContextAttribute>().Name;
                         identifier.Context = ctxn;
                         identifier.IsCollection = true;
+                        identifier.RequireTemplate = p.GetCustomAttribute<PropertyAttribute>().RequireTemplate;
                     }
                     
                     if (p.PropertyType == typeof(bool))
@@ -88,6 +89,7 @@ namespace Typewriter.TemplateEditor.Lexing
                         var ctxn = ctx.GetCustomAttribute<ContextAttribute>().Name;
                         identifier.Context = ctxn;
                         identifier.IsCollection = true;
+                        identifier.RequireTemplate = m.GetCustomAttribute<PropertyAttribute>().RequireTemplate;
                     }
 
                     if (m.ReturnType == typeof(bool))

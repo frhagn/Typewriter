@@ -52,6 +52,7 @@
     <Compile Include="Interfaces\IFileMetadata.cs" />
     <Compile Include="Interfaces\IInterfaceMetadata.cs" />
     <Compile Include="Interfaces\IMethodMetadata.cs" />
+    <Compile Include="Interfaces\INamedItem.cs" />
     <Compile Include="Interfaces\IParameterMetadata.cs" />
     <Compile Include="Interfaces\IPropertyMetadata.cs" />
     <Compile Include="Interfaces\ITypeMetadata.cs" />

@@ -6,19 +6,19 @@ namespace Typewriter.CodeModel
     /// Represents a property.
     /// </summary>
     [Context("Property", "Properties")]
-    public interface Property : Field
+    public abstract class Property : Field
     {
         /// <summary>
         /// Determines if the property has a getter.
         /// </summary>
         [Property("bool HasGetter", "Determines if the $context has a getter")]
-        bool HasGetter { get; }
+        public abstract bool HasGetter { get; }
 
         /// <summary>
         /// Determines if the property has a setter.
         /// </summary>
         [Property("bool HasSetter", "Determines if the $context has a setter")]
-        bool HasSetter { get; }
+        public abstract bool HasSetter { get; }
     }
 
     /// <summary>

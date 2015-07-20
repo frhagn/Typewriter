@@ -15,6 +15,7 @@ namespace Typewriter.TemplateEditor.Controllers
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             return buffer.Properties.GetOrCreateSingletonProperty(() => new OutliningController(buffer) as ITagger<T>);
+
         }
     }
 
@@ -25,6 +26,9 @@ namespace Typewriter.TemplateEditor.Controllers
         public OutliningController(ITextBuffer buffer)
         {
             this.buffer = buffer;
+            
+            // ReSharper disable once UnusedVariable (used to suppress build warning)
+            var temp = TagsChanged;
         }
 
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection normalizedSnapshotSpans)

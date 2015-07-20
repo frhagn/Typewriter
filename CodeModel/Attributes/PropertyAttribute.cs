@@ -18,12 +18,18 @@ namespace Typewriter.CodeModel.Attributes
         public string Description { get; private set; }
 
         /// <summary>
+        /// Determines if the property requires a templat to be recognized by the template.
+        /// </summary>
+        public bool RequireTemplate { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the PropertyAttribute.
         /// </summary>
-        public PropertyAttribute(string name, string description)
+        public PropertyAttribute(string name, string description, bool requireTemplate = true)
         {
             Name = name;
             Description = description;
+            RequireTemplate = requireTemplate;
         }
     }
 }

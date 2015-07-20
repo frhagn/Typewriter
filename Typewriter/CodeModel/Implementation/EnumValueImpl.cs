@@ -2,27 +2,34 @@ using System.Collections.Generic;
 using System.Linq;
 using Typewriter.CodeModel.Collections;
 using Typewriter.Metadata.Interfaces;
+using static Typewriter.CodeModel.Helpers;
 
 namespace Typewriter.CodeModel.Implementation
 {
     public sealed class EnumValueImpl : EnumValue
     {
         private readonly IEnumValueMetadata metadata;
-        private readonly Item parent;
 
         private EnumValueImpl(IEnumValueMetadata metadata, Item parent)
         {
             this.metadata = metadata;
-            this.parent = parent;
+            this.Parent = parent;
         }
 
-        public Item Parent => parent;
-        public string Name => metadata.Name;
-        public string FullName => metadata.FullName;
-        public int Value => metadata.Value;
+        public override Item Parent { get; }
+
+        public override string name => CamelCase(metadata.Name);
+        public override string Name => metadata.Name;
+        public override string FullName => metadata.FullName;
+        public override int Value => metadata.Value;
 
         private AttributeCollection attributes;
-        public AttributeCollection Attributes => attributes ?? (attributes = AttributeImpl.FromMetadata(metadata.Attributes, this));
+        public override AttributeCollection Attributes => attributes ?? (attributes = AttributeImpl.FromMetadata(metadata.Attributes, this));
+
+        public override string ToString()
+        {
+            return Name;
+        }
 
         public static EnumValueCollection FromMetadata(IEnumerable<IEnumValueMetadata> metadata, Item parent)
         {

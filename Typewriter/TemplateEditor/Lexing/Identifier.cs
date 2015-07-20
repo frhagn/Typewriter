@@ -16,6 +16,7 @@ namespace Typewriter.TemplateEditor.Lexing
         public bool IsBoolean { get; set; }
         public bool HasContext { get; set; }
         public bool IsParent { get; set; }
+        public bool RequireTemplate { get; set; }
         public StandardGlyphGroup Glyph { get; set; } = StandardGlyphGroup.GlyphGroupProperty;
 
         public static Identifier FromSymbol(ISymbol symbol)
@@ -50,6 +51,8 @@ namespace Typewriter.TemplateEditor.Lexing
                         summary = symbol.ToDisplayString();
                     }
                 }
+
+                summary = summary.Replace("__Typewriter.__Code.", string.Empty);
 
                 string documentation = symbol.GetDocumentationCommentXml();
                 if (!string.IsNullOrEmpty(documentation))

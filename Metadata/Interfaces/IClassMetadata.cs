@@ -2,10 +2,8 @@
 
 namespace Typewriter.Metadata.Interfaces
 {
-    public interface IClassMetadata
+    public interface IClassMetadata : INamedItem
     {
-        string Name { get; }
-        string FullName { get; }
         bool IsGeneric { get; }
         string Namespace { get; }
         IEnumerable<IAttributeMetadata> Attributes { get; }

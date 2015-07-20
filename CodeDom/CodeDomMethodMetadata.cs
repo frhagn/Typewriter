@@ -21,7 +21,7 @@ namespace Typewriter.Metadata.CodeDom
         public string FullName => codeFunction.FullName;
         public bool IsGeneric => codeFunction.IsGeneric;
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeFunction.Attributes, file);
-        public IEnumerable<ITypeMetadata> GenericTypeArguments => GenericTypeMetadataInfo.FromFullName(GetFullMethodName(), file);
+        public IEnumerable<ITypeMetadata> GenericTypeArguments => GenericTypeMetadata.FromFullName(GetFullMethodName(), file);
         public IEnumerable<IParameterMetadata> Parameters => CodeDomParameterMetadata.FromCodeElements(codeFunction.Parameters, file);
         public ITypeMetadata Type => CodeDomTypeMetadata.FromCodeElement(codeFunction, file);
 

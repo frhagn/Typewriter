@@ -80,7 +80,8 @@ namespace Typewriter.Tests.CodeModel
             var classInfo = fileInfo.Classes.First();
             var methodInfo = classInfo.Methods.First(p => p.Name == "Method");
             
-            methodInfo.Type.Name.ShouldEqual("Void");
+            methodInfo.Type.Name.ShouldEqual("void");
+            methodInfo.Type.OriginalName.ShouldEqual("Void");
             methodInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
             methodInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
             methodInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");

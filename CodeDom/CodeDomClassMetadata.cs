@@ -19,20 +19,26 @@ namespace Typewriter.Metadata.CodeDom
 
         public string Name => codeClass.Name;
         public string FullName => codeClass.FullName;
-        public string Namespace => codeClass.Namespace.FullName;
+        public string Namespace => GetNamespace();
         public bool IsGeneric => codeClass.IsGeneric;
         public IClassMetadata BaseClass => CodeDomClassMetadata.FromCodeElements(codeClass.Bases, file).FirstOrDefault();
         public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeClass.Parent as CodeClass2, file);
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeClass.Attributes, file);
         public IEnumerable<IConstantMetadata> Constants => CodeDomConstantMetadata.FromCodeElements(codeClass.Children, file);
         public IEnumerable<IFieldMetadata> Fields => CodeDomFieldMetadata.FromCodeElements(codeClass.Children, file);
-        public IEnumerable<ITypeMetadata> GenericTypeArguments => GenericTypeMetadataInfo.FromFullName(codeClass.FullName, file);
+        public IEnumerable<ITypeMetadata> GenericTypeArguments => GenericTypeMetadata.FromFullName(codeClass.FullName, file);
         public IEnumerable<IInterfaceMetadata> Interfaces => CodeDomInterfaceMetadata.FromCodeElements(codeClass.ImplementedInterfaces, file);
         public IEnumerable<IMethodMetadata> Methods => CodeDomMethodMetadata.FromCodeElements(codeClass.Children, file);
         public IEnumerable<IPropertyMetadata> Properties => CodeDomPropertyMetadata.FromCodeElements(codeClass.Children, file);
         public IEnumerable<IClassMetadata> NestedClasses => CodeDomClassMetadata.FromCodeElements(codeClass.Members, file);
         public IEnumerable<IEnumMetadata> NestedEnums => CodeDomEnumMetadata.FromCodeElements(codeClass.Members, file);
         public IEnumerable<IInterfaceMetadata> NestedInterfaces => CodeDomInterfaceMetadata.FromCodeElements(codeClass.Members, file);
+
+        private string GetNamespace()
+        {
+            var parent = codeClass.Parent as CodeClass2;
+            return parent != null ? parent.FullName : codeClass.Namespace.FullName;
+        }
 
         internal static IEnumerable<IClassMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)
         {

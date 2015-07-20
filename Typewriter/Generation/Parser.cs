@@ -64,17 +64,33 @@ namespace Typewriter.Generation
                         var block = ParseBlock(stream, '[', ']');
                         var separator = ParseBlock(stream, '[', ']');
 
-                        IEnumerable<CodeItem> items;
-                        if (filter != null && filter.StartsWith("$"))
+                        if (filter == null && block == null && separator == null)
                         {
-                            var predicate = filter.Remove(0, 1);
-                            if (customExtensions != null)
+                            var stringValue = value.ToString();
+
+                            if (stringValue != value.GetType().FullName)
+                                output += stringValue;
+                            else
+                                output += "$" + identifier;
+                        }
+                        else
+                        {
+                            IEnumerable<CodeItem> items;
+                            if (filter != null && filter.StartsWith("$"))
                             {
-                                var c = customExtensions.GetMethod(predicate);
-                                if (c != null)
+                                var predicate = filter.Remove(0, 1);
+                                if (customExtensions != null)
                                 {
-                                    items = collection.Where(x => (bool)c.Invoke(null, new object[] { x })).ToList();
-                                    matchFound = matchFound || items.Any();
+                                    var c = customExtensions.GetMethod(predicate);
+                                    if (c != null)
+                                    {
+                                        items = collection.Where(x => (bool)c.Invoke(null, new object[] { x })).ToList();
+                                        matchFound = matchFound || items.Any();
+                                    }
+                                    else
+                                    {
+                                        items = new CodeItem[0];
+                                    }
                                 }
                                 else
                                 {
@@ -83,14 +99,10 @@ namespace Typewriter.Generation
                             }
                             else
                             {
-                                items = new CodeItem[0];
+                                items = ItemFilter.Apply(collection, filter, ref matchFound);
                             }
+                            output += string.Join(ParseTemplate(separator, context), items.Select(item => ParseTemplate(block, item)));
                         }
-                        else
-                        {
-                            items = ItemFilter.Apply(collection, filter, ref matchFound);
-                        }
-                        output += string.Join(ParseTemplate(separator, context), items.Select(item => ParseTemplate(block, item)));
                     }
                     else if (value is bool)
                     {
@@ -110,11 +122,11 @@ namespace Typewriter.Generation
                             }
                             else
                             {
-                                var extension = standardExtensions.GetMethod(identifier, new[] { value.GetType() });
-                                if (extension != null && extension.ReturnType == typeof (string))
-                                {
-                                    value = extension.Invoke(null, new[] { value });
-                                }
+                                //var extension = standardExtensions.GetMethod(identifier, new[] { value.GetType() });
+                                //if (extension != null && extension.ReturnType == typeof (string))
+                                //{
+                                //    value = extension.Invoke(null, new[] { value });
+                                //}
 
                                 output += value.ToString();
                             }

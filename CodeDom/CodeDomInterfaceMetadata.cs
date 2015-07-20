@@ -19,15 +19,21 @@ namespace Typewriter.Metadata.CodeDom
 
         public string Name => codeInterface.Name;
         public string FullName => codeInterface.FullName;
-        public string Namespace => codeInterface.Namespace.FullName;
+        public string Namespace => GetNamespace();
         public bool IsGeneric => codeInterface.IsGeneric;
 
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeInterface.Attributes, file);
-        public IEnumerable<ITypeMetadata> GenericTypeArguments => GenericTypeMetadataInfo.FromFullName(codeInterface.FullName, file);
+        public IEnumerable<ITypeMetadata> GenericTypeArguments => GenericTypeMetadata.FromFullName(codeInterface.FullName, file);
         public IEnumerable<IInterfaceMetadata> Interfaces => CodeDomInterfaceMetadata.FromCodeElements(codeInterface.Bases, file);
         public IEnumerable<IMethodMetadata> Methods => CodeDomMethodMetadata.FromCodeElements(codeInterface.Children, file);
         public IEnumerable<IPropertyMetadata> Properties => CodeDomPropertyMetadata.FromCodeElements(codeInterface.Children, file);
         public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeInterface.Parent as CodeClass2, file);
+
+        private string GetNamespace()
+        {
+            var parent = codeInterface.Parent as CodeClass2;
+            return parent != null ? parent.FullName : codeInterface.Namespace.FullName;
+        }
 
         internal static IEnumerable<IInterfaceMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)
         {

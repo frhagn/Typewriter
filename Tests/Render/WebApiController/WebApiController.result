@@ -1,20 +1,20 @@
 ﻿
 module App {    
     export class WebApiController {
-		
-		public read = () : Promise<ComplexClassModel[]> => {
+        
+        public read = () : Promise<ComplexClassModel[]> => {
             var verb = 'get';
             var route = '';
         };
-		public create = (user: ComplexClassModel) : Promise<ComplexClassModel> => {
+        public create = (user: ComplexClassModel) : Promise<ComplexClassModel> => {
             var verb = 'post';
             var route = '';
         };
-		public update = (user: ComplexClassModel, id: number) : Promise<ComplexClassModel> => {
+        public update = (user: ComplexClassModel, id: number) : Promise<ComplexClassModel> => {
             var verb = 'put';
             var route = '';
         };
-		public delete = (id: number) : Promise<HttpStatusCode> => {
+        public delete = (id: number) : Promise<HttpStatusCode> => {
             var verb = 'delete';
             var route = '';
         };

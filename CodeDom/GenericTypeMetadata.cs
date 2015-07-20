@@ -6,12 +6,12 @@ using Typewriter.Metadata.Interfaces;
 
 namespace Typewriter.Metadata.CodeDom
 {
-    internal class GenericTypeMetadataInfo : ITypeMetadata
+    internal class GenericTypeMetadata : ITypeMetadata
     {
         private readonly string fullName;
         private readonly CodeDomFileMetadata file;
 
-        public GenericTypeMetadataInfo(string fullName, CodeDomFileMetadata file)
+        public GenericTypeMetadata(string fullName, CodeDomFileMetadata file)
         {
             this.fullName = fullName;
             this.file = file;
@@ -40,7 +40,7 @@ namespace Typewriter.Metadata.CodeDom
         
         internal static IEnumerable<ITypeMetadata> FromFullName(string fullName, CodeDomFileMetadata file)
         {
-            return ExtractGenericTypeNames(fullName).Select(n => new GenericTypeMetadataInfo(n, file));
+            return ExtractGenericTypeNames(fullName).Select(n => new GenericTypeMetadata(n.Trim(), file));
         }
 
         internal static IEnumerable<string> ExtractGenericTypeNames(string name)

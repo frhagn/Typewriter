@@ -11,6 +11,9 @@ namespace Typewriter.Generation
         {
             if (string.IsNullOrWhiteSpace(filter)) return items;
 
+            var filterable = items as IFilterable;
+            if (filterable == null) return items;
+
             Func<CodeItem, IEnumerable<string>> selector;
 
             filter = filter.Trim();
@@ -18,34 +21,51 @@ namespace Typewriter.Generation
             if (filter.StartsWith("[") && filter.EndsWith("]"))
             {
                 filter = filter.Trim('[', ']', ' ');
-                selector = i => i.Attributes.SelectMany(a => new[] { a.Name, a.FullName });
+                selector = filterable.AttributeFilterSelector;
             }
             else if (filter.StartsWith(":"))
             {
                 filter = filter.Remove(0, 1).Trim();
-                selector = i =>
-                {
-                    var names = new List<string>();
-
-                    var classInfo = i as Class;
-                    if (classInfo?.BaseClass != null)
-                    {
-                        names.Add(classInfo.BaseClass.Name);
-                        names.Add(classInfo.BaseClass.FullName);
-                    }
-
-                    if (i.GetType().GetProperty("Interfaces") != null) // Todo: Fix hack
-                    {
-                        return names.Concat(((ICollection<CodeItem>)((dynamic)i).Interfaces).SelectMany(a => new[] { a.Name, a.FullName }));
-                    }
-
-                    return names;
-                };
+                selector = filterable.InheritanceFilterSelector;
             }
             else
             {
-                selector = i => new[] { i.Name, i.FullName };
+                selector = filterable.ItemFilterSelector;
             }
+
+            // Todo: Implement IFilterable
+            //if (filter.StartsWith("[") && filter.EndsWith("]"))
+            //{
+            //    filter = filter.Trim('[', ']', ' ');
+            //    selector = i => i.Attributes.SelectMany(a => new[] { a.Name, a.FullName });
+            //}
+            //else 
+            //if (filter.StartsWith(":"))
+            //{
+            //    filter = filter.Remove(0, 1).Trim();
+            //    selector = i =>
+            //    {
+            //        var names = new List<string>();
+
+            //        var classInfo = i as Class;
+            //        if (classInfo?.BaseClass != null)
+            //        {
+            //            names.Add(classInfo.BaseClass.Name);
+            //            names.Add(classInfo.BaseClass.FullName);
+            //        }
+
+            //        if (i.GetType().GetProperty("Interfaces") != null) // Todo: Fix hack
+            //        {
+            //            return names.Concat(((ICollection<CodeItem>)((dynamic)i).Interfaces).SelectMany(a => new[] { a.Name, a.FullName }));
+            //        }
+
+            //        return names;
+            //    };
+            //}
+            //else
+            //{
+            //    selector = i => new[] { i.Name, i.FullName };
+            //}
 
             var filtered = ApplyFilter(items, filter, selector);
 

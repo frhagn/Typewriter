@@ -157,7 +157,8 @@ namespace Typewriter.Tests.CodeModel
             genericInfo.Type.IsEnumerable.ShouldBeTrue();
             genericInfo.Type.IsGeneric.ShouldBeTrue();
 
-            genericInfo.Type.Name.ShouldEqual("IEnumerable");
+            genericInfo.Type.Name.ShouldEqual("T[]");
+            genericInfo.Type.OriginalName.ShouldEqual("IEnumerable");
             genericInfo.Type.FullName.ShouldEqual("System.Collections.Generic.IEnumerable<T>");
 
             genericInfo.Type.GenericTypeArguments.Count.ShouldEqual(1);
