@@ -4,9 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using EnvDTE;
+using Typewriter.CodeModel.Implementation;
+using Typewriter.Metadata.Providers;
 using Typewriter.VisualStudio;
 using VSLangProj;
-using FileInfo = Typewriter.CodeModel.CodeDom.FileInfo;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -15,15 +16,17 @@ namespace Typewriter.Generation.Controllers
         private static readonly object locker = new object();
 
         private readonly DTE dte;
+        private readonly IMetadataProvider metadataProvider;
         private readonly SolutionMonitor solutionMonitor;
         private readonly EventQueue eventQueue;
 
         private bool solutionOpen;
         private ICollection<Template> templates;
 
-        public TemplateController(DTE dte, SolutionMonitor solutionMonitor, EventQueue eventQueue)
+        public TemplateController(DTE dte, IMetadataProvider metadataProvider, SolutionMonitor solutionMonitor, EventQueue eventQueue)
         {
             this.dte = dte;
+            this.metadataProvider = metadataProvider;
             this.solutionMonitor = solutionMonitor;
             this.eventQueue = eventQueue;
 
@@ -93,7 +96,9 @@ namespace Typewriter.Generation.Controllers
                 var path = generationEvent.Paths[0];
                 Log.Debug("Render {0}", path);
 
-                var file = new FileInfo(dte.Solution.FindProjectItem(path));
+                var metadata = metadataProvider.GetFile(dte.Solution.FindProjectItem(path));
+                var file = new FileImpl(metadata);
+
                 var success = template.RenderFile(file, false);
 
                 if (success == false)
@@ -175,12 +180,6 @@ namespace Typewriter.Generation.Controllers
             }
         }
 
-        //private IEnumerable<ProjectItem> GetProjectItems(string extension)
-        //{
-        //    return dte.Solution.AllProjetcs().SelectMany(p => p.AllProjectItems())
-        //        .Where(i => i.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase));
-        //}
-
         private IEnumerable<ProjectItem> GetProjectItems()
         {
             var projects = dte.Solution.AllProjetcs().Select(p =>
@@ -195,8 +194,11 @@ namespace Typewriter.Generation.Controllers
                     return null;
                 }
             });
+
             var files = projects.Where(p => string.IsNullOrWhiteSpace(p) == false)
-                .SelectMany(p => new System.IO.FileInfo(p).Directory.GetFiles("*.tst", SearchOption.AllDirectories));
+                .SelectMany(p => new System.IO.FileInfo(p).Directory?.GetFiles("*.tst", SearchOption.AllDirectories))
+                .Where(f => f != null);
+
             return files.Select(a => dte.Solution.FindProjectItem(a.FullName));
         }
     }

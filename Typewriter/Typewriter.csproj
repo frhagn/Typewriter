@@ -24,6 +24,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -49,6 +50,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,7 +63,24 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.0.0\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.1.0.0\lib\net45\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.0.0\lib\net45\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.CoreUtility" />
     <Reference Include="Microsoft.VisualStudio.Editor" />
     <Reference Include="Microsoft.VisualStudio.Language.Intellisense" />
@@ -86,13 +106,42 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.12.0" />
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.33.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Composition.AttributedModel, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Composition.Convention, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Convention.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Composition.Hosting, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Hosting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Composition.Runtime, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Composition.TypedParts, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Reflection.Metadata, Version=1.0.21.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.1.0.21\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="VSLangProj" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -153,66 +202,50 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeModel\CodeDom\AttributeInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\ClassInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\EnumInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\EnumValueInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\GenericTypeInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\InterfaceInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\ConstantInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\FieldInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\ItemInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\FileInfo.cs" />
-    <Compile Include="CodeModel\Attributes\ContextAttribute.cs" />
-    <Compile Include="CodeModel\Attribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Class.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Constant.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Enum.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\EnumValue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Field.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\File.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Interface.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Item.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Method.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Parameter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Property.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Type.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeModel\Attributes\PropertyAttribute.cs" />
+    <Compile Include="CodeModel\Collections\AttributeCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ClassCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ConstantCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\EnumCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\EnumValueCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\FieldCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\InterfaceCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ItemCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\MethodCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ParameterCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\PropertyCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\TypeCollectionImpl.cs" />
+    <Compile Include="CodeModel\Helpers.cs" />
+    <Compile Include="CodeModel\Implementation\AttributeImpl.cs" />
+    <Compile Include="CodeModel\Implementation\ClassImpl.cs" />
+    <Compile Include="CodeModel\Implementation\ConstantImpl.cs" />
+    <Compile Include="CodeModel\Implementation\EnumImpl.cs" />
+    <Compile Include="CodeModel\Implementation\EnumValueImpl.cs" />
+    <Compile Include="CodeModel\Implementation\FieldImpl.cs" />
+    <Compile Include="CodeModel\Implementation\FileImpl.cs" />
+    <Compile Include="CodeModel\Implementation\InterfaceImpl.cs" />
+    <Compile Include="CodeModel\Implementation\MethodImpl.cs" />
+    <Compile Include="CodeModel\Implementation\ParameterImpl.cs" />
+    <Compile Include="CodeModel\Implementation\PropertyImpl.cs" />
+    <Compile Include="CodeModel\Implementation\TypeImpl.cs" />
     <Compile Include="Generation\Compiler.cs" />
     <Compile Include="Generation\Controllers\EventQueue.cs" />
-    <Compile Include="CodeModel\CodeDom\Iterator.cs" />
-    <Compile Include="CodeModel\CodeDom\MethodInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\ParameterInfo.cs" />
-    <Compile Include="CodeModel\CodeDom\PropertyInfo.cs" />
     <Compile Include="Generation\ItemFilter.cs" />
-    <Compile Include="Generation\TemplateParser.cs" />
+    <Compile Include="Generation\TemplateCodeParser.cs" />
+    <Compile Include="TemplateEditor\Controllers\FormattingController.cs" />
+    <Compile Include="TemplateEditor\Controllers\OutliningController.cs" />
     <Compile Include="TemplateEditor\Controllers\SignatureHelpController.cs" />
+    <Compile Include="TemplateEditor\Lexing\Contexts.cs" />
+    <Compile Include="TemplateEditor\Lexing\CodeLexer.cs" />
+    <Compile Include="TemplateEditor\Lexing\ContextSpan.cs" />
+    <Compile Include="TemplateEditor\Lexing\ContextSpans.cs" />
+    <Compile Include="TemplateEditor\Lexing\Identifiers.cs" />
+    <Compile Include="TemplateEditor\Lexing\TemplateLexer.cs" />
+    <Compile Include="TemplateEditor\Lexing\Roslyn\ShadowClass.cs" />
+    <Compile Include="TemplateEditor\Lexing\Roslyn\XmlDocumentationProvider.cs" />
+    <Compile Include="TemplateEditor\Lexing\Roslyn\ShadowWorkspace.cs" />
+    <Compile Include="TemplateEditor\Lexing\Roslyn\Snippet.cs" />
+    <Compile Include="TemplateEditor\Lexing\SemanticModel.cs" />
+    <Compile Include="TemplateEditor\Lexing\Tokens.cs" />
     <Compile Include="VisualStudio\ThemeInfo.cs" />
     <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\PropertyFormatDefinition.cs" />
@@ -223,14 +256,11 @@
     <Compile Include="TemplateEditor\Lexing\BraceStack.cs" />
     <Compile Include="TemplateEditor\Lexing\Context.cs" />
     <Compile Include="TemplateEditor\Lexing\Identifier.cs" />
-    <Compile Include="TemplateEditor\Lexing\Lexer.cs" />
     <Compile Include="TemplateEditor\Controllers\CompletionController.cs" />
     <Compile Include="TemplateEditor\Lexing\Stream.cs" />
     <Compile Include="TemplateEditor\Lexing\Token.cs" />
-    <Compile Include="Generation\Extensions.cs" />
     <Compile Include="Generation\Parser.cs" />
     <Compile Include="Generation\Template.cs" />
-    <Compile Include="CodeModel\CodeDom\TypeInfo.cs" />
     <Compile Include="Generation\Controllers\SolutionEvents.cs" />
     <Compile Include="Generation\Controllers\GenerationController.cs" />
     <Compile Include="VisualStudio\Log.cs" />
@@ -249,12 +279,21 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Project.ico" />
+    <Content Include="..\CodeModel\Typewriter.CodeModel.XML">
+      <Link>Resources\Typewriter.CodeModel.XML</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\Roslyn\bin\Debug\Typewriter.Metadata.Roslyn.dll">
+      <Link>Resources\Typewriter.Metadata.Roslyn.dll</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -277,12 +316,24 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeDom\Typewriter.Metadata.CodeDom.csproj">
+      <Project>{c822d1a9-4c43-4067-a01e-ea38f3138282}</Project>
+      <Name>Typewriter.Metadata.CodeDom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeModel\Typewriter.CodeModel.csproj">
+      <Project>{4ec6c920-d234-49f1-b17b-98a4de24ff87}</Project>
+      <Name>Typewriter.CodeModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ItemTemplates\ItemTemplates.csproj">
       <Project>{417568AF-7B73-4C93-9261-025D69AC89A5}</Project>
       <Name>ItemTemplates</Name>
       <VSIXSubPath>ItemTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\Metadata\Typewriter.Metadata.csproj">
+      <Project>{511e50cc-6073-43ee-9e8b-dd6f584c81a8}</Project>
+      <Name>Typewriter.Metadata</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -297,6 +348,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

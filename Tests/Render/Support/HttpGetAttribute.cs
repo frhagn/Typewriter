@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tests.Render.Support
+namespace Typewriter.Tests.Render.Support
 {
     public class HttpGetAttribute : Attribute
     {

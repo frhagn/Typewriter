@@ -1,11 +1,14 @@
 ﻿${
-	var verb = (Method m) => m.Attributes.FirstOrDefault(a => a.Name.Contains("Http")).Name.Replace("Http", "").ToLower();
+    string Verb(Method m)
+    {
+        return m.Attributes.FirstOrDefault(a => a.Name.Contains("Http")).Name.Replace("Http", "").ToLower();
+    }
 }
 module App {$Classes(*WebApiController)[    
-    export class $Name$IsGeneric[<T>][] {
-		$Methods[
-		public $name = ($Parameters[$name: $Type][, ]) : Promise<$Type[$GenericTypeArguments[$GenericTypeArguments[$Type]]]> => {
-            var verb = '$verb';
+    export class $Name$GenericTypeArguments {
+        $Methods[
+        public $name = ($Parameters[$name: $Type][, ]) : Promise<$Type[$GenericTypeArguments[$GenericTypeArguments[$Name]]]> => {
+            var verb = '$Verb';
             var route = '$Route';
         };]
     }]

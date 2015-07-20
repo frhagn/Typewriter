@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
@@ -12,6 +13,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
+using Typewriter.VisualStudio;
 using VSCommand = Microsoft.VisualStudio.VSConstants.VSStd2KCmdID;
 
 namespace Typewriter.TemplateEditor.Controllers
@@ -49,14 +51,52 @@ namespace Typewriter.TemplateEditor.Controllers
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
-            var currentPoint = (session.TextView.Caret.Position.BufferPosition) - 1;
-            var navigator = sourceProvider.NavigatorService.GetTextStructureNavigator(buffer);
-            var extent = navigator.GetExtentOfWord(currentPoint);
-            var token = currentPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
+            var point = session.TextView.Caret.Position.BufferPosition;
+            var line = point.GetContainingLine();
 
-            var completions = Editor.Instance.GetCompletions(buffer, extent.Span, glyphService);
+            if (line == null) return;
 
-            completionSets.Add(new CompletionSet("Tokens", "Tokens", token, completions, null));
+            var text = line.GetText();
+            var index = point - line.Start;
+
+            var start = index;
+
+            if (index > 0)
+            {
+                for (var i = index; i > 0; i--)
+                {
+                    var current = text[i - 1];
+                    if (current == '$')
+                    {
+                        start = i - 1;
+                        break;
+                    }
+
+                    if (current != '_' && char.IsLetterOrDigit(current) == false) break;
+
+                    start = i - 1;
+                }
+            }
+
+            var span = new SnapshotSpan(point.Snapshot, start + line.Start, point - (start + line.Start));
+            //Log.Debug("[" + span.GetText() + "]");
+
+            var trackingSpan = buffer.CurrentSnapshot.CreateTrackingSpan(span.Start, span.Length, SpanTrackingMode.EdgeInclusive);
+            var completions = Editor.Instance.GetCompletions(buffer, span, glyphService);
+
+            completionSets.Add(new StringCompletionSet("Identifiers", trackingSpan, completions));
+        }
+
+        class StringCompletionSet : CompletionSet
+        {
+            public StringCompletionSet(string moniker, ITrackingSpan span, IEnumerable<Completion> completions) : base(moniker, "Typewriter", span, completions, null) { }
+
+            public override void SelectBestMatch()
+            {
+                base.SelectBestMatch(CompletionMatchType.MatchInsertionText, true);
+                if (SelectionStatus.IsSelected) return;
+                base.SelectBestMatch(CompletionMatchType.MatchInsertionText, false);
+            }
         }
 
         private bool disposed;
@@ -105,7 +145,7 @@ namespace Typewriter.TemplateEditor.Controllers
         private readonly ITextView textView;
         private readonly CompletionControllerProvider provider;
         //private readonly ISignatureHelpBroker broker;
-        private ICompletionSession session;
+        private ICompletionSession _currentSession;
 
         internal CompletionController(IVsTextView textViewAdapter, ITextView textView, CompletionControllerProvider provider)//, ISignatureHelpBroker broker)
         {
@@ -118,93 +158,243 @@ namespace Typewriter.TemplateEditor.Controllers
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
+            if (pguidCmdGroup == VSConstants.VSStd2K)
+            {
+                switch ((VSCommand)prgCmds[0].cmdID)
+                {
+                    case VSCommand.AUTOCOMPLETE:
+                    case VSCommand.COMPLETEWORD:
+                    case VSCommand.SHOWMEMBERLIST:
+                        prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
+                        return VSConstants.S_OK;
+                }
+            }
+
             return nextCommandHandler.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }
 
-        public int Exec(ref Guid pguidCmdGroup, uint commandId, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        //public int Exec(ref Guid pguidCmdGroup, uint commandId, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        //{
+        //    if (VsShellUtilities.IsInAutomationFunction(provider.ServiceProvider) || pguidCmdGroup != VSConstants.VSStd2K)
+        //        return nextCommandHandler.Exec(ref pguidCmdGroup, commandId, nCmdexecopt, pvaIn, pvaOut);
+
+        //    var command = (VSCommand)commandId;
+        //    var typedChar = char.MinValue;
+
+        //    if (command == VSCommand.TYPECHAR)
+        //        typedChar = (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
+
+        //    if (command == VSCommand.RETURN || command == VSCommand.TAB || (char.IsWhiteSpace(typedChar) || char.IsPunctuation(typedChar)))
+        //    {
+        //        if (session != null && !session.IsDismissed)
+        //        {
+        //            if (session.SelectedCompletionSet.SelectionStatus.IsSelected)
+        //            {
+        //                session.Commit();
+
+        //                //broker.TriggerSignatureHelp(textView);
+
+        //                if (command == VSCommand.RETURN || command == VSCommand.TAB)
+        //                    return VSConstants.S_OK;
+        //            }
+        //            else
+        //            {
+        //                session.Dismiss();
+        //            }
+        //        }
+        //    }
+
+        //    //pass along the command so the char is added to the buffer 
+        //    var retVal = nextCommandHandler.Exec(ref pguidCmdGroup, commandId, nCmdexecopt, pvaIn, pvaOut); // Error här
+        //    var handled = false;
+
+        //    if (command == VSCommand.AUTOCOMPLETE || command == VSCommand.COMPLETEWORD || char.IsLetterOrDigit(typedChar) || typedChar == '$' || typedChar == '.') // !typedChar.Equals(char.MinValue) && 
+        //    {
+        //        if (session == null || session.IsDismissed) // If there is no active session, bring up completion
+        //        {
+        //            if (this.TriggerCompletion())
+        //            {
+        //                if (session != null && session.IsDismissed == false && char.IsLetterOrDigit(typedChar))
+        //                {
+        //                    session.Filter();
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            session.Filter();
+        //        }
+
+        //        handled = true;
+        //    }
+        //    else if (command == VSCommand.BACKSPACE || command == VSCommand.DELETE)
+        //    {
+        //        if (session != null && !session.IsDismissed)
+        //        {
+        //            session.Filter();
+        //        }
+
+        //        handled = true;
+        //    }
+
+        //    return handled ? VSConstants.S_OK : retVal;
+        //}
+
+        //private bool TriggerCompletion()
+        //{
+        //    var caretPoint = textView.Caret.Position.Point.GetPoint(textBuffer => (!textBuffer.ContentType.IsOfType("projection")), PositionAffinity.Predecessor);
+        //    if (!caretPoint.HasValue)
+        //    {
+        //        return false;
+        //    }
+
+        //    session = provider.CompletionBroker.CreateCompletionSession(textView, caretPoint.Value.Snapshot.CreateTrackingPoint(caretPoint.Value.Position, PointTrackingMode.Positive), true);
+
+        //    session.Dismissed += this.OnSessionDismissed;
+        //    session.Start();
+
+        //    return true;
+        //}
+
+        //private void OnSessionDismissed(object sender, EventArgs e)
+        //{
+        //    session.Dismissed -= this.OnSessionDismissed;
+        //    session = null;
+        //}
+        private static char GetTypeChar(IntPtr pvaIn)
         {
-            if (VsShellUtilities.IsInAutomationFunction(provider.ServiceProvider) || pguidCmdGroup != VSConstants.VSStd2K)
-                return nextCommandHandler.Exec(ref pguidCmdGroup, commandId, nCmdexecopt, pvaIn, pvaOut);
+            return (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
+        }
 
-            var command = (VSCommand)commandId;
-            var typedChar = char.MinValue;
-            
-            if (command == VSCommand.TYPECHAR)
-                typedChar = (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
+        public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        {
+            bool handled = false;
+            int hresult = VSConstants.S_OK;
 
-            if (command == VSCommand.RETURN || command == VSCommand.TAB || (char.IsWhiteSpace(typedChar) || char.IsPunctuation(typedChar)))
+            // 1. Pre-process
+            if (pguidCmdGroup == VSConstants.VSStd2K)
             {
-                if (session != null && !session.IsDismissed)
+                switch ((VSCommand)nCmdID)
                 {
-                    if (session.SelectedCompletionSet.SelectionStatus.IsSelected)
-                    {
-                        session.Commit();
-
-                        //broker.TriggerSignatureHelp(textView);
-
-                        return VSConstants.S_OK;
-                    }
-
-                    session.Dismiss();
+                    case VSCommand.AUTOCOMPLETE:
+                    case VSCommand.COMPLETEWORD:
+                    case VSCommand.SHOWMEMBERLIST:
+                        handled = StartSession();
+                        break;
+                    case VSCommand.RETURN:
+                        handled = Complete(false);
+                        break;
+                    case VSCommand.TAB:
+                        handled = Complete(true);
+                        break;
+                    case VSCommand.CANCEL:
+                        handled = Cancel();
+                        break;
+                    case VSCommand.TYPECHAR:
+                        char ch = GetTypeChar(pvaIn);
+                        if (ch == '.' || ch == '[' || ch == '(' || ch == '$' || ch == ' ' || ch == ';' || ch == '<')
+                            Complete(false);
+                        else if (ch == '"')
+                            Cancel();
+                            break;
                 }
             }
 
-            //pass along the command so the char is added to the buffer 
-            var retVal = nextCommandHandler.Exec(ref pguidCmdGroup, commandId, nCmdexecopt, pvaIn, pvaOut); // Error här
-            var handled = false;
-            
-            if (command == VSCommand.AUTOCOMPLETE || command == VSCommand.COMPLETEWORD || char.IsLetterOrDigit(typedChar) || typedChar == '$') // !typedChar.Equals(char.MinValue) && 
+            if (!handled)
+                hresult = nextCommandHandler.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+
+            if (ErrorHandler.Succeeded(hresult))
             {
-                if (session == null || session.IsDismissed) // If there is no active session, bring up completion
+                if (pguidCmdGroup == VSConstants.VSStd2K && (VSCommand)nCmdID == VSCommand.TYPECHAR)
                 {
-                    if (this.TriggerCompletion())
+                    if (_currentSession != null)
                     {
-                        if (session != null && session.IsDismissed == false)
+                        Filter();
+                    }
+                    else
+                    {
+                        var ch = GetTypeChar(pvaIn);
+
+                        if (Editor.Instance.EnableFullIntelliSense(textView.TextBuffer, textView.Caret.Position.BufferPosition))
                         {
-                            session.Filter();
+                            if (ch == '.')
+                                StartSession();
+                            else if (char.IsPunctuation(ch) == false && char.IsControl(ch) == false)
+                                StartSession();
+                        }
+                        else if (ch == '$')
+                        {
+                            StartSession();
                         }
                     }
                 }
-                else
-                {
-                    session.Filter();
-                }
-
-                handled = true;
-            }
-            else if (command == VSCommand.BACKSPACE || command == VSCommand.DELETE)
-            {
-                if (session != null && !session.IsDismissed)
-                {
-                    session.Filter();
-                }
-
-                handled = true;
             }
 
-            return handled ? VSConstants.S_OK : retVal;
+            return hresult;
         }
 
-        private bool TriggerCompletion()
+        private void Filter()
         {
-            var caretPoint = textView.Caret.Position.Point.GetPoint(textBuffer => (!textBuffer.ContentType.IsOfType("projection")), PositionAffinity.Predecessor);
-            if (!caretPoint.HasValue)
-            {
+            if (_currentSession?.SelectedCompletionSet == null)
+                return;
+
+            _currentSession.SelectedCompletionSet.SelectBestMatch();
+            _currentSession.SelectedCompletionSet.Recalculate();
+        }
+
+        bool Cancel()
+        {
+            if (_currentSession == null)
                 return false;
-            }
 
-            session = provider.CompletionBroker.CreateCompletionSession(textView, caretPoint.Value.Snapshot.CreateTrackingPoint(caretPoint.Value.Position, PointTrackingMode.Positive), true);
-
-            session.Dismissed += this.OnSessionDismissed;
-            session.Start();
+            _currentSession.Dismiss();
 
             return true;
         }
 
-        private void OnSessionDismissed(object sender, EventArgs e)
+        bool Complete(bool force)
         {
-            session.Dismissed -= this.OnSessionDismissed;
-            session = null;
+            if (_currentSession == null)
+                return false;
+
+            if (!_currentSession.SelectedCompletionSet.SelectionStatus.IsSelected && !force)
+            {
+                _currentSession.Dismiss();
+                return false;
+            }
+            else
+            {
+                _currentSession.Commit();
+                return true;
+            }
+        }
+
+        bool StartSession()
+        {
+            if (_currentSession != null)
+                return false;
+
+            SnapshotPoint caret = textView.Caret.Position.BufferPosition;
+
+            if (caret.Position == 0)
+                return false;
+
+            ITextSnapshot snapshot = caret.Snapshot;
+
+            if (!provider.CompletionBroker.IsCompletionActive(textView))
+            {
+                _currentSession = provider.CompletionBroker.CreateCompletionSession(textView, snapshot.CreateTrackingPoint(caret, PointTrackingMode.Positive), true);
+            }
+            else
+            {
+                _currentSession = provider.CompletionBroker.GetSessions(textView)[0];
+            }
+            _currentSession.Dismissed += (sender, args) => _currentSession = null;
+
+            if (!_currentSession.IsStarted)
+                _currentSession.Start();
+
+            return true;
         }
     }
 }

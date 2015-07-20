@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Typewriter
 {
@@ -16,17 +15,6 @@ namespace Typewriter
         internal const char NewLine = '\n';
 
         internal static readonly string TempDirectory = Path.Combine(Path.GetTempPath(), "Typewriter");
-
-        internal static readonly char[] Operators = "!&|+-/*?=,.:;<>%".ToCharArray();
-
-        internal static readonly string[] Keywords =
-        {
-            "any", "boolean", "break", "case", "catch", "class", "const", "constructor", "continue", "declare",
-            "do", "else", "enum", "export", "extends", "delete", "debugger", "default", "false", "finally", "for",
-            "function", "get", "if", "implements", "import", "in", "instanceof", "interface", "let", "module", "new",
-            "null", "number", "private", "protected", "public", "require", "return", "set", "static", "string",
-            "super", "switch", "this", "throw", "true", "try", "typeof", "var", "void", "while", "with", "yield"
-        };
     }
 
     internal static class Classifications

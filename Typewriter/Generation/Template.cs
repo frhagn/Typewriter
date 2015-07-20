@@ -29,7 +29,7 @@ namespace Typewriter.Generation
             this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
             
             var code = System.IO.File.ReadAllText(templatePath);
-            this.template = TemplateParser.Parse(code, ref this.extensions);
+            this.template = TemplateCodeParser.Parse(code, ref this.extensions);
 
             stopwatch.Stop();
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
@@ -171,13 +171,19 @@ namespace Typewriter.Generation
 
         private void SetMappedSourceFile(ProjectItem item, string path)
         {
+            if(projectItem == null) throw new ArgumentException("item");
+            if(path == null) throw new ArgumentException("path");
+
             var pathUri = new Uri(path);
             var folderUri = new Uri(projectPath.Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar);
             var relativeSourcePath = Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
 
             if (relativeSourcePath.Equals(GetMappedSourceFile(item), StringComparison.InvariantCultureIgnoreCase) == false)
             {
-                item.Properties.Item("CustomToolNamespace").Value = relativeSourcePath;
+                var property = item.Properties.Item("CustomToolNamespace");
+                if(property== null) throw new InvalidOperationException("Cannot find CustomToolNamespace property");
+
+                property.Value = relativeSourcePath;
             }
         }
         

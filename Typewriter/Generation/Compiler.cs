@@ -1,43 +1,38 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.CodeAnalysis;
+using Typewriter.TemplateEditor.Lexing.Roslyn;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation
 {
     internal static class Compiler
     {
-        private static readonly string[] referencedAssemblies = GetReferencedAssemblies();
-
-        internal static Type Compile(string source)
+        public static Type Compile(ShadowClass shadowClass)
         {
             if (Directory.Exists(Constants.TempDirectory) == false)
             {
                 Directory.CreateDirectory(Constants.TempDirectory);
             }
 
-            using (var codeProvider = CodeDomProvider.CreateProvider("CSharp"))
-            {
-                var filname = string.Format("{0}.dll", Guid.NewGuid());
-                var path = Path.Combine(Constants.TempDirectory, filname);
+            var filname = Path.GetRandomFileName();
+            var path = Path.Combine(Constants.TempDirectory, filname);
 
-                var parameters = new CompilerParameters(referencedAssemblies, path);
-                var result = codeProvider.CompileAssemblyFromSource(parameters, source);
+            var result = shadowClass.Compile(path);
 
-                if (result.Errors.Count > 0) return null;
+            if (result.Success)
                 return Assembly.LoadFrom(path).GetTypes().FirstOrDefault();
+
+            var errors = result.Diagnostics.Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+
+            foreach (var error in errors)
+            {
+                Log.Error("Template error: {0} {1}", error.Id, error.GetMessage());
             }
-        }
 
-        private static string[] GetReferencedAssemblies()
-        {
-            var assemblies = typeof(Compiler).Assembly.GetReferencedAssemblies().ToList();
-            var assemblyLocations = assemblies.Select(a => Assembly.ReflectionOnlyLoad(a.FullName).Location).ToList();
-
-            assemblyLocations.Add(typeof(Compiler).Assembly.Location);
-
-            return assemblyLocations.ToArray();
+            return null;
         }
     }
 }
