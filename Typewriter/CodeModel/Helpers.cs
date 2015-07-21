@@ -17,9 +17,6 @@ namespace Typewriter.CodeModel
             if (metadata == null)
                 return "any";
 
-            if (metadata.IsNullable)
-                return GetTypeScriptTypeName(metadata.Name.TrimEnd('?'));
-
             if (metadata.IsEnumerable)
             {
                 var genericTypeArguments = metadata.GenericTypeArguments.ToList();
@@ -41,40 +38,42 @@ namespace Typewriter.CodeModel
             if (metadata.IsGeneric)
                 return metadata.Name + string.Concat("<", string.Join(", ", metadata.GenericTypeArguments.Select(GetTypeScriptName)), ">");
 
-            return GetTypeScriptTypeName(metadata.Name);
+            return ExtractTypeScriptName(metadata);
         }
 
-        private static string GetTypeScriptTypeName(string type)
+        private static string ExtractTypeScriptName(ITypeMetadata metadata)
         {
-            switch (type)
+            var fullName = metadata.IsNullable ? metadata.FullName.TrimEnd('?') : metadata.FullName;
+
+            switch (fullName)
             {
-                case "Boolean":
+                case "System.Boolean":
                     return "boolean";
-                case "String":
-                case "Char":
-                case "Guid":
-                case "TimeSpan":
+                case "System.String":
+                case "System.Char":
+                case "System.Guid":
+                case "System.TimeSpan":
                     return "string";
-                case "Byte":
-                case "SByte":
-                case "Int16":
-                case "Int32":
-                case "Int64":
-                case "UInt16":
-                case "UInt32":
-                case "UInt64":
-                case "Single":
-                case "Double":
-                case "Decimal":
+                case "System.Byte":
+                case "System.SByte":
+                case "System.Int16":
+                case "System.Int32":
+                case "System.Int64":
+                case "System.UInt16":
+                case "System.UInt32":
+                case "System.UInt64":
+                case "System.Single":
+                case "System.Double":
+                case "System.Decimal":
                     return "number";
-                case "DateTime":
-                case "DateTimeOffset":
+                case "System.DateTime":
+                case "System.DateTimeOffset":
                     return "Date";
-                case "Void":
+                case "System.Void":
                     return "void";
-                default:
-                    return type;
             }
+
+            return metadata.Name;
         }
     }
 }

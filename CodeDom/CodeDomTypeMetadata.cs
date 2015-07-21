@@ -9,7 +9,24 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class CodeDomTypeMetadata : ITypeMetadata
     {
-        private static readonly string[] primitiveTypes = { "System.Boolean", "System.Char", "System.String", "System.Byte", "System.SByte", "System.Int32", "System.UInt32", "System.Int16", "System.UInt16", "System.Int64", "System.UInt64", "System.Single", "System.Double", "System.Decimal", "System.DateTime" };
+        private static readonly Dictionary<string, string> primitiveTypes = new Dictionary<string, string>
+        {
+            { "System.Boolean", "bool" },
+            { "System.Byte", "byte" },
+            { "System.Char", "char" },
+            { "System.DateTime", "DateTime" },
+            { "System.Decimal", "decimal" },
+            { "System.Double", "double" },
+            { "System.Int16", "short" },
+            { "System.Int32", "int" },
+            { "System.Int64", "long" },
+            { "System.SByte", "sbyte" },
+            { "System.Single", "float" },
+            { "System.String", "string" },
+            { "System.UInt32", "uint" },
+            { "System.UInt16", "ushort" },
+            { "System.UInt64", "ulong" }
+        };
 
         protected CodeType codeType;
         private readonly bool isNullable;
@@ -23,8 +40,8 @@ namespace Typewriter.Metadata.CodeDom
             this.file = file;
         }
 
-        public virtual string Name => CodeType.Name + (IsNullable ? "?" : string.Empty);
-        public virtual string FullName => CodeType.FullName + (IsNullable ? "?" : string.Empty);
+        public virtual string Name => GetName(CodeType.Name, CodeType.FullName);
+        public virtual string FullName => GetFullName(CodeType.FullName);
         public virtual string Namespace => GetNamespace();
 
         public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 && IsNullable == false;
@@ -49,6 +66,19 @@ namespace Typewriter.Metadata.CodeDom
         {
             var parent = CodeType.Parent as CodeClass2;
             return parent != null ? parent.FullName : CodeType.Namespace.FullName;
+        }
+
+        protected string GetName(string name, string fullName)
+        {
+            if (primitiveTypes.ContainsKey(fullName))
+                name = primitiveTypes[fullName];
+
+            return name + (IsNullable ? "?" : string.Empty);
+        }
+
+        protected string GetFullName(string fullName)
+        {
+            return fullName + (IsNullable ? "?" : string.Empty);
         }
 
         private IEnumerable<ITypeMetadata> LoadGenericTypeArguments()
@@ -80,7 +110,7 @@ namespace Typewriter.Metadata.CodeDom
 
                 if (IsNullable)
                 {
-                    fullName = fullName.TrimEnd('?'); //GenericTypeArguments.First().FullName;
+                    fullName = fullName.TrimEnd('?');
                 }
                 else if (IsEnumerable)
                 {
@@ -95,7 +125,7 @@ namespace Typewriter.Metadata.CodeDom
                     }
                 }
                 
-                return IsEnum || primitiveTypes.Any(t => t == fullName);
+                return IsEnum || primitiveTypes.ContainsKey(fullName);
             }
         }
 

@@ -21,43 +21,39 @@ namespace Typewriter.Metadata.CodeDom
             return file.GetType(fullName);
         }
 
-        public override string FullName => fullName;
+        public override string Name => GetName(ExtractName(), fullName);
+        public override string FullName => GetFullName(fullName);
+        public override string Namespace => ExtractNamespace();
 
-        public override string Name
+        private string ExtractName()
         {
-            get
-            {
-                var name = FullName;
-                
-                // Remove generic arguments from containing class
-                var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);
-                if (continingIndex > -1)
-                    name = name.Remove(0, continingIndex + 1);
+            var name = FullName;
 
-                name = name.Split('<')[0];
-                return name.Substring(name.LastIndexOf('.') + 1) + (IsNullable ? "?" : string.Empty);
-            }
+            // Remove generic arguments from containing class
+            var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);
+            if (continingIndex > -1)
+                name = name.Remove(0, continingIndex + 1);
+
+            name = name.Split('<')[0];
+            return name.Substring(name.LastIndexOf('.') + 1);
         }
 
-        public override string Namespace
+        private string ExtractNamespace()
         {
-            get
+            var name = fullName;
+            var parentName = string.Empty;
+
+            // Remove generic arguments from containing class
+            var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);
+            if (continingIndex > -1)
             {
-                var name = FullName;
-                var parentName = string.Empty;
-
-                // Remove generic arguments from containing class
-                var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);
-                if (continingIndex > -1)
-                {
-                    parentName = name.Substring(0, continingIndex + 1);
-                    name = name.Remove(0, continingIndex + 1);
-                }
-
-                name = name.Split('<')[0];
-
-                return parentName + name.Substring(0, name.LastIndexOf('.')) + (IsNullable ? "?" : string.Empty);
+                parentName = name.Substring(0, continingIndex + 1);
+                name = name.Remove(0, continingIndex + 1);
             }
+
+            name = name.Split('<')[0];
+
+            return parentName + name.Substring(0, name.LastIndexOf('.'));
         }
     }
 }
