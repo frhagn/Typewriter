@@ -32,7 +32,7 @@ namespace Typewriter.Generation
                 Log.Error("Template error: {0} {1}", error.Id, error.GetMessage());
             }
 
-            return null;
+            throw new Exception("Failed to compile template.");
         }
     }
 }

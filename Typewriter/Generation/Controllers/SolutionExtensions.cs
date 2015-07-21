@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -9,7 +10,16 @@ namespace Typewriter.Generation.Controllers
     {
         public static string Path(this ProjectItem projectItem)
         {
-            return projectItem.Properties.Item("FullPath").Value.ToString();
+            try
+            {
+                return projectItem.Properties.Item("FullPath").Value.ToString();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Cannot find path of project item {e.Message}");
+            }
+
+            return null;
         }
 
         public static IEnumerable<Project> AllProjetcs(this Solution solution)

@@ -28,17 +28,7 @@ namespace Typewriter.Generation
             }
 
             shadowClass.Parse();
-            //var source = shadowClass.GetClass();
-
-            try
-            {
-                //extensions = Compiler.Compile(source);
-                extensions = Compiler.Compile(shadowClass);
-            }
-            catch (Exception e)
-            {
-                Log.Debug(e.Message);
-            }
+            extensions = Compiler.Compile(shadowClass);
 
             return output;
         }

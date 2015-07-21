@@ -78,12 +78,19 @@ namespace Typewriter.Generation.Controllers
         {
             if (!FileChanged(path)) return;
 
-            var projectItem = dte.Solution.FindProjectItem(path);
-            var template = new Template(projectItem);
-
-            foreach (var item in GetReferencedProjectItems(projectItem, ".cs"))
+            try
             {
-                eventQueue.Enqueue(generationEvent => Render(template, generationEvent), GenerationType.Render, item.Path());
+                var projectItem = dte.Solution.FindProjectItem(path);
+                var template = new Template(projectItem);
+
+                foreach (var item in GetReferencedProjectItems(projectItem, ".cs"))
+                {
+                    eventQueue.Enqueue(generationEvent => Render(template, generationEvent), GenerationType.Render, item.Path());
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Debug(e.Message);
             }
         }
 
@@ -115,10 +122,7 @@ namespace Typewriter.Generation.Controllers
             }
         }
 
-        public ICollection<Template> Templates
-        {
-            get { return LoadTemplates(); }
-        }
+        public ICollection<Template> Templates => LoadTemplates();
 
         private ICollection<Template> LoadTemplates()
         {
@@ -129,7 +133,20 @@ namespace Typewriter.Generation.Controllers
             if (this.templates == null)
             {
                 var items = GetProjectItems();
-                this.templates = items.Select(i => new Template(i)).ToList();
+                this.templates = items.Select(i =>
+                {
+                    try
+                    {
+                        return new Template(i);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Debug(e.Message);
+                        Log.Warn($"Template {i.Path()} will be ignored until the errors are removed.");
+
+                        return null;
+                    }
+                }).Where(t => t != null).ToList();
             }
             else
             {

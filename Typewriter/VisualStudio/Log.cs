@@ -24,6 +24,11 @@ namespace Typewriter.VisualStudio
 #endif
         }
 
+        public static void Warn(string message, params object[] parameters)
+        {
+            instance?.Write("WARNING", message, parameters);
+        }
+
         public static void Error(string message, params object[] parameters)
         {
             instance?.Write("ERROR", message, parameters);
