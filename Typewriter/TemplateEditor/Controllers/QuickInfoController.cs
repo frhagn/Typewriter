@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.TemplateEditor.Controllers
 {
@@ -40,15 +41,17 @@ namespace Typewriter.TemplateEditor.Controllers
 
             if (triggerPoint.HasValue)
             {
-                var navigator = provider.NavigatorService.GetTextStructureNavigator(buffer);
-                var extent = navigator.GetExtentOfWord(triggerPoint.Value);
-                var info = Editor.Instance.GetQuickInfo(buffer, extent.Span);
-
-                if (info != null)
+                var extent = GetExtentOfWord(triggerPoint.Value);
+                if (extent.HasValue)
                 {
-                    applicableToSpan = snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
-                    quickInfoContent.Add(info);
-                    return;
+                    var info = Editor.Instance.GetQuickInfo(buffer, extent.Value);
+
+                    if (info != null)
+                    {
+                        applicableToSpan = snapshot.CreateTrackingSpan(extent.Value, SpanTrackingMode.EdgeInclusive);
+                        quickInfoContent.Add(info);
+                        return;
+                    }
                 }
             }
 
@@ -56,12 +59,69 @@ namespace Typewriter.TemplateEditor.Controllers
         }
 
         private bool disposed;
+
         public void Dispose()
         {
             if (disposed) return;
 
             GC.SuppressFinalize(this);
             disposed = true;
+        }
+
+        private static SnapshotSpan? GetExtentOfWord(SnapshotPoint point)
+        {
+            var line = point.GetContainingLine();
+
+            if (line == null) return null;
+
+            var text = line.GetText();
+            var index = point - line.Start;
+
+            var start = index;
+            var length = 0;
+
+            if (index > 0)
+            {
+                for (var i = index; i > 0; i--)
+                {
+                    var current = text[i];
+                    if (current == '$')
+                    {
+                        start = i;
+                        length++;
+                        break;
+                    }
+
+                    if (current != '_' && char.IsLetterOrDigit(current) == false) break;
+
+                    start = i;
+                    length++;
+                }
+            }
+
+            if (length > 0)
+            {
+                index++;
+
+                if (index < line.Length)
+                {
+                    for (var i = index; i < line.Length; i++)
+                    {
+                        var current = text[i];
+                        if (current != '_' && char.IsLetterOrDigit(current) == false) break;
+
+                        length++;
+                    }
+                }
+
+                var span = new SnapshotSpan(point.Snapshot, start + line.Start, length);
+
+                Log.Debug("[" + span.GetText() + "]");
+
+                return span;
+            }
+
+            return null;
         }
     }
 
