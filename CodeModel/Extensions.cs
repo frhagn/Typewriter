@@ -12,7 +12,7 @@ namespace Typewriter.CodeModel
         /// Returns the value of the RouteAttribute of the method and the RoutePrefixAttribute of the current class
         /// </summary>
         [Property("(extension) string Route", "Returns the value of the RouteAttribute of the $context and the RoutePrefixAttribute of the current class")]
-        public static string Route(Method methodInfo)
+        public static string Route(this Method methodInfo)
         {
             var parent = methodInfo.Parent as Class;
             var route = methodInfo.Attributes.FirstOrDefault(a => a.Name == "Route");

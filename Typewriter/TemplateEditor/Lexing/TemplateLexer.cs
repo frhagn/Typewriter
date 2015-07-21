@@ -259,9 +259,11 @@ namespace Typewriter.TemplateEditor.Lexing
                         var length = stream.Position - start;
                         if (ParseDollar(stream, semanticModel, context))
                         {
-                            semanticModel.Tokens.Add(Classifications.Comment, start, length);
-                            if (stream.Advance() == false || stream.Current == Constants.NewLine) return true;
-                            start = stream.Position;
+                            if (length > 0)
+                                semanticModel.Tokens.Add(Classifications.Comment, start, length);
+                            //if (stream.Advance() == false || stream.Current == Constants.NewLine) return true;
+                            if (stream.Peek() == char.MinValue) return true;
+                            start = stream.Position + 1;
                         }
                         if (stream.Current == Constants.NewLine) break;
                     }
@@ -278,9 +280,11 @@ namespace Typewriter.TemplateEditor.Lexing
 
                         if (ParseDollar(stream, semanticModel, context))
                         {
-                            semanticModel.Tokens.Add(Classifications.Comment, start, length);
-                            if (stream.Advance() == false || stream.Current == Constants.NewLine) return true;
-                            start = stream.Position;
+                            if (length > 0)
+                                semanticModel.Tokens.Add(Classifications.Comment, start, length);
+                            //if (stream.Advance() == false || stream.Current == Constants.NewLine) return true;
+                            if (stream.Peek() == char.MinValue) return true;
+                            start = stream.Position + 1;
                         }
 
                         if (stream.Current == Constants.NewLine)

@@ -46,6 +46,12 @@ namespace Typewriter.Metadata.CodeDom
         internal static IEnumerable<string> ExtractGenericTypeNames(string name)
         {
             var list = new List<string>();
+
+            // Remove generic arguments from containing class
+            var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);
+            if (continingIndex > -1)
+                name = name.Remove(0, continingIndex + 2);
+
             var start = name.IndexOf("<", StringComparison.Ordinal);
             var end = name.LastIndexOf(">", StringComparison.Ordinal) - (start + 1);
 
