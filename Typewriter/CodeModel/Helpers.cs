@@ -18,7 +18,7 @@ namespace Typewriter.CodeModel
                 return "any";
 
             if (metadata.IsNullable)
-                return GetTypeScriptName(metadata.GenericTypeArguments.First());
+                return GetTypeScriptTypeName(metadata.Name.TrimEnd('?'));
 
             if (metadata.IsEnumerable)
             {

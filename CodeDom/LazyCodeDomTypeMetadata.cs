@@ -1,3 +1,4 @@
+using System;
 using EnvDTE;
 
 namespace Typewriter.Metadata.CodeDom
@@ -7,7 +8,7 @@ namespace Typewriter.Metadata.CodeDom
         private readonly string fullName;
         private readonly CodeDomFileMetadata file;
 
-        public LazyCodeDomTypeMetadata(string fullName, CodeDomFileMetadata file) : base(null, file)
+        public LazyCodeDomTypeMetadata(string fullName, bool isNullable, CodeDomFileMetadata file) : base(null, isNullable, file)
         {
             this.fullName = fullName;
             this.file = file;
@@ -26,8 +27,15 @@ namespace Typewriter.Metadata.CodeDom
         {
             get
             {
-                var name = FullName.Split('<')[0];
-                return name.Substring(name.LastIndexOf('.') + 1);
+                var name = FullName;
+                
+                // Remove generic arguments from containing class
+                var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);
+                if (continingIndex > -1)
+                    name = name.Remove(0, continingIndex + 1);
+
+                name = name.Split('<')[0];
+                return name.Substring(name.LastIndexOf('.') + 1) + (IsNullable ? "?" : string.Empty);
             }
         }
 
@@ -35,8 +43,20 @@ namespace Typewriter.Metadata.CodeDom
         {
             get
             {
-                var name = FullName.Split('<')[0];
-                return name.Substring(0, name.LastIndexOf('.'));
+                var name = FullName;
+                var parentName = string.Empty;
+
+                // Remove generic arguments from containing class
+                var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);
+                if (continingIndex > -1)
+                {
+                    parentName = name.Substring(0, continingIndex + 1);
+                    name = name.Remove(0, continingIndex + 1);
+                }
+
+                name = name.Split('<')[0];
+
+                return parentName + name.Substring(0, name.LastIndexOf('.')) + (IsNullable ? "?" : string.Empty);
             }
         }
     }
