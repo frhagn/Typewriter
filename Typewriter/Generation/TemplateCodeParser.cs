@@ -114,7 +114,13 @@ namespace Typewriter.Generation
                             if (index > 0)
                             {
                                 var name = filter.Substring(0, index);
-                                var type = Contexts.Find(identifier)?.Type.FullName;
+
+                                var contextName = identifier;
+                                // Todo: Make the TemplateCodeParser context aware
+                                if (contextName == "GenericTypeArguments") contextName = "Types";
+                                else if (contextName.StartsWith("Nested")) contextName = contextName.Remove(0, 6);
+
+                                var type = Contexts.Find(contextName)?.Type.FullName;
 
                                 if (type == null) return false;
 

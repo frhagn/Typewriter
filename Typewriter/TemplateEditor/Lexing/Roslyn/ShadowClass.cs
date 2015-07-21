@@ -155,7 +155,9 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
                             Context = childContext,
                             HasContext = childContext != null,
                             IsBoolean = isBoolean,
-                            IsCollection = isCollection
+                            IsCollection = isCollection,
+                            RequireTemplate = isCollection,
+                            IsCustom = true
                         });
                     }
                 }

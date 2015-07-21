@@ -17,6 +17,7 @@ namespace Typewriter.TemplateEditor.Lexing
         public bool HasContext { get; set; }
         public bool IsParent { get; set; }
         public bool RequireTemplate { get; set; }
+        public bool IsCustom { get; set; }
         public StandardGlyphGroup Glyph { get; set; } = StandardGlyphGroup.GlyphGroupProperty;
 
         public static Identifier FromSymbol(ISymbol symbol)
