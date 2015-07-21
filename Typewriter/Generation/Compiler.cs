@@ -29,7 +29,13 @@ namespace Typewriter.Generation
 
             foreach (var error in errors)
             {
-                Log.Error("Template error: {0} {1}", error.Id, error.GetMessage());
+                var message = error.GetMessage();
+
+                message = message.Replace("__Typewriter.", string.Empty);
+                message = message.Replace("__Code.", string.Empty);
+                message = message.Replace("publicstatic", string.Empty);
+
+                Log.Error("Template error: {0} {1}", error.Id, message);
             }
 
             throw new Exception("Failed to compile template.");

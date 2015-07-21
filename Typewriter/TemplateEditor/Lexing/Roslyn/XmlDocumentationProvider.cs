@@ -61,26 +61,24 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             return commentsDictionary;
         }
 
-        private static string GetDocumentationFilePath(string originalPath)
+        private static string GetDocumentationFilePath(string path)
         {
-            if (File.Exists(originalPath)) { return originalPath; }
+            if (File.Exists(path)) return path;
 
-            var fileName = Path.GetFileName(originalPath);
-            const string netFrameworkPathPart = @"Reference Assemblies\Microsoft\Framework\.NETFramework";
-
+            var fileName = Path.GetFileName(path);
             if (fileName == null) return null;
 
-            var newPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), netFrameworkPathPart, @"v4.5.2", fileName);
-            if (File.Exists(newPath)) { return newPath; }
+            path = Path.Combine(Constants.ResourcesDirectory, fileName);
+            if (File.Exists(path)) return path;
 
-            newPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), netFrameworkPathPart, @"v4.5.1", fileName);
-            if (File.Exists(newPath)) { return newPath; }
+            path = Path.Combine(Constants.ReferenceAssembliesDirectory, @"v4.5.2", fileName);
+            if (File.Exists(path)) return path;
 
-            newPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), netFrameworkPathPart, @"v4.5", fileName);
-            if (File.Exists(newPath)) { return newPath; }
+            path = Path.Combine(Constants.ReferenceAssembliesDirectory, @"v4.5.1", fileName);
+            if (File.Exists(path)) return path;
 
-            newPath = Path.Combine(Path.GetDirectoryName(typeof(XmlDocumentationProvider).Assembly.Location), fileName);
-            if (File.Exists(newPath)) { return newPath; }
+            path = Path.Combine(Constants.ReferenceAssembliesDirectory, @"v4.5", fileName);
+            if (File.Exists(path)) return path;
 
             return null;
         }

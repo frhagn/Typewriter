@@ -83,11 +83,27 @@ namespace Typewriter.TemplateEditor.Lexing
         {
             var code = new StringBuilder();
             var position = stream.Position;
+            var isString = false;
+            var open = char.MinValue;
 
             do
             {
                 code.Append(stream.Current);
-                semanticModel.Tokens.AddBrace(stream);
+
+                if (isString && stream.Current == open && stream.Peek(-1) != '\\')
+                {
+                    isString = false;
+                }
+                else if (stream.Current == '"' || stream.Current == '\'')
+                {
+                    open = stream.Current;
+                    isString = true;
+                }
+                
+                if(isString == false)
+                {
+                    semanticModel.Tokens.AddBrace(stream);
+                }
             }
             while (stream.Advance());
 

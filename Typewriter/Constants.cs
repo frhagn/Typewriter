@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Typewriter
 {
@@ -15,6 +16,9 @@ namespace Typewriter
         internal const char NewLine = '\n';
 
         internal static readonly string TempDirectory = Path.Combine(Path.GetTempPath(), "Typewriter");
+        // ReSharper disable once AssignNullToNotNullAttribute
+        internal static readonly string ResourcesDirectory = Path.Combine(Path.GetDirectoryName(typeof(Constants).Assembly.Location), "Resources");
+        internal static readonly string ReferenceAssembliesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Reference Assemblies\Microsoft\Framework\.NETFramework");
     }
 
     internal static class Classifications

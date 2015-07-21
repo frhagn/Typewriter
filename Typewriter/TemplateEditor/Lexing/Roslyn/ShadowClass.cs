@@ -75,7 +75,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
                 classAdded = true;
             }
 
-            var method = $"object __{startIndex} ({type} {name}) {{ return ";
+            var method = $"bool __{startIndex} ({type} {name}) {{ return ";
             var index = code.IndexOf("=>", StringComparison.Ordinal) + 2;
             code = code.Remove(0, index);
 

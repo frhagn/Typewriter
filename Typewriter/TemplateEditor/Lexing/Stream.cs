@@ -97,11 +97,27 @@ namespace Typewriter.TemplateEditor.Lexing
                 var letter = Peek(i);
 
                 if (letter == char.MinValue) break;
-                if (letter == open) depth++;
                 if (letter == close) depth--;
-                if (depth > 0) identifier.Append(letter);
+                if (depth > 0)
+                {
+                    identifier.Append(letter);
+                    if (letter == open) depth++;
 
-                i++;
+                    i++;
+
+                    if (letter != open && (letter == '"' || letter == '\''))
+                    {
+                        var block = PeekBlock(i, letter, letter);
+                        identifier.Append(block);
+                        i += block.Length;
+
+                        if (letter == Peek(i))
+                        {
+                            identifier.Append(letter);
+                            i++;
+                        }
+                    }
+                }
             }
 
             return identifier.ToString();
