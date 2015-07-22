@@ -97,11 +97,13 @@ namespace Typewriter.TemplateEditor.Lexing
                 var letter = Peek(i);
 
                 if (letter == char.MinValue) break;
-                if (letter == close) depth--;
+                //if (letter == close) depth--;
+                if (IsMatch(i, letter, close)) depth--;
                 if (depth > 0)
                 {
                     identifier.Append(letter);
-                    if (letter == open) depth++;
+                    //if (letter == open) depth++;
+                    if (IsMatch(i, letter, open)) depth++;
 
                     i++;
 
@@ -121,6 +123,22 @@ namespace Typewriter.TemplateEditor.Lexing
             }
 
             return identifier.ToString();
+        }
+
+        private bool IsMatch(int index, char letter, char match)
+        {
+            if (letter == match)
+            {
+                var isString = match == '"' || match == '\'';
+                if (isString)
+                {
+                    if (Peek(index - 1) == '\\') return false;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public bool SkipWhitespace()

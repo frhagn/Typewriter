@@ -80,9 +80,9 @@ namespace Typewriter.TemplateEditor.Controllers
             var start = index;
             var length = 0;
 
-            if (index > 0)
+            if (index > 0 && index < line.Length)
             {
-                for (var i = index; i > 0; i--)
+                for (var i = index; i >= 0; i--)
                 {
                     var current = text[i];
                     if (current == '$')
@@ -116,7 +116,7 @@ namespace Typewriter.TemplateEditor.Controllers
 
                 var span = new SnapshotSpan(point.Snapshot, start + line.Start, length);
 
-                Log.Debug("[" + span.GetText() + "]");
+                //Log.Debug("[" + span.GetText() + "]");
 
                 return span;
             }
