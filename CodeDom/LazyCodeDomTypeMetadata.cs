@@ -27,7 +27,7 @@ namespace Typewriter.Metadata.CodeDom
 
         private string ExtractName()
         {
-            var name = FullName;
+            var name = fullName;
 
             // Remove generic arguments from containing class
             var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);

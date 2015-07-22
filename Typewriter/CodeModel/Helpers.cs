@@ -73,7 +73,7 @@ namespace Typewriter.CodeModel
                     return "void";
             }
 
-            return metadata.Name;
+            return metadata.IsNullable ? metadata.Name.TrimEnd('?') : metadata.Name;
         }
     }
 }
