@@ -14,7 +14,6 @@ namespace Typewriter.Metadata.CodeDom
             { "System.Boolean", "bool" },
             { "System.Byte", "byte" },
             { "System.Char", "char" },
-            { "System.DateTime", "DateTime" },
             { "System.Decimal", "decimal" },
             { "System.Double", "double" },
             { "System.Int16", "short" },
@@ -25,7 +24,12 @@ namespace Typewriter.Metadata.CodeDom
             { "System.String", "string" },
             { "System.UInt32", "uint" },
             { "System.UInt16", "ushort" },
-            { "System.UInt64", "ulong" }
+            { "System.UInt64", "ulong" },
+            
+            { "System.DateTime", "DateTime" },
+            { "System.DateTimeOffset", "DateTimeOffset" },
+            { "System.Guid", "Guid" },
+            { "System.TimeSpan", "TimeSpan" },
         };
 
         protected CodeType codeType;
@@ -84,7 +88,6 @@ namespace Typewriter.Metadata.CodeDom
         private IEnumerable<ITypeMetadata> LoadGenericTypeArguments()
         {
             if (IsGeneric == false) return new ITypeMetadata[0];
-            //if (FullName.EndsWith("?")) return new[] { new LazyCodeDomTypeMetadata(FullName.TrimEnd('?'), file) };
 
             return GenericTypeMetadata.ExtractGenericTypeNames(FullName).Select(fullName =>
             {
@@ -117,7 +120,7 @@ namespace Typewriter.Metadata.CodeDom
                     var innerType = GenericTypeArguments.FirstOrDefault();
                     if (innerType != null)
                     {
-                        fullName = IsNullable ? innerType.GenericTypeArguments.First().FullName : innerType.FullName;
+                        fullName = innerType.IsNullable ? innerType.FullName.TrimEnd('?') : innerType.FullName;
                     }
                     else
                     {

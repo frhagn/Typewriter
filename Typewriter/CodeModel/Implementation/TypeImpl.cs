@@ -27,11 +27,13 @@ namespace Typewriter.CodeModel.Implementation
         public override string FullName => metadata.FullName;
         public override string Namespace => metadata.Namespace;
         public override bool IsGeneric => metadata.IsGeneric;
-        public override bool IsDate => Name == "Date";
         public override bool IsEnum => metadata.IsEnum;
         public override bool IsEnumerable => metadata.IsEnumerable;
         public override bool IsNullable => metadata.IsNullable;
         public override bool IsPrimitive => metadata.IsPrimitive;
+        public override bool IsDate => Name == "Date";
+        public override bool IsGuid => FullName == "System.Guid" || FullName == "System.Guid?";
+        public override bool IsTimeSpan => FullName == "System.TimeSpan" || FullName == "System.TimeSpan?";
         public override string Default => GetDefaultValue();
 
         private AttributeCollection attributes;

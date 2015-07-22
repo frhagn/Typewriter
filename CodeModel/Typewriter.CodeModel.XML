@@ -601,7 +601,17 @@
         </member>
         <member name="P:Typewriter.CodeModel.Type.IsDate">
             <summary>
-            Determines if the type is a date.
+            Determines if the type is a DateTime.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.IsGuid">
+            <summary>
+            Determines if the type is a Guid.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.IsTimeSpan">
+            <summary>
+            Determines if the type is a TimeSpan.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.Default">

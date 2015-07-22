@@ -39,10 +39,22 @@ namespace Typewriter.CodeModel
         public abstract bool IsPrimitive { get; }
 
         /// <summary>
-        /// Determines if the type is a date.
+        /// Determines if the type is a DateTime.
         /// </summary>
-        [Property("bool IsDate", "Determines if the $context is a date.")]
+        [Property("bool IsDate", "Determines if the $context is a DateTime.")]
         public abstract bool IsDate { get; }
+
+        /// <summary>
+        /// Determines if the type is a Guid.
+        /// </summary>
+        [Property("bool IsGuid", "Determines if the $context is a Guid.")]
+        public abstract bool IsGuid { get; }
+
+        /// <summary>
+        /// Determines if the type is a TimeSpan.
+        /// </summary>
+        [Property("bool IsTimeSpan", "Determines if the $context is a TimeSpan.")]
+        public abstract bool IsTimeSpan { get; }
 
         /// <summary>
         /// The default value of the type.
