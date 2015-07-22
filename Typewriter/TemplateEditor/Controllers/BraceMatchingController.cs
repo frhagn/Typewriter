@@ -8,8 +8,8 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace Typewriter.TemplateEditor.Controllers
 {
-    [Export(typeof(IViewTaggerProvider))]
-    [ContentType(Constants.ContentType), TagType(typeof(TextMarkerTag))]
+    [Export(typeof (IViewTaggerProvider))]
+    [ContentType(Constants.ContentType), TagType(typeof (TextMarkerTag))]
     internal class BraceMatchingControllerProvider : IViewTaggerProvider
     {
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
@@ -69,10 +69,10 @@ namespace Typewriter.TemplateEditor.Controllers
             if (spans[0].Snapshot != snapshot)
                 point = point.TranslateTo(spans[0].Snapshot, PointTrackingMode.Positive);
 
-            if (point.Position > snapshot.Length) 
+            if (point.Position > snapshot.Length)
                 yield break;
 
-            foreach (var tag in Editor.Instance.GetBraceTags(buffer, point))//new SnapshotSpan(point, 1)))
+            foreach (var tag in Editor.Instance.GetBraceTags(buffer, point)) //new SnapshotSpan(point, 1)))
             {
                 yield return tag;
             }

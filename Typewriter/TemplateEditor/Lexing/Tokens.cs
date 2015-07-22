@@ -9,6 +9,8 @@ namespace Typewriter.TemplateEditor.Lexing
         private readonly BraceStack braces = new BraceStack();
         private readonly Dictionary<int, Token> tokenDictionary = new Dictionary<int, Token>();
 
+        public BraceStack BraceStack => braces;
+
         public void Add(Token token)
         {
             tokenDictionary[token.Start] = token;
@@ -57,6 +59,11 @@ namespace Typewriter.TemplateEditor.Lexing
         public Token GetToken(int position)
         {
             return tokenDictionary.ContainsKey(position) ? tokenDictionary[position] : null;
+        }
+
+        public IEnumerable<Token> FindTokens(int position)
+        {
+            return tokenDictionary.Values.Where(t => t.Start <= position && t.Start + t.Length >= position);
         }
 
         public IEnumerable<Token> GetTokens(Span span)

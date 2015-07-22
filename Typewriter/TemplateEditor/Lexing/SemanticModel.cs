@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -66,10 +65,12 @@ namespace Typewriter.TemplateEditor.Lexing
 
         private readonly ShadowClass shadowClass;
         private readonly Tokens tokens = new Tokens();
+        private readonly Tokens errorTokens = new Tokens();
         private readonly ContextSpans contextSpans = new ContextSpans();      
         private readonly Identifiers tempIdentifiers = new Identifiers();
 
         public Tokens Tokens => tokens;
+        public Tokens ErrorTokens => errorTokens;
         public ContextSpans ContextSpans => contextSpans;
         public Identifiers TempIdentifiers => tempIdentifiers;
         public ShadowClass ShadowClass => shadowClass;
@@ -126,7 +127,13 @@ namespace Typewriter.TemplateEditor.Lexing
             {
                 return tokens.GetToken(position)?.QuickInfo;
             }
-            
+
+            var error = errorTokens.FindTokens(position).FirstOrDefault();
+            if (error != null)
+            {
+                return error.QuickInfo;
+            }
+
             var symbol = shadowClass.GetSymbol(position);
             if (symbol != null)
             {
@@ -140,6 +147,12 @@ namespace Typewriter.TemplateEditor.Lexing
         public IEnumerable<Token> GetTokens(Span span)
         {
             return tokens.GetTokens(span);
+        }
+
+        // Snytax errors
+        public IEnumerable<Token> GetErrorTokens(Span span)
+        {
+            return errorTokens.GetTokens(span);
         }
 
         // Statement completion

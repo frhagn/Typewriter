@@ -231,6 +231,7 @@
     <Compile Include="Generation\Controllers\EventQueue.cs" />
     <Compile Include="Generation\ItemFilter.cs" />
     <Compile Include="Generation\TemplateCodeParser.cs" />
+    <Compile Include="TemplateEditor\Controllers\SyntaxErrorController.cs" />
     <Compile Include="TemplateEditor\Controllers\FormattingController.cs" />
     <Compile Include="TemplateEditor\Controllers\OutliningController.cs" />
     <Compile Include="TemplateEditor\Controllers\SignatureHelpController.cs" />

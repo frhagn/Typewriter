@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
 {
@@ -125,6 +126,23 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             });
 
             return tokens.Where(t => t.Classification != null);
+        }
+
+        public IEnumerable<Token> GetErrorTokens()
+        {
+            var tokens = snippets.Where(s => s.Type != SnippetType.Class).SelectMany(s =>
+            {
+                var diagnostics = workspace.GetDiagnostics(documentId, s.Offset, s.Length);
+
+                return diagnostics.Select(diagnostic => new Token
+                {
+                    QuickInfo = diagnostic.GetMessage(),
+                    Start = s.FromShadowIndex(diagnostic.Location.SourceSpan.Start),
+                    Length = diagnostic.Location.SourceSpan.Length
+                });
+            });
+
+            return tokens;
         }
 
         public IEnumerable<TemporaryIdentifier> GetIdentifiers()

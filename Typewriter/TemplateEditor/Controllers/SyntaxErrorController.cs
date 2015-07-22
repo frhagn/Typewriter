@@ -9,31 +9,30 @@ using Microsoft.VisualStudio.Utilities;
 namespace Typewriter.TemplateEditor.Controllers
 {
     [Export(typeof(ITaggerProvider))]
-    [ContentType(Constants.ContentType), TagType(typeof(IOutliningRegionTag))]
-    internal sealed class OutliningControllerProvider : ITaggerProvider
+    [ContentType(Constants.ContentType), TagType(typeof(ErrorTag))]
+    internal class SyntaxErrorControllerProvider : ITaggerProvider
     {
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-            return buffer.Properties.GetOrCreateSingletonProperty(() => new OutliningController(buffer) as ITagger<T>);
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new SyntaxErrorController(buffer) as ITagger<T>);
         }
     }
 
-    internal class OutliningController : ITagger<IOutliningRegionTag>
+    internal class SyntaxErrorController : ITagger<ErrorTag>
     {
         private readonly ITextBuffer buffer;
-
-        public OutliningController(ITextBuffer buffer)
+        
+        internal SyntaxErrorController(ITextBuffer buffer)
         {
             this.buffer = buffer;
-            
+
             // ReSharper disable once UnusedVariable (used to suppress build warning)
             var temp = TagsChanged;
         }
 
-        public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection normalizedSnapshotSpans)
+        public IEnumerable<ITagSpan<ErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            var spans = Editor.Instance.GetCodeBlocks(buffer).ToList();
-            return spans.Select(s => new TagSpan<IOutliningRegionTag>(s, new OutliningRegionTag(false, false, "...", s.GetText())));
+            return spans.SelectMany(s => Editor.Instance.GetSyntaxErrorTags(buffer, s));
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;

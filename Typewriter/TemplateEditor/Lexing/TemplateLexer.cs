@@ -11,6 +11,7 @@ namespace Typewriter.TemplateEditor.Lexing
     {
         private static readonly Context fileContext = Contexts.Find(nameof(File));
         private static readonly char[] operators = "!&|+-/*?=,.:;<>%".ToCharArray();
+
         private static readonly string[] keywords =
         {
             "any", "boolean", "break", "case", "catch", "class", "const", "constructor", "continue", "declare",
@@ -24,6 +25,16 @@ namespace Typewriter.TemplateEditor.Lexing
         {
             var context = new Stack<Context>(new[] { fileContext });
             Parse(code, semanticModel, context, 0);
+
+            if (semanticModel.Tokens.BraceStack.IsBalanced(']') == false)
+            {
+                semanticModel.ErrorTokens.Add(new Token
+                {
+                    QuickInfo = "] expected",
+                    Start = code.Length,
+                    Length = 0
+                });
+            }
         }
 
         private void Parse(string template, SemanticModel semanticModel, Stack<Context> context, int offset)
@@ -138,7 +149,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
                 var block = stream.PeekBlock(1, '(', ')');
 
-                if(block.Contains("=>") == false)
+                if (block.Contains("=>") == false)
                     semanticModel.Tokens.Add(Classifications.String, stream.Position + 1, block.Length);
 
                 stream.Advance(block.Length);

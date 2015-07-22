@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
-using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
-using Typewriter.VisualStudio;
-using SemanticModel = Typewriter.TemplateEditor.Lexing.SemanticModel;
 
 namespace Typewriter.TemplateEditor
 {
@@ -82,9 +76,10 @@ namespace Typewriter.TemplateEditor
         // Classification
         public IEnumerable<ClassificationSpan> GetClassificationSpans(ITextBuffer buffer, SnapshotSpan span, IClassificationTypeRegistryService classificationRegistry)
         {
-            var tokens = GetSemanticModel(buffer);
+            var semanticModel = GetSemanticModel(buffer);
+            var tokens = semanticModel.GetTokens(span.Span);
 
-            foreach (var token in tokens.GetTokens(span.Span))
+            foreach (var token in tokens)
             {
                 if (token.Classification != null)
                 {
@@ -117,6 +112,19 @@ namespace Typewriter.TemplateEditor
 
                 return new Completion(prefix + i.Name, prefix + i.Name, quickInfo, imageSource, null);
             });
+        }
+
+        // Syntax errors
+        public IEnumerable<ITagSpan<ErrorTag>> GetSyntaxErrorTags(ITextBuffer buffer, SnapshotSpan span)
+        {
+            var semanticModel = GetSemanticModel(buffer);
+            var tokens = semanticModel.GetErrorTokens(span.Span);
+
+            foreach (var token in tokens)
+            {
+                var tag = new ErrorTag(Classifications.SyntaxError, token.QuickInfo);
+                yield return new TagSpan<ErrorTag>(new SnapshotSpan(span.Snapshot, token.Start, token.Length), tag);
+            }
         }
 
         // Quick info

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
@@ -23,6 +24,15 @@ namespace Typewriter.TemplateEditor.Lexing
             if (brace == ')' && functionBraceStack.Count > 0) return functionBraceStack.Pop();
 
             return null;
+        }
+
+        public bool IsBalanced(char brace)
+        {
+            if (brace == '}') return curlyBraceStack.Any() == false;
+            if (brace == ']') return braceStack.Any() == false;
+            if (brace == ')') return functionBraceStack.Any() == false;
+
+            return false;
         }
     }
 }

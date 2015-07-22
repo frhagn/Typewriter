@@ -89,12 +89,25 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             return Recommender.GetRecommendedSymbolsAtPosition(semanticModel, position, this).ToArray();
         }
 
-        public IReadOnlyList<MethodDeclarationSyntax> GetMethods(DocumentId documentId)
+        public IReadOnlyList<Diagnostic> GetDiagnostics(DocumentId documentId, int start, int length)
         {
             var document = CurrentSolution.GetDocument(documentId);
             var semanticModel = document.GetSemanticModelAsync().Result;
+            //var syntaxTree = document.GetSyntaxTreeAsync().Result;
+            //var diagnostics = syntaxTree.GetDiagnostics();
+            var bounds = TextSpan.FromBounds(start, start + length);
+            var diagnostics = semanticModel.GetDiagnostics(bounds);
 
-            var root = semanticModel.SyntaxTree.GetRoot();
+            return diagnostics.ToArray();
+        }
+
+        public IReadOnlyList<MethodDeclarationSyntax> GetMethods(DocumentId documentId)
+        {
+            var document = CurrentSolution.GetDocument(documentId);
+            //var semanticModel = document.GetSemanticModelAsync().Result;
+            var syntaxTree = document.GetSyntaxTreeAsync().Result;
+
+            var root = syntaxTree.GetRoot();
             return root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToArray();
         }
 
