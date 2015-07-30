@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
@@ -34,7 +33,18 @@ namespace Typewriter.Metadata.CodeDom
                 if (codeVariable.InitExpression == null)
                     value++;
                 else
-                    value = Convert.ToInt32(codeVariable.InitExpression);
+                {
+                    string initExpression = codeVariable.InitExpression.ToString();
+
+                    if (int.TryParse(initExpression, out value) == false)
+                    {
+                        // Handle init expressions from char constants e.g. 'A' = 65
+                        if (initExpression.Length == 3 && initExpression.StartsWith("'") && initExpression.EndsWith("'"))
+                            value = initExpression[1];
+                        else
+                            value = -1;
+                    }
+                }
 
                 yield return new CodeDomEnumValueMetadata(codeVariable, file, value);
             }

@@ -9,7 +9,9 @@ namespace Typewriter.Tests.CodeModel.Support
         ValueA,
         ValueB,
         ValueC = 5,
-        ValueD
+        ValueD,
+        ValueE = 'A',
+        ValueF
     }
 
     [Flags]

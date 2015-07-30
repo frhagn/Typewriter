@@ -3,6 +3,7 @@ using Should;
 using Typewriter.CodeModel;
 using Typewriter.Metadata.CodeDom;
 using Typewriter.Metadata.Providers;
+using Typewriter.Tests.CodeModel.Support;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
@@ -81,6 +82,18 @@ namespace Typewriter.Tests.CodeModel
 
             thirdValue.Value.ShouldEqual(5);
             fourthValue.Value.ShouldEqual(6);
+        }
+
+        [Fact]
+        public void Expect_values_specified_with_a_char_to_be_converted_to_their_integer_value()
+        {
+            var enumInfo = fileInfo.Enums.First();
+            var fifthValue = enumInfo.Values.First(v => v.Name == "ValueE");
+            var sixthValue = enumInfo.Values.First(v => v.Name == "ValueF");
+
+            fifthValue.Value.ShouldEqual('A'); // A = 65
+            fifthValue.Value.ShouldEqual(65);
+            sixthValue.Value.ShouldEqual(66);
         }
 
         [Fact]
