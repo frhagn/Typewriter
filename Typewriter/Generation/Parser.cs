@@ -32,7 +32,7 @@ namespace Typewriter.Generation
 
         private string ParseTemplate(string template, object context)
         {
-            if (string.IsNullOrWhiteSpace(template)) return null;
+            if (string.IsNullOrEmpty(template)) return null;
 
             var output = string.Empty;
             var stream = new Stream(template);
