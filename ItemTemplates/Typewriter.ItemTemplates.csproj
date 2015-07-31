@@ -33,8 +33,8 @@
     <ProjectGuid>{417568AF-7B73-4C93-9261-025D69AC89A5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ItemTemplates</RootNamespace>
-    <AssemblyName>ItemTemplates</AssemblyName>
+    <RootNamespace>Typewriter.ItemTemplates</RootNamespace>
+    <AssemblyName>Typewriter.ItemTemplates</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>

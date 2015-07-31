@@ -321,9 +321,9 @@
       <Project>{4ec6c920-d234-49f1-b17b-98a4de24ff87}</Project>
       <Name>Typewriter.CodeModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\ItemTemplates.csproj">
+    <ProjectReference Include="..\ItemTemplates\Typewriter.ItemTemplates.csproj">
       <Project>{417568AF-7B73-4C93-9261-025D69AC89A5}</Project>
-      <Name>ItemTemplates</Name>
+      <Name>Typewriter.ItemTemplates</Name>
       <VSIXSubPath>ItemTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
