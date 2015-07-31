@@ -74,10 +74,9 @@ namespace Typewriter.VisualStudio
         {
             //try
             //{
-            //    var assemblyLocation = Path.GetDirectoryName(typeof(GenerationController).Assembly.Location);
-            //    var assembly = Assembly.LoadFrom(Path.Combine(assemblyLocation, "Resources", "Typewriter.Metadata.Roslyn.dll"));
+            //    var assembly = Assembly.LoadFrom(Path.Combine(Constants.TypewriterDirectory, "Typewriter.Metadata.Roslyn.dll"));
             //    var type = assembly.GetType("Typewriter.Metadata.Roslyn.RoslynMetadataProvider");
-            //    var provider = Activator.CreateInstance(type) as IMetadataProvider;
+            //    var provider = (IMetadataProvider)Activator.CreateInstance(type);
 
             //    Log.Debug("Using Roslyn");
             //    this.metadataProvider = provider;
@@ -88,22 +87,6 @@ namespace Typewriter.VisualStudio
                 this.metadataProvider = new CodeDomMetadataProvider();
             }
         }
-
-        //// Used by Roslyn CodeModelProvider
-        //public T GetWorkspace<T>() where T : class
-        //{
-        //    try
-        //    {
-        //        var componentModel = ServiceProvider.GlobalProvider.GetService(typeof (SComponentModel)) as IComponentModel;
-        //        return componentModel?.GetService<T>();
-        //    }
-        //    catch(Exception exception)
-        //    {
-        //        Log.Debug(exception.Message);
-        //    }
-
-        //    return default(T);
-        //}
 
         private void RegisterLanguageService()
         {
@@ -116,8 +99,7 @@ namespace Typewriter.VisualStudio
             try
             {
                 var icon = ThemeInfo.IsDark ? "dark.ico" : "light.ico";
-                var directory = Path.Combine(Path.GetDirectoryName(typeof(ExtensionPackage).Assembly.Location), "Resources");
-                var path = Path.Combine(directory, icon);
+                var path = Path.Combine(Constants.ResourcesDirectory, icon);
 
                 using (RegistryKey classes = Registry.CurrentUser.OpenSubKey("SoftWare\\Classes", true))
                 {
@@ -125,12 +107,13 @@ namespace Typewriter.VisualStudio
 
                     using (var key = classes.CreateSubKey(Constants.Extension + "\\DefaultIcon"))
                     {
-                        if (key != null) key.SetValue(string.Empty, path);
+                        key?.SetValue(string.Empty, path);
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Log.Debug("Failed to register icons: {0}", e.Message);
             }
         }
 

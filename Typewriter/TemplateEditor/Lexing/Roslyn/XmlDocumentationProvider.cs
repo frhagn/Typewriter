@@ -71,6 +71,9 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             path = Path.Combine(Constants.ResourcesDirectory, fileName);
             if (File.Exists(path)) return path;
 
+            path = Path.Combine(Constants.ReferenceAssembliesDirectory, @"v4.6", fileName);
+            if (File.Exists(path)) return path;
+
             path = Path.Combine(Constants.ReferenceAssembliesDirectory, @"v4.5.2", fileName);
             if (File.Exists(path)) return path;
 
