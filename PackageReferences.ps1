@@ -1,6 +1,9 @@
-param (
-    [string]$c = "Release"
- )
+#
+#	Enable script execution by running PowerShell (x86) as Administrator and type the command:
+#	Set-ExecutionPolicy RemoteSigned
+#
+
+param ([string]$c = "Release")
 
 Add-Type -Path "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6\System.IO.Compression.FileSystem.dll"
 
@@ -10,6 +13,7 @@ $directorypath = Split-Path $invocation.MyCommand.Path
 $zip = [System.IO.Compression.ZipFile]::Open($directorypath + "\Typewriter\bin\" + $c + "\Typewriter.vsix", "Update")
 
 # Roslyn dependencies
+"Adding Roslyn dependencies for Visual Studio 2013"
 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\Typewriter\bin\" + $c + "\Microsoft.CodeAnalysis.CSharp.dll", "Microsoft.CodeAnalysis.CSharp.dll", "NoCompression")
 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\Typewriter\bin\" + $c + "\Microsoft.CodeAnalysis.CSharp.Workspaces.dll", "Microsoft.CodeAnalysis.CSharp.Workspaces.dll", "NoCompression")
 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\Typewriter\bin\" + $c + "\Microsoft.CodeAnalysis.dll", "Microsoft.CodeAnalysis.dll", "NoCompression")
@@ -24,6 +28,9 @@ $zip = [System.IO.Compression.ZipFile]::Open($directorypath + "\Typewriter\bin\"
 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\Typewriter\bin\" + $c + "\System.Reflection.Metadata.dll", "System.Reflection.Metadata.dll", "NoCompression")
 
 # Roslyn Metadata
+"Adding Roslyn Metadata Provider"
 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\Roslyn\bin\" + $c + "\Typewriter.Metadata.Roslyn.dll", "Typewriter.Metadata.Roslyn.dll", "NoCompression")
 
 $zip.Dispose()
+
+"Done"
