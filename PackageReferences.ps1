@@ -23,7 +23,7 @@ $zip = [System.IO.Compression.ZipFile]::Open($directorypath + "\Typewriter\bin\"
 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\Typewriter\bin\" + $c + "\System.Collections.Immutable.dll", "System.Collections.Immutable.dll", "NoCompression")
 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\Typewriter\bin\" + $c + "\System.Reflection.Metadata.dll", "System.Reflection.Metadata.dll", "NoCompression")
 
-# CodeModel Intellisense
-#[System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\CodeModel\bin\" + $c + "\Typewriter.CodeModel.XML", "Resources\Typewriter.CodeModel.XML", "NoCompression")
+# Roslyn Metadata
+[System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $directorypath + "\Roslyn\bin\" + $c + "\Typewriter.Metadata.Roslyn.dll", "Typewriter.Metadata.Roslyn.dll", "NoCompression")
 
 $zip.Dispose()

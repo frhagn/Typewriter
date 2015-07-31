@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Typewriter\Properties\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CodeDomAttributeMetadata.cs" />
     <Compile Include="CodeDomClassMetadata.cs" />
     <Compile Include="CodeDomConstantMetadata.cs" />

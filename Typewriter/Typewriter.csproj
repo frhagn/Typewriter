@@ -202,6 +202,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\SharedAssemblyInfo.cs" />
     <Compile Include="CodeModel\Collections\AttributeCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\ClassCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\ConstantCollectionImpl.cs" />
@@ -331,11 +332,6 @@
     <ProjectReference Include="..\Metadata\Typewriter.Metadata.csproj">
       <Project>{511e50cc-6073-43ee-9e8b-dd6f584c81a8}</Project>
       <Name>Typewriter.Metadata</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roslyn\Typewriter.Metadata.Roslyn.csproj">
-      <Project>{3d74f5ff-ad4c-40a5-9577-5ed378031ff6}</Project>
-      <Name>Typewriter.Metadata.Roslyn</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

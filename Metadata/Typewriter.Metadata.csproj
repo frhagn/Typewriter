@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Typewriter\Properties\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Interfaces\IAttributeMetadata.cs" />
     <Compile Include="Interfaces\IClassMetadata.cs" />
     <Compile Include="Interfaces\IConstantMetadata.cs" />

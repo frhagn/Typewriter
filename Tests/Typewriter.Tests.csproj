@@ -129,6 +129,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Typewriter\Properties\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CodeModel\EnumTests.cs" />
     <Compile Include="CodeModel\MethodTests.cs" />
     <Compile Include="CodeModel\PropertyTests.cs" />
