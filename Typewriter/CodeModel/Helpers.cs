@@ -83,6 +83,9 @@ namespace Typewriter.CodeModel
                     return "Date";
                 case "System.Void":
                     return "void";
+                case "System.Object":
+                case "dynamic":
+                    return "any";
             }
 
             return metadata.IsNullable ? metadata.Name.TrimEnd('?') : metadata.Name;
