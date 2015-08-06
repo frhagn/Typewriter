@@ -344,10 +344,6 @@
       <Link>Resources\Typewriter.CodeModel.XML</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\Roslyn\bin\Debug\Typewriter.Metadata.Roslyn.dll">
-      <Link>Typewriter.Metadata.Roslyn.dll</Link>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Resources\Icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

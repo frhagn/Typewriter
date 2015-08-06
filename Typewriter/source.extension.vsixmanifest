@@ -3,7 +3,7 @@
   <Metadata>
     <Identity Id="45b6b392-ce2f-409c-a39f-bbf90b34349e" Version="0.9.22" Language="en-US" Publisher="frhagn" />
     <DisplayName>Typewriter</DisplayName>
-    <Description xml:space="preserve">Automatic TypeScript Template generation from C# source files. Beta (0.9.21)</Description>
+    <Description xml:space="preserve">Automatic TypeScript Template generation from C# files. Beta (0.9.22)</Description>
     <MoreInfo>http://frhagn.github.io/Typewriter/</MoreInfo>
     <License>Resources\License.txt</License>
     <GettingStartedGuide>http://frhagn.github.io/Typewriter/</GettingStartedGuide>

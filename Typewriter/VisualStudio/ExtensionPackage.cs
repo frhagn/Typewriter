@@ -77,13 +77,13 @@ namespace Typewriter.VisualStudio
                 var type = assembly.GetType("Typewriter.Metadata.Roslyn.RoslynMetadataProvider");
                 var provider = (IMetadataProvider)Activator.CreateInstance(type);
 
-                Log.Debug("Using Roslyn");
+                Log.Info("Using Roslyn");
                 this.metadataProvider = provider;
             }
             catch(Exception e)
             {
                 Log.Debug("Failed to load Roslyn Provider: {0}", e.Message);
-                Log.Debug("Using CodeDom");
+                Log.Info("Using CodeDom");
                 this.metadataProvider = new CodeDomMetadataProvider();
             }
         }
