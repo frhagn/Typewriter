@@ -81,12 +81,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Angular\WebApiController.tst" />
     <None Include="Models\Models.tst" />
     <None Include="Empty\Template.tst" />
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="Empty\EmptyCSharp.vstemplate">
-      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
+      <OutputSubPath>Web/Scripts</OutputSubPath>
       <SubType>Designer</SubType>
     </VSTemplate>
   </ItemGroup>
@@ -112,34 +113,37 @@
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="Empty\EmptyWeb.vstemplate">
-      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
+      <OutputSubPath>Web/Scripts</OutputSubPath>
       <SubType>Designer</SubType>
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Empty\EmptyAspNet5.vstemplate">
-      <OutputSubPath>ASP.NET 5 Preview/TypeScript/TypeScript Templates</OutputSubPath>
-      <SubType>Designer</SubType>
+    <None Include="Models\ModelsCSharp.vstemplate">
+      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Models\ModelsAspNet5.vstemplate">
-      <OutputSubPath>ASP.NET 5 Preview/TypeScript/TypeScript Templates</OutputSubPath>
-      <SubType>Designer</SubType>
+    <None Include="Models\ModelsWeb.vstemplate">
+      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <VSTemplate Include="Models\ModelsCSharp.vstemplate">
-      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
-    </VSTemplate>
-  </ItemGroup>
-  <ItemGroup>
-    <VSTemplate Include="Models\ModelsWeb.vstemplate">
-      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
-    </VSTemplate>
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\tst.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Angular\WebApiControllerCSharp.vstemplate">
+      <SubType>Designer</SubType>
+      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Angular\WebApiControllerWeb.vstemplate">
+      <SubType>Designer</SubType>
+      <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Angular\tst.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

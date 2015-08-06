@@ -6,7 +6,7 @@
     <Icon>tst.ico</Icon>
     <TemplateID>abf556a6-677e-4c55-9550-4563e5829809</TemplateID>
     <ProjectType>CSharp</ProjectType>
-    <NumberOfParentCategoriesToRollUp>2</NumberOfParentCategoriesToRollUp>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <DefaultName>Template.tst</DefaultName>
   </TemplateData>
   <TemplateContent>

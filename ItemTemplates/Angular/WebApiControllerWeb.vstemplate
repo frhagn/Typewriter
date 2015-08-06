@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>Angular WebApi Controller</Name>
+    <Description>Controller Template for using WebApi Controllers with Angular.js</Description>
+    <Icon>tst.ico</Icon>
+    <TemplateID>c5cefb29-7a4a-416f-82cf-128c9521e195</TemplateID>
+    <ProjectType>Web</ProjectType>
+    <NumberOfParentCategoriesToRollUp>2</NumberOfParentCategoriesToRollUp>
+    <DefaultName>Controllers.tst</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <References/>
+    <ProjectItem ReplaceParameters="true" ItemType="None">WebApiController.tst</ProjectItem>
+  </TemplateContent>
+</VSTemplate>
