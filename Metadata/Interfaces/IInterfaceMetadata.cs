@@ -8,7 +8,7 @@ namespace Typewriter.Metadata.Interfaces
         string Namespace { get; }
         bool IsGeneric { get; }
         IClassMetadata ContainingClass { get; }
-        IEnumerable<ITypeMetadata> GenericTypeArguments { get; }
+        IEnumerable<ITypeParameterMetadata> TypeParameters { get; }
         IEnumerable<IInterfaceMetadata> Interfaces { get; }
         IEnumerable<IMethodMetadata> Methods { get; }
         IEnumerable<IPropertyMetadata> Properties { get; }

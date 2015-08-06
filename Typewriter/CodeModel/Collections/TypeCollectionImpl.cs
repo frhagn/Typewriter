@@ -18,21 +18,6 @@ namespace Typewriter.CodeModel.Collections
             }
         }
 
-        protected override IEnumerable<string> GetInheritanceFilter(Type item)
-        {
-            if (item.BaseClass != null)
-            {
-                yield return item.BaseClass.Name;
-                yield return item.BaseClass.FullName;
-            }
-
-            foreach (var implementedInterface in item.Interfaces)
-            {
-                yield return implementedInterface.Name;
-                yield return implementedInterface.FullName;
-            }
-        }
-
         protected override IEnumerable<string> GetItemFilter(Type item)
         {
             yield return item.OriginalName;

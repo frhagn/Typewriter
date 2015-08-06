@@ -1,28 +1,32 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using Typewriter.Metadata.CodeDom;
-using Typewriter.Metadata.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Interfaces", "CodeDom")]
-    public class CodeDomInterfaceTests : InterfaceTests<CodeDomMetadataProvider>
+    [Trait("Interfaces", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    public class CodeDomInterfaceTests : InterfaceTests
     {
+        public CodeDomInterfaceTests(CodeDomFixture fixture) : base(fixture)
+        {
+        }
     }
 
-    //[Trait("Interfaces", "Roslyn")]
-    //public class RoslynInterfaceTests : InterfaceTests<RoslynProviderStub>
-    //{
-    //}
+    [Trait("Interfaces", "Roslyn"), Collection(nameof(RoslynFixture))]
+    public class RoslynInterfaceTests : InterfaceTests
+    {
+        public RoslynInterfaceTests(RoslynFixture fixture) : base(fixture)
+        {
+        }
+    }
 
-    public abstract class InterfaceTests<T> : TestBase<T> where T : IMetadataProvider, new()
+    public abstract class InterfaceTests : TestBase
     {
         private readonly File fileInfo;
 
-        protected InterfaceTests()
+        protected InterfaceTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\IInterfaceInfo.cs");
         }
@@ -55,17 +59,17 @@ namespace Typewriter.Tests.CodeModel
             var interfaceInfo = fileInfo.Interfaces.First();
 
             interfaceInfo.IsGeneric.ShouldBeFalse();
-            interfaceInfo.GenericTypeArguments.Count.ShouldEqual(0);
+            interfaceInfo.TypeParameters.Count.ShouldEqual(0);
         }
 
         [Fact]
         public void Expect_generic_interface_to_be_generic()
         {
             var interfaceInfo = fileInfo.Interfaces.First(i => i.Name == "IGenericInterface");
-            var genericTypeArgument = interfaceInfo.GenericTypeArguments.First();
+            var genericTypeArgument = interfaceInfo.TypeParameters.First();
 
             interfaceInfo.IsGeneric.ShouldBeTrue();
-            interfaceInfo.GenericTypeArguments.Count.ShouldEqual(1);
+            interfaceInfo.TypeParameters.Count.ShouldEqual(1);
             genericTypeArgument.Name.ShouldEqual("T");
         }
 

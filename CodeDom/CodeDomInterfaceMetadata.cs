@@ -22,8 +22,8 @@ namespace Typewriter.Metadata.CodeDom
         public string Namespace => GetNamespace();
         public bool IsGeneric => codeInterface.IsGeneric;
 
-        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeInterface.Attributes, file);
-        public IEnumerable<ITypeMetadata> GenericTypeArguments => GenericTypeMetadata.FromFullName(codeInterface.FullName, file);
+        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeInterface.Attributes);
+        public IEnumerable<ITypeParameterMetadata> TypeParameters => CodeDomTypeParameterMetadata.FromFullName(codeInterface.FullName);
         public IEnumerable<IInterfaceMetadata> Interfaces => CodeDomInterfaceMetadata.FromCodeElements(codeInterface.Bases, file);
         public IEnumerable<IMethodMetadata> Methods => CodeDomMethodMetadata.FromCodeElements(codeInterface.Children, file);
         public IEnumerable<IPropertyMetadata> Properties => CodeDomPropertyMetadata.FromCodeElements(codeInterface.Children, file);

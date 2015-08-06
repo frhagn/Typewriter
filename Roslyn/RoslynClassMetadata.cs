@@ -1,40 +1,47 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis;
 using Typewriter.Metadata.Interfaces;
 
 namespace Typewriter.Metadata.Roslyn
 {
     public class RoslynClassMetadata : IClassMetadata
     {
-        private readonly ClassDeclarationSyntax classSyntax;
+        private readonly INamedTypeSymbol symbol;
 
-        private RoslynClassMetadata(ClassDeclarationSyntax classSyntax)
+        private RoslynClassMetadata(INamedTypeSymbol symbol)
         {
-            this.classSyntax = classSyntax;
+            this.symbol = symbol;
         }
 
-        public string Name => classSyntax.Identifier.Text;
-        public string FullName { get; }
-        public bool IsGeneric { get; }
-        public string Namespace { get; }
-        public IEnumerable<IAttributeMetadata> Attributes { get; }
-        public IClassMetadata BaseClass { get; }
-        public IClassMetadata ContainingClass { get; }
-        public IEnumerable<IConstantMetadata> Constants { get; }
-        public IEnumerable<IFieldMetadata> Fields { get; }
-        public IEnumerable<IInterfaceMetadata> Interfaces { get; }
-        public IEnumerable<IMethodMetadata> Methods { get; }
-        public IEnumerable<IPropertyMetadata> Properties { get; }
-        public IEnumerable<ITypeMetadata> GenericTypeArguments { get; }
-        public IEnumerable<IClassMetadata> NestedClasses { get; }
-        public IEnumerable<IEnumMetadata> NestedEnums { get; }
-        public IEnumerable<IInterfaceMetadata> NestedInterfaces { get; }
+        public string Name => symbol.Name;
+        public string FullName => symbol.ToDisplayString();
+        public bool IsGeneric => symbol.TypeParameters.Any(); // Todo: IsGeneric???
+        public string Namespace => symbol.GetNamespace();
 
-        internal static IEnumerable<IClassMetadata> FromClassSyntax(IEnumerable<ClassDeclarationSyntax> classSyntax)
+        public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
+        public IClassMetadata BaseClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.BaseType);
+        public IClassMetadata ContainingClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.ContainingType);
+        public IEnumerable<IConstantMetadata> Constants => RoslynConstantMetadata.FromFieldSymbols(symbol.GetMembers().OfType<IFieldSymbol>());
+        public IEnumerable<IFieldMetadata> Fields => RoslynFieldMetadata.FromFieldSymbols(symbol.GetMembers().OfType<IFieldSymbol>());
+        public IEnumerable<IInterfaceMetadata> Interfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(symbol.Interfaces);
+        public IEnumerable<IMethodMetadata> Methods => RoslynMethodMetadata.FromMethodSymbols(symbol.GetMembers().OfType<IMethodSymbol>());
+        public IEnumerable<IPropertyMetadata> Properties => RoslynPropertyMetadata.FromPropertySymbol(symbol.GetMembers().OfType<IPropertySymbol>());
+        public IEnumerable<ITypeParameterMetadata> TypeParameters => RoslynTypeParameterMetadata.FromTypeParameterSymbols(symbol.TypeParameters);
+        public IEnumerable<IClassMetadata> NestedClasses => RoslynClassMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Class));
+        public IEnumerable<IEnumMetadata> NestedEnums => RoslynEnumMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Enum));
+        public IEnumerable<IInterfaceMetadata> NestedInterfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Interface));
+
+        internal static IClassMetadata FromNamedTypeSymbol(INamedTypeSymbol symbol)
         {
-            return classSyntax.Where(c => c.Modifiers.Any(m => m.Kind() == SyntaxKind.PublicKeyword)).Select(c => new RoslynClassMetadata(c));
+            if (symbol?.DeclaredAccessibility != Accessibility.Public || symbol.ToDisplayString() == "object") return null;
+
+            return new RoslynClassMetadata(symbol);
+        }
+
+        internal static IEnumerable<IClassMetadata> FromNamedTypeSymbols(IEnumerable<INamedTypeSymbol> symbols)
+        {
+            return symbols.Where(s => s.DeclaredAccessibility == Accessibility.Public && s.ToDisplayString() != "object").Select(s => new RoslynClassMetadata(s));
         }
     }
 }

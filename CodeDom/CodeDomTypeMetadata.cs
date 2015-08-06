@@ -9,29 +9,6 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class CodeDomTypeMetadata : ITypeMetadata
     {
-        private static readonly Dictionary<string, string> primitiveTypes = new Dictionary<string, string>
-        {
-            { "System.Boolean", "bool" },
-            { "System.Byte", "byte" },
-            { "System.Char", "char" },
-            { "System.Decimal", "decimal" },
-            { "System.Double", "double" },
-            { "System.Int16", "short" },
-            { "System.Int32", "int" },
-            { "System.Int64", "long" },
-            { "System.SByte", "sbyte" },
-            { "System.Single", "float" },
-            { "System.String", "string" },
-            { "System.UInt32", "uint" },
-            { "System.UInt16", "ushort" },
-            { "System.UInt64", "ulong" },
-            
-            { "System.DateTime", "DateTime" },
-            { "System.DateTimeOffset", "DateTimeOffset" },
-            { "System.Guid", "Guid" },
-            { "System.TimeSpan", "TimeSpan" },
-        };
-
         protected CodeType codeType;
         private readonly bool isNullable;
         private readonly CodeDomFileMetadata file;
@@ -44,7 +21,7 @@ namespace Typewriter.Metadata.CodeDom
             this.file = file;
         }
 
-        public virtual string Name => GetName(CodeType.Name, CodeType.FullName);
+        public virtual string Name => GetName(CodeType.Name);
         public virtual string FullName => GetFullName(CodeType.FullName);
         public virtual string Namespace => GetNamespace();
 
@@ -53,30 +30,17 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsEnum => CodeType.Kind == vsCMElement.vsCMElementEnum;
         public bool IsEnumerable => IsCollection(FullName);
 
-        public IClassMetadata BaseClass => CodeDomClassMetadata.FromCodeElements(CodeType.Bases, file).FirstOrDefault();
-        public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(CodeType.Parent as CodeClass2, file);
-        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(CodeType.Attributes, file);
-        public IEnumerable<IConstantMetadata> Constants => CodeDomConstantMetadata.FromCodeElements(CodeType.Children, file);
-        public IEnumerable<IFieldMetadata> Fields => CodeDomFieldMetadata.FromCodeElements(CodeType.Children, file);
-        public IEnumerable<IInterfaceMetadata> Interfaces => CodeDomInterfaceMetadata.FromCodeElements(CodeType.Bases, file);
-        public IEnumerable<IMethodMetadata> Methods => CodeDomMethodMetadata.FromCodeElements(CodeType.Children, file);
-        public IEnumerable<IPropertyMetadata> Properties => CodeDomPropertyMetadata.FromCodeElements(CodeType.Children, file);
-        public IEnumerable<IClassMetadata> NestedClasses => CodeDomClassMetadata.FromCodeElements(CodeType.Members, file);
-        public IEnumerable<IEnumMetadata> NestedEnums => CodeDomEnumMetadata.FromCodeElements(CodeType.Members, file);
-        public IEnumerable<IInterfaceMetadata> NestedInterfaces => CodeDomInterfaceMetadata.FromCodeElements(CodeType.Members, file);
-        public IEnumerable<ITypeMetadata> GenericTypeArguments => LoadGenericTypeArguments();
-
+        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(CodeType.Attributes);
+        public IEnumerable<ITypeMetadata> TypeArguments => LoadGenericTypeArguments();
+        
         private string GetNamespace()
         {
             var parent = CodeType.Parent as CodeClass2;
             return parent != null ? parent.FullName : CodeType.Namespace.FullName;
         }
 
-        protected string GetName(string name, string fullName)
+        protected string GetName(string name)
         {
-            if (primitiveTypes.ContainsKey(fullName))
-                name = primitiveTypes[fullName];
-
             return name + (IsNullable ? "?" : string.Empty);
         }
 
@@ -89,7 +53,7 @@ namespace Typewriter.Metadata.CodeDom
         {
             if (IsGeneric == false) return new ITypeMetadata[0];
 
-            return GenericTypeMetadata.ExtractGenericTypeNames(FullName).Select(fullName =>
+            return LazyCodeDomTypeMetadata.ExtractGenericTypeNames(FullName).Select(fullName =>
             {
                 if (fullName.EndsWith("[]"))
                     fullName = $"System.Collections.Generic.ICollection<{fullName.TrimEnd('[', ']')}>";
@@ -105,33 +69,6 @@ namespace Typewriter.Metadata.CodeDom
             });
         }
 
-        public bool IsPrimitive
-        {
-            get
-            {
-                var fullName = FullName;
-
-                if (IsNullable)
-                {
-                    fullName = fullName.TrimEnd('?');
-                }
-                else if (IsEnumerable)
-                {
-                    var innerType = GenericTypeArguments.FirstOrDefault();
-                    if (innerType != null)
-                    {
-                        fullName = innerType.IsNullable ? innerType.FullName.TrimEnd('?') : innerType.FullName;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                
-                return IsEnum || primitiveTypes.ContainsKey(fullName);
-            }
-        }
-
         private static ITypeMetadata GetType(dynamic element, CodeDomFileMetadata file)
         {
             //try
@@ -139,7 +76,7 @@ namespace Typewriter.Metadata.CodeDom
             var isGenericTypeArgument = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefOther && element.Type.AsFullName.Split('.').Length == 1;
             if (isGenericTypeArgument)
             {
-                return new GenericTypeMetadata(element.Type.AsFullName, file);
+                return new GenericTypeMetadata(element.Type.AsFullName);
             }
 
             var isArray = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefArray;

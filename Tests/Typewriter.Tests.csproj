@@ -132,6 +132,7 @@
     <Compile Include="..\Typewriter\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeModel\AttributeTests.cs" />
     <Compile Include="CodeModel\EnumTests.cs" />
     <Compile Include="CodeModel\MethodTests.cs" />
     <Compile Include="CodeModel\PropertyTests.cs" />
@@ -145,7 +146,10 @@
     <Compile Include="CodeModel\Support\FileInfo.cs" />
     <Compile Include="CodeModel\Support\AttributeInfo.cs" />
     <Compile Include="CodeModel\FileTests.cs" />
+    <Compile Include="TestInfrastructure\CodeDomFixture.cs" />
+    <Compile Include="TestInfrastructure\RoslynFixture.cs" />
     <Compile Include="TestInfrastructure\Dte.cs" />
+    <Compile Include="TestInfrastructure\ITestFixture.cs" />
     <Compile Include="TestInfrastructure\MessageFilter.cs" />
     <Compile Include="Render\RenderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,7 +166,7 @@
     <Compile Include="Render\Support\IHttpActionResult.cs" />
     <Compile Include="Render\WebApiController\WebApiController.cs" />
     <Compile Include="TestInfrastructure\TestBase.cs" />
-    <Compile Include="TestInfrastructure\RoslynProviderStub.cs" />
+    <Compile Include="TestInfrastructure\RoslynMetadataProviderStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -39,10 +39,10 @@ namespace Typewriter.CodeModel
         public abstract bool IsGeneric { get; }
 
         /// <summary>
-        /// All generic type arguments of the method.
+        /// All generic type parameters of the method.
         /// </summary>
-        [Property("collection GenericTypeArguments", "All generic type arguments of the $context.", requireTemplate: false)]
-        public abstract TypeCollection GenericTypeArguments { get; }
+        [Property("collection TypeParameters", "All generic type parameters of the $context.", requireTemplate: false)]
+        public abstract TypeParameterCollection TypeParameters { get; }
 
         /// <summary>
         /// All parameters of the method.

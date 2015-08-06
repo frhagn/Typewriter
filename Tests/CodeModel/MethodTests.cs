@@ -8,21 +8,27 @@ using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Methods", "CodeDom")]
-    public class CodeDomMethodTests : MethodTests<CodeDomMetadataProvider>
+    [Trait("Methods", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    public class CodeDomMethodTests : MethodTests
     {
+        public CodeDomMethodTests(CodeDomFixture fixture) : base(fixture)
+        {
+        }
     }
 
-    //[Trait("Methods", "Roslyn")]
-    //public class RoslynMethodTests : MethodTests<RoslynProviderStub>
-    //{
-    //}
+    [Trait("Methods", "Roslyn"), Collection(nameof(RoslynFixture))]
+    public class RoslynMethodTests : MethodTests
+    {
+        public RoslynMethodTests(RoslynFixture fixture) : base(fixture)
+        {
+        }
+    }
 
-    public abstract class MethodTests<T> : TestBase<T> where T : IMetadataProvider, new()
+    public abstract class MethodTests : TestBase
     {
         private readonly File fileInfo;
 
-        protected MethodTests()
+        protected MethodTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\MethodInfo.cs");
         }
@@ -80,6 +86,7 @@ namespace Typewriter.Tests.CodeModel
             var classInfo = fileInfo.Classes.First();
             var methodInfo = classInfo.Methods.First(p => p.Name == "Method");
             
+            methodInfo.Type.FullName.ShouldEqual("System.Void");
             methodInfo.Type.Name.ShouldEqual("void");
             methodInfo.Type.OriginalName.ShouldEqual("Void");
             methodInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
@@ -94,16 +101,15 @@ namespace Typewriter.Tests.CodeModel
         {
             var classInfo = fileInfo.Classes.First();
             var methodInfo = classInfo.Methods.First(p => p.Name == "Generic");
-            var genericTypeInfo = methodInfo.GenericTypeArguments.First();
+            var genericTypeInfo = methodInfo.TypeParameters.First();
             var parameterTypeInfo = methodInfo.Parameters.First().Type;
 
             methodInfo.IsGeneric.ShouldBeTrue("IsGeneric");
-            methodInfo.GenericTypeArguments.Count.ShouldEqual(1);
+            methodInfo.TypeParameters.Count.ShouldEqual(1);
 
             methodInfo.Type.Name.ShouldEqual("T");
             methodInfo.Type.FullName.ShouldEqual("T");
             genericTypeInfo.Name.ShouldEqual("T");
-            genericTypeInfo.FullName.ShouldEqual("T");
             parameterTypeInfo.Name.ShouldEqual("T");
             parameterTypeInfo.FullName.ShouldEqual("T");
         }
@@ -116,7 +122,7 @@ namespace Typewriter.Tests.CodeModel
             var parameterTypeInfo = methodInfo.Parameters.First().Type;
 
             methodInfo.IsGeneric.ShouldBeFalse("IsGeneric");
-            methodInfo.GenericTypeArguments.Count.ShouldEqual(0);
+            methodInfo.TypeParameters.Count.ShouldEqual(0);
 
             methodInfo.Type.Name.ShouldEqual("T");
             methodInfo.Type.FullName.ShouldEqual("T");
@@ -133,7 +139,7 @@ namespace Typewriter.Tests.CodeModel
             var secondParameterTypeInfo = methodInfo.Parameters.First(p => p.Name == "parameter2").Type;
 
             methodInfo.IsGeneric.ShouldBeTrue("IsGeneric");
-            methodInfo.GenericTypeArguments.Count.ShouldEqual(1);
+            methodInfo.TypeParameters.Count.ShouldEqual(1);
 
             methodInfo.Type.Name.ShouldEqual("T1");
             methodInfo.Type.FullName.ShouldEqual("T1");

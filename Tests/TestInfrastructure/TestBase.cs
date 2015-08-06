@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using EnvDTE;
 using Typewriter.CodeModel.Implementation;
 using Typewriter.Metadata.Providers;
@@ -10,34 +9,15 @@ using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.Tests.TestInfrastructure
 {
-    //public abstract class CodeDomTestBase : TestBase
-    //{
-    //    protected CodeDomTestBase()
-    //    {
-    //        //if (codeModelProvider == null) codeModelProvider = new CodeDomMetadataProvider();
-    //    }
-    //}
-
-    //public abstract class RoslynTestBase : TestBase
-    //{
-    //    protected RoslynTestBase()
-    //    {
-    //        if (codeModelProvider == null) codeModelProvider = new RoslynProviderStub();
-    //    }
-    //}
-
-    public abstract class TestBase<T> : IDisposable where T : IMetadataProvider, new()
+    public abstract class TestBase
     {
-        private static DTE dte;
-        protected static IMetadataProvider metadataProvider;// = new CodeDomMetadataProvider();
+        private readonly DTE dte;
+        private readonly IMetadataProvider metadataProvider;
 
-        protected TestBase()
+        protected TestBase(ITestFixture fixture)
         {
-            if(dte == null) dte = Dte.GetInstance("Typewriter.sln");
-            if (metadataProvider == null) metadataProvider = new T();
-            
-            // Handle threading errors when calling into Visual Studio.
-            MessageFilter.Register();
+            this.dte = fixture.Dte;
+            this.metadataProvider = fixture.Provider;
         }
         
         protected string SolutionDirectory => new FileInfo(dte.Solution.FileName).Directory?.FullName;
@@ -56,11 +36,6 @@ namespace Typewriter.Tests.TestInfrastructure
         {
             var metadata = metadataProvider.GetFile(GetProjectItem(path));
             return new FileImpl(metadata);
-        }
-
-        public void Dispose()
-        {
-            MessageFilter.Revoke();
         }
     }
 }

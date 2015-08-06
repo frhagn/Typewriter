@@ -57,6 +57,7 @@
     <Compile Include="CodeDomFieldMetadata.cs" />
     <Compile Include="CodeDomFileMetadata.cs" />
     <Compile Include="CodeDomMetadataProvider.cs" />
+    <Compile Include="CodeDomTypeParameterMetadata.cs" />
     <Compile Include="GenericTypeMetadata.cs" />
     <Compile Include="CodeDomInterfaceMetadata.cs" />
     <Compile Include="LazyCodeDomTypeMetadata.cs" />

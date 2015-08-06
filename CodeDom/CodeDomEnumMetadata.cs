@@ -20,7 +20,7 @@ namespace Typewriter.Metadata.CodeDom
         public string Name => codeEnum.Name;
         public string FullName => codeEnum.FullName;
         public string Namespace => GetNamespace();
-        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeEnum.Attributes, file);
+        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeEnum.Attributes);
         public IEnumerable<IEnumValueMetadata> Values => CodeDomEnumValueMetadata.FromCodeElements(codeEnum.Members, file);
         public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeEnum.Parent as CodeClass2, file);
 

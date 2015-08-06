@@ -5,9 +5,9 @@
     }
 }
 module App {$Classes(*WebApiController)[    
-    export class $Name$GenericTypeArguments {
+    export class $Name$TypeParameters {
         $Methods[
-        public $name = ($Parameters[$name: $Type][, ]) : Promise<$Type[$GenericTypeArguments[$GenericTypeArguments[$Name]]]> => {
+        public $name = ($Parameters[$name: $Type][, ]) : Promise<$Type[$TypeArguments[$TypeArguments[$Name]]]> => {
             var verb = '$Verb';
             var route = '$Route';
         };]

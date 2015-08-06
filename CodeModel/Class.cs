@@ -87,10 +87,10 @@ namespace Typewriter.CodeModel
         public abstract PropertyCollection Properties { get; }
 
         /// <summary>
-        /// All generic type arguments of the class.
+        /// All generic type parameters of the class.
         /// </summary>
-        [Property("collection GenericTypeArguments", "All generic type arguments of the $context.", requireTemplate: false)]
-        public abstract TypeCollection GenericTypeArguments { get; }
+        [Property("collection TypeParameters", "All generic type parameters of the $context.", requireTemplate: false)]
+        public abstract TypeParameterCollection TypeParameters { get; }
 
         /// <summary>
         /// All classes defined in the class.

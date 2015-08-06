@@ -1,27 +1,33 @@
 ﻿using Should;
-using Typewriter.CodeModel;
-using Typewriter.CodeModel.Implementation;
 using Typewriter.Generation;
-using Typewriter.Metadata.CodeDom;
-using Typewriter.Metadata.Providers;
 using Typewriter.Tests.Render.RoutedApiController;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.Render
 {
-    [Trait("Render", "CodeDom")]
-    public class CodeDomRenderTests : RenderTests<CodeDomMetadataProvider>
+    [Trait("Render", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    public class CodeDomRenderTests : RenderTests
     {
+        public CodeDomRenderTests(CodeDomFixture fixture) : base(fixture)
+        {
+        }
     }
 
-    //[Trait("Render", "Roslyn")]
-    //public class RoslynRenderTests : RenderTests<RoslynProviderStub>
-    //{
-    //}
-
-    public abstract class RenderTests<T> : TestBase<T> where T : IMetadataProvider, new()
+    [Trait("Render", "Roslyn"), Collection(nameof(RoslynFixture))]
+    public class RoslynRenderTests : RenderTests
     {
+        public RoslynRenderTests(RoslynFixture fixture) : base(fixture)
+        {
+        }
+    }
+
+    public abstract class RenderTests : TestBase
+    {
+        protected RenderTests(ITestFixture fixture) : base(fixture)
+        {
+        }
+
         private void Assert<TClass>()
         {
             var type = typeof(TClass);
@@ -30,8 +36,7 @@ namespace Typewriter.Tests.Render
             var path = string.Join(@"\", nsParts);
 
             var template = new Template(GetProjectItem(path + ".tstemplate"));
-            var metadata = metadataProvider.GetFile(GetProjectItem(path + ".cs"));
-            var file = new FileImpl(metadata);
+            var file = GetFile(path + ".cs");
             var result = GetFileContents(path + ".result");
 
             bool success;

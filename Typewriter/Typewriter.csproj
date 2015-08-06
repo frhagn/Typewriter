@@ -252,6 +252,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeModel\Collections\TypeParameterCollectionImpl.cs" />
+    <Compile Include="CodeModel\Implementation\TypeParameterImpl.cs" />
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
     <Compile Include="CodeModel\Collections\AttributeCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\ClassCollectionImpl.cs" />
@@ -340,6 +342,10 @@
     <None Include="Resources\Project.ico" />
     <Content Include="..\CodeModel\Typewriter.CodeModel.XML">
       <Link>Resources\Typewriter.CodeModel.XML</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\Roslyn\bin\Debug\Typewriter.Metadata.Roslyn.dll">
+      <Link>Typewriter.Metadata.Roslyn.dll</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Icons.pkgdef">

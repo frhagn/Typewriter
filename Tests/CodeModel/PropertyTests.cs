@@ -1,28 +1,32 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using Typewriter.Metadata.CodeDom;
-using Typewriter.Metadata.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Properties", "CodeDom")]
-    public class CodeDomPropertyTests : PropertyTests<CodeDomMetadataProvider>
+    [Trait("Properties", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    public class CodeDomPropertyTests : PropertyTests
     {
+        public CodeDomPropertyTests(CodeDomFixture fixture) : base(fixture)
+        {
+        }
     }
 
-    //[Trait("Properties", "Roslyn")]
-    //public class RoslynPropertyTests : PropertyTests<RoslynProviderStub>
-    //{
-    //}
+    [Trait("Properties", "Roslyn"), Collection(nameof(RoslynFixture))]
+    public class RoslynPropertyTests : PropertyTests
+    {
+        public RoslynPropertyTests(RoslynFixture fixture) : base(fixture)
+        {
+        }
+    }
 
-    public abstract class PropertyTests<T> : TestBase<T> where T : IMetadataProvider, new()
+    public abstract class PropertyTests : TestBase
     {
         private readonly File fileInfo;
 
-        protected PropertyTests()
+        protected PropertyTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\PropertyInfo.cs");
         }
@@ -32,7 +36,7 @@ namespace Typewriter.Tests.CodeModel
         {
             var classInfo = fileInfo.Classes.First();
             var propertyInfo = classInfo.Properties.First(p => p.Name == "Bool");
-
+            
             propertyInfo.Name.ShouldEqual("Bool");
             propertyInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.PropertyInfo.Bool");
             propertyInfo.Parent.ShouldEqual(classInfo);
@@ -101,7 +105,166 @@ namespace Typewriter.Tests.CodeModel
                 propertyInfo.Type.IsGeneric.ShouldBeFalse($"IsGeneric {property}");
                 propertyInfo.Type.IsNullable.ShouldBeFalse($"IsNullable {property}");
                 propertyInfo.Type.IsPrimitive.ShouldBeTrue($"IsPrimitive {property}");
+                propertyInfo.Type.IsDate.ShouldBeFalse($"IsDate {property}");
+                propertyInfo.Type.IsGuid.ShouldBeFalse($"IsGuid {property}");
+                propertyInfo.Type.IsTimeSpan.ShouldBeFalse($"IsTimeSpan {property}");
             }
+        }
+
+        [Fact]
+        public void Expect_datetime_properties_to_be_primitive()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var properties = new[] { "DateTime", "DateTimeOffset" };
+
+            foreach (var property in properties)
+            {
+                var propertyInfo = classInfo.Properties.First(p => p.Name == property);
+
+                propertyInfo.Type.IsEnum.ShouldBeFalse($"IsEnum {property}");
+                propertyInfo.Type.IsEnumerable.ShouldBeFalse($"IsEnumerable {property}");
+                propertyInfo.Type.IsGeneric.ShouldBeFalse($"IsGeneric {property}");
+                propertyInfo.Type.IsNullable.ShouldBeFalse($"IsNullable {property}");
+                propertyInfo.Type.IsPrimitive.ShouldBeTrue($"IsPrimitive {property}");
+                propertyInfo.Type.IsDate.ShouldBeTrue($"IsDate {property}");
+                propertyInfo.Type.IsGuid.ShouldBeFalse($"IsGuid {property}");
+                propertyInfo.Type.IsTimeSpan.ShouldBeFalse($"IsTimeSpan {property}");
+
+                propertyInfo.Type.Name.ShouldEqual("Date");
+            }
+        }
+
+        [Fact]
+        public void Expect_guid_properties_to_be_primitive()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var propertyInfo = classInfo.Properties.First(p => p.Name == "Guid");
+
+            propertyInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
+            propertyInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
+            propertyInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
+            propertyInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            propertyInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
+            propertyInfo.Type.IsDate.ShouldBeFalse("IsDate");
+            propertyInfo.Type.IsGuid.ShouldBeTrue("IsGuid");
+            propertyInfo.Type.IsTimeSpan.ShouldBeFalse("IsTimeSpan");
+
+            propertyInfo.Type.Name.ShouldEqual("string");
+        }
+
+        [Fact]
+        public void Expect_timespan_properties_to_be_primitive()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var propertyInfo = classInfo.Properties.First(p => p.Name == "TimeSpan");
+
+            propertyInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
+            propertyInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
+            propertyInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
+            propertyInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            propertyInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
+            propertyInfo.Type.IsDate.ShouldBeFalse("IsDate");
+            propertyInfo.Type.IsGuid.ShouldBeFalse("IsGuid");
+            propertyInfo.Type.IsTimeSpan.ShouldBeTrue("IsTimeSpan");
+
+            propertyInfo.Type.Name.ShouldEqual("string");
+        }
+
+        [Fact]
+        public void Expect_object_and_dynamic_properties_to_return_any()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var objectInfo = classInfo.Properties.First(p => p.Name == "Object");
+            var dynamicInfo = classInfo.Properties.First(p => p.Name == "Dynamic");
+
+            objectInfo.Type.Name.ShouldEqual("any");
+            objectInfo.Type.FullName.ShouldEqual("System.Object");
+            objectInfo.Type.OriginalName.ShouldEqual("Object");
+            dynamicInfo.Type.Name.ShouldEqual("any");
+            dynamicInfo.Type.FullName.ShouldEqual("dynamic");
+            dynamicInfo.Type.OriginalName.ShouldEqual("dynamic");
+        }
+
+        [Fact]
+        public void Expect_enum_properties_to_be_enums()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var enumInfo = classInfo.Properties.First(p => p.Name == "Enum");
+
+            enumInfo.Type.IsEnum.ShouldBeTrue("IsEnum");
+            enumInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
+            enumInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
+            enumInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            enumInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
+            enumInfo.Type.IsDate.ShouldBeFalse("IsDate");
+            enumInfo.Type.IsGuid.ShouldBeFalse("IsGuid");
+            enumInfo.Type.IsTimeSpan.ShouldBeFalse("IsTimeSpan");
+        }
+
+        [Fact]
+        public void Expect_nullable_enum_properties_to_be_enums()
+        {
+            var classInfo = fileInfo.Classes.First();
+
+            var nullableEnumInfo1 = classInfo.Properties.First(p => p.Name == "NullableEnum1");
+            var nullableEnumInfo2 = classInfo.Properties.First(p => p.Name == "NullableEnum2");
+
+            nullableEnumInfo1.Type.Name.ShouldEqual("ConsoleColor");
+            nullableEnumInfo1.Type.OriginalName.ShouldEqual("ConsoleColor?");
+            nullableEnumInfo1.Type.FullName.ShouldEqual("System.ConsoleColor?");
+
+            nullableEnumInfo1.Type.IsEnum.ShouldBeTrue("IsEnum");
+            nullableEnumInfo1.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
+            nullableEnumInfo1.Type.IsGeneric.ShouldBeFalse("IsGeneric");
+            nullableEnumInfo1.Type.IsNullable.ShouldBeTrue("IsNullable");
+            nullableEnumInfo1.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
+            nullableEnumInfo1.Type.IsDate.ShouldBeFalse("IsDate");
+            nullableEnumInfo1.Type.IsGuid.ShouldBeFalse("IsGuid");
+            nullableEnumInfo1.Type.IsTimeSpan.ShouldBeFalse("IsTimeSpan");
+            
+            nullableEnumInfo2.Type.Name.ShouldEqual("ConsoleColor");
+            nullableEnumInfo2.Type.OriginalName.ShouldEqual("ConsoleColor?");
+            nullableEnumInfo2.Type.FullName.ShouldEqual("System.ConsoleColor?");
+
+            nullableEnumInfo2.Type.IsEnum.ShouldBeTrue("IsEnum");
+            nullableEnumInfo2.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
+            nullableEnumInfo2.Type.IsGeneric.ShouldBeFalse("IsGeneric");
+            nullableEnumInfo2.Type.IsNullable.ShouldBeTrue("IsNullable");
+            nullableEnumInfo2.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
+            nullableEnumInfo2.Type.IsDate.ShouldBeFalse("IsDate");
+            nullableEnumInfo2.Type.IsGuid.ShouldBeFalse("IsGuid");
+            nullableEnumInfo2.Type.IsTimeSpan.ShouldBeFalse("IsTimeSpan");
+        }
+
+        [Fact]
+        public void Expect_keyword_properties_to_return_keyword_name()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var intInfo = classInfo.Properties.First(p => p.Name == "Int");
+            var nullableIntInfo1 = classInfo.Properties.First(p => p.Name == "NullableInt1");
+            var nullableIntInfo2 = classInfo.Properties.First(p => p.Name == "NullableInt2");
+            var enumerableIntInfo = classInfo.Properties.First(p => p.Name == "EnumerableInt");
+            var enumerableNullableIntInfo = classInfo.Properties.First(p => p.Name == "EnumerableNullableInt");
+
+            intInfo.Type.Name.ShouldEqual("number");
+            intInfo.Type.OriginalName.ShouldEqual("int");
+            intInfo.Type.FullName.ShouldEqual("System.Int32");
+
+            nullableIntInfo1.Type.Name.ShouldEqual("number");
+            nullableIntInfo1.Type.OriginalName.ShouldEqual("int?");
+            nullableIntInfo1.Type.FullName.ShouldEqual("System.Int32?");
+
+            nullableIntInfo2.Type.Name.ShouldEqual("number");
+            nullableIntInfo2.Type.OriginalName.ShouldEqual("int?");
+            nullableIntInfo2.Type.FullName.ShouldEqual("System.Int32?");
+
+            enumerableIntInfo.Type.Name.ShouldEqual("number[]");
+            enumerableIntInfo.Type.OriginalName.ShouldEqual("IEnumerable");
+            enumerableIntInfo.Type.FullName.ShouldEqual("System.Collections.Generic.IEnumerable<System.Int32>");
+
+            enumerableNullableIntInfo.Type.Name.ShouldEqual("number[]");
+            enumerableNullableIntInfo.Type.OriginalName.ShouldEqual("IEnumerable");
+            enumerableNullableIntInfo.Type.FullName.ShouldEqual("System.Collections.Generic.IEnumerable<System.Int32?>");
         }
 
         [Fact]
@@ -129,6 +292,17 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_untyped_enumerable_properties_to_return_any_array()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var arrayInfo = classInfo.Properties.First(p => p.Name == "Array");
+            var enumerableInfo = classInfo.Properties.First(p => p.Name == "Enumerable");
+
+            arrayInfo.Type.Name.ShouldEqual("any[]");
+            enumerableInfo.Type.Name.ShouldEqual("any[]");
+        }
+
+        [Fact]
         public void Expect_string_properties_not_to_be_enumerable()
         {
             var classInfo = fileInfo.Classes.First();
@@ -152,7 +326,7 @@ namespace Typewriter.Tests.CodeModel
         {
             var classInfo = fileInfo.Classes.First(c => c.Name == "GenericPropertyInfo");
             var genericInfo = classInfo.Properties.First(p => p.Name == "EnumerableGeneric");
-            var innerType = genericInfo.Type.GenericTypeArguments.First();
+            var innerType = genericInfo.Type.TypeArguments.First();
 
             genericInfo.Type.IsEnumerable.ShouldBeTrue();
             genericInfo.Type.IsGeneric.ShouldBeTrue();
@@ -161,9 +335,56 @@ namespace Typewriter.Tests.CodeModel
             genericInfo.Type.OriginalName.ShouldEqual("IEnumerable");
             genericInfo.Type.FullName.ShouldEqual("System.Collections.Generic.IEnumerable<T>");
 
-            genericInfo.Type.GenericTypeArguments.Count.ShouldEqual(1);
+            genericInfo.Type.TypeArguments.Count.ShouldEqual(1);
             innerType.Name.ShouldEqual("T");
             innerType.FullName.ShouldEqual("T");
+        }
+
+        [Fact]
+        public void Expect_type_class_name_to_match_class_name()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var propertyInfo = classInfo.Properties.First(p => p.Name == "Class");
+
+            propertyInfo.Type.Name.ShouldEqual("ClassInfo");
+            propertyInfo.Type.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.ClassInfo");
+            propertyInfo.Type.Namespace.ShouldEqual("Typewriter.Tests.CodeModel.Support");
+            propertyInfo.Type.Parent.ShouldEqual(propertyInfo);
+        }
+
+        [Fact]
+        public void Expect_to_find_class_attributes()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var propertyInfo = classInfo.Properties.First(p => p.Name == "Class");
+
+            var attributeInfo = propertyInfo.Type.Attributes.First();
+
+            propertyInfo.Type.Attributes.Count.ShouldEqual(1);
+            attributeInfo.Name.ShouldEqual("AttributeInfo");
+            attributeInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.AttributeInfoAttribute");
+        }
+
+        [Fact]
+        public void Expect_non_generic_type_class_not_to_be_generic()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var propertyInfo = classInfo.Properties.First(p => p.Name == "Class");
+
+            propertyInfo.Type.IsGeneric.ShouldBeFalse();
+            propertyInfo.Type.TypeArguments.Count.ShouldEqual(0);
+        }
+
+        [Fact]
+        public void Expect_generic_type_class_to_be_generic()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var propertyTypeInfo = classInfo.Properties.First(p => p.Name == "GenericClass");
+            var genericTypeArgument = propertyTypeInfo.Type.TypeArguments.First();
+
+            propertyTypeInfo.Type.IsGeneric.ShouldBeTrue();
+            propertyTypeInfo.Type.TypeArguments.Count.ShouldEqual(1);
+            genericTypeArgument.Name.ShouldEqual("string");
         }
     }
 }

@@ -113,10 +113,22 @@
     <Compile Include="..\Typewriter\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="RoslynAttributeMetadata.cs" />
     <Compile Include="RoslynClassMetadata.cs" />
+    <Compile Include="RoslynConstantMetadata.cs" />
+    <Compile Include="RoslynEnumMetadata.cs" />
+    <Compile Include="RoslynEnumValueMetadata.cs" />
+    <Compile Include="RoslynFieldMetadata.cs" />
     <Compile Include="RoslynFileMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoslynInterfaceMetadata.cs" />
     <Compile Include="RoslynMetadataProvider.cs" />
+    <Compile Include="RoslynMethodMetadata.cs" />
+    <Compile Include="RoslynParameterMetadata.cs" />
+    <Compile Include="RoslynPropertyMetadata.cs" />
+    <Compile Include="RoslynTypeMetadata.cs" />
+    <Compile Include="RoslynTypeParameterMetadata.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

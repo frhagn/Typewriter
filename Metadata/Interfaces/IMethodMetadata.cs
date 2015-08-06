@@ -5,7 +5,7 @@ namespace Typewriter.Metadata.Interfaces
     public interface IMethodMetadata : IFieldMetadata
     {
         bool IsGeneric { get; }
-        IEnumerable<ITypeMetadata> GenericTypeArguments { get; }
+        IEnumerable<ITypeParameterMetadata> TypeParameters { get; }
         IEnumerable<IParameterMetadata> Parameters { get; }
     }
 }

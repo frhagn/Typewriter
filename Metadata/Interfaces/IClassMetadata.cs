@@ -14,7 +14,7 @@ namespace Typewriter.Metadata.Interfaces
         IEnumerable<IInterfaceMetadata> Interfaces { get; }
         IEnumerable<IMethodMetadata> Methods { get; }
         IEnumerable<IPropertyMetadata> Properties { get; }
-        IEnumerable<ITypeMetadata> GenericTypeArguments { get; }
+        IEnumerable<ITypeParameterMetadata> TypeParameters { get; }
         IEnumerable<IClassMetadata> NestedClasses { get; }
         IEnumerable<IEnumMetadata> NestedEnums { get; }
         IEnumerable<IInterfaceMetadata> NestedInterfaces { get; }

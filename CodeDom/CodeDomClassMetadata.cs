@@ -23,10 +23,10 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsGeneric => codeClass.IsGeneric;
         public IClassMetadata BaseClass => CodeDomClassMetadata.FromCodeElements(codeClass.Bases, file).FirstOrDefault();
         public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeClass.Parent as CodeClass2, file);
-        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeClass.Attributes, file);
+        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeClass.Attributes);
         public IEnumerable<IConstantMetadata> Constants => CodeDomConstantMetadata.FromCodeElements(codeClass.Children, file);
         public IEnumerable<IFieldMetadata> Fields => CodeDomFieldMetadata.FromCodeElements(codeClass.Children, file);
-        public IEnumerable<ITypeMetadata> GenericTypeArguments => GenericTypeMetadata.FromFullName(codeClass.FullName, file);
+        public IEnumerable<ITypeParameterMetadata> TypeParameters => CodeDomTypeParameterMetadata.FromFullName(codeClass.FullName);
         public IEnumerable<IInterfaceMetadata> Interfaces => CodeDomInterfaceMetadata.FromCodeElements(codeClass.ImplementedInterfaces, file);
         public IEnumerable<IMethodMetadata> Methods => CodeDomMethodMetadata.FromCodeElements(codeClass.Children, file);
         public IEnumerable<IPropertyMetadata> Properties => CodeDomPropertyMetadata.FromCodeElements(codeClass.Children, file);
@@ -47,7 +47,7 @@ namespace Typewriter.Metadata.CodeDom
 
         internal static IClassMetadata FromCodeClass(CodeClass2 codeClass, CodeDomFileMetadata file)
         {
-            return codeClass == null ? null : new CodeDomClassMetadata(codeClass, file);
+            return codeClass == null || codeClass.Access != vsCMAccess.vsCMAccessPublic || codeClass.FullName == "System.Object" ? null : new CodeDomClassMetadata(codeClass, file);
         }
     }
 }

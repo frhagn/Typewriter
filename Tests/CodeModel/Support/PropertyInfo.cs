@@ -28,20 +28,20 @@ namespace Typewriter.Tests.CodeModel.Support
         public double Double { get; set; }
         public decimal Decimal { get; set; }
 
-        public object Object { get; set; }
+        // Special types
         public DateTime DateTime { get; set; }
+        public DateTimeOffset DateTimeOffset { get; set; }
+        public Guid Guid { get; set; }
+        public TimeSpan TimeSpan { get; set; }
+        public object Object { get; set; }
+        public dynamic Dynamic { get; set; }
 
-        // Framework types
-        public Guid Guid { get; set; } // Struct
+        // Enums
+        public ConsoleColor Enum { get; set; }
+        public ConsoleColor? NullableEnum1 { get; set; }
+        public Nullable<ConsoleColor> NullableEnum2 { get; set; }
+
         public Exception Exception { get; set; } // Class
-        public IDisposable Disposable { get; set; } // Interface
-        public ConsoleColor ConsoleColor { get; set; } // Enum
-        public Action Action { get; set; } // Delegate
-
-        // Defined types
-        public ClassInfo Class { get; set; }
-        public IInterfaceInfo Interface { get; set; }
-        public EnumInfo Enum { get; set; }
 
         // Untyped collections
         public Array Array { get; set; }
@@ -50,13 +50,23 @@ namespace Typewriter.Tests.CodeModel.Support
         // Typed collections
         public string[] StringArray { get; set; }
         public IEnumerable<string> EnumerableString { get; set; }
-        public IEnumerable<IEnumerable<string>> EnumerableEnumerableString { get; set; }
+
+        // Nullable
+        public int? NullableInt1 { get; set; }
+        public Nullable<int> NullableInt2 { get; set; }
+        public IEnumerable<int> EnumerableInt { get; set; }
+        public IEnumerable<int?> EnumerableNullableInt { get; set; }
+
+        // Defined types
+        public ClassInfo Class { get; set; }
+        public BaseClassInfo BaseClass { get; set; }
+        public GenericClassInfo<string> GenericClass { get; set; }
+        public IInterfaceInfo Interface { get; set; }
     }
 
     public class GenericPropertyInfo<T>
     {
         public T Generic { get; set; }
         public IEnumerable<T> EnumerableGeneric { get; set; }
-        public IEnumerable<IEnumerable<T>> EnumerableEnumerableGeneric { get; set; }
     }
 }

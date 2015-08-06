@@ -19,7 +19,7 @@ namespace Typewriter.Metadata.CodeDom
 
         public string Name => codeVariable.Name;
         public string FullName => codeVariable.FullName;
-        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeVariable.Attributes, file);
+        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeVariable.Attributes);
         public ITypeMetadata Type => CodeDomTypeMetadata.FromCodeElement(codeVariable, file);
 
         internal static IEnumerable<IFieldMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)

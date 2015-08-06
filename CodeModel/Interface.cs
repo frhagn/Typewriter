@@ -45,10 +45,10 @@ namespace Typewriter.CodeModel
         public abstract AttributeCollection Attributes { get; }
 
         /// <summary>
-        /// All generic type arguments of the interface.
+        /// All generic type parameters of the interface.
         /// </summary>
-        [Property("collection GenericTypeArguments", "All generic type arguments of the $context.", requireTemplate: false)]
-        public abstract TypeCollection GenericTypeArguments { get; }
+        [Property("collection TypeParameters", "All generic type parameters of the $context.", requireTemplate: false)]
+        public abstract TypeParameterCollection TypeParameters { get; }
 
         /// <summary>
         /// All interfaces implemented by the interface.

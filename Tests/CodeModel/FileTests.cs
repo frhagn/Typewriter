@@ -1,30 +1,33 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Should;
-using Typewriter.Metadata.CodeDom;
-using Typewriter.Metadata.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Files", "CodeDom")]
-    public class CodeDomFileTests : FileTests<CodeDomMetadataProvider>
+    [Trait("Files", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    public class CodeDomFileTests : FileTests
     {
+        public CodeDomFileTests(CodeDomFixture fixture) : base(fixture)
+        {
+        }
     }
 
-    //[Trait("Files", "Roslyn")]
-    //public class RoslynFileTests : FileTests<RoslynProviderStub>
-    //{
-    //}
+    [Trait("Files", "Roslyn"), Collection(nameof(RoslynFixture))]
+    public class RoslynFileTests : FileTests
+    {
+        public RoslynFileTests(RoslynFixture fixture) : base(fixture)
+        {
+        }
+    }
 
-    public abstract class FileTests<T> : TestBase<T> where T : IMetadataProvider, new()
+    public abstract class FileTests : TestBase
     {
         private readonly File fileInfo;
 
-        protected FileTests()
+        protected FileTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\FileInfo.cs");
         }

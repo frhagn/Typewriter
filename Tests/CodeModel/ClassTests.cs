@@ -1,28 +1,32 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using Typewriter.Metadata.CodeDom;
-using Typewriter.Metadata.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Classes", "CodeDom")]
-    public class CodeDomClassTests : ClassTests<CodeDomMetadataProvider>
+    [Trait("Classes", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    public class CodeDomClassTests : ClassTests
     {
+        public CodeDomClassTests(CodeDomFixture fixture) : base(fixture)
+        {
+        }
     }
 
-    //[Trait("Classes", "Roslyn")]
-    //public class RoslynClassTests : ClassTests<RoslynProviderStub>
-    //{
-    //}
+    [Trait("Classes", "Roslyn"), Collection(nameof(RoslynFixture))]
+    public class RoslynClassTests : ClassTests
+    {
+        public RoslynClassTests(RoslynFixture fixture) : base(fixture)
+        {
+        }
+    }
 
-    public abstract class ClassTests<T> : TestBase<T> where T : IMetadataProvider, new()
+    public abstract class ClassTests : TestBase
     {
         private readonly File fileInfo;
 
-        protected ClassTests()
+        protected ClassTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\ClassInfo.cs");
         }
@@ -90,17 +94,17 @@ namespace Typewriter.Tests.CodeModel
             var classInfo = fileInfo.Classes.First();
 
             classInfo.IsGeneric.ShouldBeFalse();
-            classInfo.GenericTypeArguments.Count.ShouldEqual(0);
+            classInfo.TypeParameters.Count.ShouldEqual(0);
         }
 
         [Fact]
         public void Expect_generic_class_to_be_generic()
         {
             var classInfo = fileInfo.Classes.First(i => i.Name == "GenericClassInfo");
-            var genericTypeArgument = classInfo.GenericTypeArguments.First();
+            var genericTypeArgument = classInfo.TypeParameters.First();
 
             classInfo.IsGeneric.ShouldBeTrue();
-            classInfo.GenericTypeArguments.Count.ShouldEqual(1);
+            classInfo.TypeParameters.Count.ShouldEqual(1);
             genericTypeArgument.Name.ShouldEqual("T");
         }
 

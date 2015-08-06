@@ -21,8 +21,22 @@ namespace Typewriter.CodeModel.Implementation
         public override string name => CamelCase(metadata.Name);
         public override string Name => metadata.Name;
         public override string FullName => metadata.FullName;
+        public override string Value => GetValue(metadata.Value);
 
-        public override string Value => metadata.Value;
+        private static string GetValue(string value)
+        {
+            if (value == null) return null;
+
+            if (value.StartsWith("\"") && value.EndsWith("\""))
+            {
+                var trimmed = value.Substring(1, value.Length - 2);
+
+                if (trimmed.Replace("\\\"", string.Empty).Contains("\"") == false)
+                    return trimmed;
+            }
+
+            return value;
+        }
 
         public override string ToString()
         {

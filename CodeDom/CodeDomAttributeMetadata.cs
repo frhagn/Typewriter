@@ -9,21 +9,24 @@ namespace Typewriter.Metadata.CodeDom
     public class CodeDomAttributeMetadata : IAttributeMetadata
     {
         private readonly CodeAttribute2 codeAttribute;
-        private readonly CodeDomFileMetadata file;
+        private readonly string value;
 
-        private CodeDomAttributeMetadata(CodeAttribute2 codeAttribute, CodeDomFileMetadata file)
+        private CodeDomAttributeMetadata(CodeAttribute2 codeAttribute)
         {
             this.codeAttribute = codeAttribute;
-            this.file = file;
+            this.value = codeAttribute.Value;//.Trim('"');
+
+            if (string.IsNullOrEmpty(this.value))
+                this.value = null;
         }
 
         public string Name => codeAttribute.Name;
         public string FullName => codeAttribute.FullName;
-        public string Value => codeAttribute.Value?.Trim('"');
+        public string Value => value; // Todo!
 
-        internal static IEnumerable<IAttributeMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)
+        internal static IEnumerable<IAttributeMetadata> FromCodeElements(CodeElements codeElements)
         {
-            return codeElements.OfType<CodeAttribute2>().Select(a => new CodeDomAttributeMetadata(a, file));
+            return codeElements.OfType<CodeAttribute2>().Select(a => new CodeDomAttributeMetadata(a));
         }
     }
 }

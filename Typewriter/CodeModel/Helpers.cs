@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Typewriter.Metadata.Interfaces;
 
 namespace Typewriter.CodeModel
@@ -19,26 +20,37 @@ namespace Typewriter.CodeModel
 
             if (metadata.IsEnumerable)
             {
-                var genericTypeArguments = metadata.GenericTypeArguments.ToList();
+                var typeArguments = metadata.TypeArguments.ToList();
 
-                if (genericTypeArguments.Count == 1)
-                    return GetTypeScriptName(genericTypeArguments.FirstOrDefault()) + "[]";
+                if (typeArguments.Count == 1)
+                    return GetTypeScriptName(typeArguments.FirstOrDefault()) + "[]";
 
-                if (genericTypeArguments.Count == 2)
+                if (typeArguments.Count == 2)
                 {
-                    var key = GetTypeScriptName(genericTypeArguments[0]);
-                    var value = GetTypeScriptName(genericTypeArguments[1]);
+                    var key = GetTypeScriptName(typeArguments[0]);
+                    var value = GetTypeScriptName(typeArguments[1]);
 
                     return string.Concat("{ [key: ", key, "]: ", value, "; }");
                 }
 
-                return "any";
+                return "any[]";
             }
 
             if (metadata.IsGeneric)
-                return metadata.Name + string.Concat("<", string.Join(", ", metadata.GenericTypeArguments.Select(GetTypeScriptName)), ">");
+                return metadata.Name + string.Concat("<", string.Join(", ", metadata.TypeArguments.Select(GetTypeScriptName)), ">");
 
             return ExtractTypeScriptName(metadata);
+        }
+
+        public static string GetOriginalName(ITypeMetadata metadata)
+        {
+            var name = metadata.Name;
+            var fullName = metadata.IsNullable ? metadata.FullName.TrimEnd('?') : metadata.FullName;
+
+            if (primitiveTypes.ContainsKey(fullName))
+                name = primitiveTypes[fullName] + (metadata.IsNullable ? "?" : string.Empty);
+
+            return name;
         }
 
         private static string ExtractTypeScriptName(ITypeMetadata metadata)
@@ -75,5 +87,52 @@ namespace Typewriter.CodeModel
 
             return metadata.IsNullable ? metadata.Name.TrimEnd('?') : metadata.Name;
         }
+
+        public static bool IsPrimitive(ITypeMetadata metadata)
+        {
+            var fullName = metadata.FullName;
+
+            if (metadata.IsNullable)
+            {
+                fullName = fullName.TrimEnd('?');
+            }
+            else if (metadata.IsEnumerable)
+            {
+                var innerType = metadata.TypeArguments.FirstOrDefault();
+                if (innerType != null)
+                {
+                    fullName = innerType.IsNullable ? innerType.FullName.TrimEnd('?') : innerType.FullName;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return metadata.IsEnum || primitiveTypes.ContainsKey(fullName);
+        }
+
+        private static readonly Dictionary<string, string> primitiveTypes = new Dictionary<string, string>
+        {
+            { "System.Boolean", "bool" },
+            { "System.Byte", "byte" },
+            { "System.Char", "char" },
+            { "System.Decimal", "decimal" },
+            { "System.Double", "double" },
+            { "System.Int16", "short" },
+            { "System.Int32", "int" },
+            { "System.Int64", "long" },
+            { "System.SByte", "sbyte" },
+            { "System.Single", "float" },
+            { "System.String", "string" },
+            { "System.UInt32", "uint" },
+            { "System.UInt16", "ushort" },
+            { "System.UInt64", "ulong" },
+
+            { "System.DateTime", "DateTime" },
+            { "System.DateTimeOffset", "DateTimeOffset" },
+            { "System.Guid", "Guid" },
+            { "System.TimeSpan", "TimeSpan" },
+        };
     }
 }

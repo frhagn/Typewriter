@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
@@ -72,17 +71,18 @@ namespace Typewriter.VisualStudio
         // Hack to load unreferenced assembly for Roslyn Workspace, consider using MEF instead
         private void GetCodeModelProvider()
         {
-            //try
-            //{
-            //    var assembly = Assembly.LoadFrom(Path.Combine(Constants.TypewriterDirectory, "Typewriter.Metadata.Roslyn.dll"));
-            //    var type = assembly.GetType("Typewriter.Metadata.Roslyn.RoslynMetadataProvider");
-            //    var provider = (IMetadataProvider)Activator.CreateInstance(type);
-
-            //    Log.Debug("Using Roslyn");
-            //    this.metadataProvider = provider;
-            //}
-            //catch
+            try
             {
+                var assembly = Assembly.LoadFrom(Path.Combine(Constants.TypewriterDirectory, "Typewriter.Metadata.Roslyn.dll"));
+                var type = assembly.GetType("Typewriter.Metadata.Roslyn.RoslynMetadataProvider");
+                var provider = (IMetadataProvider)Activator.CreateInstance(type);
+
+                Log.Debug("Using Roslyn");
+                this.metadataProvider = provider;
+            }
+            catch(Exception e)
+            {
+                Log.Debug("Failed to load Roslyn Provider: {0}", e.Message);
                 Log.Debug("Using CodeDom");
                 this.metadataProvider = new CodeDomMetadataProvider();
             }

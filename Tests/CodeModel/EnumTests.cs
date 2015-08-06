@@ -1,29 +1,32 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using Typewriter.Metadata.CodeDom;
-using Typewriter.Metadata.Providers;
-using Typewriter.Tests.CodeModel.Support;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Enums", "CodeDom")]
-    public class CodeDomEnumTests : EnumTests<CodeDomMetadataProvider>
+    [Trait("Enums", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    public class CodeDomEnumTests : EnumTests
     {
+        public CodeDomEnumTests(CodeDomFixture fixture) : base(fixture)
+        {
+        }
     }
 
-    //[Trait("Enums", "Roslyn")]
-    //public class RoslynEnumTests : EnumTests<RoslynProviderStub>
-    //{
-    //}
+    [Trait("Enums", "Roslyn"), Collection(nameof(RoslynFixture))]
+    public class RoslynEnumTests : EnumTests
+    {
+        public RoslynEnumTests(RoslynFixture fixture) : base(fixture)
+        {
+        }
+    }
 
-    public abstract class EnumTests<T> : TestBase<T> where T : IMetadataProvider, new()
+    public abstract class EnumTests : TestBase
     {
         private readonly File fileInfo;
 
-        protected EnumTests()
+        protected EnumTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\EnumInfo.cs");
         }

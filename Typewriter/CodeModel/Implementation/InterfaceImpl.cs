@@ -36,8 +36,8 @@ namespace Typewriter.CodeModel.Implementation
         private PropertyCollection properties;
         public override PropertyCollection Properties => properties ?? (properties = PropertyImpl.FromMetadata(metadata.Properties, this));
 
-        private TypeCollection genericTypeArguments;
-        public override TypeCollection GenericTypeArguments => genericTypeArguments ?? (genericTypeArguments = TypeImpl.FromMetadata(metadata.GenericTypeArguments, this));
+        private TypeParameterCollection typeParameters;
+        public override TypeParameterCollection TypeParameters => typeParameters ?? (typeParameters = TypeParameterImpl.FromMetadata(metadata.TypeParameters, this));
 
         private Class containingClass;
         public override Class ContainingClass => containingClass ?? (containingClass = ClassImpl.FromMetadata(metadata.ContainingClass, this));
