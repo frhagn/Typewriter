@@ -103,7 +103,7 @@ namespace Typewriter.Generation.Controllers
                 var path = generationEvent.Paths[0];
                 Log.Debug("Render {0}", path);
 
-                var metadata = metadataProvider.GetFile(dte.Solution.FindProjectItem(path));
+                var metadata = metadataProvider.GetFile(path);
                 var file = new FileImpl(metadata);
 
                 var success = template.RenderFile(file, false);

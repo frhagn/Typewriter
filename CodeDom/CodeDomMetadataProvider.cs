@@ -6,9 +6,22 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class CodeDomMetadataProvider : IMetadataProvider
     {
-        public IFileMetadata GetFile(ProjectItem projectItem)
+        private readonly DTE dte;
+
+        public CodeDomMetadataProvider(DTE dte)
         {
-            return new CodeDomFileMetadata(projectItem);
+            this.dte = dte;
+        }
+
+        public IFileMetadata GetFile(string path)
+        {
+            var projectItem = dte.Solution.FindProjectItem(path);
+            if (projectItem != null)
+            {
+                return new CodeDomFileMetadata(projectItem);
+            }
+
+            return null;
         }
     }
 }

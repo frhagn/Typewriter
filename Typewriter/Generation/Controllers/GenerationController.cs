@@ -40,7 +40,7 @@ namespace Typewriter.Generation.Controllers
                 switch (generationEvent.Type)
                 {
                     case GenerationType.Render:
-                        var metadata = metadataProvider.GetFile(dte.Solution.FindProjectItem(generationEvent.Paths[0]));
+                        var metadata = metadataProvider.GetFile(generationEvent.Paths[0]);
                         var file = new FileImpl(metadata);
 
                         foreach (var template in templates)

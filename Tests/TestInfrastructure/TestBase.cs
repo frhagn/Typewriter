@@ -34,7 +34,7 @@ namespace Typewriter.Tests.TestInfrastructure
 
         protected File GetFile(string path)
         {
-            var metadata = metadataProvider.GetFile(GetProjectItem(path));
+            var metadata = metadataProvider.GetFile(Path.Combine(SolutionDirectory, path));
             return new FileImpl(metadata);
         }
     }

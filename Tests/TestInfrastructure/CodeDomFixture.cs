@@ -10,7 +10,7 @@ namespace Typewriter.Tests.TestInfrastructure
         public CodeDomFixture()
         {
             Dte = TestInfrastructure.Dte.GetInstance("Typewriter.sln");
-            Provider = new CodeDomMetadataProvider();
+            Provider = new CodeDomMetadataProvider(Dte);
 
             // Handle threading errors when calling into Visual Studio.
             MessageFilter.Register();

@@ -22,10 +22,15 @@ namespace Typewriter.Tests.TestInfrastructure
             this.workspace = msBuildWorkspace;
         }
 
-        public IFileMetadata GetFile(ProjectItem projectItem)
+        public IFileMetadata GetFile(string path)
         {
-            var document = workspace.CurrentSolution.GetDocumentIdsWithFilePath(projectItem.FileNames[1]).FirstOrDefault();
-            return new RoslynFileMetadata(workspace.CurrentSolution.GetDocument(document));
+            var document = workspace.CurrentSolution.GetDocumentIdsWithFilePath(path).FirstOrDefault();
+            if (document != null)
+            {
+                return new RoslynFileMetadata(workspace.CurrentSolution.GetDocument(document));
+            }
+
+            return null;
         }
     }
 }

@@ -84,7 +84,7 @@ namespace Typewriter.VisualStudio
             {
                 Log.Debug("Failed to load Roslyn Provider: {0}", e.Message);
                 Log.Info("Using CodeDom");
-                this.metadataProvider = new CodeDomMetadataProvider();
+                this.metadataProvider = new CodeDomMetadataProvider(this.dte);
             }
         }
 

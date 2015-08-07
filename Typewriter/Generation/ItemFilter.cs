@@ -33,40 +33,6 @@ namespace Typewriter.Generation
                 selector = filterable.ItemFilterSelector;
             }
 
-            // Todo: Implement IFilterable
-            //if (filter.StartsWith("[") && filter.EndsWith("]"))
-            //{
-            //    filter = filter.Trim('[', ']', ' ');
-            //    selector = i => i.Attributes.SelectMany(a => new[] { a.Name, a.FullName });
-            //}
-            //else 
-            //if (filter.StartsWith(":"))
-            //{
-            //    filter = filter.Remove(0, 1).Trim();
-            //    selector = i =>
-            //    {
-            //        var names = new List<string>();
-
-            //        var classInfo = i as Class;
-            //        if (classInfo?.BaseClass != null)
-            //        {
-            //            names.Add(classInfo.BaseClass.Name);
-            //            names.Add(classInfo.BaseClass.FullName);
-            //        }
-
-            //        if (i.GetType().GetProperty("Interfaces") != null) // Todo: Fix hack
-            //        {
-            //            return names.Concat(((ICollection<CodeItem>)((dynamic)i).Interfaces).SelectMany(a => new[] { a.Name, a.FullName }));
-            //        }
-
-            //        return names;
-            //    };
-            //}
-            //else
-            //{
-            //    selector = i => new[] { i.Name, i.FullName };
-            //}
-
             var filtered = ApplyFilter(items, filter, selector);
 
             matchFound = matchFound || filtered.Any();
