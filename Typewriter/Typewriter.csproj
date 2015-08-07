@@ -385,6 +385,13 @@
       <Project>{511e50cc-6073-43ee-9e8b-dd6f584c81a8}</Project>
       <Name>Typewriter.Metadata</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Roslyn\Typewriter.Metadata.Roslyn.csproj">
+      <Project>{3d74f5ff-ad4c-40a5-9577-5ed378031ff6}</Project>
+      <Name>Typewriter.Metadata.Roslyn</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>BuiltProjectOutputGroup</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -405,7 +412,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup>
-    <PostBuildEvent>PowerShell -File "$(SolutionDir)PackageReferences.ps1" -c $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>PowerShell -File "$(SolutionDir)PackageReferences.ps1" -configuration $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
