@@ -35,7 +35,7 @@ namespace Typewriter.Generation
                 message = message.Replace("__Code.", string.Empty);
                 message = message.Replace("publicstatic", string.Empty);
 
-                Log.Error("Template error: {0} {1}", error.Id, message);
+                Log.Warn("Template error: {0} {1}", error.Id, message);
             }
 
             throw new Exception("Failed to compile template.");

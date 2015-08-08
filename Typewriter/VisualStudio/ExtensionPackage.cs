@@ -68,7 +68,6 @@ namespace Typewriter.VisualStudio
                 ErrorHandler.ThrowOnFailure(1);
         }
 
-        // Hack to load unreferenced assembly for Roslyn Workspace, consider using MEF instead
         private void GetCodeModelProvider()
         {
             try
@@ -80,9 +79,8 @@ namespace Typewriter.VisualStudio
                 Log.Info("Using Roslyn");
                 this.metadataProvider = provider;
             }
-            catch(Exception e)
+            catch
             {
-                Log.Debug("Failed to load Roslyn Provider: {0}", e.Message);
                 Log.Info("Using CodeDom");
                 this.metadataProvider = new CodeDomMetadataProvider(this.dte);
             }

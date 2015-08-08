@@ -7,6 +7,7 @@ using Typewriter.VisualStudio;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     public class ShadowClass
     {
         #region Constants
