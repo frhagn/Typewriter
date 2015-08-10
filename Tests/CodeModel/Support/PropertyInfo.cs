@@ -50,6 +50,7 @@ namespace Typewriter.Tests.CodeModel.Support
         // Typed collections
         public string[] StringArray { get; set; }
         public IEnumerable<string> EnumerableString { get; set; }
+        public List<string> ListString { get; set; }
 
         // Nullable
         public int? NullableInt1 { get; set; }
