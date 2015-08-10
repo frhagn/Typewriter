@@ -159,6 +159,11 @@
             All generic type parameters of the class.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.TypeArguments">
+            <summary>
+            All generic type parameters of the class.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Class.NestedClasses">
             <summary>
             All classes defined in the class.
