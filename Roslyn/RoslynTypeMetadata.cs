@@ -22,8 +22,24 @@ namespace Typewriter.Metadata.Roslyn
         public string Namespace => symbol.GetNamespace();
 
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
-        public IEnumerable<ITypeMetadata> TypeArguments => (symbol is INamedTypeSymbol) ? FromTypeSymbols(((INamedTypeSymbol)symbol).TypeArguments) : new ITypeMetadata[0];
-        
+        public IEnumerable<ITypeMetadata> TypeArguments
+        {
+            get
+            {
+                if (symbol is INamedTypeSymbol)
+                {
+                    return FromTypeSymbols(((INamedTypeSymbol) symbol).TypeArguments);
+                }
+
+                if (symbol is IArrayTypeSymbol)
+                {
+                    return FromTypeSymbols(new [] { ((IArrayTypeSymbol) symbol).ElementType});
+                }
+
+                return new ITypeMetadata[0];
+            }
+        }
+
         public bool IsEnum => symbol.TypeKind == TypeKind.Enum;
         public bool IsEnumerable => symbol.ToDisplayString() != "string" && (
             symbol.TypeKind == TypeKind.Array ||

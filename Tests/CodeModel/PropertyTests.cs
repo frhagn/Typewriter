@@ -303,6 +303,21 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_typed_enumerable_properties_to_return_typed_array()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var stringArrayInfo = classInfo.Properties.First(p => p.Name == "StringArray");
+            var enumerableStringInfo = classInfo.Properties.First(p => p.Name == "EnumerableString");
+            var listStringInfo = classInfo.Properties.First(p => p.Name == "ListString");
+
+            enumerableStringInfo.Type.ToString().ShouldEqual("string[]");
+            listStringInfo.Type.Name.ShouldEqual("string[]");
+            
+            stringArrayInfo.Type.ToString().ShouldEqual("string[]");
+
+        }
+
+        [Fact]
         public void Expect_string_properties_not_to_be_enumerable()
         {
             var classInfo = fileInfo.Classes.First();

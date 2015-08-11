@@ -31,7 +31,7 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsEnumerable => IsCollection(FullName);
 
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(CodeType.Attributes);
-        public IEnumerable<ITypeMetadata> TypeArguments => LoadGenericTypeArguments();
+        public IEnumerable<ITypeMetadata> TypeArguments => LoadGenericTypeArguments(IsGeneric,FullName,file);
         
         private string GetNamespace()
         {
@@ -49,11 +49,11 @@ namespace Typewriter.Metadata.CodeDom
             return fullName + (IsNullable ? "?" : string.Empty);
         }
 
-        private IEnumerable<ITypeMetadata> LoadGenericTypeArguments()
+        public static IEnumerable<ITypeMetadata> LoadGenericTypeArguments(bool isGeneric, string typeFullName, CodeDomFileMetadata file)
         {
-            if (IsGeneric == false) return new ITypeMetadata[0];
+            if (isGeneric == false) return new ITypeMetadata[0];
 
-            return LazyCodeDomTypeMetadata.ExtractGenericTypeNames(FullName).Select(fullName =>
+            return LazyCodeDomTypeMetadata.ExtractGenericTypeNames(typeFullName).Select(fullName =>
             {
                 if (fullName.EndsWith("[]"))
                     fullName = $"System.Collections.Generic.ICollection<{fullName.TrimEnd('[', ']')}>";

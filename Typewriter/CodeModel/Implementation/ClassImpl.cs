@@ -51,6 +51,9 @@ namespace Typewriter.CodeModel.Implementation
         private TypeParameterCollection typeParameters;
         public override TypeParameterCollection TypeParameters => typeParameters ?? (typeParameters = TypeParameterImpl.FromMetadata(metadata.TypeParameters, this));
 
+        private TypeCollection typeArguments;
+        public override TypeCollection TypeArguments => typeArguments ?? (typeArguments = TypeImpl.FromMetadata(metadata.TypeArguments, this));
+
         private ClassCollection nestedClasses;
         public override ClassCollection NestedClasses => nestedClasses ?? (nestedClasses = ClassImpl.FromMetadata(metadata.NestedClasses, this));
 

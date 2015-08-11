@@ -42,6 +42,7 @@
         {
             NestedValue
         }
+
     }
 
     public class BaseClassInfo
@@ -50,6 +51,11 @@
     }
 
     public class GenericClassInfo<T>
+    {
+    }
+
+
+    public class InheritGenericClassInfo : GenericClassInfo<string>
     {
     }
 }
