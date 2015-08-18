@@ -79,7 +79,7 @@ namespace Typewriter.TemplateEditor.Lexing
             {
                 line.Append(Peek(i));
                 i++;
-            } while (Peek(i) != '\n');
+            } while (Peek(i) != '\n' && i < template.Length);
 
             line.Append('\n');
 
