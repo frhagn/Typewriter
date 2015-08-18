@@ -21,7 +21,21 @@ namespace Typewriter.Metadata.Roslyn
             this.name = symbol.Name;
 
             if (index > -1)
+            {
                 this.value = declaration.Substring(index + 1, declaration.Length - index - 2);
+
+                // Trim {} from params
+                if (this.value.EndsWith("\"}"))
+                {
+                    this.value = this.value.Remove(this.value.LastIndexOf("{\"", StringComparison.Ordinal), 1);
+                    this.value = this.value.TrimEnd('}');
+                }
+                else if (this.value.EndsWith("}"))
+                {
+                    this.value = this.value.Remove(this.value.LastIndexOf("{", StringComparison.Ordinal), 1);
+                    this.value = this.value.TrimEnd('}');
+                }
+            }
 
             if (name.EndsWith("Attribute"))
                 name = name.Substring(0, name.Length - 9);

@@ -79,5 +79,23 @@ namespace Typewriter.Tests.CodeModel
             
             attributeInfo.Value.ShouldEqual("2, Parameter = \"parameter\"");
         }
+
+        [Fact]
+        public void Expect_attributes_with_params_parameter_to_have_a_proper_value()
+        {
+            var propertyInfo = classInfo.Properties.First(p => p.Name == "ParamsParameter");
+            var attributeInfo = propertyInfo.Attributes.First();
+
+            attributeInfo.Value.ShouldEqual("\"parameter1\", \"parameter2\"");
+        }
+
+        [Fact]
+        public void Expect_attributes_with_string_and_params_parameter_to_have_a_proper_value()
+        {
+            var propertyInfo = classInfo.Properties.First(p => p.Name == "IntAndParamsParameter");
+            var attributeInfo = propertyInfo.Attributes.First();
+
+            attributeInfo.Value.ShouldEqual("1, \"parameter\"");
+        }
     }
 }
