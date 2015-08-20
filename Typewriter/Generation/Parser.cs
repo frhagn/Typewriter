@@ -55,7 +55,7 @@ namespace Typewriter.Generation
                 {
                     stream.Advance(identifier.Length);
 
-                    var collection = value as IEnumerable<CodeItem>;
+                    var collection = value as IEnumerable<Item>;
                     if (collection != null)
                     {
                         var filter = ParseBlock(stream, '(', ')');
@@ -73,7 +73,7 @@ namespace Typewriter.Generation
                         }
                         else
                         {
-                            IEnumerable<CodeItem> items;
+                            IEnumerable<Item> items;
                             if (filter != null && filter.StartsWith("$"))
                             {
                                 var predicate = filter.Remove(0, 1);
@@ -88,12 +88,12 @@ namespace Typewriter.Generation
                                     }
                                     else
                                     {
-                                        items = new CodeItem[0];
+                                        items = new Item[0];
                                     }
                                 }
                                 else
                                 {
-                                    items = new CodeItem[0];
+                                    items = new Item[0];
                                 }
                             }
                             else

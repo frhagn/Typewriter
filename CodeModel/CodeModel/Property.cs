@@ -6,19 +6,47 @@ namespace Typewriter.CodeModel
     /// Represents a property.
     /// </summary>
     [Context("Property", "Properties")]
-    public abstract class Property : Field
+    public abstract class Property : Item
     {
+        /// <summary>
+        /// All attributes defined on the property.
+        /// </summary>
+        public abstract AttributeCollection Attributes { get; }
+
+        /// <summary>
+        /// The full original name of the property including namespace and containing class names.
+        /// </summary>
+        public abstract string FullName { get; }
+
         /// <summary>
         /// Determines if the property has a getter.
         /// </summary>
-        //[Property("bool HasGetter", "Determines if the $context has a getter")]
         public abstract bool HasGetter { get; }
 
         /// <summary>
         /// Determines if the property has a setter.
         /// </summary>
-        //[Property("bool HasSetter", "Determines if the $context has a setter")]
         public abstract bool HasSetter { get; }
+
+        /// <summary>
+        /// The name of the property (camelCased).
+        /// </summary>
+        public abstract string name { get; }
+
+        /// <summary>
+        /// The name of the property.
+        /// </summary>
+        public abstract string Name { get; }
+
+        /// <summary>
+        /// The parent context of the property.
+        /// </summary>
+        public abstract Item Parent { get; }
+
+        /// <summary>
+        /// The type of the property.
+        /// </summary>
+        public abstract Type Type { get; }
 
         /// <summary>
         /// Converts the current instance to string.

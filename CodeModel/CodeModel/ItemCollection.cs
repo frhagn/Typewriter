@@ -18,16 +18,16 @@ namespace Typewriter.CodeModel
         /// <summary>
         /// Returns a selector to filter items by attributes.
         /// </summary>
-        Func<CodeItem, IEnumerable<string>> AttributeFilterSelector { get; }
+        Func<Item, IEnumerable<string>> AttributeFilterSelector { get; }
 
         /// <summary>
         /// Returns a selector to filter items by inheritance.
         /// </summary>
-        Func<CodeItem, IEnumerable<string>> InheritanceFilterSelector { get; }
+        Func<Item, IEnumerable<string>> InheritanceFilterSelector { get; }
 
         /// <summary>
         /// Returns a selector to filter items by name.
         /// </summary>
-        Func<CodeItem, IEnumerable<string>> ItemFilterSelector { get; }
+        Func<Item, IEnumerable<string>> ItemFilterSelector { get; }
     }
 }

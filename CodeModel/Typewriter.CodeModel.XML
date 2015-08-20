@@ -9,6 +9,11 @@
             Represents an attribute.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Attribute.FullName">
+            <summary>
+            The full original name of the attribute including namespace and containing class names.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Attribute.name">
             <summary>
             The name of the attribute (camelCased).
@@ -19,9 +24,9 @@
             The name of the attribute.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Attribute.FullName">
+        <member name="P:Typewriter.CodeModel.Attribute.Parent">
             <summary>
-            The full original name of the attribute including namespace and containing class names.
+            The parent context of the attribute.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Attribute.Value">
@@ -64,6 +69,51 @@
             Represents a class.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.Attributes">
+            <summary>
+            All attributes defined on the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.BaseClass">
+            <summary>
+            The base class of the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Constants">
+            <summary>
+            All constants defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.ContainingClass">
+            <summary>
+            The containing class of the class if it's nested.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Fields">
+            <summary>
+            All fields defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.FullName">
+            <summary>
+            The full original name of the class including namespace and containing class names.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Interfaces">
+            <summary>
+            All interfaces implemented by the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.IsGeneric">
+            <summary>
+            Determines if the class is generic.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Methods">
+            <summary>
+            All methods defined in the class.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Class.name">
             <summary>
             The name of the class (camelCased).
@@ -74,69 +124,9 @@
             The name of the class.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Class.FullName">
-            <summary>
-            The full original name of the class including namespace and containing class names.
-            </summary>
-        </member>
         <member name="P:Typewriter.CodeModel.Class.Namespace">
             <summary>
             The namespace of the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.IsGeneric">
-            <summary>
-            Determines if the class is generic.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.Attributes">
-            <summary>
-            All attributes defined on the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.Constants">
-            <summary>
-            All constants defined in the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.Fields">
-            <summary>
-            All fields defined in the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.BaseClass">
-            <summary>
-            The base class of the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.ContainingClass">
-            <summary>
-            The containing class of the class if it's nested.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.Interfaces">
-            <summary>
-            All interfaces implemented by the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.Methods">
-            <summary>
-            All methods defined in the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.Properties">
-            <summary>
-            All properties defined in the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.TypeParameters">
-            <summary>
-            All generic type parameters of the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Class.TypeArguments">
-            <summary>
-            All generic type parameters of the class.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Class.NestedClasses">
@@ -154,6 +144,28 @@
             All interfaces defined in the class.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.Parent">
+            <summary>
+            The parent context of the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.Properties">
+            <summary>
+            All properties defined in the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.TypeArguments">
+            <summary>
+            All generic type arguments of the class.
+            TypeArguments are the specified arguments for the TypeParametes on a generic class e.g. &lt;string&gt;.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Class.TypeParameters">
+            <summary>
+            All generic type parameters of the class.
+            TypeParameters are the type placeholders of a generic class e.g. &lt;T&gt;.
+            </summary>
+        </member>
         <member name="M:Typewriter.CodeModel.Class.op_Implicit(Typewriter.CodeModel.Class)~System.String">
             <summary>
             Converts the current instance to string.
@@ -167,6 +179,36 @@
         <member name="T:Typewriter.CodeModel.Constant">
             <summary>
             Represents a constant.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Constant.Attributes">
+            <summary>
+            All attributes defined on the constant.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Constant.FullName">
+            <summary>
+            The full original name of the constant including namespace and containing class names.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Constant.name">
+            <summary>
+            The name of the constant (camelCased).
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Constant.Name">
+            <summary>
+            The name of the constant.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Constant.Parent">
+            <summary>
+            The parent context of the constant.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Constant.Type">
+            <summary>
+            The type of the constant.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Constant.op_Implicit(Typewriter.CodeModel.Constant)~System.String">
@@ -184,6 +226,26 @@
             Represents an enum.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Enum.Attributes">
+            <summary>
+            All attributes defined on the enum.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.ContainingClass">
+            <summary>
+            The containing class of the enum if it is nested.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.FullName">
+            <summary>
+            The full original name of the enum including namespace and containing class names.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.IsFlags">
+            <summary>
+            Determines if the enum is decorated with the Flags attribute.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Enum.name">
             <summary>
             The name of the enum (camelCased).
@@ -194,24 +256,14 @@
             The name of the enum.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Enum.FullName">
-            <summary>
-            The full original name of the enum including namespace and containing class names.
-            </summary>
-        </member>
         <member name="P:Typewriter.CodeModel.Enum.Namespace">
             <summary>
             The namespace of the enum.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Enum.IsFlags">
+        <member name="P:Typewriter.CodeModel.Enum.Parent">
             <summary>
-            Determines if the enum is decorated with the Flags attribute.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Enum.Attributes">
-            <summary>
-            All attributes defined on the enum.
+            The parent context of the enum.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Enum.Values">
@@ -219,9 +271,9 @@
             All values defined in the enum.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Enum.ContainingClass">
+        <member name="M:Typewriter.CodeModel.Enum.op_Implicit(Typewriter.CodeModel.Enum)~System.String">
             <summary>
-            The containing class of the enum if it is nested.
+            Converts the current instance to string.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.EnumCollection">
@@ -234,6 +286,16 @@
             Represents an enum value.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.EnumValue.Attributes">
+            <summary>
+            All attributes defined on the enum value.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.EnumValue.FullName">
+            <summary>
+            The full original name of the enum value including namespace and containing class names.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.EnumValue.name">
             <summary>
             The name of the enum value (camelCased).
@@ -244,9 +306,9 @@
             The name of the enum value.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.EnumValue.FullName">
+        <member name="P:Typewriter.CodeModel.EnumValue.Parent">
             <summary>
-            The full original name of the enum value including namespace and containing class names.
+            The parent context of the enum value.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.EnumValue.Value">
@@ -254,9 +316,9 @@
             The numeric value.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.EnumValue.Attributes">
+        <member name="M:Typewriter.CodeModel.EnumValue.op_Implicit(Typewriter.CodeModel.EnumValue)~System.String">
             <summary>
-            All attributes defined on the enum value.
+            Converts the current instance to string.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.EnumValueCollection">
@@ -274,6 +336,16 @@
             Represents a field.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Field.Attributes">
+            <summary>
+            All attributes defined on the field.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Field.FullName">
+            <summary>
+            The full original name of the field including namespace and containing class names.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Field.name">
             <summary>
             The name of the field (camelCased).
@@ -284,19 +356,14 @@
             The name of the field.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Field.FullName">
+        <member name="P:Typewriter.CodeModel.Field.Parent">
             <summary>
-            The full original name of the field including namespace and containing class names.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Field.Attributes">
-            <summary>
-            All attributes defined on the field.
+            The parent context of the field.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Field.Type">
             <summary>
-            The type of the field
+            The type of the field.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Field.op_Implicit(Typewriter.CodeModel.Field)~System.String">
@@ -314,16 +381,6 @@
             Represents a file.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.File.Name">
-            <summary>
-            The name of the file.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.File.FullName">
-            <summary>
-            The full path of the file.
-            </summary>
-        </member>
         <member name="P:Typewriter.CodeModel.File.Classes">
             <summary>
             All classes defined in the file.
@@ -339,9 +396,49 @@
             All interfaces defined in the file.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.File.FullName">
+            <summary>
+            The full path of the file.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.File.Name">
+            <summary>
+            The name of the file.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.Interface">
             <summary>
             Represents an interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.Attributes">
+            <summary>
+            All attributes defined on the interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.ContainingClass">
+            <summary>
+            The containing class of the interface if it is nested.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.FullName">
+            <summary>
+            The full original name of the interface including namespace and containing class names.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.Interfaces">
+            <summary>
+            All interfaces implemented by the interface.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.IsGeneric">
+            <summary>
+            Determines if the interface is generic.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.Methods">
+            <summary>
+            All methods defined in the interface.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Interface.name">
@@ -354,39 +451,14 @@
             The name of the interface.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Interface.FullName">
-            <summary>
-            The full original name of the interface including namespace and containing class names.
-            </summary>
-        </member>
         <member name="P:Typewriter.CodeModel.Interface.Namespace">
             <summary>
             The namespace of the interface.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Interface.IsGeneric">
+        <member name="P:Typewriter.CodeModel.Interface.Parent">
             <summary>
-            Determines if the interface is generic.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Interface.Attributes">
-            <summary>
-            All attributes defined on the interface.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Interface.TypeParameters">
-            <summary>
-            All generic type parameters of the interface.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Interface.Interfaces">
-            <summary>
-            All interfaces implemented by the interface.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Interface.Methods">
-            <summary>
-            All methods defined in the interface.
+            The parent context of the interface.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Interface.Properties">
@@ -394,9 +466,16 @@
             All properties defined in the interface.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Interface.ContainingClass">
+        <member name="P:Typewriter.CodeModel.Interface.TypeArguments">
             <summary>
-            The containing class of the interface if it is nested.
+            All generic type arguments of the interface.
+            TypeArguments are the specified arguments for the TypeParametes on a generic class e.g. &lt;string&gt;.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.TypeParameters">
+            <summary>
+            All generic type parameters of the interface.
+            TypeParameters are the type placeholders of a generic class e.g. &lt;T&gt;.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Interface.op_Implicit(Typewriter.CodeModel.Interface)~System.String">
@@ -411,17 +490,7 @@
         </member>
         <member name="T:Typewriter.CodeModel.Item">
             <summary>
-            Represents an item.
-            </summary>
-        </member>
-        <member name="T:Typewriter.CodeModel.CodeItem">
-            <summary>
-            Represents a code item.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.CodeItem.Parent">
-            <summary>
-            The parent context of the code item.
+            Represents an code model item.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.ItemCollection`1">
@@ -454,6 +523,21 @@
             Represents a method.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Method.Attributes">
+            <summary>
+            All attributes defined on the method.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Method.FullName">
+            <summary>
+            The full original name of the method including namespace and containing class names.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Method.IsGeneric">
+            <summary>
+            Determines if the method is generic.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Method.name">
             <summary>
             The name of the method (camelCased).
@@ -464,34 +548,25 @@
             The name of the method.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Method.FullName">
-            <summary>
-            The full original name of the method including namespace and containing class names.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Method.Attributes">
-            <summary>
-            All attributes defined on the method.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Method.IsGeneric">
-            <summary>
-            Determines if the method is generic.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Method.TypeParameters">
-            <summary>
-            All generic type parameters of the method.
-            </summary>
-        </member>
         <member name="P:Typewriter.CodeModel.Method.Parameters">
             <summary>
             All parameters of the method.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Method.Parent">
+            <summary>
+            The parent context of the method.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Method.Type">
             <summary>
             The type of the method.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Method.TypeParameters">
+            <summary>
+            All generic type parameters of the method.
+            TypeParameters are the type placeholders of a generic method e.g. &lt;T&gt;.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Method.op_Implicit(Typewriter.CodeModel.Method)~System.String">
@@ -509,6 +584,36 @@
             Represents a parameter.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Parameter.Attributes">
+            <summary>
+            All attributes defined on the parameter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Parameter.FullName">
+            <summary>
+            The full original name of the parameter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Parameter.name">
+            <summary>
+            The name of the parameter (camelCased).
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Parameter.Name">
+            <summary>
+            The name of the parameter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Parameter.Parent">
+            <summary>
+            The parent context of the parameter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Parameter.Type">
+            <summary>
+            The type of the parameter.
+            </summary>
+        </member>
         <member name="M:Typewriter.CodeModel.Parameter.op_Implicit(Typewriter.CodeModel.Parameter)~System.String">
             <summary>
             Converts the current instance to string.
@@ -524,6 +629,16 @@
             Represents a property.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Property.Attributes">
+            <summary>
+            All attributes defined on the property.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Property.FullName">
+            <summary>
+            The full original name of the property including namespace and containing class names.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Property.HasGetter">
             <summary>
             Determines if the property has a getter.
@@ -532,6 +647,26 @@
         <member name="P:Typewriter.CodeModel.Property.HasSetter">
             <summary>
             Determines if the property has a setter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Property.name">
+            <summary>
+            The name of the property (camelCased).
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Property.Name">
+            <summary>
+            The name of the property.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Property.Parent">
+            <summary>
+            The parent context of the property.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Property.Type">
+            <summary>
+            The type of the property.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Property.op_Implicit(Typewriter.CodeModel.Property)~System.String">
@@ -549,44 +684,24 @@
             Represents a type.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Type.name">
+        <member name="P:Typewriter.CodeModel.Type.Attributes">
             <summary>
-            The name of the class (camelCased).
+            All attributes defined on the type.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Type.Name">
+        <member name="P:Typewriter.CodeModel.Type.Default">
             <summary>
-            The name of the class.
+            The default value of the type.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.FullName">
             <summary>
-            The full original name of the class including namespace and containing class names.
+            The full original name of the type including namespace and containing class names.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Type.OriginalName">
+        <member name="P:Typewriter.CodeModel.Type.IsDate">
             <summary>
-            The original C# name of the type.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Type.Namespace">
-            <summary>
-            The namespace of the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Type.Attributes">
-            <summary>
-            All attributes defined on the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Type.TypeArguments">
-            <summary>
-            All generic type parameters of the class.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Type.IsGeneric">
-            <summary>
-            Determines if the class is generic.
+            Determines if the type is a DateTime.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.IsEnum">
@@ -599,6 +714,16 @@
             Determines if the type is enumerable.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Type.IsGeneric">
+            <summary>
+            Determines if the class is generic.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.IsGuid">
+            <summary>
+            Determines if the type is a Guid.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Type.IsNullable">
             <summary>
             Determines if the type is nullable.
@@ -609,24 +734,39 @@
             Determines if the type is primitive.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Type.IsDate">
-            <summary>
-            Determines if the type is a DateTime.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Type.IsGuid">
-            <summary>
-            Determines if the type is a Guid.
-            </summary>
-        </member>
         <member name="P:Typewriter.CodeModel.Type.IsTimeSpan">
             <summary>
             Determines if the type is a TimeSpan.
             </summary>
         </member>
-        <member name="P:Typewriter.CodeModel.Type.Default">
+        <member name="P:Typewriter.CodeModel.Type.name">
             <summary>
-            The default value of the type.
+            The name of the class (camelCased).
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.Name">
+            <summary>
+            The name of the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.Namespace">
+            <summary>
+            The namespace of the class.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.OriginalName">
+            <summary>
+            The original C# name of the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.Parent">
+            <summary>
+            The parent context of the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.TypeArguments">
+            <summary>
+            All generic type parameters of the class.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Type.op_Implicit(Typewriter.CodeModel.Type)~System.String">
@@ -652,6 +792,11 @@
         <member name="P:Typewriter.CodeModel.TypeParameter.Name">
             <summary>
             The name of the type parameter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.TypeParameter.Parent">
+            <summary>
+            The parent context of the type parameter.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.TypeParameterCollection">

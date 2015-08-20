@@ -6,55 +6,60 @@ namespace Typewriter.CodeModel
     /// Represents an enum.
     /// </summary>
     [Context("Enum", "Enums")]
-    public abstract class Enum : CodeItem
+    public abstract class Enum : Item
     {
+        /// <summary>
+        /// All attributes defined on the enum.
+        /// </summary>
+        public abstract AttributeCollection Attributes { get; }
+
+        /// <summary>
+        /// The containing class of the enum if it is nested.
+        /// </summary>
+        public abstract Class ContainingClass { get; }
+
+        /// <summary>
+        /// The full original name of the enum including namespace and containing class names.
+        /// </summary>
+        public abstract string FullName { get; }
+
+        /// <summary>
+        /// Determines if the enum is decorated with the Flags attribute.
+        /// </summary>
+        public abstract bool IsFlags { get; }
+
         /// <summary>
         /// The name of the enum (camelCased).
         /// </summary>
-        //[Property("string name", "The name of the $context (camelCased).")]
         public abstract string name { get; }
 
         /// <summary>
         /// The name of the enum.
         /// </summary>
-        //[Property("string Name", "The name of the $context.")]
         public abstract string Name { get; }
-
-        /// <summary>
-        /// The full original name of the enum including namespace and containing class names.
-        /// </summary>
-        //[Property("string FullName", "The full original name of the $context including namespace and containing class names.")]
-        public abstract string FullName { get; }
 
         /// <summary>
         /// The namespace of the enum.
         /// </summary>
-        //[Property("string Namespace", "The namespace of the $context.")]
         public abstract string Namespace { get; }
 
         /// <summary>
-        /// Determines if the enum is decorated with the Flags attribute.
+        /// The parent context of the enum.
         /// </summary>
-        //[Property("bool IsFlags", "Determines if the $context is decorated with the Flags attribute.")]
-        public abstract bool IsFlags { get; }
-
-        /// <summary>
-        /// All attributes defined on the enum.
-        /// </summary>
-        //[Property("collection Attributes", "All attributes defined on the $context.")]
-        public abstract AttributeCollection Attributes { get; }
+        public abstract Item Parent { get; }
 
         /// <summary>
         /// All values defined in the enum.
         /// </summary>
-        //[Property("collection Values", "All values defined in the $context.")]
         public abstract EnumValueCollection Values { get; }
 
         /// <summary>
-        /// The containing class of the enum if it is nested.
+        /// Converts the current instance to string.
         /// </summary>
-        //[Property("class ContainingClass", "The containing class of the $context if it is nested.")]
-        public abstract Class ContainingClass { get; }
+        public static implicit operator string (Enum instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>

@@ -6,8 +6,38 @@ namespace Typewriter.CodeModel
     /// Represents a constant.
     /// </summary>
     [Context("Constant", "Constants")]
-    public abstract class Constant : Field
+    public abstract class Constant : Item
     {
+        /// <summary>
+        /// All attributes defined on the constant.
+        /// </summary>
+        public abstract AttributeCollection Attributes { get; }
+
+        /// <summary>
+        /// The full original name of the constant including namespace and containing class names.
+        /// </summary>
+        public abstract string FullName { get; }
+
+        /// <summary>
+        /// The name of the constant (camelCased).
+        /// </summary>
+        public abstract string name { get; }
+
+        /// <summary>
+        /// The name of the constant.
+        /// </summary>
+        public abstract string Name { get; }
+
+        /// <summary>
+        /// The parent context of the constant.
+        /// </summary>
+        public abstract Item Parent { get; }
+
+        /// <summary>
+        /// The type of the constant.
+        /// </summary>
+        public abstract Type Type { get; }
+
         /// <summary>
         /// Converts the current instance to string.
         /// </summary>

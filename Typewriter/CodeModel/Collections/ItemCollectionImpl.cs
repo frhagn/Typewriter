@@ -9,19 +9,19 @@ namespace Typewriter.CodeModel.Collections
         {
         }
 
-        public Func<CodeItem, IEnumerable<string>> AttributeFilterSelector => i =>
+        public Func<Item, IEnumerable<string>> AttributeFilterSelector => i =>
         {
             var item = i as T;
             return item == null ? new string[0] : GetAttributeFilter(item);
         };
 
-        public Func<CodeItem, IEnumerable<string>> InheritanceFilterSelector => i =>
+        public Func<Item, IEnumerable<string>> InheritanceFilterSelector => i =>
         {
             var item = i as T;
             return item == null ? new string[0] : GetInheritanceFilter(item);
         };
 
-        public Func<CodeItem, IEnumerable<string>> ItemFilterSelector => i =>
+        public Func<Item, IEnumerable<string>> ItemFilterSelector => i =>
         {
             var item = i as T;
             return item == null ? new string[0] : GetItemFilter(item);

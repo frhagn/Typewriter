@@ -7,14 +7,14 @@ namespace Typewriter.Generation
 {
     internal static class ItemFilter
     {
-        internal static IEnumerable<CodeItem> Apply(IEnumerable<CodeItem> items, string filter, ref bool matchFound)
+        internal static IEnumerable<Item> Apply(IEnumerable<Item> items, string filter, ref bool matchFound)
         {
             if (string.IsNullOrWhiteSpace(filter)) return items;
 
             var filterable = items as IFilterable;
             if (filterable == null) return items;
 
-            Func<CodeItem, IEnumerable<string>> selector;
+            Func<Item, IEnumerable<string>> selector;
 
             filter = filter.Trim();
 
@@ -40,7 +40,7 @@ namespace Typewriter.Generation
             return filtered;
         }
 
-        private static ICollection<CodeItem> ApplyFilter(IEnumerable<CodeItem> items, string filter, Func<CodeItem, IEnumerable<string>> selector)
+        private static ICollection<Item> ApplyFilter(IEnumerable<Item> items, string filter, Func<Item, IEnumerable<string>> selector)
         {
             var parts = filter.Split('*');
 

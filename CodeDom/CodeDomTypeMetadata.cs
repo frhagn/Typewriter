@@ -71,8 +71,6 @@ namespace Typewriter.Metadata.CodeDom
 
         private static ITypeMetadata GetType(dynamic element, CodeDomFileMetadata file)
         {
-            //try
-            //{
             var isGenericTypeArgument = element.Type.TypeKind == (int)vsCMTypeRef.vsCMTypeRefOther && element.Type.AsFullName.Split('.').Length == 1;
             if (isGenericTypeArgument)
             {
@@ -87,7 +85,7 @@ namespace Typewriter.Metadata.CodeDom
             }
 
             CodeType codeType = element.Type.CodeType;
-            
+
             var isNullable = codeType.FullName.EndsWith("?") || codeType.FullName.StartsWith("System.Nullable<");
             if (isNullable)
             {
@@ -98,11 +96,6 @@ namespace Typewriter.Metadata.CodeDom
             }
 
             return new CodeDomTypeMetadata(codeType, false, file);
-            //}
-            //catch (NotImplementedException)
-            //{
-            //    return new LazyCodeDomType<T>(fullName, parent);
-            //}
         }
 
         private static bool IsCollection(string fullName)

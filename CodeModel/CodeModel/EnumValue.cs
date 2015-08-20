@@ -6,37 +6,45 @@ namespace Typewriter.CodeModel
     /// Represents an enum value.
     /// </summary>
     [Context("EnumValue", "Values")]
-    public abstract class EnumValue : CodeItem
+    public abstract class EnumValue : Item
     {
+        /// <summary>
+        /// All attributes defined on the enum value.
+        /// </summary>
+        public abstract AttributeCollection Attributes { get; }
+
+        /// <summary>
+        /// The full original name of the enum value including namespace and containing class names.
+        /// </summary>
+        public abstract string FullName { get; }
+
         /// <summary>
         /// The name of the enum value (camelCased).
         /// </summary>
-        //[Property("string name", "The name of the $context (camelCased).")]
         public abstract string name { get; }
 
         /// <summary>
         /// The name of the enum value.
         /// </summary>
-        //[Property("string Name", "The name of the $context.")]
         public abstract string Name { get; }
 
         /// <summary>
-        /// The full original name of the enum value including namespace and containing class names.
+        /// The parent context of the enum value.
         /// </summary>
-        //[Property("string FullName", "The full original name of the $context including namespace and containing class names.")]
-        public abstract string FullName { get; }
+        public abstract Item Parent { get; }
 
         /// <summary>
         /// The numeric value.
         /// </summary>
-        //[Property("number Value", "The numeric value.")]
         public abstract int Value { get; }
 
         /// <summary>
-        /// All attributes defined on the enum value.
+        /// Converts the current instance to string.
         /// </summary>
-        //[Property("collection Attributes", "All attributes defined on the $context.")]
-        public abstract AttributeCollection Attributes { get; }
+        public static implicit operator string (EnumValue instance)
+        {
+            return instance.ToString();
+        }
     }
 
     /// <summary>
