@@ -21,13 +21,23 @@ namespace Typewriter.TemplateEditor.Controllers
     internal class SyntaxErrorController : ITagger<ErrorTag>
     {
         private readonly ITextBuffer buffer;
-        
+
         internal SyntaxErrorController(ITextBuffer buffer)
         {
             this.buffer = buffer;
+            this.buffer.PostChanged += BufferOnPostChanged;
+        }
 
-            // ReSharper disable once UnusedVariable (used to suppress build warning)
-            var temp = TagsChanged;
+        private void BufferOnPostChanged(object sender, EventArgs eventArgs)
+        {
+            var tagsChanged = TagsChanged;
+
+            if (tagsChanged != null)
+            {
+                var span = new Span(0, buffer.CurrentSnapshot.Length);
+                var snapshotSpan = new SnapshotSpan(buffer.CurrentSnapshot, span);
+                tagsChanged(this, new SnapshotSpanEventArgs(snapshotSpan));
+            }
         }
 
         public IEnumerable<ITagSpan<ErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
