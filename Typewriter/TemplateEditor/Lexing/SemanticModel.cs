@@ -142,7 +142,17 @@ namespace Typewriter.TemplateEditor.Lexing
             var contextSpan = contextSpans.GetContextSpan(position);
             if (contextSpan?.Type == ContextType.Template)
             {
-                return tokens.GetToken(position)?.QuickInfo;
+                var quickInfo = tokens.GetToken(position)?.QuickInfo;
+                if (quickInfo != null && quickInfo.StartsWith("Item Parent"))
+                {
+                    var parent = contextSpan.ParentContext?.Name;
+                    if (parent != null)
+                    {
+                        quickInfo = parent + quickInfo.Remove(0, 4);
+                    }
+                }
+
+                return quickInfo;
             }
 
             var error = errorTokens.FindTokens(position).FirstOrDefault();

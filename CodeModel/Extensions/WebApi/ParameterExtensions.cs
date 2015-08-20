@@ -4,12 +4,13 @@ using Typewriter.CodeModel;
 namespace Typewriter.Extensions.WebApi
 {
     /// <summary>
-    /// 
+    /// Extension methods for extracting Web API parameters.
     /// </summary>
     public static class ParameterExtensions
     {
         /// <summary>
-        /// comment
+        /// Creates an object literal containing the parameters that should be sent in the request body of a Web API request.
+        /// If no parameters are required the "null" is returned.
         /// </summary>
         public static string PostData(this Method method)
         {

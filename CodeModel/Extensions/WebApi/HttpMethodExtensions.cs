@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Typewriter.CodeModel;
-using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.Extensions.WebApi
 {
@@ -15,8 +14,6 @@ namespace Typewriter.Extensions.WebApi
         /// Returns the http method from a Web API action.
         /// The http method is extracted from Http* or AcceptVerbs attribute or by naming convension if no attributes are specified.
         /// </summary>
-        //[Property("(extension) string HttpMethod", @"Returns the http method for a Web API action.
-//The http method is extracted from Http* or AcceptVerbs attribute or by naming convension if no attributes are specified.")]
         public static string HttpMethod(this Method method)
         {
             // HTTP method can be specified with an attribute: AcceptVerbs, HttpDelete, HttpGet, HttpHead, HttpOptions, HttpPatch, HttpPost, or HttpPut.

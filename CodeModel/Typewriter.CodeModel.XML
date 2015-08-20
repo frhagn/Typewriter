@@ -804,16 +804,6 @@
             Represents a collection of generic type parameters.
             </summary>
         </member>
-        <member name="T:Typewriter.Extensions.Extensions">
-            <summary>
-            Extension methods for working with the Typewriter CodeModel.
-            </summary>
-        </member>
-        <member name="M:Typewriter.Extensions.Extensions.Route(Typewriter.CodeModel.Method)">
-            <summary>
-            Returns the value of the RouteAttribute of the method and the RoutePrefixAttribute of the current class
-            </summary>
-        </member>
         <member name="T:Typewriter.Extensions.WebApi.HttpMethodExtensions">
             <summary>
             Extension methods for extracting Web API http method.
@@ -827,12 +817,13 @@
         </member>
         <member name="T:Typewriter.Extensions.WebApi.ParameterExtensions">
             <summary>
-            
+            Extension methods for extracting Web API parameters.
             </summary>
         </member>
         <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.PostData(Typewriter.CodeModel.Method)">
             <summary>
-            comment
+            Creates an object literal containing the parameters that should be sent in the request body of a Web API request.
+            If no parameters are required the "null" is returned.
             </summary>
         </member>
         <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.PostData(Typewriter.CodeModel.Method,System.String)">
@@ -847,12 +838,26 @@
         </member>
         <member name="M:Typewriter.Extensions.WebApi.UrlExtensions.Url(Typewriter.CodeModel.Method)">
             <summary>
-            comment
+            Returns the url for the Web API action based on route attributes (or "api/{controller}/{id?}" if no attributes are present).
+            Route parameters are converted to TypeScript string interpolation syntax by prefixing all parameters with $ e.g. ${id}.
+            Optional parameters are added as QueryString parameters for GET and HEAD requests.
             </summary>
         </member>
         <member name="M:Typewriter.Extensions.WebApi.UrlExtensions.Url(Typewriter.CodeModel.Method,System.String)">
             <summary>
-            ...
+            Returns the url for the Web API action based on route attributes (or the supplied convension route if no attributes are present).
+            Route parameters are converted to TypeScript string interpolation syntax by prefixing all parameters with $ e.g. ${id}.
+            Optional parameters are added as QueryString parameters for GET and HEAD requests.
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.WebApi.UrlExtensions.Route(Typewriter.CodeModel.Method)">
+            <summary>
+            Returns the route for the Web API action based on route attributes (or "api/{controller}/{id?}" if no attributes are present).
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.WebApi.UrlExtensions.Route(Typewriter.CodeModel.Method,System.String)">
+            <summary>
+            Returns the route for the Web API action based on route attributes (or the supplied convension route if no attributes are present).
             </summary>
         </member>
     </members>

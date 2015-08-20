@@ -208,19 +208,20 @@ namespace Typewriter.Tests.CodeModel
 
             containingClassInfo.ShouldBeNull();
         }
-
-
+        
         [Fact]
         public void Expect_generic_baseclass_to_have_type_arguments()
         {
-            var classInfo = fileInfo.Classes.First(m=>m.Name== "InheritGenericClassInfo");
+            var classInfo = fileInfo.Classes.First(m => m.Name == "InheritGenericClassInfo");
             var genericTypeArgument = classInfo.BaseClass.TypeArguments.First();
+            //var genericTypeParameter = classInfo.BaseClass.TypeParameters.First();
 
             classInfo.BaseClass.IsGeneric.ShouldBeTrue();
-            classInfo.BaseClass.TypeParameters.Count.ShouldEqual(1);
-            genericTypeArgument.Name.ShouldEqual("string");
-            //genericTypeArgument.Type.Name.ShouldEqual("string");
-        }
+            classInfo.BaseClass.TypeArguments.Count.ShouldEqual(1);
+            //classInfo.BaseClass.TypeParameters.Count.ShouldEqual(1);
 
+            genericTypeArgument.Name.ShouldEqual("string");
+            //genericTypeParameter.Name.ShouldEqual("T");
+        }
     }
 }

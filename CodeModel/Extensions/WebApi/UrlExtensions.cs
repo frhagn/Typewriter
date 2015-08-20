@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using Typewriter.CodeModel;
-using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.Extensions.WebApi
 {
@@ -14,7 +13,9 @@ namespace Typewriter.Extensions.WebApi
         internal const string DefaultRoute = "api/{controller}/{id?}";
 
         /// <summary>
-        /// comment
+        /// Returns the url for the Web API action based on route attributes (or "api/{controller}/{id?}" if no attributes are present).
+        /// Route parameters are converted to TypeScript string interpolation syntax by prefixing all parameters with $ e.g. ${id}.
+        /// Optional parameters are added as QueryString parameters for GET and HEAD requests.
         /// </summary>
         public static string Url(this Method method)
         {
@@ -22,9 +23,10 @@ namespace Typewriter.Extensions.WebApi
         }
 
         /// <summary>
-        /// ...
+        /// Returns the url for the Web API action based on route attributes (or the supplied convension route if no attributes are present).
+        /// Route parameters are converted to TypeScript string interpolation syntax by prefixing all parameters with $ e.g. ${id}.
+        /// Optional parameters are added as QueryString parameters for GET and HEAD requests.
         /// </summary>
-        //[Property("(extension) string Url", "...")]
         public static string Url(this Method method, string route)
         {
             // 1. Select the proper route based on route attributes and the supplied convension route.
@@ -33,7 +35,7 @@ namespace Typewriter.Extensions.WebApi
             // 4. Remove all parameter constraints and convert the placeholder to TypeScript string interpolation syntax by prefixing all parameters with $.
             // 5. Find parameters on the method that are not specified in the route and add them as a query string.
 
-            route = CalculateBaseRoute(method, route);
+            route = Route(method, route);
             route = RemoveUnmatchedOptionalParameters(method, route);
             route = ReplaceSpecialParameters(method, route);
             route = ConvertRouteParameters(route);
@@ -42,7 +44,18 @@ namespace Typewriter.Extensions.WebApi
             return route;
         }
 
-        private static string CalculateBaseRoute(Method method, string route)
+        /// <summary>
+        /// Returns the route for the Web API action based on route attributes (or "api/{controller}/{id?}" if no attributes are present).
+        /// </summary>
+        public static string Route(this Method method)
+        {
+            return Route(method, DefaultRoute);
+        }
+
+        /// <summary>
+        /// Returns the route for the Web API action based on route attributes (or the supplied convension route if no attributes are present).
+        /// </summary>
+        public static string Route(this Method method, string route)
         {
             var routeAttribute = method.Attributes.FirstOrDefault(a => a.Name == "Route");
             if (routeAttribute != null)

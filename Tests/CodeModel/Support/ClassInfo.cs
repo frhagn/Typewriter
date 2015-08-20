@@ -54,7 +54,6 @@
     {
     }
 
-
     public class InheritGenericClassInfo : GenericClassInfo<string>
     {
     }

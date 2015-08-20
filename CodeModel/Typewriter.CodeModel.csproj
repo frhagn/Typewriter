@@ -56,7 +56,6 @@
     <Compile Include="CodeModel\Enum.cs" />
     <Compile Include="CodeModel\EnumValue.cs" />
     <Compile Include="CodeModel\IStringConvertable.cs" />
-    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="CodeModel\Field.cs" />
     <Compile Include="CodeModel\File.cs" />
     <Compile Include="CodeModel\Interface.cs" />

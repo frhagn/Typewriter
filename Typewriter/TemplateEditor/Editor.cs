@@ -113,7 +113,7 @@ namespace Typewriter.TemplateEditor
             return identifiers.Select(i =>
             {
                 var imageSource = glyphService.GetGlyph(i.Glyph, StandardGlyphItem.GlyphItemPublic);
-                var quickInfo = i.IsParent ? i.QuickInfo.Replace("$parent", contextSpan.ParentContext?.Name.ToLowerInvariant()) : i.QuickInfo;
+                var quickInfo = i.IsParent ? i.QuickInfo.Replace("Item", contextSpan.ParentContext?.Name) : i.QuickInfo;
 
                 return new Completion(prefix + i.Name, prefix + i.Name, quickInfo, imageSource, null);
             });

@@ -45,7 +45,7 @@ namespace Typewriter.TemplateEditor.Lexing
             var propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo != null)
             {
-                documentation = string.Concat(propertyInfo.PropertyType.Name, " ", name, 
+                documentation = string.Concat(GetTypeName(propertyInfo.PropertyType.Name), " ", name, 
                     ParseDocumentation(documentationProvider.GetDocumentationForSymbol("P:" + propertyInfo.ReflectedType.FullName + "." + propertyInfo.Name)));
             }
             else
@@ -57,7 +57,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     var parameters = string.Join(",", methodInfo.GetParameters().Select(p => p.ParameterType.FullName));
                     var typName = $"M:{methodInfo.ReflectedType.FullName}.{methodInfo.Name}({parameters})";
 
-                    documentation = string.Concat(prefix, methodInfo.ReturnType.Name, " ", name,
+                    documentation = string.Concat(prefix, GetTypeName(methodInfo.ReturnType.Name), " ", name,
                         ParseDocumentation(documentationProvider.GetDocumentationForSymbol(typName)));
                 }
             }
@@ -67,6 +67,14 @@ namespace Typewriter.TemplateEditor.Lexing
                 Name = name,
                 QuickInfo = documentation
             };
+        }
+
+        private static string GetTypeName(string name)
+        {
+            if (name == "String") return "string";
+            if (name == "Boolean") return "bool";
+
+            return name;
         }
 
         private static string GetSummary(ISymbol symbol)
