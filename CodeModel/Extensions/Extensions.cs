@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using Typewriter.CodeModel;
 using Typewriter.CodeModel.Attributes;
 
-namespace Typewriter.CodeModel
+namespace Typewriter.Extensions
 {
     /// <summary>
     /// Extension methods for working with the Typewriter CodeModel.
@@ -11,7 +12,7 @@ namespace Typewriter.CodeModel
         /// <summary>
         /// Returns the value of the RouteAttribute of the method and the RoutePrefixAttribute of the current class
         /// </summary>
-        [Property("(extension) string Route", "Returns the value of the RouteAttribute of the $context and the RoutePrefixAttribute of the current class")]
+        //[Property("(extension) string Route", "Returns the value of the RouteAttribute of the $context and the RoutePrefixAttribute of the current class")]
         public static string Route(this Method methodInfo)
         {
             var parent = methodInfo.Parent as Class;

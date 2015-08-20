@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +15,6 @@ using Microsoft.CodeAnalysis.Recommendations;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CSharp.RuntimeBinder;
 using Typewriter.CodeModel;
-using Typewriter.VisualStudio;
 using File = System.IO.File;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
@@ -34,12 +32,9 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             typeof (RuntimeBinderException).Assembly, // Microsoft.CSharp
             typeof (Class).Assembly // Typewriter.CodeModel
         };
-
-        private readonly ConcurrentDictionary<string, DocumentationProvider> documentationProviders;
-
+        
         public ShadowWorkspace() : base(MefHostServices.DefaultHost, WorkspaceKind.Host)
         {
-            documentationProviders = new ConcurrentDictionary<string, DocumentationProvider>();
         }
 
         public DocumentId AddProjectWithDocument(string documentFileName, string text)
@@ -93,8 +88,6 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         {
             var document = CurrentSolution.GetDocument(documentId);
             var semanticModel = document.GetSemanticModelAsync().Result;
-            //var syntaxTree = document.GetSyntaxTreeAsync().Result;
-            //var diagnostics = syntaxTree.GetDiagnostics();
             var bounds = TextSpan.FromBounds(start, start + length);
             var diagnostics = semanticModel.GetDiagnostics(bounds);
 
@@ -104,7 +97,6 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         public IReadOnlyList<MethodDeclarationSyntax> GetMethods(DocumentId documentId)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            //var semanticModel = document.GetSemanticModelAsync().Result;
             var syntaxTree = document.GetSyntaxTreeAsync().Result;
 
             var root = syntaxTree.GetRoot();
@@ -157,8 +149,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         private MetadataReference CreateReference(Assembly assembly)
         {
             var location = assembly.Location;
-            var path = Path.ChangeExtension(location, "xml");
-            var provider = documentationProviders.GetOrAdd(path, p => new XmlDocumentationProvider(p));
+            var provider = XmlDocumentationProvider.GetDocumentationProvider(assembly);
 
             return MetadataReference.CreateFromFile(location, new MetadataReferenceProperties(), provider);
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Typewriter.Tests.Render.Support
+namespace Typewriter.Tests.Support
 {
     internal class RouteAttribute : Attribute
     {

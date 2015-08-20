@@ -10,24 +10,22 @@ namespace Typewriter.Generation
 {
     public class Parser
     {
-        private static readonly Type standardExtensions = typeof(Extensions);
-
-        public static string Parse(string template, Type customExtensions, object context, out bool success)
+        public static string Parse(string template, List<Type> extensions, object context, out bool success)
         {
-            var instance = new Parser(customExtensions);
+            var instance = new Parser(extensions);
             var output = instance.ParseTemplate(template, context);
             success = instance.hasError == false;
 
             return instance.matchFound ? output : null;
         }
 
-        private readonly Type customExtensions;
+        private readonly List<Type> extensions;
         private bool matchFound;
         private bool hasError;
 
-        private Parser(Type customExtensions)
+        private Parser(List<Type> extensions)
         {
-            this.customExtensions = customExtensions;
+            this.extensions = extensions;
         }
 
         private string ParseTemplate(string template, object context)
@@ -79,9 +77,10 @@ namespace Typewriter.Generation
                             if (filter != null && filter.StartsWith("$"))
                             {
                                 var predicate = filter.Remove(0, 1);
-                                if (customExtensions != null)
+                                if (extensions != null)
                                 {
-                                    var c = customExtensions.GetMethod(predicate);
+                                    // Lambda filters are always defined in the first extension type
+                                    var c = extensions.FirstOrDefault()?.GetMethod(predicate);
                                     if (c != null)
                                     {
                                         items = collection.Where(x => (bool)c.Invoke(null, new object[] { x })).ToList();
@@ -122,12 +121,6 @@ namespace Typewriter.Generation
                             }
                             else
                             {
-                                //var extension = standardExtensions.GetMethod(identifier, new[] { value.GetType() });
-                                //if (extension != null && extension.ReturnType == typeof (string))
-                                //{
-                                //    value = extension.Invoke(null, new[] { value });
-                                //}
-
                                 output += value.ToString();
                             }
                         }
@@ -165,13 +158,6 @@ namespace Typewriter.Generation
 
             try
             {
-                var extension = customExtensions?.GetMethod(identifier, new[] { type });
-                if (extension != null)
-                {
-                    value = extension.Invoke(null, new[] { context });
-                    return true;
-                }
-
                 var property = type.GetProperty(identifier);
                 if (property != null)
                 {
@@ -179,7 +165,7 @@ namespace Typewriter.Generation
                     return true;
                 }
 
-                extension = standardExtensions.GetMethod(identifier, new[] { type });
+                var extension = extensions.Select(e => e.GetMethod(identifier, new[] { type })).FirstOrDefault(m => m != null);
                 if (extension != null)
                 {
                     value = extension.Invoke(null, new[] { context });

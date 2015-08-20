@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
 {
-    internal class Snippet
+    public class Snippet
     {
         public static Snippet Create(SnippetType type, string code, int offset = 0, int startIndex = -1, int endIndex = -1, int internalOffset = 0)
         {
@@ -46,7 +46,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         }
     }
 
-    internal enum SnippetType
+    public enum SnippetType
     {
         Using,
         Code,

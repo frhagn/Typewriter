@@ -11,13 +11,13 @@ namespace Typewriter.CodeModel
         /// <summary>
         /// Determines if the property has a getter.
         /// </summary>
-        [Property("bool HasGetter", "Determines if the $context has a getter")]
+        //[Property("bool HasGetter", "Determines if the $context has a getter")]
         public abstract bool HasGetter { get; }
 
         /// <summary>
         /// Determines if the property has a setter.
         /// </summary>
-        [Property("bool HasSetter", "Determines if the $context has a setter")]
+        //[Property("bool HasSetter", "Determines if the $context has a setter")]
         public abstract bool HasSetter { get; }
 
         /// <summary>

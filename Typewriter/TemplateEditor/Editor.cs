@@ -13,15 +13,20 @@ namespace Typewriter.TemplateEditor
     {
         public static Editor Instance { get; } = new Editor();
 
-        private readonly ShadowClass shadowClass = new ShadowClass();
-        private readonly CodeLexer codeLexer = new CodeLexer();
-        private readonly TemplateLexer templateLexer = new TemplateLexer();
+        private readonly ShadowClass shadowClass;
+        private readonly Contexts contexts;
+        private readonly CodeLexer codeLexer;
+        private readonly TemplateLexer templateLexer;
 
         private ITextSnapshot currentSnapshot;
         private SemanticModel semanticModelCache;
 
         private Editor()
         {
+            shadowClass = new ShadowClass();
+            contexts = new Contexts(shadowClass);
+            codeLexer = new CodeLexer(contexts);
+            templateLexer = new TemplateLexer(contexts);
         }
 
         private SemanticModel GetSemanticModel(ITextBuffer buffer)

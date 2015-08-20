@@ -1,9 +1,13 @@
 using System;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Typewriter.TemplateEditor.Lexing.Roslyn;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
@@ -30,9 +34,45 @@ namespace Typewriter.TemplateEditor.Lexing
             };
         }
 
+        public static Identifier FromMemberInfo(MemberInfo memberInfo)
+        {
+            var assembly = memberInfo.ReflectedType.Assembly;
+            var documentationProvider = XmlDocumentationProvider.GetDocumentationProvider(assembly);
+
+            var name = memberInfo.Name;
+            string documentation = null;
+
+            var propertyInfo = memberInfo as PropertyInfo;
+            if (propertyInfo != null)
+            {
+                documentation = string.Concat(propertyInfo.PropertyType.Name, " ", name, 
+                    ParseDocumentation(documentationProvider.GetDocumentationForSymbol("P:" + propertyInfo.ReflectedType.FullName + "." + propertyInfo.Name)));
+            }
+            else
+            {
+                var methodInfo = memberInfo as MethodInfo;
+                if (methodInfo != null)
+                {
+                    var prefix = methodInfo.IsDefined(typeof (ExtensionAttribute), false) ? "(extension) " : "";
+                    var parameters = string.Join(",", methodInfo.GetParameters().Select(p => p.ParameterType.FullName));
+                    var typName = $"M:{methodInfo.ReflectedType.FullName}.{methodInfo.Name}({parameters})";
+
+                    documentation = string.Concat(prefix, methodInfo.ReturnType.Name, " ", name,
+                        ParseDocumentation(documentationProvider.GetDocumentationForSymbol(typName)));
+                }
+            }
+
+            return new Identifier
+            {
+                Name = name,
+                QuickInfo = documentation
+            };
+        }
+
         private static string GetSummary(ISymbol symbol)
         {
-            string summary = "";
+            var summary = "";
+
             if (symbol != null)
             {
                 var p = symbol as IPropertySymbol;
@@ -45,7 +85,8 @@ namespace Typewriter.TemplateEditor.Lexing
                     var m = symbol as IMethodSymbol;
                     if (m != null)
                     {
-                        summary = m.ReturnType.ToDisplayString() + " " + m.ToDisplayString();
+                        var prefix = m.IsExtensionMethod ? "(extension) " : "";
+                        summary = string.Concat(prefix, m.ReturnType.ToDisplayString(), " ", m.ToDisplayString());
                     }
                     else
                     {
@@ -55,28 +96,33 @@ namespace Typewriter.TemplateEditor.Lexing
 
                 summary = summary.Replace("__Typewriter.__Code.", string.Empty);
 
-                string documentation = symbol.GetDocumentationCommentXml();
-                if (!string.IsNullOrEmpty(documentation))
+                var documentation = symbol.GetDocumentationCommentXml();
+                summary += ParseDocumentation(documentation);
+            }
+
+            return summary;
+        }
+
+        private static string ParseDocumentation(string documentation)
+        {
+            if (string.IsNullOrEmpty(documentation) == false)
+            {
+                if (documentation.Contains("<summary>"))
                 {
-                    if (documentation.Contains("<summary>"))
+                    try
                     {
-                        try
-                        {
-                            summary += Environment.NewLine + (from item in XDocument.Parse("<r>" + documentation + "</r>").Descendants("summary")
-                                                              select GetValue(item)
-                                ).First().Trim();
-                        }
-                        catch (Exception)
-                        {
-                        }
+                        documentation = XDocument.Parse("<r>" + documentation + "</r>").Descendants("summary").Select(GetValue).FirstOrDefault() ?? string.Empty;
+                        documentation = Regex.Replace(documentation, @"^ +", "", RegexOptions.Multiline);
                     }
-                    else
+                    catch
                     {
-                        summary += Environment.NewLine + documentation.Trim();
                     }
                 }
+
+                return Environment.NewLine + documentation.Trim();
             }
-            return summary;
+
+            return string.Empty;
         }
 
         private static string GetValue(XElement element)

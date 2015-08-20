@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
-using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation
 {
@@ -10,29 +13,54 @@ namespace Typewriter.Generation
     {
         private static int counter;
 
-        public static string Parse(string template, ref Type extensions)
+        public static string Parse(string template, List<Type> extensions)
         {
             if (string.IsNullOrWhiteSpace(template)) return null;
 
             var output = string.Empty;
             var stream = new Stream(template);
             var shadowClass = new ShadowClass();
+            var contexts = new Contexts(shadowClass);
 
             shadowClass.Clear();
 
             while (stream.Advance())
             {
                 if (ParseCodeBlock(stream, shadowClass)) continue;
-                if (ParseLambda(stream, shadowClass, ref output)) continue;
+                if (ParseLambda(stream, shadowClass, contexts, ref output)) continue;
                 output += stream.Current;
             }
 
             shadowClass.Parse();
-            extensions = Compiler.Compile(shadowClass);
+
+            extensions.Clear();
+            extensions.Add(Compiler.Compile(shadowClass));
+            extensions.AddRange(FindExtensionClasses(shadowClass));
 
             return output;
         }
-        
+
+        private static IEnumerable<Type> FindExtensionClasses(ShadowClass shadowClass)
+        {
+            var types = new List<Type>();
+
+            var usings = shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using"));
+            foreach (var usingStatement in usings.Select(u => u.Code))
+            {
+                var ns = usingStatement.Remove(0, 5).Trim().Trim(';');
+
+                foreach (var assembly in shadowClass.ReferencedAssemblies)
+                {
+                    types.AddRange(assembly.GetExportedTypes().Where(t => t.Namespace == ns &&
+                        t.GetMethods(BindingFlags.Static | BindingFlags.Public).Any(m => 
+                            m.IsDefined(typeof (ExtensionAttribute), false) && 
+                            m.GetParameters().First().ParameterType.Namespace == "Typewriter.CodeModel")));
+                }
+            }
+
+            return types;
+        }
+
         private static bool ParseCodeBlock(Stream stream, ShadowClass shadowClass)
         {
             if (stream.Current == '$' && stream.Peek() == '{')
@@ -87,7 +115,7 @@ namespace Typewriter.Generation
             shadowClass.AddBlock(code.ToString(), 0);
         }
 
-        private static bool ParseLambda(Stream stream, ShadowClass shadowClass, ref string template)
+        private static bool ParseLambda(Stream stream, ShadowClass shadowClass, Contexts contexts, ref string template)
         {
             if (stream.Current == '$')
             {
@@ -107,10 +135,10 @@ namespace Typewriter.Generation
 
                                 var contextName = identifier;
                                 // Todo: Make the TemplateCodeParser context aware
-                                if (contextName == "GenericTypeArguments") contextName = "Types";
+                                if (contextName == "TypeArguments") contextName = "Types";
                                 else if (contextName.StartsWith("Nested")) contextName = contextName.Remove(0, 6);
 
-                                var type = Contexts.Find(contextName)?.Type.FullName;
+                                var type = contexts.Find(contextName)?.Type.FullName;
 
                                 if (type == null) return false;
 

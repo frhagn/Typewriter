@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using Typewriter.Tests.Render.RoutedApiController.Support;
-using Typewriter.Tests.Render.Support;
+using Typewriter.Tests.Support;
 
 namespace Typewriter.Tests.Render.RoutedApiController
 {

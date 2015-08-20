@@ -7,10 +7,17 @@ namespace Typewriter.TemplateEditor.Lexing
 {
     public class CodeLexer
     {
-        private static readonly Context fileContext = Contexts.Find(nameof(File));
+        private readonly Contexts contexts;
+        private readonly Context fileContext;
         
         private SemanticModel semanticModel;
-        private Stack<Context> context; 
+        private Stack<Context> context;
+
+        public CodeLexer(Contexts contexts)
+        {
+            this.contexts = contexts;
+            this.fileContext = contexts.Find(nameof(File));
+        }
 
         public void Tokenize(SemanticModel semanticModel, string code)
         {
@@ -25,7 +32,7 @@ namespace Typewriter.TemplateEditor.Lexing
             
             semanticModel.Tokens.AddRange(semanticModel.ShadowClass.GetTokens());
             semanticModel.ErrorTokens.AddRange(semanticModel.ShadowClass.GetErrorTokens());
-            semanticModel.TempIdentifiers.Add(semanticModel.ShadowClass.GetIdentifiers());
+            semanticModel.TempIdentifiers.Add(semanticModel.ShadowClass.GetIdentifiers(contexts));
         }
 
         private void Parse(string template, int offset)
@@ -123,7 +130,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
                     if (identifier.IsCollection)
                     {
-                        context.Push(Contexts.Find(identifier.Context));
+                        context.Push(contexts.Find(identifier.Context));
                         ParseFilter(stream);
                         ParseBlock(stream); // template
 
@@ -146,7 +153,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     }
                     else if (identifier.HasContext)
                     {
-                        context.Push(Contexts.Find(identifier.Context));
+                        context.Push(contexts.Find(identifier.Context));
 
                         ParseBlock(stream); // template
 

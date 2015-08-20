@@ -1,4 +1,4 @@
-﻿namespace Typewriter.Tests.Render.Support
+﻿namespace Typewriter.Tests.Support
 {
     public interface IHttpActionResult<T>
     {

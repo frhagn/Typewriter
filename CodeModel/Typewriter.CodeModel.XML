@@ -59,31 +59,6 @@
             Initializes a new instance of the ContextAttribute.
             </summary>
         </member>
-        <member name="T:Typewriter.CodeModel.Attributes.PropertyAttribute">
-            <summary>
-            Marks metadata properties with QuickInfo.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Attributes.PropertyAttribute.Name">
-            <summary>
-            The name of the marked property.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Attributes.PropertyAttribute.Description">
-            <summary>
-            The description of the marked property.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Attributes.PropertyAttribute.RequireTemplate">
-            <summary>
-            Determines if the property requires a templat to be recognized by the template.
-            </summary>
-        </member>
-        <member name="M:Typewriter.CodeModel.Attributes.PropertyAttribute.#ctor(System.String,System.String,System.Boolean)">
-            <summary>
-            Initializes a new instance of the PropertyAttribute.
-            </summary>
-        </member>
         <member name="T:Typewriter.CodeModel.Class">
             <summary>
             Represents a class.
@@ -289,14 +264,9 @@
             Represents a collection of enum values.
             </summary>
         </member>
-        <member name="T:Typewriter.CodeModel.Extensions">
+        <member name="T:Typewriter.CodeModel.IStringConvertable">
             <summary>
-            Extension methods for working with the Typewriter CodeModel.
-            </summary>
-        </member>
-        <member name="M:Typewriter.CodeModel.Extensions.Route(Typewriter.CodeModel.Method)">
-            <summary>
-            Returns the value of the RouteAttribute of the method and the RoutePrefixAttribute of the current class
+            Marker interface for collections that can render themselves as string
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.Field">
@@ -687,6 +657,57 @@
         <member name="T:Typewriter.CodeModel.TypeParameterCollection">
             <summary>
             Represents a collection of generic type parameters.
+            </summary>
+        </member>
+        <member name="T:Typewriter.Extensions.Extensions">
+            <summary>
+            Extension methods for working with the Typewriter CodeModel.
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.Extensions.Route(Typewriter.CodeModel.Method)">
+            <summary>
+            Returns the value of the RouteAttribute of the method and the RoutePrefixAttribute of the current class
+            </summary>
+        </member>
+        <member name="T:Typewriter.Extensions.WebApi.HttpMethodExtensions">
+            <summary>
+            Extension methods for extracting Web API http method.
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.WebApi.HttpMethodExtensions.HttpMethod(Typewriter.CodeModel.Method)">
+            <summary>
+            Returns the http method from a Web API action.
+            The http method is extracted from Http* or AcceptVerbs attribute or by naming convension if no attributes are specified.
+            </summary>
+        </member>
+        <member name="T:Typewriter.Extensions.WebApi.ParameterExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.PostData(Typewriter.CodeModel.Method)">
+            <summary>
+            comment
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.PostData(Typewriter.CodeModel.Method,System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Typewriter.Extensions.WebApi.UrlExtensions">
+            <summary>
+            Extension methods for extracting Web API url.
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.WebApi.UrlExtensions.Url(Typewriter.CodeModel.Method)">
+            <summary>
+            comment
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.WebApi.UrlExtensions.Url(Typewriter.CodeModel.Method,System.String)">
+            <summary>
+            ...
             </summary>
         </member>
     </members>

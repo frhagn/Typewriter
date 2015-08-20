@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
+using Typewriter.CodeModel;
 using Typewriter.VisualStudio;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
@@ -42,12 +44,16 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         
         private int offset;
         private bool classAdded;
-
+        
         public ShadowClass()
         {
             workspace = new ShadowWorkspace();
             documentId = workspace.AddProjectWithDocument("ShadowClass.cs", "");
         }
+
+        public IEnumerable<Snippet> Snippets => snippets;
+
+        public IEnumerable<Assembly> ReferencedAssemblies => new[] { typeof (Class).Assembly };
 
         public void AddUsing(string code, int startIndex)
         {
@@ -146,7 +152,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             return tokens;
         }
 
-        public IEnumerable<TemporaryIdentifier> GetIdentifiers()
+        public IEnumerable<TemporaryIdentifier> GetIdentifiers(Contexts contexts)
         {
             var methods = workspace.GetMethods(documentId);
 
@@ -158,13 +164,13 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
 
                 if (identifier.StartsWith("__") == false && parameter != null)
                 {
-                    var context = Contexts.Find(parameter);
+                    var context = contexts.Find(parameter);
                     if (context != null)
                     {
                         var isBoolean = returnType == "bool" || returnType == "Boolean";
 
                         var index = returnType.IndexOf("Collection", StringComparison.Ordinal);
-                        var childContext = Contexts.Find(index > 0 ? returnType.Substring(0, index) : returnType)?.Name;
+                        var childContext = contexts.Find(index > 0 ? returnType.Substring(0, index) : returnType)?.Name;
                         var isCollection = childContext != null && index > 0;
 
                         yield return new TemporaryIdentifier(context, new Identifier

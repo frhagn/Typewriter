@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Typewriter.Tests.Render.Support;
 using Typewriter.Tests.Render.WebApiController.Support;
+using Typewriter.Tests.Support;
 
 namespace Typewriter.Tests.Render.WebApiController
 {

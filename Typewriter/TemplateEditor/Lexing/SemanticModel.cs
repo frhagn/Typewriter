@@ -89,7 +89,12 @@ namespace Typewriter.TemplateEditor.Lexing
                 if (contextSpan.Type == ContextType.Template)
                 {
                     var contextIdentifiers = contextSpan.Context.Identifiers;
-                    return contextIdentifiers.Concat(this.tempIdentifiers.GetTempIdentifiers(contextSpan.Context)).OrderBy(i => i.Name);
+                    var customIdentifiers = this.tempIdentifiers.GetTempIdentifiers(contextSpan.Context);
+                    // Todo: Optimize performance
+                    var extensionIdentifiers = shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using"))
+                        .SelectMany(s => contextSpan.Context.GetExtensionIdentifiers(s.Code.Remove(0, 5).Trim().TrimEnd(';')));
+
+                    return contextIdentifiers.Concat(customIdentifiers).Concat(extensionIdentifiers).OrderBy(i => i.Name);
                 }
 
                 var identifiers = shadowClass.GetRecommendedSymbols(position).GroupBy(s => s.Name).Select(g => Identifier.FromSymbol(g.First())).ToList();
@@ -110,7 +115,19 @@ namespace Typewriter.TemplateEditor.Lexing
         internal Identifier GetIdentifier(Context context, string name)
         {
             var identifier = context.GetIdentifier(name);
-            return identifier ?? tempIdentifiers.GetTempIdentifiers(context).FirstOrDefault(i => i.Name == name);
+            if (identifier != null) return identifier;
+
+            identifier = tempIdentifiers.GetTempIdentifiers(context).FirstOrDefault(i => i.Name == name);
+            if (identifier != null) return identifier;
+
+            // Todo: Optimize performance
+            foreach (var snippet in shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using")))
+            {
+                identifier = context.GetExtensionIdentifier(snippet.Code.Remove(0, 5).Trim().TrimEnd(';'), name);
+                if (identifier != null) return identifier;
+            }
+
+            return null;
         }
 
         // BraceMatching

@@ -9,9 +9,7 @@ namespace Typewriter.TemplateEditor.Lexing
 {
     public class TemplateLexer
     {
-        private static readonly Context fileContext = Contexts.Find(nameof(File));
         private static readonly char[] operators = "!&|+-/*?=,.:;<>%".ToCharArray();
-
         private static readonly string[] keywords =
         {
             "any", "boolean", "break", "case", "catch", "class", "const", "constructor", "continue", "declare",
@@ -20,6 +18,15 @@ namespace Typewriter.TemplateEditor.Lexing
             "null", "number", "private", "protected", "public", "require", "return", "set", "static", "string",
             "super", "switch", "this", "throw", "true", "try", "typeof", "var", "void", "while", "with", "yield"
         };
+
+        private readonly Contexts contexts;
+        private readonly Context fileContext;
+
+        public TemplateLexer(Contexts contexts)
+        {
+            this.contexts = contexts;
+            this.fileContext = contexts.Find(nameof(File));
+        }
 
         public void Tokenize(SemanticModel semanticModel, string code)
         {
@@ -108,7 +115,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
                         if (identifier.IsCollection)
                         {
-                            context.Push(Contexts.Find(identifier.Context));
+                            context.Push(contexts.Find(identifier.Context));
 
                             ParseFilter(stream, semanticModel, context);
                             ParseBlock(stream, semanticModel, context); // template
@@ -124,7 +131,7 @@ namespace Typewriter.TemplateEditor.Lexing
                         }
                         else if (identifier.HasContext)
                         {
-                            context.Push(Contexts.Find(identifier.Context));
+                            context.Push(contexts.Find(identifier.Context));
 
                             //ParseDot(stream, SemanticModel, Contexts.Find(identifier.Context), context); // Identifier
                             ParseBlock(stream, semanticModel, context); // template

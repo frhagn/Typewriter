@@ -17,7 +17,7 @@ namespace Typewriter.CodeModel
         /// <summary>
         /// The parent context of the code item.
         /// </summary>
-        [Property("$parent Parent", "The parent context of the $context.")]
+        //[Property("$parent Parent", "The parent context of the $context.")]
         public abstract Item Parent { get; }
     }
 }

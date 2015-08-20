@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using EnvDTE;
@@ -12,7 +13,7 @@ namespace Typewriter.Generation
     {
         private readonly object locker = new object();
 
-        private readonly Type extensions;
+        private readonly List<Type> customExtensions = new List<Type>();
         private readonly string template;
         private readonly string templatePath;
         private readonly string projectPath;
@@ -29,7 +30,7 @@ namespace Typewriter.Generation
             this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
             
             var code = System.IO.File.ReadAllText(templatePath);
-            this.template = TemplateCodeParser.Parse(code, ref this.extensions);
+            this.template = TemplateCodeParser.Parse(code, customExtensions);
 
             stopwatch.Stop();
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
@@ -37,7 +38,7 @@ namespace Typewriter.Generation
 
         public string Render(File file, out bool success)
         {
-            return Parser.Parse(template, extensions, file, out success);
+            return Parser.Parse(template, customExtensions, file, out success);
         }
 
         public bool RenderFile(File file, bool saveProjectFile)
