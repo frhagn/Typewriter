@@ -127,7 +127,7 @@ namespace Typewriter.TemplateEditor
 
             foreach (var token in tokens)
             {
-                var tag = new ErrorTag(Classifications.SyntaxError, token.QuickInfo);
+                var tag = new ErrorTag(token.IsError ? Classifications.SyntaxError : Classifications.Warning, token.QuickInfo);
                 yield return new TagSpan<ErrorTag>(new SnapshotSpan(span.Snapshot, token.Start, token.Length), tag);
             }
         }

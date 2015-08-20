@@ -32,5 +32,6 @@ namespace Typewriter
         public const string Property = "Tst/Property";
         public const string String = "String";
         public const string SyntaxError = "syntax error";
+        public const string Warning = "compiler warning";
     }
 }

@@ -141,11 +141,21 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             {
                 var diagnostics = workspace.GetDiagnostics(documentId, s.Offset, s.Length);
 
-                return diagnostics.Select(diagnostic => new Token
+                return diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error || d.Severity == DiagnosticSeverity.Warning).Select(diagnostic =>
                 {
-                    QuickInfo = diagnostic.GetMessage(),
-                    Start = s.FromShadowIndex(diagnostic.Location.SourceSpan.Start),
-                    Length = diagnostic.Location.SourceSpan.Length
+                    var quickInfo = diagnostic.GetMessage();
+                    var isError = diagnostic.Severity == DiagnosticSeverity.Error;
+
+                    quickInfo = quickInfo.Replace("__Typewriter.", string.Empty);
+                    quickInfo = quickInfo.Replace("__Code.", string.Empty);
+
+                    return new Token
+                    {
+                        QuickInfo = quickInfo,
+                        IsError = isError,
+                        Start = s.FromShadowIndex(diagnostic.Location.SourceSpan.Start),
+                        Length = diagnostic.Location.SourceSpan.Length
+                    };
                 });
             });
 
