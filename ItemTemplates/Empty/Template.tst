@@ -1,6 +1,8 @@
 ﻿${
-    using Typewriter.Extensions.WebApi;
+    // Uncomment this line to enable extension methods for ASP.NET Web API e.g. $Url
+    // using Typewriter.Extensions.WebApi;
 
+    // Custom extension methods can be used in the template e.g. $LoudName
     string LoudName(Property property)
     {
         return property.Name.ToUpperInvariant();
