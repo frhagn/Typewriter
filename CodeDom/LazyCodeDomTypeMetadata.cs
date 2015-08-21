@@ -10,7 +10,7 @@ namespace Typewriter.Metadata.CodeDom
         private readonly string fullName;
         private readonly CodeDomFileMetadata file;
 
-        public LazyCodeDomTypeMetadata(string fullName, bool isNullable, CodeDomFileMetadata file) : base(null, isNullable, file)
+        public LazyCodeDomTypeMetadata(string fullName, bool isNullable, bool isType, CodeDomFileMetadata file) : base(null, isNullable, isType, file)
         {
             this.fullName = fullName;
             this.file = file;

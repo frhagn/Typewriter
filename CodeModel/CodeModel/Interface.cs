@@ -65,13 +65,13 @@ namespace Typewriter.CodeModel
 
         /// <summary>
         /// All generic type arguments of the interface.
-        /// TypeArguments are the specified arguments for the TypeParametes on a generic class e.g. &lt;string&gt;.
+        /// TypeArguments are the specified arguments for the TypeParametes on a generic interface e.g. &lt;string&gt;.
         /// </summary>
         public abstract TypeCollection TypeArguments { get; }
 
         /// <summary>
         /// All generic type parameters of the interface.
-        /// TypeParameters are the type placeholders of a generic class e.g. &lt;T&gt;.
+        /// TypeParameters are the type placeholders of a generic interface e.g. &lt;T&gt;.
         /// </summary>
         public abstract TypeParameterCollection TypeParameters { get; }
 

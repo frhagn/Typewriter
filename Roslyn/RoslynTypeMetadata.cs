@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Typewriter.Metadata.Interfaces;
 
 namespace Typewriter.Metadata.Roslyn
@@ -9,11 +10,13 @@ namespace Typewriter.Metadata.Roslyn
     {
         private readonly ITypeSymbol symbol;
         private readonly bool isNullable;
+        private readonly bool isTask;
 
-        public RoslynTypeMetadata(ITypeSymbol symbol, bool isNullable)
+        public RoslynTypeMetadata(ITypeSymbol symbol, bool isNullable, bool isTask)
         {
             this.symbol = symbol;
             this.isNullable = isNullable;
+            this.isTask = isTask;
         }
 
         public string Name => symbol.Name + (IsNullable? "?" : string.Empty);
@@ -46,23 +49,60 @@ namespace Typewriter.Metadata.Roslyn
             symbol.ToDisplayString() == "System.Collections.IEnumerable" ||
             symbol.AllInterfaces.Any(i => i.ToDisplayString() == "System.Collections.IEnumerable"));
         public bool IsNullable => isNullable;
+        public bool IsTask => isTask;
 
         public static ITypeMetadata FromTypeSymbol(ITypeSymbol symbol)
         {
             if (symbol.Name == "Nullable" && symbol.ContainingNamespace.Name == "System")
             {
                 var type = symbol as INamedTypeSymbol;
+                var argument = type?.TypeArguments.FirstOrDefault();
 
-                if (type != null)
-                    return new RoslynTypeMetadata(type.TypeArguments.First(), true);
+                if (argument != null)
+                    return new RoslynTypeMetadata(argument, true, false);
+            }
+            else if (symbol.Name == "Task" && symbol.ContainingNamespace.GetFullName() == "System.Threading.Tasks")
+            {
+                var type = symbol as INamedTypeSymbol;
+                var argument = type?.TypeArguments.FirstOrDefault();
+
+                if (argument != null)
+                {
+                    if (argument.Name == "Nullable" && argument.ContainingNamespace.Name == "System")
+                    {
+                        type = argument as INamedTypeSymbol;
+                        var innerArgument = type?.TypeArguments.FirstOrDefault();
+
+                        if (innerArgument != null)
+                            return new RoslynTypeMetadata(innerArgument, true, true);
+                    }
+
+                    return new RoslynTypeMetadata(argument, false, true);
+                }
+
+                return new RoslynVoidTaskMetadata();
             }
 
-            return new RoslynTypeMetadata(symbol, false);
+            return new RoslynTypeMetadata(symbol, false, false);
         }
 
         public static IEnumerable<ITypeMetadata> FromTypeSymbols(IEnumerable<ITypeSymbol> symbols)
         {
             return symbols.Select(FromTypeSymbol);
         }
+    }
+
+    public class RoslynVoidTaskMetadata : ITypeMetadata
+    {
+        public string Name => "Void";
+        public string FullName => "System.Void";
+        public bool IsEnum => false;
+        public bool IsEnumerable => false;
+        public bool IsGeneric => false;
+        public bool IsNullable => false;
+        public bool IsTask => true;
+        public string Namespace => "System";
+        public IEnumerable<IAttributeMetadata> Attributes => new IAttributeMetadata[0];
+        public IEnumerable<ITypeMetadata> TypeArguments => new ITypeMetadata[0];
     }
 }

@@ -19,6 +19,7 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsEnumerable => false;
         public bool IsGeneric => false;
         public bool IsNullable => false;
+        public bool IsTask => false;
         public string Name => fullName;
         public string Namespace => null;
     }

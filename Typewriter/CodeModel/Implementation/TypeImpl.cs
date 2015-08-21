@@ -32,6 +32,7 @@ namespace Typewriter.CodeModel.Implementation
         public override bool IsEnum => metadata.IsEnum;
         public override bool IsEnumerable => metadata.IsEnumerable;
         public override bool IsNullable => metadata.IsNullable;
+        public override bool IsTask => metadata.IsTask;
         public override bool IsPrimitive => IsPrimitive(metadata);
         public override bool IsDate => Name == "Date";
         public override bool IsGuid => FullName == "System.Guid" || FullName == "System.Guid?";

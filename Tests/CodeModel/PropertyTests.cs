@@ -125,6 +125,7 @@ namespace Typewriter.Tests.CodeModel
                 propertyInfo.Type.IsEnumerable.ShouldBeFalse($"IsEnumerable {property}");
                 propertyInfo.Type.IsGeneric.ShouldBeFalse($"IsGeneric {property}");
                 propertyInfo.Type.IsNullable.ShouldBeFalse($"IsNullable {property}");
+                propertyInfo.Type.IsTask.ShouldBeFalse($"IsTask {property}");
                 propertyInfo.Type.IsPrimitive.ShouldBeTrue($"IsPrimitive {property}");
                 propertyInfo.Type.IsDate.ShouldBeTrue($"IsDate {property}");
                 propertyInfo.Type.IsGuid.ShouldBeFalse($"IsGuid {property}");
@@ -144,6 +145,7 @@ namespace Typewriter.Tests.CodeModel
             propertyInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
             propertyInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
             propertyInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            propertyInfo.Type.IsTask.ShouldBeFalse("IsTask");
             propertyInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
             propertyInfo.Type.IsDate.ShouldBeFalse("IsDate");
             propertyInfo.Type.IsGuid.ShouldBeTrue("IsGuid");
@@ -162,6 +164,7 @@ namespace Typewriter.Tests.CodeModel
             propertyInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
             propertyInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
             propertyInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            propertyInfo.Type.IsTask.ShouldBeFalse("IsTask");
             propertyInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
             propertyInfo.Type.IsDate.ShouldBeFalse("IsDate");
             propertyInfo.Type.IsGuid.ShouldBeFalse("IsGuid");
@@ -195,6 +198,7 @@ namespace Typewriter.Tests.CodeModel
             enumInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
             enumInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
             enumInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            enumInfo.Type.IsTask.ShouldBeFalse("IsTask");
             enumInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
             enumInfo.Type.IsDate.ShouldBeFalse("IsDate");
             enumInfo.Type.IsGuid.ShouldBeFalse("IsGuid");
@@ -217,6 +221,7 @@ namespace Typewriter.Tests.CodeModel
             nullableEnumInfo1.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
             nullableEnumInfo1.Type.IsGeneric.ShouldBeFalse("IsGeneric");
             nullableEnumInfo1.Type.IsNullable.ShouldBeTrue("IsNullable");
+            nullableEnumInfo1.Type.IsTask.ShouldBeFalse("IsTask");
             nullableEnumInfo1.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
             nullableEnumInfo1.Type.IsDate.ShouldBeFalse("IsDate");
             nullableEnumInfo1.Type.IsGuid.ShouldBeFalse("IsGuid");
@@ -230,6 +235,7 @@ namespace Typewriter.Tests.CodeModel
             nullableEnumInfo2.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
             nullableEnumInfo2.Type.IsGeneric.ShouldBeFalse("IsGeneric");
             nullableEnumInfo2.Type.IsNullable.ShouldBeTrue("IsNullable");
+            nullableEnumInfo2.Type.IsTask.ShouldBeFalse("IsTask");
             nullableEnumInfo2.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
             nullableEnumInfo2.Type.IsDate.ShouldBeFalse("IsDate");
             nullableEnumInfo2.Type.IsGuid.ShouldBeFalse("IsGuid");

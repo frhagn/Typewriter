@@ -59,6 +59,11 @@ namespace Typewriter.CodeModel
         public abstract bool IsPrimitive { get; }
 
         /// <summary>
+        /// Determines if the type is a Task.
+        /// </summary>
+        public abstract bool IsTask { get; }
+
+        /// <summary>
         /// Determines if the type is a TimeSpan.
         /// </summary>
         public abstract bool IsTimeSpan { get; }

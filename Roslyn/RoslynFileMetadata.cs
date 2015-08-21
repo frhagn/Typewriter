@@ -17,6 +17,8 @@ namespace Typewriter.Metadata.Roslyn
             this.document = document;
             this.semanticModel = document.GetSemanticModelAsync().Result;
             this.root = semanticModel.SyntaxTree.GetRoot();
+
+            var v = semanticModel.Compilation.GetSpecialType(SpecialType.System_Void);
         }
 
         public string Name => document.Name;

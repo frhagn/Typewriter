@@ -1,4 +1,7 @@
-﻿namespace Typewriter.Tests.CodeModel.Support
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Typewriter.Tests.CodeModel.Support
 {
     public class MethodInfo
     {
@@ -10,6 +13,21 @@
         public T Generic<T>(T parameter)
         {
             return default(T);
+        }
+
+        public Task Task()
+        {
+            return null;
+        }
+
+        public Task<string> TaskString()
+        {
+            return null;
+        }
+
+        public Task<Nullable<int>> TaskNullableInt()
+        {
+            return null;
         }
     }
 

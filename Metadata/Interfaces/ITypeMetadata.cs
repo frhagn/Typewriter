@@ -7,8 +7,9 @@ namespace Typewriter.Metadata.Interfaces
     {
         bool IsEnum { get; }
         bool IsEnumerable { get; }
-        bool IsNullable { get; }
         bool IsGeneric { get; }
+        bool IsNullable { get; }
+        bool IsTask { get; }
         string Namespace { get; }
         IEnumerable<IAttributeMetadata> Attributes { get; }
         IEnumerable<ITypeMetadata> TypeArguments { get; }

@@ -11,13 +11,15 @@ namespace Typewriter.Metadata.CodeDom
     {
         protected CodeType codeType;
         private readonly bool isNullable;
+        private readonly bool isTask;
         private readonly CodeDomFileMetadata file;
         protected virtual CodeType CodeType => codeType;
 
-        protected CodeDomTypeMetadata(CodeType codeType, bool isNullable, CodeDomFileMetadata file)
+        protected CodeDomTypeMetadata(CodeType codeType, bool isNullable, bool isTask, CodeDomFileMetadata file)
         {
             this.codeType = codeType;
             this.isNullable = isNullable;
+            this.isTask = isTask;
             this.file = file;
         }
 
@@ -25,10 +27,11 @@ namespace Typewriter.Metadata.CodeDom
         public virtual string FullName => GetFullName(CodeType.FullName);
         public virtual string Namespace => GetNamespace();
 
-        public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 && IsNullable == false;
-        public bool IsNullable => isNullable;
         public bool IsEnum => CodeType.Kind == vsCMElement.vsCMElementEnum;
         public bool IsEnumerable => IsCollection(FullName);
+        public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 && IsNullable == false;
+        public bool IsNullable => isNullable;
+        public bool IsTask => isTask;
 
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(CodeType.Attributes);
         public IEnumerable<ITypeMetadata> TypeArguments => LoadGenericTypeArguments(IsGeneric,FullName,file);
@@ -58,14 +61,29 @@ namespace Typewriter.Metadata.CodeDom
                 if (fullName.EndsWith("[]"))
                     fullName = $"System.Collections.Generic.ICollection<{fullName.TrimEnd('[', ']')}>";
 
-                var nullable = fullName.EndsWith("?") || fullName.StartsWith("System.Nullable<");
-                if (nullable)
+                var isNullable = fullName.EndsWith("?") || fullName.StartsWith("System.Nullable<");
+                if (isNullable)
                 {
                     fullName = fullName.EndsWith("?") ? fullName.TrimEnd('?') : fullName.Substring(16, fullName.Length - 17);
-                    return new LazyCodeDomTypeMetadata(fullName, true, file);
+                    return new LazyCodeDomTypeMetadata(fullName, true, false, file);
                 }
 
-                return new LazyCodeDomTypeMetadata(fullName, false, file);
+                var isTask = fullName.StartsWith("System.Threading.Tasks.Task");
+                if (isTask)
+                {
+                    fullName = fullName.Contains("<") ? fullName.Substring(28, fullName.Length - 29) : "System.Void";
+
+                    isNullable = fullName.EndsWith("?") || fullName.StartsWith("System.Nullable<");
+                    if (isNullable)
+                    {
+                        fullName = fullName.EndsWith("?") ? fullName.TrimEnd('?') : fullName.Substring(16, fullName.Length - 17);
+                        return new LazyCodeDomTypeMetadata(fullName, true, true, file);
+                    }
+
+                    return new LazyCodeDomTypeMetadata(fullName, false, true, file);
+                }
+
+                return new LazyCodeDomTypeMetadata(fullName, false, false, file);
             });
         }
 
@@ -81,7 +99,7 @@ namespace Typewriter.Metadata.CodeDom
             if (isArray)
             {
                 var name = element.Type.ElementType.AsFullName;
-                return new LazyCodeDomTypeMetadata($"System.Collections.Generic.ICollection<{name}>", false, file);
+                return new LazyCodeDomTypeMetadata($"System.Collections.Generic.ICollection<{name}>", false, false, file);
             }
 
             CodeType codeType = element.Type.CodeType;
@@ -92,10 +110,26 @@ namespace Typewriter.Metadata.CodeDom
                 var name = codeType.FullName;
                 name = name.EndsWith("?") ? name.TrimEnd('?') : name.Substring(16, name.Length - 17);
 
-                return new LazyCodeDomTypeMetadata(name, true, file);
+                return new LazyCodeDomTypeMetadata(name, true, false, file);
             }
 
-            return new CodeDomTypeMetadata(codeType, false, file);
+            var isTask = codeType.FullName.StartsWith("System.Threading.Tasks.Task");
+            if (isTask)
+            {
+                var name = codeType.FullName;
+                name = name.Contains("<") ? name.Substring(28, name.Length - 29) : "System.Void";
+
+                isNullable = name.EndsWith("?") || name.StartsWith("System.Nullable<");
+                if (isNullable)
+                {
+                    name = name.EndsWith("?") ? name.TrimEnd('?') : name.Substring(16, name.Length - 17);
+                    return new LazyCodeDomTypeMetadata(name, true, true, file);
+                }
+
+                return new LazyCodeDomTypeMetadata(name, false, true, file);
+            }
+
+            return new CodeDomTypeMetadata(codeType, false, false, file);
         }
 
         private static bool IsCollection(string fullName)

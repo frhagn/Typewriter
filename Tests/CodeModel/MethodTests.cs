@@ -93,6 +93,7 @@ namespace Typewriter.Tests.CodeModel
             methodInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
             methodInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
             methodInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            methodInfo.Type.IsTask.ShouldBeFalse("IsTask");
             methodInfo.Type.IsPrimitive.ShouldBeFalse("IsPrimitive");
         }
 
@@ -147,6 +148,57 @@ namespace Typewriter.Tests.CodeModel
             firstParameterTypeInfo.FullName.ShouldEqual("T1");
             secondParameterTypeInfo.Name.ShouldEqual("T");
             secondParameterTypeInfo.FullName.ShouldEqual("T");
+        }
+
+        [Fact]
+        public void Expect_task_methods_to_return_void()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "Task");
+
+            methodInfo.Type.FullName.ShouldEqual("System.Void");
+            methodInfo.Type.Name.ShouldEqual("void");
+            methodInfo.Type.OriginalName.ShouldEqual("Void");
+            methodInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
+            methodInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
+            methodInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
+            methodInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            methodInfo.Type.IsTask.ShouldBeTrue("IsTask");
+            methodInfo.Type.IsPrimitive.ShouldBeFalse("IsPrimitive");
+        }
+
+        [Fact]
+        public void Expect_task_string_methods_to_return_string()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "TaskString");
+
+            methodInfo.Type.FullName.ShouldEqual("System.String");
+            methodInfo.Type.Name.ShouldEqual("string");
+            methodInfo.Type.OriginalName.ShouldEqual("string");
+            methodInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
+            methodInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
+            methodInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
+            methodInfo.Type.IsNullable.ShouldBeFalse("IsNullable");
+            methodInfo.Type.IsTask.ShouldBeTrue("IsTask");
+            methodInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
+        }
+
+        [Fact]
+        public void Expect_task_nullable_int_methods_to_return_int()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "TaskNullableInt");
+
+            methodInfo.Type.FullName.ShouldEqual("System.Int32?");
+            methodInfo.Type.Name.ShouldEqual("number");
+            methodInfo.Type.OriginalName.ShouldEqual("int?");
+            methodInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
+            methodInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
+            methodInfo.Type.IsGeneric.ShouldBeFalse("IsGeneric");
+            methodInfo.Type.IsNullable.ShouldBeTrue("IsNullable");
+            methodInfo.Type.IsTask.ShouldBeTrue("IsTask");
+            methodInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
         }
     }
 }

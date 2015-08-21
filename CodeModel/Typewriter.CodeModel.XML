@@ -469,13 +469,13 @@
         <member name="P:Typewriter.CodeModel.Interface.TypeArguments">
             <summary>
             All generic type arguments of the interface.
-            TypeArguments are the specified arguments for the TypeParametes on a generic class e.g. &lt;string&gt;.
+            TypeArguments are the specified arguments for the TypeParametes on a generic interface e.g. &lt;string&gt;.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Interface.TypeParameters">
             <summary>
             All generic type parameters of the interface.
-            TypeParameters are the type placeholders of a generic class e.g. &lt;T&gt;.
+            TypeParameters are the type placeholders of a generic interface e.g. &lt;T&gt;.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Interface.op_Implicit(Typewriter.CodeModel.Interface)~System.String">
@@ -732,6 +732,11 @@
         <member name="P:Typewriter.CodeModel.Type.IsPrimitive">
             <summary>
             Determines if the type is primitive.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.IsTask">
+            <summary>
+            Determines if the type is a Task.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.IsTimeSpan">
