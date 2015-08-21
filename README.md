@@ -1,6 +1,9 @@
 # Typewriter
 Automatic TypeScript Template generation for Visual Studio
 
+[Documentation](http://frhagn.github.io/Typewriter)  
+[Download from Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6)
+
 ## Getting started
 Step 1: Add a TypeScript Template file (.tst)  
 Step 2: Add the following code in the template  
@@ -30,7 +33,3 @@ namespace TestApplication
 Step 6: Save the class.  
 
 Each time a class matching the filter in the template is saved a TypeScript class matching the template is updated or added to the project.
-
-## Links
-[Documentation](http://frhagn.github.io/Typewriter)  
-[Download from Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6)
