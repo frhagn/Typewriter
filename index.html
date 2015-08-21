@@ -40,19 +40,19 @@
                 <div class="navbar-collapse collapse" id="navbar-main">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
+                            <a href="pages/getting-started.html">Getting started</a>
+                        </li>
+                        <li>
+                            <a href="pages/documentation.html">Documentation</a>
+                        </li>
+                        <li>
+                            <a href="pages/changelog.html">Change log</a>
+                        </li>
+                        <li>
                             <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" target="_blank"><i class="fa fa-fw fa-download"></i>&nbsp;&nbsp;Download</a>
                         </li>
-                        <!--<li>
-                            <a href="#getting-started">Getting started</a>
-                        </li>
                         <li>
-                            <a href="#examples">Examples</a>
-                        </li>
-                        <li>
-                            <a href="#docs">Docs</a>
-                        </li>-->
-                        <li>
-                            <a href="https://github.com/frhagn/Typewriter" target="_blank"><i class="fa fa-github"></i>&nbsp;&nbsp;Github</a>
+                            <a href="https://github.com/frhagn/Typewriter"><i class="fa fa-github"></i>&nbsp;&nbsp;GitHub</a>
                         </li>
                     </ul>
                 </div>
@@ -69,7 +69,7 @@
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <p>
-                            <a href="#getting-started" class="btn btn-default">Getting started</a>
+                            <a href="pages/getting-started.html" class="btn btn-default">Getting started</a>
                             <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" class="btn btn-primary"
                             target="_blank"><i class="fa fa-fw fa-download"></i>&nbsp;&nbsp;Download Typewriter</a>
                         </p>
@@ -79,6 +79,39 @@
         </header>
         
         <section class="alternate">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1 class="text-center">About</h1>
+                        <p class="lead text-center">Typewriter extends the functionality of Visual Studio.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="feature-item">
+                            <h3>What is it?</h3>
+                            <p>Typewriter is a free extension for Visual Studio that generates TypeScript files from c# code files using TypeScript Templates.</p>
+                            <p>This allows you to create fully typed TypeScript representations of server side API, models, controllers, SignalR hubs etc.
+                                that automatically updates when you make changes to your c# code.</p>
+                            <p>By doing this you get TypeScript Intellisense and compile-time errors when the client- and server side code differs. This
+                                speeds up your development pace and increases the quality of your applications.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="feature-item">
+                            <h3>How does it work?</h3>
+                            <p>Typewriter works by adding support for TypeScript Template files (.tst) in Visual Studio.</p>
+                            <p>A TypeScript Template is a TypeScript file with some extra features for extracting meta data about your
+                                c# source code such as classes, interfaces, properties and methods. The meta data in combination with the template files
+                                are then used to create TypeScript files that are kept in sync with the c# source files.</p>
+                            <p>So if you add, remove or modify your c# code, the changes will be reflected in the generated TypeScript files automatically.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
@@ -147,35 +180,6 @@
                                     The source code is available on GitHub.</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h1 class="text-center">About</h1>
-                        <p class="lead text-center">Typewriter extends the functionality of Visual Studio.</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h3>What is it?</h3>
-                        <p>Typewriter is a free extension for Visual Studio that generates TypeScript files from c# code files using TypeScript Templates.</p>
-                        <p>This allows you to create fully typed TypeScript representations of server side API, models, controllers, SignalR hubs etc.
-                            that automatically updates when you make changes to your c# code.</p>
-                        <p>By doing this you get TypeScript Intellisense and compile-time errors when the client- and server side code differs. This
-                            speeds up your development pace and increases the quality of your applications.</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <h3>How does it work?</h3>
-                        <p>Typewriter works by adding support for TypeScript Template files (.tst) in Visual Studio.</p>
-                        <p>A TypeScript Template file is essentially a TypeScript file with some extra features for extracting meta data about your
-                            c# source code such as classes, interfaces, properties and methods. The meta data in combination with the template files
-                            are then used to create TypeScript files that are kept in sync with the c# source files.</p>
-                        <p>So if you add, remove or modify your c# code, the changes will be reflected in the generated TypeScript files automatically.</p>
                     </div>
                 </div>
             </div>
@@ -262,7 +266,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <p><code>$Classes("*Model")</code> will find public classes with a name ending in "Model" defined in the same project as the template
+                        <p><code>$Classes(*Model)</code> will find public classes with a name ending in "Model" defined in the same project as the template
                             or in a project referenced by that project.</p>
                         <p>The section between the brackets (<code>[]</code>) is repeated for each class.
                             <code>$Name</code> will print the name of the class and
@@ -286,7 +290,7 @@
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="models">
-                                    <pre><code class="ts">module App { <span class="tst">$Classes(</span>"*Model"<span class="tst">)[</span>
+                                    <pre><code class="ts">module App { <span class="tst">$Classes(</span><span class="hljs-string">*Model</span><span class="tst">)[</span>
     export class <span class="tst">$Name</span> { <span class="tst">$Properties[</span>
         public <span class="tst">$name</span>: <span class="tst">$Type</span>;<span class="tst">]</span>
     }<span class="tst">]</span>

@@ -34,8 +34,8 @@ Visual Studio-like style based on original C# coloring by Jason Diamond <jason@d
   color: #00f;
 }
 
-.tst {
-  color: #2b91af;
+.tst, .tst .hljs-string {
+  color: #2b91af
 }
 
 .hljs-string,

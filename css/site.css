@@ -8,6 +8,18 @@ body{
 
 h1,h2,h3,h4{ font-weight: normal; }
 
+h3 {
+  padding-top: 10px;
+}
+
+h4 {
+  padding-top: 15px;
+}
+
+.alert h4 {
+  padding-top: 0px;
+}
+
 ::selection{
   background: rgba(151, 160, 175, 0.5);
   color: #ffffff;
@@ -23,10 +35,9 @@ a:hover,a:focus,.a:active {
   outline: none !important;
 }
 
-.navbar.navbar-transparent{
+.navbar.navbar-transparent {
   background-color: transparent;
 }
-
 
 /*.navbar.navbar-themed {
   border: none;
@@ -98,7 +109,7 @@ footer {
 
 p.lead {
   font-size: 16px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 h2:first-child {
   margin-top: 0;
@@ -108,6 +119,7 @@ h2:first-child {
   font-size: 28px;
   line-height: 36px;
   width: 30px;
+  padding-top: 8px;
 }
 pre[class*='language-'] > code[data-language] {
   overflow: auto;
