@@ -339,9 +339,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="Resources\Project.ico" />
     <Content Include="..\CodeModel\Typewriter.CodeModel.XML">
       <Link>Resources\Typewriter.CodeModel.XML</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Icons.pkgdef">

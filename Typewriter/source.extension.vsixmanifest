@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="45b6b392-ce2f-409c-a39f-bbf90b34349e" Version="0.9.22" Language="en-US" Publisher="frhagn" />
+    <Identity Id="45b6b392-ce2f-409c-a39f-bbf90b34349e" Version="1.0.0" Language="en-US" Publisher="frhagn" />
     <DisplayName>Typewriter</DisplayName>
-    <Description xml:space="preserve">Automatic TypeScript Template generation from C# files. Beta (0.9.22)</Description>
+    <Description xml:space="preserve">Automatic TypeScript Template generation from C# files.</Description>
     <MoreInfo>http://frhagn.github.io/Typewriter/</MoreInfo>
     <License>Resources\License.txt</License>
-    <GettingStartedGuide>http://frhagn.github.io/Typewriter/</GettingStartedGuide>
-    <ReleaseNotes>http://frhagn.github.io/Typewriter/</ReleaseNotes>
-    <Icon>Resources\light.ico</Icon>
-    <PreviewImage>Resources\Package.ico</PreviewImage>
-    <Tags>Code Generator, TypeScript, TypeScript Code generation, Templates</Tags>
+    <GettingStartedGuide>http://frhagn.github.io/Typewriter/pages/changelog.html</GettingStartedGuide>
+    <ReleaseNotes>http://frhagn.github.io/Typewriter/pages/changelog.html</ReleaseNotes>
+    <Icon>Resources\icon.png</Icon>
+    <PreviewImage>Resources\preview.png</PreviewImage>
+    <Tags>TypeScript, Code Generation, Templates, Web API, MVC, Typewriter</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Community" />
