@@ -92,16 +92,18 @@ namespace Typewriter.CodeModel
         /// All properties defined in the class.
         /// </summary>
         public abstract PropertyCollection Properties { get; }
-        
+
         /// <summary>
         /// All generic type arguments of the class.
         /// TypeArguments are the specified arguments for the TypeParametes on a generic class e.g. &lt;string&gt;.
+        /// (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
         /// </summary>
         public abstract TypeCollection TypeArguments { get; }
 
         /// <summary>
         /// All generic type parameters of the class.
         /// TypeParameters are the type placeholders of a generic class e.g. &lt;T&gt;.
+        /// (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
         /// </summary>
         public abstract TypeParameterCollection TypeParameters { get; }
 

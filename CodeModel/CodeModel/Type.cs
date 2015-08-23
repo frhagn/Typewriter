@@ -45,6 +45,7 @@ namespace Typewriter.CodeModel
 
         /// <summary>
         /// All interfaces implemented by the type.
+        /// (In Visual Studio 2013 Interfaces are not available on Types)
         /// </summary>
         public abstract InterfaceCollection Interfaces { get; }
 
@@ -146,12 +147,14 @@ namespace Typewriter.CodeModel
         /// <summary>
         /// All generic type parameters of the type.
         /// TypeArguments are the specified arguments for the TypeParametes on a generic type e.g. &lt;string&gt;.
+        /// (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
         /// </summary>
         public abstract TypeCollection TypeArguments { get; }
 
         /// <summary>
         /// All generic type parameters of the type.
         /// TypeParameters are the type placeholders of a generic type e.g. &lt;T&gt;.
+        /// (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
         /// </summary>
         public abstract TypeParameterCollection TypeParameters { get; }
 
