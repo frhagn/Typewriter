@@ -202,14 +202,20 @@
                                 </tr>
                                 <tr>
                                     <td>TypeArguments</td>
-                                    <td>All generic type arguments of the class.<br>
-                                        TypeArguments are the specified arguments for the TypeParametes on a generic class e.g. &lt;string&gt;.</td>
+                                    <td>
+                                        All generic type arguments of the class.<br>
+                                        TypeArguments are the specified arguments for the TypeParametes on a generic class e.g. &lt;string&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
                                     <td>TypeParameterCollection</td>
                                 </tr>
                                 <tr>
                                     <td>TypeParameters</td>
-                                    <td>All generic type parameters of the class.<br>
-                                        TypeParameters are the type placeholders of a generic class e.g. &lt;T&gt;.</td>
+                                    <td>
+                                        All generic type parameters of the class.<br>
+                                        TypeParameters are the type placeholders of a generic class e.g. &lt;T&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
                                     <td>TypeParameterCollection</td>
                                 </tr>
                             </tbody>
@@ -547,14 +553,20 @@
                                 </tr>
                                 <tr>
                                     <td>TypeArguments</td>
-                                    <td>All generic type arguments of the interface.<br>
-                                        TypeArguments are the specified arguments for the TypeParametes on a generic interface e.g. &lt;string&gt;.</td>
+                                    <td>
+                                        All generic type arguments of the interface.<br>
+                                        TypeArguments are the specified arguments for the TypeParametes on a generic interface e.g. &lt;string&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
                                     <td>TypeParameterCollection</td>
                                 </tr>
                                 <tr>
                                     <td>TypeParameters</td>
-                                    <td>All generic type parameters of the interface.<br>
-                                        TypeParameters are the type placeholders of a generic interface e.g. &lt;T&gt;.</td>
+                                    <td>
+                                        All generic type parameters of the interface.<br>
+                                        TypeParameters are the type placeholders of a generic interface e.g. &lt;T&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
                                     <td>TypeParameterCollection</td>
                                 </tr>
                                 
@@ -621,7 +633,10 @@
                                 </tr>
                                 <tr>
                                     <td>TypeParameters</td>
-                                    <td>All generic type parameters of the method.</td>
+                                    <td>
+                                        All generic type parameters of the method.<br>
+                                        TypeParameters are the type placeholders of a generic method e.g. &lt;T&gt;.
+                                    </td>
                                     <td>TypeParameterCollection</td>
                                 </tr>
                             </tbody>
@@ -763,14 +778,42 @@
                                     <td>AttributeCollection</td>
                                 </tr>
                                 <tr>
+                                    <td>BaseClass</td>
+                                    <td>The base class of the type.</td>
+                                    <td>Class</td>
+                                </tr>
+                                <tr>
+                                    <td>Constants</td>
+                                    <td>All constants defined in the type.</td>
+                                    <td>ConstantCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>ContainingClass</td>
+                                    <td>The containing class of the type if it's nested.</td>
+                                    <td>Class</td>
+                                </tr>
+                                <tr>
                                     <td>Default</td>
                                     <td>The default value of the type.<br>e.g. strings returns null, integers returns 0 and IEnumerable&lt;CustomerModel&gt; returns []</td>
                                     <td>string</td>
                                 </tr>
                                 <tr>
+                                    <td>Fields</td>
+                                    <td>All fields defined in the type.</td>
+                                    <td>FieldCollection</td>
+                                </tr>
+                                <tr>
                                     <td>FullName</td>
                                     <td>The full original name of the type including namespace, type parameters and containing class names.<br>e.g. System.Int32</td>
                                     <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Interfaces</td>
+                                    <td>
+                                        All interfaces implemented by the type.<br>
+                                        (In Visual Studio 2013 Interfaces are not available on Types)
+                                    </td>
+                                    <td>InterfaceCollection</td>
                                 </tr>
                                 <tr>
                                     <td>IsDate</td>
@@ -809,8 +852,13 @@
                                 </tr>
                                 <tr>
                                     <td>IsTimeSpan</td>
-                                    <td>Determines if the type is a TimeSpan. (Type.Name returns string for Guids)</td>
+                                    <td>Determines if the type is a TimeSpan. (Type.Name returns string for TimeSpans)</td>
                                     <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>Methods</td>
+                                    <td>All methods defined in the type.</td>
+                                    <td>MethodCollection</td>
                                 </tr>
                                 <tr>
                                     <td>Name</td>
@@ -828,6 +876,21 @@
                                     <td>string</td>
                                 </tr>
                                 <tr>
+                                    <td>NestedClasses</td>
+                                    <td>All classes defined in the type.</td>
+                                    <td>ClassCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>NestedEnums</td>
+                                    <td>All enums defined in the type.</td>
+                                    <td>EnumCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>NestedInterfaces</td>
+                                    <td>All interfaces defined in the type.</td>
+                                    <td>InterfaceCollection</td>
+                                </tr>
+                                <tr>
                                     <td>OriginalName</td>
                                     <td>The original name of the type as it was specified in C#.<br>e.g. int</td>
                                     <td>string</td>
@@ -838,9 +901,27 @@
                                     <td>Item</td>
                                 </tr>
                                 <tr>
+                                    <td>Properties</td>
+                                    <td>All properties defined in the type.</td>
+                                    <td>PropertyCollection</td>
+                                </tr>
+                                <tr>
                                     <td>TypeArguments</td>
-                                    <td>The type arguments of the type if it's generic.</td>
+                                    <td>
+                                        All generic type parameters of the type.
+                                        TypeArguments are the specified arguments for the TypeParametes on a generic type e.g. &lt;string&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
                                     <td>TypeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>TypeParameters</td>
+                                    <td>
+                                        All generic type parameters of the type.<br>
+                                        TypeParameters are the type placeholders of a generic type e.g. &lt;T&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
+                                    <td>TypeParameterCollection</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -910,7 +991,7 @@
                                     <td>string</td>
                                 </tr>
                                 <tr>
-                                    <td>PostData</td>
+                                    <td>RequestData</td>
                                     <td>
                                         Creates an object literal containing the parameters that should be sent in the request body of a Web API request.
                                         If no parameters are required the literal "null" is returned.
