@@ -14,14 +14,39 @@ namespace Typewriter.CodeModel
         public abstract AttributeCollection Attributes { get; }
 
         /// <summary>
+        /// The base class of the type.
+        /// </summary>
+        public abstract Class BaseClass { get; }
+
+        /// <summary>
+        /// All constants defined in the type.
+        /// </summary>
+        public abstract ConstantCollection Constants { get; }
+
+        /// <summary>
+        /// The containing class of the type if it's nested.
+        /// </summary>
+        public abstract Class ContainingClass { get; }
+
+        /// <summary>
         /// The default value of the type.
         /// </summary>
         public abstract string Default { get; }
 
         /// <summary>
+        /// All fields defined in the type.
+        /// </summary>
+        public abstract FieldCollection Fields { get; }
+
+        /// <summary>
         /// The full original name of the type including namespace and containing class names.
         /// </summary>
         public abstract string FullName { get; }
+
+        /// <summary>
+        /// All interfaces implemented by the type.
+        /// </summary>
+        public abstract InterfaceCollection Interfaces { get; }
 
         /// <summary>
         /// Determines if the type is a DateTime.
@@ -39,7 +64,7 @@ namespace Typewriter.CodeModel
         public abstract bool IsEnumerable { get; }
 
         /// <summary>
-        /// Determines if the class is generic.
+        /// Determines if the type is generic.
         /// </summary>
         public abstract bool IsGeneric { get; }
 
@@ -69,20 +94,40 @@ namespace Typewriter.CodeModel
         public abstract bool IsTimeSpan { get; }
 
         /// <summary>
-        /// The name of the class (camelCased).
+        /// All methods defined in the type.
+        /// </summary>
+        public abstract MethodCollection Methods { get; }
+
+        /// <summary>
+        /// The name of the type (camelCased).
         /// </summary>
         public abstract string name { get; }
 
         /// <summary>
-        /// The name of the class.
+        /// The name of the type.
         /// </summary>
         public abstract string Name { get; }
 
         /// <summary>
-        /// The namespace of the class.
+        /// The namespace of the type.
         /// </summary>
         public abstract string Namespace { get; }
-        
+
+        /// <summary>
+        /// All classes defined in the type.
+        /// </summary>
+        public abstract ClassCollection NestedClasses { get; }
+
+        /// <summary>
+        /// All enums defined in the type.
+        /// </summary>
+        public abstract EnumCollection NestedEnums { get; }
+
+        /// <summary>
+        /// All interfaces defined in the type.
+        /// </summary>
+        public abstract InterfaceCollection NestedInterfaces { get; }
+
         /// <summary>
         /// The original C# name of the type.
         /// </summary>
@@ -94,9 +139,21 @@ namespace Typewriter.CodeModel
         public abstract Item Parent { get; }
 
         /// <summary>
-        /// All generic type parameters of the class.
+        /// All properties defined in the type.
+        /// </summary>
+        public abstract PropertyCollection Properties { get; }
+
+        /// <summary>
+        /// All generic type parameters of the type.
+        /// TypeArguments are the specified arguments for the TypeParametes on a generic type e.g. &lt;string&gt;.
         /// </summary>
         public abstract TypeCollection TypeArguments { get; }
+
+        /// <summary>
+        /// All generic type parameters of the type.
+        /// TypeParameters are the type placeholders of a generic type e.g. &lt;T&gt;.
+        /// </summary>
+        public abstract TypeParameterCollection TypeParameters { get; }
 
         /// <summary>
         /// Converts the current instance to string.

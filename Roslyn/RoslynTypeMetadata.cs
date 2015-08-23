@@ -25,21 +25,44 @@ namespace Typewriter.Metadata.Roslyn
         public string Namespace => symbol.GetNamespace();
 
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
+        public IClassMetadata BaseClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.BaseType);
+        public IClassMetadata ContainingClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.ContainingType);
+
+        public IEnumerable<IConstantMetadata> Constants => RoslynConstantMetadata.FromFieldSymbols(symbol.GetMembers().OfType<IFieldSymbol>());
+        public IEnumerable<IFieldMetadata> Fields => RoslynFieldMetadata.FromFieldSymbols(symbol.GetMembers().OfType<IFieldSymbol>());
+        public IEnumerable<IInterfaceMetadata> Interfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(symbol.Interfaces);
+        public IEnumerable<IMethodMetadata> Methods => RoslynMethodMetadata.FromMethodSymbols(symbol.GetMembers().OfType<IMethodSymbol>());
+        public IEnumerable<IPropertyMetadata> Properties => RoslynPropertyMetadata.FromPropertySymbol(symbol.GetMembers().OfType<IPropertySymbol>());
+        public IEnumerable<IClassMetadata> NestedClasses => RoslynClassMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Class));
+        public IEnumerable<IEnumMetadata> NestedEnums => RoslynEnumMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Enum));
+        public IEnumerable<IInterfaceMetadata> NestedInterfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Interface));
+
+
         public IEnumerable<ITypeMetadata> TypeArguments
         {
             get
             {
-                if (symbol is INamedTypeSymbol)
-                {
-                    return FromTypeSymbols(((INamedTypeSymbol) symbol).TypeArguments);
-                }
+                var namedTypeSymbol = symbol as INamedTypeSymbol;
+                if (namedTypeSymbol != null)
+                    return FromTypeSymbols(namedTypeSymbol.TypeArguments);
 
-                if (symbol is IArrayTypeSymbol)
-                {
-                    return FromTypeSymbols(new [] { ((IArrayTypeSymbol) symbol).ElementType});
-                }
+                var arrayTypeSymbol = symbol as IArrayTypeSymbol;
+                if (arrayTypeSymbol != null)
+                    return FromTypeSymbols(new [] { arrayTypeSymbol.ElementType});
 
                 return new ITypeMetadata[0];
+            }
+        }
+
+        public IEnumerable<ITypeParameterMetadata> TypeParameters
+        {
+            get
+            {
+                var namedTypeSymbol = symbol as INamedTypeSymbol;
+                if (namedTypeSymbol != null)
+                    return RoslynTypeParameterMetadata.FromTypeParameterSymbols(namedTypeSymbol.TypeParameters);
+
+                return new ITypeParameterMetadata[0];
             }
         }
 
@@ -102,7 +125,19 @@ namespace Typewriter.Metadata.Roslyn
         public bool IsNullable => false;
         public bool IsTask => true;
         public string Namespace => "System";
+
         public IEnumerable<IAttributeMetadata> Attributes => new IAttributeMetadata[0];
+        public IClassMetadata BaseClass => null;
+        public IClassMetadata ContainingClass => null;
+        public IEnumerable<IConstantMetadata> Constants => new IConstantMetadata[0];
+        public IEnumerable<IFieldMetadata> Fields => new IFieldMetadata[0];
+        public IEnumerable<IInterfaceMetadata> Interfaces => new IInterfaceMetadata[0];
+        public IEnumerable<IMethodMetadata> Methods => new IMethodMetadata[0];
+        public IEnumerable<IPropertyMetadata> Properties => new IPropertyMetadata[0];
+        public IEnumerable<IClassMetadata> NestedClasses => new IClassMetadata[0];
+        public IEnumerable<IEnumMetadata> NestedEnums => new IEnumMetadata[0];
+        public IEnumerable<IInterfaceMetadata> NestedInterfaces => new IInterfaceMetadata[0];
         public IEnumerable<ITypeMetadata> TypeArguments => new ITypeMetadata[0];
+        public IEnumerable<ITypeParameterMetadata> TypeParameters => new ITypeParameterMetadata[0];
     }
 }

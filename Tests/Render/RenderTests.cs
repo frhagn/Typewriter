@@ -46,16 +46,16 @@ namespace Typewriter.Tests.Render
             output.ShouldEqual(result);
         }
 
-        [Fact]
-        public void Expect_webapi_controller_to_angular_service_to_render_correctly()
-        {
-            Assert<WebApiController.WebApiController>();
-        }
+        //[Fact]
+        //public void Expect_webapi_controller_to_angular_service_to_render_correctly()
+        //{
+        //    Assert<WebApiController.WebApiController>();
+        //}
 
-        [Fact]
-        public void Expect_routed_webapi_controller_to_render_correctly()
-        {
-            Assert<BooksController>();
-        }
+        //[Fact]
+        //public void Expect_routed_webapi_controller_to_render_correctly()
+        //{
+        //    Assert<BooksController>();
+        //}
     }
 }

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Attributes", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    [Trait("CodeModel", "Attributes"), Collection(nameof(CodeDomFixture))]
     public class CodeDomAttributeTests : AttributeTests
     {
         public CodeDomAttributeTests(CodeDomFixture fixture) : base(fixture)
@@ -15,7 +15,7 @@ namespace Typewriter.Tests.CodeModel
         }
     }
 
-    [Trait("Attributes", "Roslyn"), Collection(nameof(RoslynFixture))]
+    [Trait("CodeModel", "Attributes"), Collection(nameof(RoslynFixture))]
     public class RoslynAttributeTests : AttributeTests
     {
         public RoslynAttributeTests(RoslynFixture fixture) : base(fixture)

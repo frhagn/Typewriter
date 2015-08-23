@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Typewriter.Tests.Extensions
 {
-    [Trait("WebApi Extensions", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    [Trait("Extensions", "WebApi"), Collection(nameof(CodeDomFixture))]
     public class CodeDomWebApiExtensionsTests : WebApiExtensionsTests
     {
         public CodeDomWebApiExtensionsTests(CodeDomFixture fixture) : base(fixture)
@@ -15,7 +15,7 @@ namespace Typewriter.Tests.Extensions
         }
     }
 
-    [Trait("WebApi Extensions", "Roslyn"), Collection(nameof(RoslynFixture))]
+    [Trait("Extensions", "WebApi"), Collection(nameof(RoslynFixture))]
     public class RoslynWebApiExtensionsTests : WebApiExtensionsTests
     {
         public RoslynWebApiExtensionsTests(RoslynFixture fixture) : base(fixture)

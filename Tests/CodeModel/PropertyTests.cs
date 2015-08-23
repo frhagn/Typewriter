@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Properties", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    [Trait("CodeModel", "Properties"), Collection(nameof(CodeDomFixture))]
     public class CodeDomPropertyTests : PropertyTests
     {
         public CodeDomPropertyTests(CodeDomFixture fixture) : base(fixture)
@@ -14,7 +14,7 @@ namespace Typewriter.Tests.CodeModel
         }
     }
 
-    [Trait("Properties", "Roslyn"), Collection(nameof(RoslynFixture))]
+    [Trait("CodeModel", "Properties"), Collection(nameof(RoslynFixture))]
     public class RoslynPropertyTests : PropertyTests
     {
         public RoslynPropertyTests(RoslynFixture fixture) : base(fixture)
@@ -359,53 +359,6 @@ namespace Typewriter.Tests.CodeModel
             genericInfo.Type.TypeArguments.Count.ShouldEqual(1);
             innerType.Name.ShouldEqual("T");
             innerType.FullName.ShouldEqual("T");
-        }
-
-        [Fact]
-        public void Expect_type_class_name_to_match_class_name()
-        {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "Class");
-
-            propertyInfo.Type.Name.ShouldEqual("ClassInfo");
-            propertyInfo.Type.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.ClassInfo");
-            propertyInfo.Type.Namespace.ShouldEqual("Typewriter.Tests.CodeModel.Support");
-            propertyInfo.Type.Parent.ShouldEqual(propertyInfo);
-        }
-
-        [Fact]
-        public void Expect_to_find_class_attributes()
-        {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "Class");
-
-            var attributeInfo = propertyInfo.Type.Attributes.First();
-
-            propertyInfo.Type.Attributes.Count.ShouldEqual(1);
-            attributeInfo.Name.ShouldEqual("AttributeInfo");
-            attributeInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.AttributeInfoAttribute");
-        }
-
-        [Fact]
-        public void Expect_non_generic_type_class_not_to_be_generic()
-        {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "Class");
-
-            propertyInfo.Type.IsGeneric.ShouldBeFalse();
-            propertyInfo.Type.TypeArguments.Count.ShouldEqual(0);
-        }
-
-        [Fact]
-        public void Expect_generic_type_class_to_be_generic()
-        {
-            var classInfo = fileInfo.Classes.First();
-            var propertyTypeInfo = classInfo.Properties.First(p => p.Name == "GenericClass");
-            var genericTypeArgument = propertyTypeInfo.Type.TypeArguments.First();
-
-            propertyTypeInfo.Type.IsGeneric.ShouldBeTrue();
-            propertyTypeInfo.Type.TypeArguments.Count.ShouldEqual(1);
-            genericTypeArgument.Name.ShouldEqual("string");
         }
     }
 }

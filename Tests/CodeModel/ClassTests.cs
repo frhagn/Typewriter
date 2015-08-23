@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Classes", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    [Trait("CodeModel", "Classes"), Collection(nameof(CodeDomFixture))]
     public class CodeDomClassTests : ClassTests
     {
         public CodeDomClassTests(CodeDomFixture fixture) : base(fixture)
@@ -14,7 +14,7 @@ namespace Typewriter.Tests.CodeModel
         }
     }
 
-    [Trait("Classes", "Roslyn"), Collection(nameof(RoslynFixture))]
+    [Trait("CodeModel", "Classes"), Collection(nameof(RoslynFixture))]
     public class RoslynClassTests : ClassTests
     {
         public RoslynClassTests(RoslynFixture fixture) : base(fixture)
@@ -214,14 +214,18 @@ namespace Typewriter.Tests.CodeModel
         {
             var classInfo = fileInfo.Classes.First(m => m.Name == "InheritGenericClassInfo");
             var genericTypeArgument = classInfo.BaseClass.TypeArguments.First();
-            //var genericTypeParameter = classInfo.BaseClass.TypeParameters.First();
 
             classInfo.BaseClass.IsGeneric.ShouldBeTrue();
             classInfo.BaseClass.TypeArguments.Count.ShouldEqual(1);
-            //classInfo.BaseClass.TypeParameters.Count.ShouldEqual(1);
 
             genericTypeArgument.Name.ShouldEqual("string");
-            //genericTypeParameter.Name.ShouldEqual("T");
+
+            if (isRoslyn)
+            {
+                var genericTypeParameter = classInfo.BaseClass.TypeParameters.First();
+                classInfo.BaseClass.TypeParameters.Count.ShouldEqual(1);
+                genericTypeParameter.Name.ShouldEqual("T");
+            }
         }
     }
 }

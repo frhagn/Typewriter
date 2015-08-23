@@ -20,7 +20,7 @@ namespace Typewriter.Metadata.CodeDom
         public string Name => codeInterface.Name;
         public string FullName => codeInterface.FullName;
         public string Namespace => GetNamespace();
-        public bool IsGeneric => codeInterface.IsGeneric;
+        public bool IsGeneric => codeInterface.FullName.EndsWith(">");
 
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeInterface.Attributes);
         public IEnumerable<ITypeParameterMetadata> TypeParameters => CodeDomTypeParameterMetadata.FromFullName(codeInterface.FullName);

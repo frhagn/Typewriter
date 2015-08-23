@@ -14,10 +14,16 @@ namespace Typewriter.Tests.TestInfrastructure
         private readonly DTE dte;
         private readonly IMetadataProvider metadataProvider;
 
+        protected readonly bool isRoslyn;
+        protected readonly bool isCodeDom;
+
         protected TestBase(ITestFixture fixture)
         {
             this.dte = fixture.Dte;
             this.metadataProvider = fixture.Provider;
+
+            this.isRoslyn = fixture is RoslynFixture;
+            this.isCodeDom = fixture is CodeDomFixture;
         }
         
         protected string SolutionDirectory => new FileInfo(dte.Solution.FileName).Directory?.FullName;

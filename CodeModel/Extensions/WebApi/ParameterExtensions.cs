@@ -12,15 +12,15 @@ namespace Typewriter.Extensions.WebApi
         /// Creates an object literal containing the parameters that should be sent in the request body of a Web API request.
         /// If no parameters are required the literal "null" is returned.
         /// </summary>
-        public static string PostData(this Method method)
+        public static string RequestData(this Method method)
         {
-            return PostData(method, UrlExtensions.DefaultRoute);
+            return RequestData(method, UrlExtensions.DefaultRoute);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public static string PostData(this Method method, string route)
+        public static string RequestData(this Method method, string route)
         {
             var url = method.Url(route);
             var dataParameters = method.Parameters.Where(p => url.Contains($"${{{p.name}}}") == false).ToList();

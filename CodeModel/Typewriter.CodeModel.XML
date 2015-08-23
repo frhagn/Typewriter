@@ -689,14 +689,39 @@
             All attributes defined on the type.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Type.BaseClass">
+            <summary>
+            The base class of the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.Constants">
+            <summary>
+            All constants defined in the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.ContainingClass">
+            <summary>
+            The containing class of the type if it's nested.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Type.Default">
             <summary>
             The default value of the type.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Type.Fields">
+            <summary>
+            All fields defined in the type.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Type.FullName">
             <summary>
             The full original name of the type including namespace and containing class names.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.Interfaces">
+            <summary>
+            All interfaces implemented by the type.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.IsDate">
@@ -716,7 +741,7 @@
         </member>
         <member name="P:Typewriter.CodeModel.Type.IsGeneric">
             <summary>
-            Determines if the class is generic.
+            Determines if the type is generic.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.IsGuid">
@@ -744,19 +769,39 @@
             Determines if the type is a TimeSpan.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Type.Methods">
+            <summary>
+            All methods defined in the type.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Type.name">
             <summary>
-            The name of the class (camelCased).
+            The name of the type (camelCased).
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.Name">
             <summary>
-            The name of the class.
+            The name of the type.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.Namespace">
             <summary>
-            The namespace of the class.
+            The namespace of the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.NestedClasses">
+            <summary>
+            All classes defined in the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.NestedEnums">
+            <summary>
+            All enums defined in the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.NestedInterfaces">
+            <summary>
+            All interfaces defined in the type.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.OriginalName">
@@ -769,9 +814,21 @@
             The parent context of the type.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Type.Properties">
+            <summary>
+            All properties defined in the type.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Type.TypeArguments">
             <summary>
-            All generic type parameters of the class.
+            All generic type parameters of the type.
+            TypeArguments are the specified arguments for the TypeParametes on a generic type e.g. &lt;string&gt;.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.TypeParameters">
+            <summary>
+            All generic type parameters of the type.
+            TypeParameters are the type placeholders of a generic type e.g. &lt;T&gt;.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Type.op_Implicit(Typewriter.CodeModel.Type)~System.String">
@@ -825,13 +882,13 @@
             Extension methods for extracting Web API parameters.
             </summary>
         </member>
-        <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.PostData(Typewriter.CodeModel.Method)">
+        <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.RequestData(Typewriter.CodeModel.Method)">
             <summary>
             Creates an object literal containing the parameters that should be sent in the request body of a Web API request.
             If no parameters are required the literal "null" is returned.
             </summary>
         </member>
-        <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.PostData(Typewriter.CodeModel.Method,System.String)">
+        <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.RequestData(Typewriter.CodeModel.Method,System.String)">
             <summary>
             
             </summary>

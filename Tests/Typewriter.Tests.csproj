@@ -139,6 +139,7 @@
     <Compile Include="CodeModel\InterfaceTests.cs" />
     <Compile Include="CodeModel\ClassTests.cs" />
     <Compile Include="CodeModel\Support\MethodInfo.cs" />
+    <Compile Include="CodeModel\Support\TypeInfo.cs" />
     <Compile Include="CodeModel\Support\PropertyInfo.cs" />
     <Compile Include="CodeModel\Support\IInterfaceInfo.cs" />
     <Compile Include="CodeModel\Support\ClassInfo.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="CodeModel\Support\FileInfo.cs" />
     <Compile Include="CodeModel\Support\AttributeInfo.cs" />
     <Compile Include="CodeModel\FileTests.cs" />
+    <Compile Include="CodeModel\TypeTests.cs" />
     <Compile Include="Extensions\Support\HttpMethodController.cs" />
     <Compile Include="Extensions\Support\RouteController.cs" />
     <Compile Include="Extensions\WebApiTests.cs" />

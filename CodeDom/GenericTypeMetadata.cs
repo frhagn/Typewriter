@@ -11,9 +11,7 @@ namespace Typewriter.Metadata.CodeDom
         {
             this.fullName = fullName;
         }
-
-        public IEnumerable<IAttributeMetadata> Attributes => new IAttributeMetadata[0];
-        public IEnumerable<ITypeMetadata> TypeArguments => new ITypeMetadata[0];
+        
         public string FullName => fullName;
         public bool IsEnum => false;
         public bool IsEnumerable => false;
@@ -22,5 +20,19 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsTask => false;
         public string Name => fullName;
         public string Namespace => null;
+
+        public IEnumerable<IAttributeMetadata> Attributes => new IAttributeMetadata[0];
+        public IClassMetadata BaseClass => null;
+        public IClassMetadata ContainingClass => null;
+        public IEnumerable<IConstantMetadata> Constants => new IConstantMetadata[0];
+        public IEnumerable<IFieldMetadata> Fields => new IFieldMetadata[0];
+        public IEnumerable<IInterfaceMetadata> Interfaces => new IInterfaceMetadata[0];
+        public IEnumerable<IMethodMetadata> Methods => new IMethodMetadata[0];
+        public IEnumerable<IPropertyMetadata> Properties => new IPropertyMetadata[0];
+        public IEnumerable<IClassMetadata> NestedClasses => new IClassMetadata[0];
+        public IEnumerable<IEnumMetadata> NestedEnums => new IEnumMetadata[0];
+        public IEnumerable<IInterfaceMetadata> NestedInterfaces => new IInterfaceMetadata[0];
+        public IEnumerable<ITypeMetadata> TypeArguments => new ITypeMetadata[0];
+        public IEnumerable<ITypeParameterMetadata> TypeParameters => new ITypeParameterMetadata[0];
     }
 }

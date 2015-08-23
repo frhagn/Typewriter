@@ -1,14 +1,12 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
-using Typewriter.Metadata.CodeDom;
-using Typewriter.Metadata.Providers;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Methods", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    [Trait("CodeModel", "Methods"), Collection(nameof(CodeDomFixture))]
     public class CodeDomMethodTests : MethodTests
     {
         public CodeDomMethodTests(CodeDomFixture fixture) : base(fixture)
@@ -16,7 +14,7 @@ namespace Typewriter.Tests.CodeModel
         }
     }
 
-    [Trait("Methods", "Roslyn"), Collection(nameof(RoslynFixture))]
+    [Trait("CodeModel", "Methods"), Collection(nameof(RoslynFixture))]
     public class RoslynMethodTests : MethodTests
     {
         public RoslynMethodTests(RoslynFixture fixture) : base(fixture)

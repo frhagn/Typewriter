@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Interfaces", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    [Trait("CodeModel", "Interfaces"), Collection(nameof(CodeDomFixture))]
     public class CodeDomInterfaceTests : InterfaceTests
     {
         public CodeDomInterfaceTests(CodeDomFixture fixture) : base(fixture)
@@ -14,7 +14,7 @@ namespace Typewriter.Tests.CodeModel
         }
     }
 
-    [Trait("Interfaces", "Roslyn"), Collection(nameof(RoslynFixture))]
+    [Trait("CodeModel", "Interfaces"), Collection(nameof(RoslynFixture))]
     public class RoslynInterfaceTests : InterfaceTests
     {
         public RoslynInterfaceTests(RoslynFixture fixture) : base(fixture)
@@ -124,6 +124,25 @@ namespace Typewriter.Tests.CodeModel
             var containingClassInfo = interfaceInfo.ContainingClass;
 
             containingClassInfo.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Expect_inherited_generic_interface_to_have_type_arguments()
+        {
+            var interfaceInfo = fileInfo.Interfaces.First(m => m.Name == "IInheritGenericInterfaceInfo");
+            var genericTypeArgument = interfaceInfo.Interfaces.First().TypeArguments.First();
+
+            interfaceInfo.Interfaces.First().IsGeneric.ShouldBeTrue();
+            interfaceInfo.Interfaces.First().TypeArguments.Count.ShouldEqual(1);
+
+            genericTypeArgument.Name.ShouldEqual("string");
+
+            if (isRoslyn)
+            {
+                var genericTypeParameter = interfaceInfo.Interfaces.First().TypeParameters.First();
+                interfaceInfo.Interfaces.First().TypeParameters.Count.ShouldEqual(1);
+                genericTypeParameter.Name.ShouldEqual("T");
+            }
         }
     }
 }

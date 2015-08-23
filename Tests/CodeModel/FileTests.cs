@@ -7,7 +7,7 @@ using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("Files", "CodeDom"), Collection(nameof(CodeDomFixture))]
+    [Trait("CodeModel", "Files"), Collection(nameof(CodeDomFixture))]
     public class CodeDomFileTests : FileTests
     {
         public CodeDomFileTests(CodeDomFixture fixture) : base(fixture)
@@ -15,7 +15,7 @@ namespace Typewriter.Tests.CodeModel
         }
     }
 
-    [Trait("Files", "Roslyn"), Collection(nameof(RoslynFixture))]
+    [Trait("CodeModel", "Files"), Collection(nameof(RoslynFixture))]
     public class RoslynFileTests : FileTests
     {
         public RoslynFileTests(RoslynFixture fixture) : base(fixture)

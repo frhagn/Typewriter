@@ -16,6 +16,10 @@
     {
     }
 
+    public interface IInheritGenericInterfaceInfo : IGenericInterface<string>
+    {
+    }
+
     public class InterfaceContiningClassInfo
     {
         public interface INestedInterfaceInfo
