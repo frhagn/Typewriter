@@ -164,7 +164,7 @@ module App { <span class="tst">$Classes(</span><span class="hljs-string">:ApiCon
         constructor(private $http: ng.IHttpService) {
         } <span class="tst">$Methods[</span>
         
-        public <span class="tst">$name</span> = () => {
+        public <span class="tst">$name</span> = (<span class="tst">$Parameters[$name</span>: <span class="tst">$Type][</span>, <span class="tst">]</span>) => {
             return this.$http({ url: `<span class="tst">$Url</span>`, method: "<span class="tst">$HttpMethod</span>", data: <span class="tst">$RequestData</span> });
         }<span class="tst">]</span>
     }<span class="tst">]</span>
