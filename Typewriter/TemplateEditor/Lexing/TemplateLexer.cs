@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Typewriter.CodeModel;
-using Typewriter.TemplateEditor.Lexing.Roslyn;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
@@ -12,10 +9,10 @@ namespace Typewriter.TemplateEditor.Lexing
         private static readonly char[] operators = "!&|+-/*?=,.:;<>%".ToCharArray();
         private static readonly string[] keywords =
         {
-            "any", "boolean", "break", "case", "catch", "class", "const", "constructor", "continue", "declare",
-            "do", "else", "enum", "export", "extends", "delete", "debugger", "default", "false", "finally", "for",
-            "function", "get", "if", "implements", "import", "in", "instanceof", "interface", "let", "module", "new",
-            "null", "number", "private", "protected", "public", "require", "return", "set", "static", "string",
+            "any", "as", "boolean", "break", "case", "catch", "class", "const", "constructor", "continue", "declare", "default",
+            "do", "else", "enum", "export", "extends", "delete", "debugger", "default", "false", "finally", "for", "from", 
+            "function", "get", "if", "implements", "import", "in", "instanceof", "interface", "let", "module", "namespace", "new",
+            "null", "number", "of", "private", "protected", "public", "require", "return", "set", "static", "string",
             "super", "switch", "this", "throw", "true", "try", "typeof", "var", "void", "while", "with", "yield"
         };
 
