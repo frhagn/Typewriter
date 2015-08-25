@@ -76,7 +76,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
                 if ((stream.Current == 'u' && stream.PeekWord() == "using") || (stream.Current == '/' && stream.Peek() == '/'))
                 {
-                    var line = stream.PeekLine().Trim(char.MinValue);
+                    var line = stream.PeekLine();
                     semanticModel.ShadowClass.AddUsing(line, stream.Position);
                     stream.Advance(line.Length);
 

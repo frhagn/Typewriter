@@ -107,11 +107,14 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
 
         public void Parse()
         {
-            if (classAdded)
+            if (classAdded == false)
             {
-                snippets.Add(Snippet.Create(SnippetType.Class, endClassTemplate));
+                snippets.Add(Snippet.Create(SnippetType.Class, classTemplate));
+                offset += classTemplate.Length;
+                classAdded = true;
             }
 
+            snippets.Add(Snippet.Create(SnippetType.Class, endClassTemplate));
             snippets.Add(Snippet.Create(SnippetType.Class, endTemplate));
 
             var code = string.Join(string.Empty, snippets.Select(s => s.Code));

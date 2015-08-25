@@ -108,7 +108,8 @@ namespace Typewriter.Generation
 
             do
             {
-                code.Append(stream.Current);
+                if (stream.Current != char.MinValue)
+                    code.Append(stream.Current);
             }
             while (stream.Advance());
 
