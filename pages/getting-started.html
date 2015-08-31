@@ -8,13 +8,9 @@
         <link rel="stylesheet" href="../content/stylesheets/bootstrap.min.css" media="screen">
         <link rel="stylesheet" href="../content/stylesheets/font-awesome.min.css" />
         <link rel="stylesheet" href="../css/site.css" />
-        <link rel="stylesheet" href="../css/highlight.css" />
         <script src="../content/scripts/jquery.min.js"></script>
         <script src="../content/scripts/bootstrap.min.js"></script>
-        <script src="../content/scripts/highlight.js"></script>
-        <script>
-            hljs.initHighlightingOnLoad();
-        </script>
+        <script src="../content/scripts/highlighter.js"></script>
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -38,6 +34,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a href="getting-started.html">Getting started</a>
+                        </li>
+                        <li>
+                            <a href="examples.html">Examples</a>
                         </li>
                         <li>
                             <a href="documentation.html">Documentation</a>
@@ -71,15 +70,18 @@
                         <h4>Add a TypeScript Template</h4>
                         <p>When Typewriter is installed it also adds a new file type to Visual Studio, TypeScript Template (*.tst). TypeScript Templates are available in the "Add new item"-dialog under the category "Web".</p>
                         <p>Add a new TypeScript Template named Models.tst and paste the following code in the new file.</p>
-                        <pre><code class="ts">module App { <span class="tst">$Classes(</span><span class="hljs-string">*Model</span><span class="tst">)[</span>
-    export class <span class="tst">$Name</span> { <span class="tst">$Properties[</span>
-        public <span class="tst">$name</span>: <span class="tst">$Type</span>;<span class="tst">]</span>
-    }<span class="tst">]</span>
-}</code></pre>
-                        
+                        <pre class="hl tst">
+module App { $Classes(*Model)[
+    export class $Name { $Properties[
+        public $name: $Type;]
+    }]
+}
+                        </pre>
+                                                
                         <h4>Add C# class</h4>
                         <p>Add a C# class named CustomerModel.cs and paste the following code in the new file.</p>
-                        <pre><code class="cs">using System;
+                        <pre class="hl cs">
+using System;
 using System.Collections.Generic;
 
 namespace Demo 
@@ -90,18 +92,21 @@ namespace Demo
         public string Name { get; set; }
         public ICollection&lt;OrderModel&gt; Orders { get; set; }
     }
-}</code></pre>
+}
+                        </pre>
 
                         <h4>Done</h4>
                         <p>That's it, you now have a template that will track any changes to your C# code and when it finds a class matching the filter (*Model) it will automatically add, update or delete a corresponding TypeScript-file.</p>
                         <p>A new TypeScript file, CustomerModel.ts, have been generated and added to your project (under the Models.tst node in the Solution Explorer).</p>
-                        <pre><code class="ts">module App { 
+                        <pre class="hl ts">
+module App { 
     export class CustomerModel {
         public id: number;
         public name: string;
         public orders: OrderModel[];
     }
-}</code></pre>
+}
+                        </pre>
 
                         <h3>Code model</h3>
                         <p>
@@ -136,41 +141,45 @@ namespace Demo
                         
                         <h3>Custom methods</h3>
                         <p>
-                            You can extend the code model by adding custom methods to your template. To add a costom code block you type <code>${ }</code> at the beginning of the template.
-                            Within this code block you can add using statements and custom methods. Methods that take a single parameter of a code model type, e.g. <code>Class</code> or <code>Method</code>, will be available in the template.
-                            <h4>Example</h4> 
-                            <pre><code class="ts"><span class="tst">${</span>
+                            You can extend the code model by adding custom methods to your template. To add a custom code block you type <code>${ }</code> at the beginning of the template.
+                            Within this code block you can add using-statements and custom methods. Methods that take a single parameter of a code model type, e.g. <code>Class</code> or <code>Method</code>, will be available in the template.
+                        </p>
+                        <h4>Example</h4> 
+                        <pre class="hl tst">
+${
     string LoudName(Class c)
     {
         return c.Name.ToUpperInvariant();
     }
-<span class="tst">}</span>
-module App { <span class="tst">$Classes(</span><span class="hljs-string">*Model</span><span class="tst">)[</span>
-    export class <span class="tst">$LoudName</span> { 
-    }<span class="tst">]</span>
-}</code></pre>
-                            In this example <code>$LoudName</code> is a custom method.
-                        </p>
+}
+module App { $Classes(*Model)[
+
+    export class $LoudName {
+        // ... 
+    }]
+}
+                        </pre>
+                        <p>In this example <code>$LoudName</code> will call the custom method.</p>
                         
                         <h3>Extensions</h3>
-                        <p>
-                            Typewriter provides extension methods for common tasks. To enable extension methods, add a code block with the appropriate using statement for the extensions you want to use.
-                            <h4>Example</h4> 
-                            <pre><code class="ts"><span class="tst">${</span>
-    <span class="hljs-keyword">using</span> Typewriter.Extensions.WebApi;
-<span class="tst">}</span>
-module App { <span class="tst">$Classes(</span><span class="hljs-string">:ApiController</span><span class="tst">)[</span>
-    export class <span class="tst">$Name</span> {
+                        <p>Typewriter provides extension methods for common tasks. To enable extension methods, add a code block with the appropriate using statement for the extensions you want to use.</p>
+                        <h4>Example</h4> 
+                        <pre class="hl tst">
+${
+    using Typewriter.Extensions.WebApi;
+}
+module App { $Classes(:ApiController)[
+    export class $Name {
         constructor(private $http: ng.IHttpService) {
-        } <span class="tst">$Methods[</span>
+        } $Methods[
         
-        public <span class="tst">$name</span> = (<span class="tst">$Parameters[$name</span>: <span class="tst">$Type][</span>, <span class="tst">]</span>) => {
-            return this.$http({ url: `<span class="tst">$Url</span>`, method: "<span class="tst">$HttpMethod</span>", data: <span class="tst">$RequestData</span> });
-        }<span class="tst">]</span>
-    }<span class="tst">]</span>
-}</code></pre>
-                            In this example <code>$Url</code>, <code>$HttpMethod</code> and <code>$RequestData</code> are extensions.
-                        </p>
+        public $name = ($Parameters[$name: $Type][, ]) => {
+            return this.$http({ url: `$Url`, method: "$HttpMethod", data: $RequestData });
+        }]
+    }]
+}
+                        </pre>
+                        <p>In this example <code>$Url</code>, <code>$HttpMethod</code> and <code>$RequestData</code> are extensions.</p>
                     </div>
                 </div>
             </div>

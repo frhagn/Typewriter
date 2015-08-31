@@ -135,3 +135,16 @@ pre[class*='language-'] > code[data-language] {
   height: 12px;
   background-color: #4c5667;
 }
+
+.hl .keyword {
+    color: #0000ff;
+}
+.hl .string {
+    color: #a31515;
+}
+.hl .property {
+    color: #2b91af;
+}
+.hl .comment {
+    color: #008000;
+}

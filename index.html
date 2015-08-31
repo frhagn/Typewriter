@@ -8,13 +8,10 @@
         <link rel="stylesheet" href="content/stylesheets/bootstrap.min.css" media="screen">
         <link rel="stylesheet" href="content/stylesheets/font-awesome.min.css" />
         <link rel="stylesheet" href="css/site.css" />
-        <link rel="stylesheet" href="css/highlight.css" />
         <script src="content/scripts/jquery.min.js"></script>
         <script src="content/scripts/bootstrap.min.js"></script>
-        <script src="content/scripts/highlight.js"></script>
-        <script>
-            hljs.initHighlightingOnLoad();
-            
+        <script src="content/scripts/highlighter.js"></script>
+        <script>            
             $(function() {
                 $(window).scroll(function(event) {
                     if(window.scrollY > 0) {
@@ -50,6 +47,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a href="pages/getting-started.html">Getting started</a>
+                        </li>
+                        <li>
+                            <a href="pages/examples.html">Examples</a>
                         </li>
                         <li>
                             <a href="pages/documentation.html">Documentation</a>
@@ -299,14 +299,16 @@
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="models">
-                                    <pre><code class="ts">module App { <span class="tst">$Classes(</span><span class="hljs-string">*Model</span><span class="tst">)[</span>
-    export class <span class="tst">$Name</span> { <span class="tst">$Properties[</span>
-        public <span class="tst">$name</span>: <span class="tst">$Type</span>;<span class="tst">]</span>
-    }<span class="tst">]</span>
-}</code></pre>
+                                    <pre class="hl tst">
+module App { $Classes(*Model)[
+    export class $Name { $Properties[
+        public $name: $Type;]
+    }]
+}</pre>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="customer-model-cs">
-                                    <pre><code class="cs">using System;
+                                    <pre class="hl cs">
+using System;
 using System.Collections.Generic;
 
 namespace Demo 
@@ -317,16 +319,17 @@ namespace Demo
         public string Name { get; set; }
         public ICollection&lt;OrderModel&gt; Orders { get; set; }
     }
-}</code></pre>
+}</pre>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="customer-model-ts">
-                                    <pre><code class="ts">module App { 
+                                    <pre class="hl ts">
+module App { 
     export class CustomerModel {
         public id: number;
         public name: string;
         public orders: OrderModel[];
     }
-}</code></pre>
+}</pre>
                                 </div>
                             </div>
                         </div>
