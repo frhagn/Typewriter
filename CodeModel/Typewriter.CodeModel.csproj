@@ -32,9 +32,6 @@
     <DocumentationFile>Typewriter.CodeModel.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,6 +60,7 @@
     <Compile Include="CodeModel\ItemCollection.cs" />
     <Compile Include="CodeModel\Method.cs" />
     <Compile Include="CodeModel\Parameter.cs" />
+    <Compile Include="Extensions\Types\TypeExtensions.cs" />
     <Compile Include="Extensions\WebApi\HttpMethodExtensions.cs" />
     <Compile Include="Extensions\WebApi\ParameterExtensions.cs" />
     <Compile Include="Extensions\WebApi\UrlExtensions.cs" />

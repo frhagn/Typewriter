@@ -873,6 +873,22 @@
             Represents a collection of generic type parameters.
             </summary>
         </member>
+        <member name="T:Typewriter.Extensions.Types.TypeExtensions">
+            <summary>
+            Extension methods for working with types.
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.Types.TypeExtensions.ClassName(Typewriter.CodeModel.Type)">
+            <summary>
+            Returns the name of the type without []
+            </summary>
+        </member>
+        <member name="M:Typewriter.Extensions.Types.TypeExtensions.Unwrap(Typewriter.CodeModel.Type)">
+            <summary>
+            Returns the name of the first TypeArgument of a generic type or the name of the type if it's not generic.
+            Equivalent to $Type[$IsGeneric[$TypeArguments[$Name]][$Name]]
+            </summary>
+        </member>
         <member name="T:Typewriter.Extensions.WebApi.HttpMethodExtensions">
             <summary>
             Extension methods for extracting Web API http method.
