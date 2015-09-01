@@ -25,6 +25,7 @@ namespace Typewriter.Metadata.CodeDom
         public IClassMetadata BaseClass => null;
         public IClassMetadata ContainingClass => null;
         public IEnumerable<IConstantMetadata> Constants => new IConstantMetadata[0];
+        public IEnumerable<IDelegateMetadata> Delegates => new IDelegateMetadata[0];
         public IEnumerable<IFieldMetadata> Fields => new IFieldMetadata[0];
         public IEnumerable<IInterfaceMetadata> Interfaces => new IInterfaceMetadata[0];
         public IEnumerable<IMethodMetadata> Methods => new IMethodMetadata[0];

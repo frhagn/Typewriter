@@ -25,6 +25,7 @@ namespace Typewriter.Metadata.CodeDom
         public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeClass.Parent as CodeClass2, file);
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeClass.Attributes);
         public IEnumerable<IConstantMetadata> Constants => CodeDomConstantMetadata.FromCodeElements(codeClass.Children, file);
+        public IEnumerable<IDelegateMetadata> Delegates => CodeDomDelegateMetadata.FromCodeElements(codeClass.Children, file);
         public IEnumerable<IFieldMetadata> Fields => CodeDomFieldMetadata.FromCodeElements(codeClass.Children, file);
         public IEnumerable<ITypeParameterMetadata> TypeParameters => CodeDomTypeParameterMetadata.FromFullName(codeClass.FullName);
         public IEnumerable<ITypeMetadata> TypeArguments => CodeDomTypeMetadata.LoadGenericTypeArguments(IsGeneric, FullName, file);

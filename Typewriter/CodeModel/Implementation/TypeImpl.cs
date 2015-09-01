@@ -45,6 +45,9 @@ namespace Typewriter.CodeModel.Implementation
         private ConstantCollection constants;
         public override ConstantCollection Constants => constants ?? (constants = ConstantImpl.FromMetadata(metadata.Constants, this));
 
+        private DelegateCollection delegates;
+        public override DelegateCollection Delegates => delegates ?? (delegates = DelegateImpl.FromMetadata(metadata.Delegates, this));
+
         private FieldCollection fields;
         public override FieldCollection Fields => fields ?? (fields = FieldImpl.FromMetadata(metadata.Fields, this));
 

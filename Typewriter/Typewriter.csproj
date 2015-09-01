@@ -252,7 +252,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeModel\Collections\DelegateCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\TypeParameterCollectionImpl.cs" />
+    <Compile Include="CodeModel\Implementation\DelegateImpl.cs" />
     <Compile Include="CodeModel\Implementation\TypeParameterImpl.cs" />
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
     <Compile Include="CodeModel\Collections\AttributeCollectionImpl.cs" />

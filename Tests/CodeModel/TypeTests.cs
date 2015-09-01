@@ -138,6 +138,17 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_public_delegates()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var typeInfo = classInfo.Properties.First(p => p.Name == "Class").Type;
+            var delegateInfo = typeInfo.Delegates.First();
+
+            typeInfo.Delegates.Count.ShouldEqual(1);
+            delegateInfo.Name.ShouldEqual("PublicDelegate");
+        }
+
+        [Fact]
         public void Expect_to_find_public_fields()
         {
             var classInfo = fileInfo.Classes.First();

@@ -29,6 +29,11 @@ namespace Typewriter.CodeModel
         public abstract Class ContainingClass { get; }
 
         /// <summary>
+        /// All delegates defined in the class.
+        /// </summary>
+        public abstract DelegateCollection Delegates { get; }
+
+        /// <summary>
         /// All fields defined in the class.
         /// </summary>
         public abstract FieldCollection Fields { get; }

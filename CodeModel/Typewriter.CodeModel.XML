@@ -89,6 +89,11 @@
             The containing class of the class if it's nested.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.Delegates">
+            <summary>
+            All delegates defined in the class.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Class.Fields">
             <summary>
             All fields defined in the class.
@@ -221,6 +226,72 @@
         <member name="T:Typewriter.CodeModel.ConstantCollection">
             <summary>
             Represents a collection of constants.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.Delegate">
+            <summary>
+            Represents a delegate.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.Attributes">
+            <summary>
+            All attributes defined on the delegate.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.ContainingClass">
+            <summary>
+            The containing class of the delegate if it's nested.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.FullName">
+            <summary>
+            The full original name of the delegate including namespace and containing class names.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.IsGeneric">
+            <summary>
+            Determines if the delegate is generic.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.name">
+            <summary>
+            The name of the delegate (camelCased).
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.Name">
+            <summary>
+            The name of the delegate.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.Parameters">
+            <summary>
+            All parameters of the delegate.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.Parent">
+            <summary>
+            The parent context of the delegate.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.Type">
+            <summary>
+            The type of the delegate.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.TypeParameters">
+            <summary>
+            All generic type parameters of the delegate.
+            TypeParameters are the type placeholders of a generic delegate e.g. &lt;T&gt;.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Delegate.op_Implicit(Typewriter.CodeModel.Delegate)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.DelegateCollection">
+            <summary>
+            Represents a collection of classes.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.Enum">
@@ -385,17 +456,22 @@
         </member>
         <member name="P:Typewriter.CodeModel.File.Classes">
             <summary>
-            All classes defined in the file.
+            All public classes defined in the file.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.File.Delegates">
+            <summary>
+            All public delegates defined in the file.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.File.Enums">
             <summary>
-            All enums defined in the file.
+            All public enums defined in the file.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.File.Interfaces">
             <summary>
-            All interfaces defined in the file.
+            All public interfaces defined in the file.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.File.FullName">
@@ -711,6 +787,11 @@
         <member name="P:Typewriter.CodeModel.Type.Default">
             <summary>
             The default value of the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.Delegates">
+            <summary>
+            All delegates defined in the type.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.Fields">
