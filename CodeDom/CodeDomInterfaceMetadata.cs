@@ -23,6 +23,7 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsGeneric => codeInterface.FullName.EndsWith(">");
 
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeInterface.Attributes);
+        public IEnumerable<IEventMetadata> Events => CodeDomEventMetadata.FromCodeElements(codeInterface.Children, file);
         public IEnumerable<ITypeParameterMetadata> TypeParameters => CodeDomTypeParameterMetadata.FromFullName(codeInterface.FullName);
         public IEnumerable<ITypeMetadata> TypeArguments => CodeDomTypeMetadata.LoadGenericTypeArguments(IsGeneric, FullName, file);
         public IEnumerable<IInterfaceMetadata> Interfaces => CodeDomInterfaceMetadata.FromCodeElements(codeInterface.Bases, file);

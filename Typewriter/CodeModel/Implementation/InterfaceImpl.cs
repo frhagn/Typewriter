@@ -27,6 +27,9 @@ namespace Typewriter.CodeModel.Implementation
         private AttributeCollection attributes;
         public override AttributeCollection Attributes => attributes ?? (attributes = AttributeImpl.FromMetadata(metadata.Attributes, this));
 
+        private EventCollection events;
+        public override EventCollection Events => events ?? (events = EventImpl.FromMetadata(metadata.Events, this));
+
         private InterfaceCollection interfaces;
         public override InterfaceCollection Interfaces => interfaces ?? (interfaces = InterfaceImpl.FromMetadata(metadata.Interfaces, this));
 

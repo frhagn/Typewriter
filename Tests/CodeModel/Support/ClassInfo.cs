@@ -13,6 +13,9 @@
         public delegate void PublicDelegate<T>(string param1, T param2);
         internal delegate void InternalDelegate();
 
+        public event Delegate PublicEvent;
+        internal event Delegate InternalEvent;
+
         public string PublicField = "";
         internal string InternalField = "";
 

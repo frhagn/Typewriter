@@ -129,6 +129,16 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_public_events()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var delegateInfo = classInfo.Events.First();
+
+            classInfo.Events.Count.ShouldEqual(1);
+            delegateInfo.Name.ShouldEqual("PublicEvent");
+        }
+
+        [Fact]
         public void Expect_to_find_public_fields()
         {
             var classInfo = fileInfo.Classes.First();

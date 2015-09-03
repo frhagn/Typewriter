@@ -94,6 +94,11 @@
             All delegates defined in the class.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.Events">
+            <summary>
+            All events defined in the class.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Class.Fields">
             <summary>
             All fields defined in the class.
@@ -236,11 +241,6 @@
         <member name="P:Typewriter.CodeModel.Delegate.Attributes">
             <summary>
             All attributes defined on the delegate.
-            </summary>
-        </member>
-        <member name="P:Typewriter.CodeModel.Delegate.ContainingClass">
-            <summary>
-            The containing class of the delegate if it's nested.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Delegate.FullName">
@@ -399,6 +399,51 @@
             Represents a collection of enum values.
             </summary>
         </member>
+        <member name="T:Typewriter.CodeModel.Event">
+            <summary>
+            Represents a delegate.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Event.Attributes">
+            <summary>
+            All attributes defined on the event.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Event.FullName">
+            <summary>
+            The full original name of the event including namespace and containing class names.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Event.name">
+            <summary>
+            The name of the event (camelCased).
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Event.Name">
+            <summary>
+            The name of the event.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Event.Parent">
+            <summary>
+            The parent context of the event.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Event.Type">
+            <summary>
+            The type of the event.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.Event.op_Implicit(Typewriter.CodeModel.Event)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.EventCollection">
+            <summary>
+            Represents a collection of classes.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.IStringConvertable">
             <summary>
             Marker interface for collections that can render themselves as string
@@ -497,6 +542,11 @@
         <member name="P:Typewriter.CodeModel.Interface.ContainingClass">
             <summary>
             The containing class of the interface if it is nested.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.Events">
+            <summary>
+            All events defined in the interface.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Interface.FullName">

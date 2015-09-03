@@ -136,11 +136,13 @@
     <Compile Include="CodeModel\EnumTests.cs" />
     <Compile Include="CodeModel\DelegateTests.cs" />
     <Compile Include="CodeModel\MethodTests.cs" />
+    <Compile Include="CodeModel\EventTests.cs" />
     <Compile Include="CodeModel\PropertyTests.cs" />
     <Compile Include="CodeModel\InterfaceTests.cs" />
     <Compile Include="CodeModel\ClassTests.cs" />
     <Compile Include="CodeModel\Support\DelegateInfo.cs" />
     <Compile Include="CodeModel\Support\MethodInfo.cs" />
+    <Compile Include="CodeModel\Support\EventInfo.cs" />
     <Compile Include="CodeModel\Support\TypeInfo.cs" />
     <Compile Include="CodeModel\Support\PropertyInfo.cs" />
     <Compile Include="CodeModel\Support\IInterfaceInfo.cs" />

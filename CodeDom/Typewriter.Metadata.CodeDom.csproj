@@ -54,6 +54,7 @@
     <Compile Include="CodeDomConstantMetadata.cs" />
     <Compile Include="CodeDomEnumMetadata.cs" />
     <Compile Include="CodeDomEnumValueMetadata.cs" />
+    <Compile Include="CodeDomEventMetadata.cs" />
     <Compile Include="CodeDomFieldMetadata.cs" />
     <Compile Include="CodeDomFileMetadata.cs" />
     <Compile Include="CodeDomMetadataProvider.cs" />

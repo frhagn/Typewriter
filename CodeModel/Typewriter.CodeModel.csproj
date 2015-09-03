@@ -53,6 +53,7 @@
     <Compile Include="CodeModel\Delegate.cs" />
     <Compile Include="CodeModel\Enum.cs" />
     <Compile Include="CodeModel\EnumValue.cs" />
+    <Compile Include="CodeModel\Event.cs" />
     <Compile Include="CodeModel\IStringConvertable.cs" />
     <Compile Include="CodeModel\Field.cs" />
     <Compile Include="CodeModel\File.cs" />

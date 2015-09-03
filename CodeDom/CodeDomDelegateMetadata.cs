@@ -1,3 +1,5 @@
+using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
@@ -39,9 +41,14 @@ namespace Typewriter.Metadata.CodeDom
             return codeDelegate.FullName.Remove(0, index);
         }
 
+        internal static IDelegateMetadata FromCodeDelegate(CodeDelegate2 codeElement, CodeDomFileMetadata file)
+        {
+            return new CodeDomDelegateMetadata(codeElement, file);
+        }
+
         internal static IEnumerable<IDelegateMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)
         {
-            return codeElements.OfType<CodeDelegate2>().Where(d => d.Access == vsCMAccess.vsCMAccessPublic).Select(d => new CodeDomDelegateMetadata(d, file));
+            return codeElements.OfType<CodeDelegate2>().Where(d => d.Access == vsCMAccess.vsCMAccessPublic).Select(d => FromCodeDelegate(d, file));
         }
     }
 }

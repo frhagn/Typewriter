@@ -198,24 +198,5 @@ namespace Typewriter.Tests.CodeModel
             delegateInfo.Type.IsTask.ShouldBeTrue("IsTask");
             delegateInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
         }
-
-        [Fact]
-        public void Expect_to_find_containing_class_on_nested_delegates()
-        {
-            var classInfo = fileInfo.Classes.First();
-            var delegateInfo = classInfo.Delegates.First();
-            var containingClassInfo = delegateInfo.ContainingClass;
-
-            containingClassInfo.Name.ShouldEqual("DelegateInfo");
-        }
-
-        [Fact]
-        public void Expect_not_to_find_containing_class_on_top_level_delegate()
-        {
-            var delegateInfo = fileInfo.Delegates.First();
-            var containingClassInfo = delegateInfo.ContainingClass;
-
-            containingClassInfo.ShouldBeNull();
-        }
     }
 }

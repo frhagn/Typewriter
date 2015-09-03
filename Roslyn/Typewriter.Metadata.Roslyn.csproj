@@ -116,6 +116,7 @@
     <Compile Include="RoslynConstantMetadata.cs" />
     <Compile Include="RoslynEnumMetadata.cs" />
     <Compile Include="RoslynEnumValueMetadata.cs" />
+    <Compile Include="RoslynEventMetadata.cs" />
     <Compile Include="RoslynFieldMetadata.cs" />
     <Compile Include="RoslynFileMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

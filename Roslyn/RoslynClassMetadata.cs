@@ -24,6 +24,7 @@ namespace Typewriter.Metadata.Roslyn
         public IClassMetadata ContainingClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.ContainingType);
         public IEnumerable<IConstantMetadata> Constants => RoslynConstantMetadata.FromFieldSymbols(symbol.GetMembers().OfType<IFieldSymbol>());
         public IEnumerable<IDelegateMetadata> Delegates => RoslynDelegateMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Delegate));
+        public IEnumerable<IEventMetadata> Events => RoslynEventMetadata.FromEventSymbols(symbol.GetMembers().OfType<IEventSymbol>());
         public IEnumerable<IFieldMetadata> Fields => RoslynFieldMetadata.FromFieldSymbols(symbol.GetMembers().OfType<IFieldSymbol>());
         public IEnumerable<IInterfaceMetadata> Interfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(symbol.Interfaces);
         public IEnumerable<IMethodMetadata> Methods => RoslynMethodMetadata.FromMethodSymbols(symbol.GetMembers().OfType<IMethodSymbol>());

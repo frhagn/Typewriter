@@ -34,6 +34,11 @@ namespace Typewriter.CodeModel
         public abstract DelegateCollection Delegates { get; }
 
         /// <summary>
+        /// All events defined in the class.
+        /// </summary>
+        public abstract EventCollection Events { get; }
+
+        /// <summary>
         /// All fields defined in the class.
         /// </summary>
         public abstract FieldCollection Fields { get; }

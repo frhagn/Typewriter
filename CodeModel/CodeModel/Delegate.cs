@@ -14,11 +14,6 @@ namespace Typewriter.CodeModel
         public abstract AttributeCollection Attributes { get; }
 
         /// <summary>
-        /// The containing class of the delegate if it's nested.
-        /// </summary>
-        public abstract Class ContainingClass { get; }
-
-        /// <summary>
         /// The full original name of the delegate including namespace and containing class names.
         /// </summary>
         public abstract string FullName { get; }
