@@ -19,6 +19,11 @@ namespace Typewriter.CodeModel
         public abstract Class ContainingClass { get; }
 
         /// <summary>
+        /// All events defined in the interface.
+        /// </summary>
+        public abstract EventCollection Events { get; }
+
+        /// <summary>
         /// The full original name of the interface including namespace and containing class names.
         /// </summary>
         public abstract string FullName { get; }

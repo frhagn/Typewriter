@@ -40,6 +40,8 @@ namespace Typewriter.Metadata.CodeDom
         public IClassMetadata BaseClass => CodeDomClassMetadata.FromCodeElements(CodeType.Bases, file).FirstOrDefault();
         public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(CodeType.Parent as CodeClass2, file);
         public IEnumerable<IConstantMetadata> Constants => CodeDomConstantMetadata.FromCodeElements(CodeType.Children, file);
+        public IEnumerable<IDelegateMetadata> Delegates => CodeDomDelegateMetadata.FromCodeElements(CodeType.Children, file);
+        public IEnumerable<IEventMetadata> Events => CodeDomEventMetadata.FromCodeElements(CodeType.Children, file);
         public IEnumerable<IFieldMetadata> Fields => CodeDomFieldMetadata.FromCodeElements(CodeType.Children, file);
         public IEnumerable<IInterfaceMetadata> Interfaces => CodeDomInterfaceMetadata.FromCodeElements(CodeType.Bases, file);
         public IEnumerable<IMethodMetadata> Methods => CodeDomMethodMetadata.FromCodeElements(CodeType.Children, file);
@@ -169,6 +171,16 @@ namespace Typewriter.Metadata.CodeDom
         }
 
         public static ITypeMetadata FromCodeElement(CodeFunction2 codeVariable, CodeDomFileMetadata file)
+        {
+            return GetType(codeVariable, file);
+        }
+
+        public static ITypeMetadata FromCodeElement(CodeDelegate2 codeVariable, CodeDomFileMetadata file)
+        {
+            return GetType(codeVariable, file);
+        }
+
+        public static ITypeMetadata FromCodeElement(CodeEvent codeVariable, CodeDomFileMetadata file)
         {
             return GetType(codeVariable, file);
         }

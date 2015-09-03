@@ -25,10 +25,11 @@ namespace Typewriter.Metadata.Roslyn
         public string FullName => document.FilePath;
         
         public IEnumerable<IClassMetadata> Classes => RoslynClassMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<ClassDeclarationSyntax>());
+        public IEnumerable<IDelegateMetadata> Delegates => RoslynDelegateMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<DelegateDeclarationSyntax>());
         public IEnumerable<IEnumMetadata> Enums => RoslynEnumMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<EnumDeclarationSyntax>());
         public IEnumerable<IInterfaceMetadata> Interfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<InterfaceDeclarationSyntax>());
 
-        private IEnumerable<INamedTypeSymbol> GetNamespaceChildNodes<T>() where T : BaseTypeDeclarationSyntax
+        private IEnumerable<INamedTypeSymbol> GetNamespaceChildNodes<T>() where T : SyntaxNode
         {
             return root.ChildNodes().OfType<NamespaceDeclarationSyntax>()
                 .SelectMany(n => n.ChildNodes().OfType<T>())

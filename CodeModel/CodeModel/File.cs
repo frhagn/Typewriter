@@ -9,17 +9,22 @@ namespace Typewriter.CodeModel
     public abstract class File : Item
     {
         /// <summary>
-        /// All classes defined in the file.
+        /// All public classes defined in the file.
         /// </summary>
         public abstract ClassCollection Classes { get; }
 
         /// <summary>
-        /// All enums defined in the file.
+        /// All public delegates defined in the file.
+        /// </summary>
+        public abstract DelegateCollection Delegates { get; }
+
+        /// <summary>
+        /// All public enums defined in the file.
         /// </summary>
         public abstract EnumCollection Enums { get; }
 
         /// <summary>
-        /// All interfaces defined in the file.
+        /// All public interfaces defined in the file.
         /// </summary>
         public abstract InterfaceCollection Interfaces { get; }
         

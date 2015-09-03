@@ -116,11 +116,13 @@
     <Compile Include="RoslynConstantMetadata.cs" />
     <Compile Include="RoslynEnumMetadata.cs" />
     <Compile Include="RoslynEnumValueMetadata.cs" />
+    <Compile Include="RoslynEventMetadata.cs" />
     <Compile Include="RoslynFieldMetadata.cs" />
     <Compile Include="RoslynFileMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoslynInterfaceMetadata.cs" />
     <Compile Include="RoslynMetadataProvider.cs" />
+    <Compile Include="RoslynDelegateMetadata.cs" />
     <Compile Include="RoslynMethodMetadata.cs" />
     <Compile Include="RoslynParameterMetadata.cs" />
     <Compile Include="RoslynPropertyMetadata.cs" />

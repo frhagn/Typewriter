@@ -25,7 +25,12 @@ namespace Typewriter.Extensions.WebApi
             var url = method.Url(route);
             var dataParameters = method.Parameters.Where(p => url.Contains($"${{{p.name}}}") == false).ToList();
 
-            if (dataParameters.Any())
+            if (dataParameters.Count == 1)
+            {
+                return dataParameters.First().name;
+            }
+
+            if (dataParameters.Count > 1)
             {
                 return $"{{ {string.Join(", ", dataParameters.Select(p => $"{p.name}: {p.name}"))} }}";
             }

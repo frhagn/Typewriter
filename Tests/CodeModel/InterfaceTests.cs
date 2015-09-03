@@ -74,6 +74,16 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_public_events()
+        {
+            var interfaceInfo = fileInfo.Interfaces.First();
+            var delegateInfo = interfaceInfo.Events.First();
+
+            interfaceInfo.Events.Count.ShouldEqual(1);
+            delegateInfo.Name.ShouldEqual("PublicEvent");
+        }
+
+        [Fact]
         public void Expect_to_find_interfaces()
         {
             var interfaceInfo = fileInfo.Interfaces.First();

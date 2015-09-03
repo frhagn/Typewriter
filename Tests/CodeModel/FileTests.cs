@@ -49,6 +49,15 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_public_delegates()
+        {
+            fileInfo.Delegates.Count.ShouldEqual(1);
+            
+            var delegateInfo = fileInfo.Delegates.First();
+            delegateInfo.Name.ShouldEqual("PublicDelegate");
+        }
+
+        [Fact]
         public void Expect_to_find_public_enums()
         {
             fileInfo.Enums.Count.ShouldEqual(1);
