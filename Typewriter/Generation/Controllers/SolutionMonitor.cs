@@ -33,10 +33,8 @@ namespace Typewriter.Generation.Controllers
 
         public void TriggerFileChanged(string path)
         {
-            if (FileChanged != null)
-            {
-                FileChanged(this, new FileChangedEventArgs(path));
-            }
+            var fileChanged = FileChanged;
+            fileChanged?.Invoke(this, new FileChangedEventArgs(path));
         }
 
         #region Event registration
