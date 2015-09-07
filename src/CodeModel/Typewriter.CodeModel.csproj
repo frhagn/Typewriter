@@ -64,7 +64,7 @@
     <Compile Include="CodeModel\Parameter.cs" />
     <Compile Include="Extensions\Types\TypeExtensions.cs" />
     <Compile Include="Extensions\WebApi\HttpMethodExtensions.cs" />
-    <Compile Include="Extensions\WebApi\ParameterExtensions.cs" />
+    <Compile Include="Extensions\WebApi\RequestDataExtensions.cs" />
     <Compile Include="Extensions\WebApi\UrlExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeModel\Property.cs" />

@@ -3,22 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.ItemTemplates", "ItemTemplates\Typewriter.ItemTemplates.csproj", "{417568AF-7B73-4C93-9261-025D69AC89A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.ItemTemplates", "src\ItemTemplates\Typewriter.ItemTemplates.csproj", "{417568AF-7B73-4C93-9261-025D69AC89A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter", "Typewriter\Typewriter.csproj", "{0427C151-9B9D-4C77-8A64-68BF2C929595}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter", "src\Typewriter\Typewriter.csproj", "{0427C151-9B9D-4C77-8A64-68BF2C929595}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3D74F5FF-AD4C-40A5-9577-5ED378031FF6} = {3D74F5FF-AD4C-40A5-9577-5ED378031FF6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Tests", "Tests\Typewriter.Tests.csproj", "{F583276A-51A1-4DDD-B225-11A5F9A01217}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Tests", "src\Tests\Typewriter.Tests.csproj", "{F583276A-51A1-4DDD-B225-11A5F9A01217}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.CodeModel", "CodeModel\Typewriter.CodeModel.csproj", "{4EC6C920-D234-49F1-B17B-98A4DE24FF87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.CodeModel", "src\CodeModel\Typewriter.CodeModel.csproj", "{4EC6C920-D234-49F1-B17B-98A4DE24FF87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata.CodeDom", "CodeDom\Typewriter.Metadata.CodeDom.csproj", "{C822D1A9-4C43-4067-A01E-EA38F3138282}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata.CodeDom", "src\CodeDom\Typewriter.Metadata.CodeDom.csproj", "{C822D1A9-4C43-4067-A01E-EA38F3138282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata", "Metadata\Typewriter.Metadata.csproj", "{511E50CC-6073-43EE-9E8B-DD6F584C81A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata", "src\Metadata\Typewriter.Metadata.csproj", "{511E50CC-6073-43EE-9E8B-DD6F584C81A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata.Roslyn", "Roslyn\Typewriter.Metadata.Roslyn.csproj", "{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata.Roslyn", "src\Roslyn\Typewriter.Metadata.Roslyn.csproj", "{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

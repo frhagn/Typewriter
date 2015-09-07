@@ -1031,18 +1031,18 @@
             The http method is extracted from Http* or AcceptVerbs attribute or by naming convension if no attributes are specified.
             </summary>
         </member>
-        <member name="T:Typewriter.Extensions.WebApi.ParameterExtensions">
+        <member name="T:Typewriter.Extensions.WebApi.RequestDataExtensions">
             <summary>
             Extension methods for extracting Web API parameters.
             </summary>
         </member>
-        <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.RequestData(Typewriter.CodeModel.Method)">
+        <member name="M:Typewriter.Extensions.WebApi.RequestDataExtensions.RequestData(Typewriter.CodeModel.Method)">
             <summary>
             Creates an object literal containing the parameters that should be sent in the request body of a Web API request.
             If no parameters are required the literal "null" is returned.
             </summary>
         </member>
-        <member name="M:Typewriter.Extensions.WebApi.ParameterExtensions.RequestData(Typewriter.CodeModel.Method,System.String)">
+        <member name="M:Typewriter.Extensions.WebApi.RequestDataExtensions.RequestData(Typewriter.CodeModel.Method,System.String)">
             <summary>
             
             </summary>
