@@ -79,7 +79,7 @@ namespace Typewriter.Generation.Controllers
                 parallellQueue.ForAll(item =>
                 {
                     item.Action(item);
-                    statusBar.Progress(ref cookie, 1, string.Empty, ++i, count);
+                    UpdateStatusbarProgress(ref cookie, ++i, count);
                 });
 
                 stopwatch.Stop();
@@ -93,26 +93,52 @@ namespace Typewriter.Generation.Controllers
         {
             cookie = 0;
             icon = (short)InteropConstants.SBAI_Save;
-            
-            int frozen;
-            statusBar.IsFrozen(out frozen);
 
-            if (frozen != 0) return;
+            try
+            {
+                int frozen;
+                statusBar.IsFrozen(out frozen);
 
-            statusBar.Progress(ref cookie, 1, string.Empty, 0, 0);
-            statusBar.SetText("Rendering template...");
-            statusBar.Animation(1, ref icon);
+                if (frozen != 0) return;
+
+                statusBar.Progress(ref cookie, 1, string.Empty, 0, 0);
+                statusBar.SetText("Rendering template...");
+                statusBar.Animation(1, ref icon);
+            }
+            catch (Exception exception)
+            {
+                Log.Debug("Failed to prepare statusbar: {0}", exception.Message);
+            }
+        }
+
+        private void UpdateStatusbarProgress(ref uint cookie, uint current, uint total)
+        {
+            try
+            {
+                statusBar.Progress(ref cookie, 1, string.Empty, current, total);
+            }
+            catch (Exception exception)
+            {
+                Log.Debug("Failed to update statusbar progress: {0}", exception.Message);
+            }
         }
 
         private void ClearStatusbar(uint cookie, ref object icon)
         {
-            //object icon = (short)InteropConstants.SBAI_Save;
-            statusBar.Animation(0, ref icon);
-            statusBar.SetText("Rendering complete");
+            try
+            {
+                //object icon = (short)InteropConstants.SBAI_Save;
+                statusBar.Animation(0, ref icon);
+                statusBar.SetText("Rendering complete");
 
-            Thread.Sleep(1000);
+                Thread.Sleep(1000);
 
-            statusBar.Progress(ref cookie, 0, "", 0, 0);
+                statusBar.Progress(ref cookie, 0, "", 0, 0);
+            }
+            catch (Exception exception)
+            {
+                Log.Debug("Failed to clear statusbar: {0}", exception.Message);
+            }
         }
 
         private bool disposed;
