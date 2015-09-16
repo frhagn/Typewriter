@@ -17,7 +17,6 @@ namespace Typewriter.Generation
         private readonly string template;
         private readonly string templatePath;
         private readonly string projectPath;
-        private readonly string solutionPath;
         private readonly ProjectItem projectItem;
 
         public Template(ProjectItem projectItem)
@@ -27,7 +26,6 @@ namespace Typewriter.Generation
             this.projectItem = projectItem;
             this.templatePath = projectItem.Path();
             this.projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            this.solutionPath = Path.GetDirectoryName(projectItem.DTE.Solution.FullName) + @"\";
             
             var code = System.IO.File.ReadAllText(templatePath);
             this.template = TemplateCodeParser.Parse(code, customExtensions);
@@ -160,12 +158,6 @@ namespace Typewriter.Generation
 
             var value = item.Properties.Item("CustomToolNamespace").Value as string;
             var path = string.IsNullOrWhiteSpace(value) ? null : Path.GetFullPath(Path.Combine(projectPath, value));
-
-            // Handle files created using older Typewriter versions
-            if (path != null && System.IO.File.Exists(path) == false)
-            {
-                return Path.Combine(solutionPath, value);
-            }
 
             return path;
         }
