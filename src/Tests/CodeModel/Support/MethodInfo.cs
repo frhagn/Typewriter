@@ -29,6 +29,11 @@ namespace Typewriter.Tests.CodeModel.Support
         {
             return null;
         }
+
+        public void ArrayParameter(byte[] byteArray)
+        {
+            
+        }
     }
 
     public class GenericMethodInfo<T>

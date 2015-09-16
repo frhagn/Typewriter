@@ -35,7 +35,7 @@ namespace Typewriter.Tests.CodeModel
         public void Expect_name_to_match_method_name()
         {
             var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "Method");
+            var methodInfo = GetMethod("Method");
 
             methodInfo.Name.ShouldEqual("Method");
             methodInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.MethodInfo.Method");
@@ -45,8 +45,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_to_find_attributes()
         {
-            var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "Method");
+            var methodInfo = GetMethod("Method");
             var attributeInfo = methodInfo.Attributes.First();
 
             methodInfo.Attributes.Count.ShouldEqual(1);
@@ -57,8 +56,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_to_find_parameters()
         {
-            var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "Method");
+            var methodInfo = GetMethod("Method");
             var parameterInfo = methodInfo.Parameters.First();
 
             methodInfo.Parameters.Count.ShouldEqual(1);
@@ -68,8 +66,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_to_find_parameter_attributes()
         {
-            var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "Method");
+            var methodInfo = GetMethod("Method");
             var parameterInfo = methodInfo.Parameters.First();
             var attributeInfo = parameterInfo.Attributes.First();
 
@@ -81,8 +78,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_void_methods_to_return_void()
         {
-            var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "Method");
+            var methodInfo = GetMethod("Method");
             
             methodInfo.Type.FullName.ShouldEqual("System.Void");
             methodInfo.Type.Name.ShouldEqual("void");
@@ -98,8 +94,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_generic_methods_to_handle_generic_type_arguments()
         {
-            var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "Generic");
+            var methodInfo = GetMethod("Generic");
             var genericTypeInfo = methodInfo.TypeParameters.First();
             var parameterTypeInfo = methodInfo.Parameters.First().Type;
 
@@ -151,8 +146,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_task_methods_to_return_void()
         {
-            var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "Task");
+            var methodInfo = GetMethod("Task");
 
             methodInfo.Type.FullName.ShouldEqual("System.Void");
             methodInfo.Type.Name.ShouldEqual("void");
@@ -168,8 +162,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_task_string_methods_to_return_string()
         {
-            var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "TaskString");
+            var methodInfo = GetMethod("TaskString");
 
             methodInfo.Type.FullName.ShouldEqual("System.String");
             methodInfo.Type.Name.ShouldEqual("string");
@@ -185,8 +178,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_task_nullable_int_methods_to_return_int()
         {
-            var classInfo = fileInfo.Classes.First();
-            var methodInfo = classInfo.Methods.First(p => p.Name == "TaskNullableInt");
+            var methodInfo = GetMethod("TaskNullableInt");
 
             methodInfo.Type.FullName.ShouldEqual("System.Int32?");
             methodInfo.Type.Name.ShouldEqual("number");
@@ -197,6 +189,21 @@ namespace Typewriter.Tests.CodeModel
             methodInfo.Type.IsNullable.ShouldBeTrue("IsNullable");
             methodInfo.Type.IsTask.ShouldBeTrue("IsTask");
             methodInfo.Type.IsPrimitive.ShouldBeTrue("IsPrimitive");
+        }
+
+        [Fact]
+        public void Expect_byteArray_parameter_primitive_not_to_throw_exception()
+        {
+            var methodInfo = GetMethod("ArrayParameter");
+
+            methodInfo.Parameters.First().Type.IsPrimitive.ShouldEqual(true);
+        }
+
+        private Method GetMethod(string name)
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == name);
+            return methodInfo;
         }
     }
 }

@@ -16,10 +16,16 @@ namespace Typewriter.Metadata.Roslyn
             var type = symbol as INamedTypeSymbol;
             var name = (type != null) ? GetFullTypeName(type) : symbol.Name;
 
-            var ns = symbol.ContainingSymbol as INamespaceSymbol;
-            if (ns?.IsGlobalNamespace == true)
+            var namespaceSymbol = symbol.ContainingSymbol as INamespaceSymbol;
+            if (namespaceSymbol?.IsGlobalNamespace == true)
             {
                 return name;
+            }
+
+            var array = symbol as IArrayTypeSymbol;
+            if (array != null)
+            {
+                return "System.Collections.Generic.ICollection<" + GetFullName(array.ElementType) + ">";
             }
 
             return GetFullName(symbol.ContainingSymbol) + "." + name;
