@@ -6,37 +6,40 @@ using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("CodeModel", "Properties"), Collection(nameof(CodeDomFixture))]
-    public class CodeDomPropertyTests : PropertyTests
-    {
-        public CodeDomPropertyTests(CodeDomFixture fixture) : base(fixture)
-        {
-        }
-    }
+	 [Trait("CodeModel", "Properties"), Collection(nameof(CodeDomFixture))]
+	 public class CodeDomPropertyTests : PropertyTests
+	 {
+		  public CodeDomPropertyTests(CodeDomFixture fixture) : base(fixture)
+		  {
+		  }
+	 }
 
-    [Trait("CodeModel", "Properties"), Collection(nameof(RoslynFixture))]
-    public class RoslynPropertyTests : PropertyTests
-    {
-        public RoslynPropertyTests(RoslynFixture fixture) : base(fixture)
-        {
-        }
-    }
+	 [Trait("CodeModel", "Properties"), Collection(nameof(RoslynFixture))]
+	 public class RoslynPropertyTests : PropertyTests
+	 {
+		  public RoslynPropertyTests(RoslynFixture fixture) : base(fixture)
+		  {
+		  }
+	 }
 
     public abstract class PropertyTests : TestBase
     {
         private readonly File fileInfo;
+        private readonly Class classInfo;
 
         protected PropertyTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\PropertyInfo.cs");
+            classInfo = fileInfo.Classes.First();
         }
+
+        protected Property GetFirstProperty(string name) => classInfo.Properties.First(p => p.Name == name);
 
         [Fact]
         public void Expect_name_to_match_property_name()
         {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "Bool");
-            
+            var propertyInfo = GetFirstProperty("Bool");
+
             propertyInfo.Name.ShouldEqual("Bool");
             propertyInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.PropertyInfo.Bool");
             propertyInfo.Parent.ShouldEqual(classInfo);
@@ -45,8 +48,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_to_find_attributes()
         {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "Bool");
+            var propertyInfo = GetFirstProperty("Bool");
             var attributeInfo = propertyInfo.Attributes.First();
 
             propertyInfo.Attributes.Count.ShouldEqual(1);
@@ -57,9 +59,8 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_properties_without_public_getter_to_only_have_setter()
         {
-            var classInfo = fileInfo.Classes.First();
-            var setterOnly = classInfo.Properties.First(p => p.Name == "SetterOnly");
-            var privateGetter = classInfo.Properties.First(p => p.Name == "PrivateGetter");
+            var setterOnly = GetFirstProperty("SetterOnly");
+            var privateGetter = GetFirstProperty("PrivateGetter");
 
             setterOnly.HasGetter.ShouldBeFalse();
             setterOnly.HasSetter.ShouldBeTrue();
@@ -70,9 +71,8 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_properties_without_public_setter_to_only_have_getter()
         {
-            var classInfo = fileInfo.Classes.First();
-            var getterOnly = classInfo.Properties.First(p => p.Name == "GetterOnly");
-            var privateSetter = classInfo.Properties.First(p => p.Name == "PrivateSetter");
+            var getterOnly = GetFirstProperty("GetterOnly");
+            var privateSetter = GetFirstProperty("PrivateSetter");
 
             getterOnly.HasGetter.ShouldBeTrue();
             getterOnly.HasSetter.ShouldBeFalse();
@@ -83,8 +83,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_properties_with_public_getter_and_setter_to_have_both_getter_and_setter()
         {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "Bool");
+            var propertyInfo = GetFirstProperty("Bool");
 
             propertyInfo.HasGetter.ShouldBeTrue();
             propertyInfo.HasSetter.ShouldBeTrue();
@@ -93,12 +92,15 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_primitive_properties_to_be_primitive()
         {
-            var classInfo = fileInfo.Classes.First();
-            var properties = new[] { "Bool", "Char", "String", "Byte", "Sbyte", "Int", "Uint", "Short", "Ushort", "Long", "Ulong", "Float", "Double", "Decimal" };
+            var properties = new[]
+            {
+                "Bool", "Char", "String", "Byte", "Sbyte", "Int", "Uint", "Short", "Ushort", "Long", "Ulong", "Float",
+                "Double", "Decimal"
+            };
 
             foreach (var property in properties)
             {
-                var propertyInfo = classInfo.Properties.First(p => p.Name == property);
+                var propertyInfo = GetFirstProperty(property);
 
                 propertyInfo.Type.IsEnum.ShouldBeFalse($"IsEnum {property}");
                 propertyInfo.Type.IsEnumerable.ShouldBeFalse($"IsEnumerable {property}");
@@ -114,12 +116,11 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_datetime_properties_to_be_primitive()
         {
-            var classInfo = fileInfo.Classes.First();
-            var properties = new[] { "DateTime", "DateTimeOffset" };
+            var properties = new[] {"DateTime", "DateTimeOffset"};
 
             foreach (var property in properties)
             {
-                var propertyInfo = classInfo.Properties.First(p => p.Name == property);
+                var propertyInfo = GetFirstProperty(property);
 
                 propertyInfo.Type.IsEnum.ShouldBeFalse($"IsEnum {property}");
                 propertyInfo.Type.IsEnumerable.ShouldBeFalse($"IsEnumerable {property}");
@@ -138,8 +139,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_guid_properties_to_be_primitive()
         {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "Guid");
+            var propertyInfo = GetFirstProperty("Guid");
 
             propertyInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
             propertyInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
@@ -157,8 +157,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_timespan_properties_to_be_primitive()
         {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "TimeSpan");
+            var propertyInfo = GetFirstProperty("TimeSpan");
 
             propertyInfo.Type.IsEnum.ShouldBeFalse("IsEnum");
             propertyInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
@@ -176,9 +175,8 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_object_and_dynamic_properties_to_return_any()
         {
-            var classInfo = fileInfo.Classes.First();
-            var objectInfo = classInfo.Properties.First(p => p.Name == "Object");
-            var dynamicInfo = classInfo.Properties.First(p => p.Name == "Dynamic");
+            var objectInfo = GetFirstProperty("Object");
+            var dynamicInfo = GetFirstProperty("Dynamic");
 
             objectInfo.Type.Name.ShouldEqual("any");
             objectInfo.Type.FullName.ShouldEqual("System.Object");
@@ -191,8 +189,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_enum_properties_to_be_enums()
         {
-            var classInfo = fileInfo.Classes.First();
-            var enumInfo = classInfo.Properties.First(p => p.Name == "Enum");
+            var enumInfo = GetFirstProperty("Enum");
 
             enumInfo.Type.IsEnum.ShouldBeTrue("IsEnum");
             enumInfo.Type.IsEnumerable.ShouldBeFalse("IsEnumerable");
@@ -208,10 +205,8 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_nullable_enum_properties_to_be_enums()
         {
-            var classInfo = fileInfo.Classes.First();
-
-            var nullableEnumInfo1 = classInfo.Properties.First(p => p.Name == "NullableEnum1");
-            var nullableEnumInfo2 = classInfo.Properties.First(p => p.Name == "NullableEnum2");
+            var nullableEnumInfo1 = GetFirstProperty("NullableEnum1");
+            var nullableEnumInfo2 = GetFirstProperty("NullableEnum2");
 
             nullableEnumInfo1.Type.Name.ShouldEqual("ConsoleColor");
             nullableEnumInfo1.Type.OriginalName.ShouldEqual("ConsoleColor?");
@@ -226,7 +221,7 @@ namespace Typewriter.Tests.CodeModel
             nullableEnumInfo1.Type.IsDate.ShouldBeFalse("IsDate");
             nullableEnumInfo1.Type.IsGuid.ShouldBeFalse("IsGuid");
             nullableEnumInfo1.Type.IsTimeSpan.ShouldBeFalse("IsTimeSpan");
-            
+
             nullableEnumInfo2.Type.Name.ShouldEqual("ConsoleColor");
             nullableEnumInfo2.Type.OriginalName.ShouldEqual("ConsoleColor?");
             nullableEnumInfo2.Type.FullName.ShouldEqual("System.ConsoleColor?");
@@ -245,12 +240,11 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_keyword_properties_to_return_keyword_name()
         {
-            var classInfo = fileInfo.Classes.First();
-            var intInfo = classInfo.Properties.First(p => p.Name == "Int");
-            var nullableIntInfo1 = classInfo.Properties.First(p => p.Name == "NullableInt1");
-            var nullableIntInfo2 = classInfo.Properties.First(p => p.Name == "NullableInt2");
-            var enumerableIntInfo = classInfo.Properties.First(p => p.Name == "EnumerableInt");
-            var enumerableNullableIntInfo = classInfo.Properties.First(p => p.Name == "EnumerableNullableInt");
+            var intInfo = GetFirstProperty("Int");
+            var nullableIntInfo1 = GetFirstProperty("NullableInt1");
+            var nullableIntInfo2 = GetFirstProperty("NullableInt2");
+            var enumerableIntInfo = GetFirstProperty("EnumerableInt");
+            var enumerableNullableIntInfo = GetFirstProperty("EnumerableNullableInt");
 
             intInfo.Type.Name.ShouldEqual("number");
             intInfo.Type.OriginalName.ShouldEqual("int");
@@ -276,8 +270,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_complex_properties_not_to_be_primitive()
         {
-            var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Properties.First(p => p.Name == "Exception");
+            var propertyInfo = GetFirstProperty("Exception");
 
             propertyInfo.Type.IsPrimitive.ShouldBeFalse();
         }
@@ -285,11 +278,10 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_enumerable_properties_to_be_enumerable()
         {
-            var classInfo = fileInfo.Classes.First();
-            var arrayInfo = classInfo.Properties.First(p => p.Name == "Array");
-            var enumerableInfo = classInfo.Properties.First(p => p.Name == "Enumerable");
-            var stringArrayInfo = classInfo.Properties.First(p => p.Name == "StringArray");
-            var enumerableStringInfo = classInfo.Properties.First(p => p.Name == "EnumerableString");
+            var arrayInfo = GetFirstProperty("Array");
+            var enumerableInfo = GetFirstProperty("Enumerable");
+            var stringArrayInfo = GetFirstProperty("StringArray");
+            var enumerableStringInfo = GetFirstProperty("EnumerableString");
 
             arrayInfo.Type.IsEnumerable.ShouldBeTrue();
             enumerableInfo.Type.IsEnumerable.ShouldBeTrue();
@@ -298,27 +290,60 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_enumerable_properties_with_innerType_to_be_primitive()
+        {
+            var stringArrayInfo = GetFirstProperty("StringArray");
+            var enumerableStringInfo = GetFirstProperty("EnumerableString");
+
+            stringArrayInfo.Type.IsPrimitive.ShouldBeTrue();
+            enumerableStringInfo.Type.IsPrimitive.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Expect_enumerable_properties_without_innerType_not_to_be_primitive()
+        {
+            var arrayInfo = GetFirstProperty("Array");
+            var enumerableInfo = GetFirstProperty("Enumerable");
+
+            arrayInfo.Type.IsPrimitive.ShouldBeFalse();
+            arrayInfo.Type.FullName.ShouldEqual("System.Array");
+            enumerableInfo.Type.IsPrimitive.ShouldBeFalse();
+        }
+
+        [Fact]
         public void Expect_untyped_enumerable_properties_to_return_any_array()
         {
-            var classInfo = fileInfo.Classes.First();
-            var arrayInfo = classInfo.Properties.First(p => p.Name == "Array");
-            var enumerableInfo = classInfo.Properties.First(p => p.Name == "Enumerable");
+            var arrayInfo = GetFirstProperty("Array");
+            var enumerableInfo = GetFirstProperty("Enumerable");
 
             arrayInfo.Type.Name.ShouldEqual("any[]");
             enumerableInfo.Type.Name.ShouldEqual("any[]");
         }
 
         [Fact]
+        public void Expect_enumerable_properties_fullName()
+        {
+            var arrayInfo = GetFirstProperty("Array");
+            var enumerableInfo = GetFirstProperty("Enumerable");
+            var stringArrayInfo = GetFirstProperty("StringArray");
+            var enumerableStringInfo = GetFirstProperty("EnumerableString");
+
+            arrayInfo.Type.FullName.ShouldEqual("System.Array");
+            enumerableInfo.Type.FullName.ShouldEqual("System.Collections.IEnumerable");
+            stringArrayInfo.Type.FullName.ShouldEqual("System.Collections.Generic.ICollection<System.String>");
+            enumerableStringInfo.Type.FullName.ShouldEqual("System.Collections.Generic.IEnumerable<System.String>");
+        }
+
+        [Fact]
         public void Expect_typed_enumerable_properties_to_return_typed_array()
         {
-            var classInfo = fileInfo.Classes.First();
-            var stringArrayInfo = classInfo.Properties.First(p => p.Name == "StringArray");
-            var enumerableStringInfo = classInfo.Properties.First(p => p.Name == "EnumerableString");
-            var listStringInfo = classInfo.Properties.First(p => p.Name == "ListString");
+            var stringArrayInfo = GetFirstProperty("StringArray");
+            var enumerableStringInfo = GetFirstProperty("EnumerableString");
+            var listStringInfo = GetFirstProperty("ListString");
 
             enumerableStringInfo.Type.ToString().ShouldEqual("string[]");
             listStringInfo.Type.Name.ShouldEqual("string[]");
-            
+
             stringArrayInfo.Type.ToString().ShouldEqual("string[]");
 
         }
@@ -326,8 +351,7 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_string_properties_not_to_be_enumerable()
         {
-            var classInfo = fileInfo.Classes.First();
-            var stringInfo = classInfo.Properties.First(p => p.Name == "String");
+            var stringInfo = GetFirstProperty("String");
 
             stringInfo.Type.IsEnumerable.ShouldBeFalse();
         }
@@ -335,8 +359,9 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_generic_property_type_to_match_generic_argument()
         {
-            var classInfo = fileInfo.Classes.First(c => c.Name == "GenericPropertyInfo");
-            var genericInfo = classInfo.Properties.First(p => p.Name == "Generic");
+            var genericInfo = fileInfo.Classes
+                .First(c => c.Name == "GenericPropertyInfo").Properties
+                .First(p => p.Name == "Generic");
 
             genericInfo.Type.Name.ShouldEqual("T");
             genericInfo.Type.FullName.ShouldEqual("T");
@@ -345,8 +370,9 @@ namespace Typewriter.Tests.CodeModel
         [Fact]
         public void Expect_enumerable_generic_property_inner_type_to_match_generic_argument()
         {
-            var classInfo = fileInfo.Classes.First(c => c.Name == "GenericPropertyInfo");
-            var genericInfo = classInfo.Properties.First(p => p.Name == "EnumerableGeneric");
+            var genericInfo = fileInfo.Classes
+                .First(c => c.Name == "GenericPropertyInfo").Properties
+                .First(p => p.Name == "EnumerableGeneric");
             var innerType = genericInfo.Type.TypeArguments.First();
 
             genericInfo.Type.IsEnumerable.ShouldBeTrue();
