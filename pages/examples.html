@@ -128,7 +128,7 @@ module App { $Classes(*Model)[
 ${
     using Typewriter.Extensions.WebApi;
 
-    string ReturnType(Method m) => m.Type.Name == "" ? "void" : m.Type.Name;
+    string ReturnType(Method m) => m.Type.Name == "IHttpActionResult" ? "void" : m.Type.Name;
     string ServiceName(Class c) => c.Name.Replace("Controller", "Service");
 }
 module App { $Classes(:ApiController)[
