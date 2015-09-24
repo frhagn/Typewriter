@@ -1,4 +1,4 @@
-The following dll:s from the Visual Studio 1013 SDK must be copied to this folder:
+The following dll:s from the Visual Studio 2013 SDK must be copied to this folder:
 
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.CoreUtility.dll
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Editor.dll
