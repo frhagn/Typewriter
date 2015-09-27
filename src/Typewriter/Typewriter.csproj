@@ -292,6 +292,7 @@
     <Compile Include="TemplateEditor\Controllers\FormattingController.cs" />
     <Compile Include="TemplateEditor\Controllers\OutliningController.cs" />
     <Compile Include="TemplateEditor\Controllers\SignatureHelpController.cs" />
+    <Compile Include="TemplateEditor\FormatDefinitions\AlternatePropertyFormatDefinition.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\InterfaceSymbolFormatDefinition.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\ClassSymbolFormatDefinition.cs" />
     <Compile Include="TemplateEditor\Lexing\Contexts.cs" />

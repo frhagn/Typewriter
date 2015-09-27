@@ -28,7 +28,7 @@ namespace Typewriter.TemplateEditor.Lexing
         public void Tokenize(SemanticModel semanticModel, string code)
         {
             var context = new Stack<Context>(new[] { fileContext });
-            Parse(code, semanticModel, context, 0);
+            Parse(code, semanticModel, context, 0, 0);
 
             if (semanticModel.Tokens.BraceStack.IsBalanced(']') == false)
             {
@@ -41,16 +41,16 @@ namespace Typewriter.TemplateEditor.Lexing
             }
         }
 
-        private void Parse(string template, SemanticModel semanticModel, Stack<Context> context, int offset)
+        private void Parse(string template, SemanticModel semanticModel, Stack<Context> context, int offset, int depth)
         {
             var stream = new Stream(template, offset);
 
             do
             {
                 if (ParseCodeBlock(stream, semanticModel, context)) continue;
-                if (ParseDollar(stream, semanticModel, context)) continue;
-                if (ParseString(stream, semanticModel, context)) continue;
-                if (ParseComment(stream, semanticModel, context)) continue;
+                if (ParseDollar(stream, semanticModel, context, depth)) continue;
+                if (ParseString(stream, semanticModel, context, depth)) continue;
+                if (ParseComment(stream, semanticModel, context, depth)) continue;
                 if (ParseNumber(stream, semanticModel)) continue;
                 if (ParseOperators(stream, semanticModel)) continue;
                 if (ParseKeywords(stream, semanticModel)) continue;
@@ -87,7 +87,7 @@ namespace Typewriter.TemplateEditor.Lexing
             return false;
         }
 
-        private bool ParseDollar(Stream stream, SemanticModel semanticModel, Stack<Context> context)
+        private bool ParseDollar(Stream stream, SemanticModel semanticModel, Stack<Context> context, int depth)
         {
             if (stream.Current == '$')
             {
@@ -95,43 +95,45 @@ namespace Typewriter.TemplateEditor.Lexing
 
                 if (identifier != null)
                 {
+                    var classification = GetPropertyClassification(depth);
+
                     if (identifier.IsParent)
                     {
                         var parent = context.Skip(1).FirstOrDefault()?.Name.ToLowerInvariant();
-                        semanticModel.Tokens.Add(Classifications.Property, stream.Position, identifier.Name.Length + 1, identifier.QuickInfo.Replace("$parent", parent));
+                        semanticModel.Tokens.Add(classification, stream.Position, identifier.Name.Length + 1, identifier.QuickInfo.Replace("$parent", parent));
                         stream.Advance(identifier.Name.Length);
 
                         var current = context.Pop();
-                        ParseBlock(stream, semanticModel, context); // template
+                        ParseBlock(stream, semanticModel, context, depth); // template
                         context.Push(current);
                     }
                     else
                     {
-                        semanticModel.Tokens.Add(Classifications.Property, stream.Position, identifier.Name.Length + 1, identifier.QuickInfo);
+                        semanticModel.Tokens.Add(classification, stream.Position, identifier.Name.Length + 1, identifier.QuickInfo);
                         stream.Advance(identifier.Name.Length);
 
                         if (identifier.IsCollection)
                         {
                             context.Push(contexts.Find(identifier.Context));
 
-                            ParseFilter(stream, semanticModel, context);
-                            ParseBlock(stream, semanticModel, context); // template
+                            ParseFilter(stream, semanticModel, context, depth);
+                            ParseBlock(stream, semanticModel, context, depth); // template
 
                             context.Pop();
 
-                            ParseBlock(stream, semanticModel, context); // separator
+                            ParseBlock(stream, semanticModel, context, depth); // separator
                         }
                         else if (identifier.IsBoolean)
                         {
-                            ParseBlock(stream, semanticModel, context); // true
-                            ParseBlock(stream, semanticModel, context); // false
+                            ParseBlock(stream, semanticModel, context, depth); // true
+                            ParseBlock(stream, semanticModel, context, depth); // false
                         }
                         else if (identifier.HasContext)
                         {
                             context.Push(contexts.Find(identifier.Context));
 
                             //ParseDot(stream, SemanticModel, Contexts.Find(identifier.Context), context); // Identifier
-                            ParseBlock(stream, semanticModel, context); // template
+                            ParseBlock(stream, semanticModel, context, depth); // template
 
                             context.Pop();
                         }
@@ -144,12 +146,14 @@ namespace Typewriter.TemplateEditor.Lexing
             return false;
         }
 
-        private void ParseFilter(Stream stream, SemanticModel semanticModel, Stack<Context> context)
+        private void ParseFilter(Stream stream, SemanticModel semanticModel, Stack<Context> context, int depth)
         {
             if (stream.Peek() == '(')
             {
                 stream.Advance();
-                semanticModel.Tokens.AddBrace(stream, Classifications.Property);
+                var classification = GetPropertyClassification(depth);
+
+                semanticModel.Tokens.AddBrace(stream, classification);
 
                 var block = stream.PeekBlock(1, '(', ')');
 
@@ -161,7 +165,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 if (stream.Peek() == ')')
                 {
                     stream.Advance();
-                    semanticModel.Tokens.AddBrace(stream, Classifications.Property);
+                    semanticModel.Tokens.AddBrace(stream, classification);
                 }
             }
         }
@@ -207,26 +211,28 @@ namespace Typewriter.TemplateEditor.Lexing
         //    }
         //}
 
-        private void ParseBlock(Stream stream, SemanticModel semanticModel, Stack<Context> context)
+        private void ParseBlock(Stream stream, SemanticModel semanticModel, Stack<Context> context, int depth)
         {
             if (stream.Peek() == '[')
             {
                 stream.Advance();
-                semanticModel.Tokens.AddBrace(stream, Classifications.Property);
+                var classification = GetPropertyClassification(depth);
+
+                semanticModel.Tokens.AddBrace(stream, classification);
 
                 var block = stream.PeekBlock(1, '[', ']');
-                Parse(block, semanticModel, context, stream.Position + 1);
+                Parse(block, semanticModel, context, stream.Position + 1, depth + 1);
                 stream.Advance(block.Length);
 
                 if (stream.Peek() == ']')
                 {
                     stream.Advance();
-                    semanticModel.Tokens.AddBrace(stream, Classifications.Property);
+                    semanticModel.Tokens.AddBrace(stream, classification);
                 }
             }
         }
 
-        private bool ParseString(Stream stream, SemanticModel semanticModel, Stack<Context> context)
+        private bool ParseString(Stream stream, SemanticModel semanticModel, Stack<Context> context, int depth)
         {
             if (stream.Current == '\'' || stream.Current == '"')
             {
@@ -236,7 +242,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 while (stream.Advance())
                 {
                     var length = stream.Position - start;
-                    if (ParseDollar(stream, semanticModel, context))
+                    if (ParseDollar(stream, semanticModel, context, depth))
                     {
                         semanticModel.Tokens.Add(Classifications.String, start, length);
                         if (stream.Advance() == false || stream.Current == Constants.NewLine) return true;
@@ -260,7 +266,7 @@ namespace Typewriter.TemplateEditor.Lexing
             return false;
         }
 
-        private bool ParseComment(Stream stream, SemanticModel semanticModel, Stack<Context> context)
+        private bool ParseComment(Stream stream, SemanticModel semanticModel, Stack<Context> context, int depth)
         {
             if (stream.Current == '/')
             {
@@ -272,7 +278,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     while (stream.Advance())
                     {
                         var length = stream.Position - start;
-                        if (ParseDollar(stream, semanticModel, context))
+                        if (ParseDollar(stream, semanticModel, context, depth))
                         {
                             if (length > 0)
                                 semanticModel.Tokens.Add(Classifications.Comment, start, length);
@@ -293,7 +299,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     {
                         var length = stream.Position - start;
 
-                        if (ParseDollar(stream, semanticModel, context))
+                        if (ParseDollar(stream, semanticModel, context, depth))
                         {
                             if (length > 0)
                                 semanticModel.Tokens.Add(Classifications.Comment, start, length);
@@ -394,6 +400,11 @@ namespace Typewriter.TemplateEditor.Lexing
                 return identifier;
 
             return null;
+        }
+
+        private static string GetPropertyClassification(int depth)
+        {
+            return depth % 2 == 0 ? Classifications.Property : Classifications.AlternalteProperty;
         }
     }
 }

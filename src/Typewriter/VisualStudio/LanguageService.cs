@@ -19,6 +19,9 @@ namespace Typewriter.VisualStudio
         [Export, Name(Classifications.Property)]
         internal static ClassificationTypeDefinition PropertyClassificationType { get; set; }
 
+        [Export, Name(Classifications.AlternalteProperty)]
+        internal static ClassificationTypeDefinition AlternatePropertyClassificationType { get; set; }
+
         [Export, Name(Classifications.ClassSymbol)]
         internal static ClassificationTypeDefinition ClassSymbolClassificationType { get; set; }
 

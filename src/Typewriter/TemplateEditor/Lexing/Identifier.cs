@@ -123,7 +123,7 @@ namespace Typewriter.TemplateEditor.Lexing
                         documentation = XDocument.Parse("<r>" + documentation + "</r>").Descendants("summary").Select(GetValue).FirstOrDefault() ?? string.Empty;
                         documentation = Regex.Replace(documentation, @"^ +", "", RegexOptions.Multiline);
 
-                        if (Constants.UsingRoslyn)
+                        if (Constants.RoslynEnabled)
                         {
                             documentation = Regex.Replace(documentation, @"^\s*\(In Visual Studio 2013.*", "", RegexOptions.Multiline);
                         }

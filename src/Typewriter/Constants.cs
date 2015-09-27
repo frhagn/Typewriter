@@ -20,7 +20,7 @@ namespace Typewriter
         internal static readonly string ResourcesDirectory = Path.Combine(TypewriterDirectory, "Resources");
         internal static readonly string ReferenceAssembliesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Reference Assemblies\Microsoft\Framework\.NETFramework");
 
-        internal static bool UsingRoslyn = false;
+        internal static bool RoslynEnabled = false;
     }
 
     internal static class Classifications
@@ -37,5 +37,6 @@ namespace Typewriter
         public const string ClassSymbol = "Tst/ClassSymbol";
         public const string InterfaceSymbol = "Tst/InterfaceSymbol";
         public const string Property = "Tst/Property";
+        public const string AlternalteProperty = "Tst/AlternateProperty";
     }
 }

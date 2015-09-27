@@ -77,7 +77,7 @@ namespace Typewriter.VisualStudio
                 var provider = (IMetadataProvider)Activator.CreateInstance(type);
 
                 Log.Info("Using Roslyn");
-                Constants.UsingRoslyn = true;
+                Constants.RoslynEnabled = true;
                 this.metadataProvider = provider;
             }
             catch
