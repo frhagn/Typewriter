@@ -16,30 +16,31 @@ namespace Typewriter.Extensions.Types
             return type.Name.TrimEnd('[', ']');
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public static string Map(this Type type, string name)
-        //{
-        //    if (type.IsDate) return $"new Date({name});";
-        //    if (type.IsPrimitive) return $"{name};";
-        //    if (type.IsEnumerable) return $"{name} ? {name}.map(i => new {ClassName(type)}(i)) : [];";
+        /// <summary>
+        /// The default value of the type.
+        /// (Dictionary types returns {}, enumerable types returns [], boolean types returns false, 
+        /// numeric types returns 0, void returns void(0), all other types return null)
+        /// </summary>
+        public static string Default(this Type type)
+        {
+            // Dictionary = { [key: type]: type; }
+            if (type.Name.StartsWith("{")) return "{}";
 
-        //    return $"{name} ? new {ClassName(type)}({name}) : null;";
-        //}
+            if (type.IsEnumerable) return "[]";
 
-        //public static string Map(this Property property, string objectName)
-        //{
-        //    return Map(property.Type, objectName + "." + property.name);
-        //}
+            if (type.Name == "boolean") return "false";
+            if (type.Name == "number") return "0";
+            if (type.Name == "void") return "void(0)";
+
+            return "null";
+        }
 
         /// <summary>
-        /// Returns the name of the first TypeArgument of a generic type or the name of the type if it's not generic.
-        /// Equivalent to $Type[$IsGeneric[$TypeArguments[$Name]][$Name]]
+        /// Returns the first TypeArgument of a generic type or the type itself if it's not generic.
         /// </summary>
-        public static string Unwrap(this Type type)
+        public static Type Unwrap(this Type type)
         {
-            return type.IsGeneric ? type.TypeArguments.First().Name : type.Name;
+            return type.IsGeneric ? type.TypeArguments.First() : type;
         }
     }
 }

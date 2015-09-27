@@ -19,6 +19,8 @@ namespace Typewriter
         internal static readonly string TypewriterDirectory = Path.GetDirectoryName(typeof(Constants).Assembly.Location);
         internal static readonly string ResourcesDirectory = Path.Combine(TypewriterDirectory, "Resources");
         internal static readonly string ReferenceAssembliesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Reference Assemblies\Microsoft\Framework\.NETFramework");
+
+        internal static bool UsingRoslyn = false;
     }
 
     internal static class Classifications

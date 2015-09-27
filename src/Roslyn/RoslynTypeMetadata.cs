@@ -22,8 +22,9 @@ namespace Typewriter.Metadata.Roslyn
         public string Name => symbol.Name + (IsNullable? "?" : string.Empty);
         public string FullName => symbol.GetFullName() + (IsNullable? "?" : string.Empty);
         public bool IsGeneric => (symbol as INamedTypeSymbol)?.TypeParameters.Any() ?? false;
+        public bool IsDefined => symbol.Locations.Any(l => l.IsInSource);
         public string Namespace => symbol.GetNamespace();
-
+        
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
         public IClassMetadata BaseClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.BaseType);
         public IClassMetadata ContainingClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.ContainingType);
@@ -125,6 +126,7 @@ namespace Typewriter.Metadata.Roslyn
         public bool IsGeneric => false;
         public bool IsNullable => false;
         public bool IsTask => true;
+        public bool IsDefined => false;
         public string Namespace => "System";
 
         public IEnumerable<IAttributeMetadata> Attributes => new IAttributeMetadata[0];

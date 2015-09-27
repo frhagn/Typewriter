@@ -32,6 +32,7 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 && IsNullable == false;
         public bool IsNullable => isNullable;
         public bool IsTask => isTask;
+        public bool IsDefined => CodeType.InfoLocation == vsCMInfoLocation.vsCMInfoLocationProject;
 
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(CodeType.Attributes);
         public IEnumerable<ITypeMetadata> TypeArguments => LoadGenericTypeArguments(IsGeneric, FullName, file);

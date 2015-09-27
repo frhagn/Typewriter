@@ -10,5 +10,9 @@ namespace Typewriter.Tests.CodeModel.Support
         public BaseClassInfo BaseClass { get; set; }
         public GenericClassInfo<string> GenericClass { get; set; }
         public InheritGenericClassInfo InheritGenericClass { get; set; }
+
+        public string String { get; set; }
+        public ICollection<ClassInfo> ClassCollection { get; set; }
+        public ICollection<string> StringCollection { get; set; }
     }
 }

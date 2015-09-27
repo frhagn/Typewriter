@@ -182,14 +182,14 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
                     {
                         var isBoolean = returnType == "bool" || returnType == "Boolean";
 
-                        var index = returnType.IndexOf("Collection", StringComparison.Ordinal);
-                        var childContext = contexts.Find(index > 0 ? returnType.Substring(0, index) : returnType)?.Name;
-                        var isCollection = childContext != null && index > 0;
+                        var contextType = ExtraxtContextType(returnType);
+                        var childContext = contexts.Find(contextType)?.Name;
+                        var isCollection = childContext != null && contextType != returnType;
 
                         yield return new TemporaryIdentifier(context, new Identifier
                         {
                             Name = identifier,
-                            QuickInfo = "(extension) " + (isCollection ? "collection" : returnType.ToLowerInvariant()) + " " + identifier,
+                            QuickInfo = "(extension) " + (isCollection ? contextType + "Collection" : contextType) + " " + identifier,
                             Context = childContext,
                             HasContext = childContext != null,
                             IsBoolean = isBoolean,
@@ -200,6 +200,22 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
                     }
                 }
             }
+        }
+
+        private static string ExtraxtContextType(string returnType)
+        {
+            if (returnType.EndsWith("[]")) return returnType.Substring(0, returnType.Length - 2);
+
+            var prefixes = new[] { "ICollection<", "IEnumerable<", "List<", "IList<" };
+            var match = prefixes.FirstOrDefault(returnType.StartsWith);
+
+            if (match != null)
+            {
+                var length = match.Length;
+                return returnType.Substring(length, returnType.Length - length - 1);
+            }
+
+            return returnType;
         }
 
         public ISymbol GetSymbol(int position)

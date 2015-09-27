@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Should;
 using Typewriter.CodeModel;
+using Typewriter.Extensions.Types;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
@@ -265,6 +266,32 @@ namespace Typewriter.Tests.CodeModel
                 typeInfo.BaseClass.TypeParameters.Count.ShouldEqual(1);
                 genericTypeParameter.Name.ShouldEqual("T");
             }
+        }
+
+        [Fact]
+        public void Expect_types_defined_in_solution_to_return_isdefined()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var typeInfo = classInfo.Properties.First(p => p.Name == "Class").Type;
+            var genericTypeInfo = classInfo.Properties.First(p => p.Name == "GenericClass").Type;
+            var classCollection = classInfo.Properties.First(p => p.Name == "ClassCollection").Type;
+
+            typeInfo.IsDefined.ShouldBeTrue("Class.IsDefined");
+            if (isRoslyn) genericTypeInfo.IsDefined.ShouldBeTrue("GenericClass.IsDefined");
+            classCollection.Unwrap().IsDefined.ShouldBeTrue("ClassCollection.IsDefined");
+        }
+
+        [Fact]
+        public void Expect_external_types_not_to_return_isdefined()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var typeInfo = classInfo.Properties.First(p => p.Name == "String").Type;
+            var genericTypeInfo = classInfo.Properties.First(p => p.Name == "GenericClass").Type;
+            var classCollection = classInfo.Properties.First(p => p.Name == "ClassCollection").Type;
+
+            typeInfo.IsDefined.ShouldBeFalse("String.IsDefined");
+            genericTypeInfo.Unwrap().IsDefined.ShouldBeFalse("GenericClass.IsDefined");
+            classCollection.IsDefined.ShouldBeFalse("ClassCollection.IsDefined");
         }
     }
 }

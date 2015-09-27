@@ -35,9 +35,9 @@ namespace Typewriter.CodeModel.Implementation
         public override bool IsTask => metadata.IsTask;
         public override bool IsPrimitive => IsPrimitive(metadata);
         public override bool IsDate => Name == "Date";
+        public override bool IsDefined => metadata.IsDefined;
         public override bool IsGuid => FullName == "System.Guid" || FullName == "System.Guid?";
         public override bool IsTimeSpan => FullName == "System.TimeSpan" || FullName == "System.TimeSpan?";
-        public override string Default => GetDefaultValue();
 
         private AttributeCollection attributes;
         public override AttributeCollection Attributes => attributes ?? (attributes = AttributeImpl.FromMetadata(metadata.Attributes, this));
@@ -80,21 +80,7 @@ namespace Typewriter.CodeModel.Implementation
 
         private InterfaceCollection nestedInterfaces;
         public override InterfaceCollection NestedInterfaces => nestedInterfaces ?? (nestedInterfaces = InterfaceImpl.FromMetadata(metadata.NestedInterfaces, this));
-
-        private string GetDefaultValue()
-        {
-            // Dictionary = { [key: type]: type; }
-            if (Name.StartsWith("{")) return "{}";
-
-            if (IsEnumerable) return "[]";
-
-            if (Name == "boolean") return "false";
-            if (Name == "number") return "0";
-            if (Name == "void") return "void(0)";
-
-            return "null";
-        }
-
+        
         public override string ToString()
         {
             return Name;

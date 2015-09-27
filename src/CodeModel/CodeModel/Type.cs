@@ -29,11 +29,6 @@ namespace Typewriter.CodeModel
         public abstract Class ContainingClass { get; }
 
         /// <summary>
-        /// The default value of the type.
-        /// </summary>
-        public abstract string Default { get; }
-
-        /// <summary>
         /// All delegates defined in the type.
         /// </summary>
         public abstract DelegateCollection Delegates { get; }
@@ -58,6 +53,12 @@ namespace Typewriter.CodeModel
         /// Determines if the type is a DateTime.
         /// </summary>
         public abstract bool IsDate { get; }
+
+        /// <summary>
+        /// Determines if the type is defined in the current solution.
+        /// (In Visual Studio 2013 IsDefined returns false for generic types)
+        /// </summary>
+        public abstract bool IsDefined { get; }
 
         /// <summary>
         /// Determines if the type is an enum.

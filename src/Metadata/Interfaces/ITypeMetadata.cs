@@ -8,5 +8,6 @@ namespace Typewriter.Metadata.Interfaces
         bool IsEnumerable { get; }
         bool IsNullable { get; }
         bool IsTask { get; }
+        bool IsDefined { get; }
     }
 }
