@@ -31,9 +31,11 @@ namespace Typewriter
         public const string Keyword = "Keyword";
         public const string Number = "Number";
         public const string Operator = "Operator";
-        public const string Property = "Tst/Property";
         public const string String = "String";
         public const string SyntaxError = "syntax error";
         public const string Warning = "compiler warning";
+        public const string ClassSymbol = "Tst/ClassSymbol";
+        public const string InterfaceSymbol = "Tst/InterfaceSymbol";
+        public const string Property = "Tst/Property";
     }
 }

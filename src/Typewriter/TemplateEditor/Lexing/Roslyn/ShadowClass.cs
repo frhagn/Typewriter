@@ -250,8 +250,10 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
                     return Classifications.Keyword;
 
                 case "class name":
+                    return Classifications.ClassSymbol;
+
                 case "interface name":
-                    return Classifications.Property;
+                    return Classifications.InterfaceSymbol;
 
                 case "identifier":
                     return Classifications.Identifier;

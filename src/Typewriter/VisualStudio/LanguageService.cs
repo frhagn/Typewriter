@@ -19,6 +19,12 @@ namespace Typewriter.VisualStudio
         [Export, Name(Classifications.Property)]
         internal static ClassificationTypeDefinition PropertyClassificationType { get; set; }
 
+        [Export, Name(Classifications.ClassSymbol)]
+        internal static ClassificationTypeDefinition ClassSymbolClassificationType { get; set; }
+
+        [Export, Name(Classifications.InterfaceSymbol)]
+        internal static ClassificationTypeDefinition InterfaceSymbolClassificationType { get; set; }
+
         private const int failed = 2147467263;
 
         public int GetCodeWindowManager(IVsCodeWindow pCodeWin, out IVsCodeWindowManager ppCodeWinMgr)
