@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
+using Typewriter.CodeModel;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
 
@@ -110,13 +111,26 @@ namespace Typewriter.TemplateEditor
             var contextSpan = semanticModel.GetContextSpan(span.Start);
             var prefix = contextSpan.Type == ContextType.Template ? "$" : "";
 
-            return identifiers.Select(i =>
+            var completions = identifiers.Select(i =>
             {
                 var imageSource = glyphService.GetGlyph(i.Glyph, StandardGlyphItem.GlyphItemPublic);
                 var quickInfo = i.IsParent ? i.QuickInfo.Replace("Item", contextSpan.ParentContext?.Name) : i.QuickInfo;
 
                 return new Completion(prefix + i.Name, prefix + i.Name, quickInfo, imageSource, null);
             });
+
+            if (contextSpan.Type == ContextType.Template && contextSpan.Context.Name == nameof(File))
+            {
+                var imageSource = glyphService.GetGlyph(StandardGlyphGroup.GlyphGroupProperty, StandardGlyphItem.GlyphItemPublic);
+                var codeBlock = new[]
+                {
+                    new Completion("${ }", "${\r\n}", "Insert a custom C# code block.", imageSource, null)
+                };
+
+                return codeBlock.Concat(completions);
+            }
+
+            return completions;
         }
 
         // Syntax errors
