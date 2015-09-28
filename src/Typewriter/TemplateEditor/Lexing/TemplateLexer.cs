@@ -1,33 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 using Typewriter.CodeModel;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
     public class TemplateLexer
     {
-        private static readonly char[] operators = "!&|+-/*?=,.:;<>%".ToCharArray();
-        private static readonly string[] keywords =
+        private static readonly char[] _operators = "!&|+-/*?=,.:;<>%".ToCharArray();
+        private static readonly string[] _symbolKeywords = { "as", "class", "extends", "implements", "import", "instanceof", "interface", "module", "new", "namespace", "typeof" };
+        private static readonly string[] _keywords =
         {
             "any", "as", "boolean", "break", "case", "catch", "class", "const", "constructor", "continue", "declare", "default",
-            "do", "else", "enum", "export", "extends", "delete", "debugger", "default", "false", "finally", "for", "from", 
+            "do", "else", "enum", "export", "extends", "delete", "debugger", "default", "false", "finally", "for", "from",
             "function", "get", "if", "implements", "import", "in", "instanceof", "interface", "let", "module", "namespace", "new",
             "null", "number", "of", "private", "protected", "public", "require", "return", "set", "static", "string",
             "super", "switch", "this", "throw", "true", "try", "typeof", "var", "void", "while", "with", "yield"
         };
 
-        private readonly Contexts contexts;
-        private readonly Context fileContext;
+        private readonly Contexts _contexts;
+        private readonly Context _fileContext;
+
+        private bool _isSymbol;
+        private int _objectLiteralEnds;
 
         public TemplateLexer(Contexts contexts)
         {
-            this.contexts = contexts;
-            this.fileContext = contexts.Find(nameof(File));
+            _contexts = contexts;
+            _fileContext = contexts.Find(nameof(File));
         }
 
         public void Tokenize(SemanticModel semanticModel, string code)
         {
-            var context = new Stack<Context>(new[] { fileContext });
+            _objectLiteralEnds = 0;
+            _isSymbol = false;
+
+            var context = new Stack<Context>(new[] { _fileContext });
             Parse(code, semanticModel, context, 0, 0);
 
             if (semanticModel.Tokens.BraceStack.IsBalanced(']') == false)
@@ -54,7 +63,10 @@ namespace Typewriter.TemplateEditor.Lexing
                 if (ParseNumber(stream, semanticModel)) continue;
                 if (ParseOperators(stream, semanticModel)) continue;
                 if (ParseKeywords(stream, semanticModel)) continue;
+                if (ParseSymbols(stream, semanticModel)) continue;
 
+                TerminateSymbol(stream);
+                
                 semanticModel.Tokens.AddBrace(stream);
             }
             while (stream.Advance());
@@ -65,7 +77,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
         private bool ParseCodeBlock(Stream stream, SemanticModel semanticModel, Stack<Context> context)
         {
-            if (stream.Current == '$' && stream.Peek() == '{' && context.Peek() == fileContext)
+            if (stream.Current == '$' && stream.Peek() == '{' && context.Peek() == _fileContext)
             {
                 semanticModel.Tokens.Add(Classifications.Property, stream.Position);
 
@@ -114,7 +126,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
                         if (identifier.IsCollection)
                         {
-                            context.Push(contexts.Find(identifier.Context));
+                            context.Push(_contexts.Find(identifier.Context));
 
                             ParseFilter(stream, semanticModel, context, depth);
                             ParseBlock(stream, semanticModel, context, depth); // template
@@ -130,7 +142,7 @@ namespace Typewriter.TemplateEditor.Lexing
                         }
                         else if (identifier.HasContext)
                         {
-                            context.Push(contexts.Find(identifier.Context));
+                            context.Push(_contexts.Find(identifier.Context));
 
                             //ParseDot(stream, SemanticModel, Contexts.Find(identifier.Context), context); // Identifier
                             ParseBlock(stream, semanticModel, context, depth); // template
@@ -353,9 +365,15 @@ namespace Typewriter.TemplateEditor.Lexing
 
         private bool ParseOperators(Stream stream, SemanticModel semanticModel)
         {
-            if (operators.Contains(stream.Current))
+            if (_operators.Contains(stream.Current))
             {
                 semanticModel.Tokens.Add(Classifications.Operator, stream.Position);
+
+                if (stream.Current == ':')
+                {
+                    while (stream.Peek() == ' ') stream.Advance();
+                    _isSymbol = true;
+                }
                 return true;
             }
 
@@ -364,17 +382,67 @@ namespace Typewriter.TemplateEditor.Lexing
 
         private bool ParseKeywords(Stream stream, SemanticModel semanticModel)
         {
-            var name = stream.PeekWord();
+            var peek = stream.Peek(-1);
 
-            if (name == null) return false;
-
-            if (keywords.Contains(name))
+            if (char.IsLetterOrDigit(peek) == false && peek != '.')
             {
-                semanticModel.Tokens.Add(Classifications.Keyword, stream.Position, name.Length);
+                var name = stream.PeekWord();
+
+                if (name != null && _keywords.Contains(name))
+                {
+                    semanticModel.Tokens.Add(Classifications.Keyword, stream.Position, name.Length);
+                    stream.Advance(name.Length - 1);
+
+                    if (_symbolKeywords.Contains(name))
+                    {
+                        while (stream.Peek() == ' ') stream.Advance();
+                        _isSymbol = true;
+                    }
+
+                    return true;
+                }
             }
 
-            stream.Advance(name.Length - 1);
-            return true;
+            return false;
+        }
+        
+        private bool ParseSymbols(Stream stream, SemanticModel semanticModel)
+        {
+            if (_isSymbol && stream.Position > _objectLiteralEnds)
+            {
+                var name = stream.PeekWord();
+                if (name == null) return false;
+
+                semanticModel.Tokens.Add(Classifications.ClassSymbol, stream.Position, name.Length);
+                stream.Advance(name.Length - 1);
+                
+                return true;
+            }
+
+            return false;
+        }
+
+        private void TerminateSymbol(Stream stream)
+        {
+            if (stream.Current == ' ' || stream.Current == '{' || stream.Current == ';' || stream.Current == '(' || stream.Current == ')' || stream.Current == ',')
+            {
+                _isSymbol = false;
+            }
+
+            // Find object literals
+            if (stream.Current == '{')
+            {
+                var i = 0;
+                while (true) if (stream.Peek(--i) != ' ') break;
+
+                var peek = stream.Peek(i);
+
+                if (peek == '=' || peek == '(' || peek == ',')
+                {
+                    var block = stream.PeekBlock(1, '{', '}');
+                    _objectLiteralEnds = Math.Max(_objectLiteralEnds, stream.Position + block.Length);
+                }
+            }
         }
 
         private Identifier GetIdentifier(Stream stream, SemanticModel semanticModel, Stack<Context> context)
