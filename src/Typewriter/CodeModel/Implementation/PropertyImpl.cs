@@ -8,27 +8,27 @@ namespace Typewriter.CodeModel.Implementation
 {
     public sealed class PropertyImpl : Property
     {
-        private readonly IPropertyMetadata metadata;
+        private readonly IPropertyMetadata _metadata;
 
         private PropertyImpl(IPropertyMetadata metadata, Item parent)
         {
-            this.metadata = metadata;
-            this.Parent = parent;
+            _metadata = metadata;
+            Parent = parent;
         }
 
         public override Item Parent { get; }
 
-        public override string name => CamelCase(metadata.Name);
-        public override string Name => metadata.Name;
-        public override string FullName => metadata.FullName;
-        public override bool HasGetter => metadata.HasGetter;
-        public override bool HasSetter => metadata.HasSetter;
+        public override string name => CamelCase(_metadata.Name.TrimStart('@'));
+        public override string Name => _metadata.Name.TrimStart('@');
+        public override string FullName => _metadata.FullName;
+        public override bool HasGetter => _metadata.HasGetter;
+        public override bool HasSetter => _metadata.HasSetter;
 
-        private AttributeCollection attributes;
-        public override AttributeCollection Attributes => attributes ?? (attributes = AttributeImpl.FromMetadata(metadata.Attributes, this));
+        private AttributeCollection _attributes;
+        public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
 
-        private Type type;
-        public override Type Type => type ?? (type = TypeImpl.FromMetadata(metadata.Type, this));
+        private Type _type;
+        public override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this));
 
         public override string ToString()
         {

@@ -8,23 +8,23 @@ namespace Typewriter.CodeModel.Implementation
 {
     public sealed class EnumValueImpl : EnumValue
     {
-        private readonly IEnumValueMetadata metadata;
+        private readonly IEnumValueMetadata _metadata;
 
         private EnumValueImpl(IEnumValueMetadata metadata, Item parent)
         {
-            this.metadata = metadata;
-            this.Parent = parent;
+            _metadata = metadata;
+            Parent = parent;
         }
 
         public override Item Parent { get; }
 
-        public override string name => CamelCase(metadata.Name);
-        public override string Name => metadata.Name;
-        public override string FullName => metadata.FullName;
-        public override int Value => metadata.Value;
+        public override string name => CamelCase(_metadata.Name.TrimStart('@'));
+        public override string Name => _metadata.Name.TrimStart('@');
+        public override string FullName => _metadata.FullName;
+        public override int Value => _metadata.Value;
 
-        private AttributeCollection attributes;
-        public override AttributeCollection Attributes => attributes ?? (attributes = AttributeImpl.FromMetadata(metadata.Attributes, this));
+        private AttributeCollection _attributes;
+        public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
 
         public override string ToString()
         {

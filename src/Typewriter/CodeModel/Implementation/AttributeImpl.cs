@@ -8,20 +8,20 @@ namespace Typewriter.CodeModel.Implementation
 {
     public sealed class AttributeImpl : Attribute
     {
-        private readonly IAttributeMetadata metadata;
+        private readonly IAttributeMetadata _metadata;
 
         private AttributeImpl(IAttributeMetadata metadata, Item parent)
         {
-            this.metadata = metadata;
-            this.Parent = parent;
+            _metadata = metadata;
+            Parent = parent;
         }
 
         public override Item Parent { get; }
 
-        public override string name => CamelCase(metadata.Name);
-        public override string Name => metadata.Name;
-        public override string FullName => metadata.FullName;
-        public override string Value => GetValue(metadata.Value);
+        public override string name => CamelCase(_metadata.Name.TrimStart('@'));
+        public override string Name => _metadata.Name.TrimStart('@');
+        public override string FullName => _metadata.FullName;
+        public override string Value => GetValue(_metadata.Value);
 
         private static string GetValue(string value)
         {

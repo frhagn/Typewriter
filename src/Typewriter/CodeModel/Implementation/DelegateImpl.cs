@@ -8,32 +8,32 @@ namespace Typewriter.CodeModel.Implementation
 {
     public sealed class DelegateImpl : Delegate
     {
-        private readonly IDelegateMetadata metadata;
+        private readonly IDelegateMetadata _metadata;
 
         private DelegateImpl(IDelegateMetadata metadata, Item parent)
         {
-            this.metadata = metadata;
-            this.Parent = parent;
+            _metadata = metadata;
+            Parent = parent;
         }
 
         public override Item Parent { get; }
 
-        public override string name => CamelCase(metadata.Name);
-        public override string Name => metadata.Name;
-        public override string FullName => metadata.FullName;
-        public override bool IsGeneric => metadata.IsGeneric;
+        public override string name => CamelCase(_metadata.Name.TrimStart('@'));
+        public override string Name => _metadata.Name.TrimStart('@');
+        public override string FullName => _metadata.FullName;
+        public override bool IsGeneric => _metadata.IsGeneric;
 
-        private AttributeCollection attributes;
-        public override AttributeCollection Attributes => attributes ?? (attributes = AttributeImpl.FromMetadata(metadata.Attributes, this));
+        private AttributeCollection _attributes;
+        public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
 
-        private TypeParameterCollection typeParameters;
-        public override TypeParameterCollection TypeParameters => typeParameters ?? (typeParameters = TypeParameterImpl.FromMetadata(metadata.TypeParameters, this));
+        private TypeParameterCollection _typeParameters;
+        public override TypeParameterCollection TypeParameters => _typeParameters ?? (_typeParameters = TypeParameterImpl.FromMetadata(_metadata.TypeParameters, this));
 
-        private ParameterCollection parameters;
-        public override ParameterCollection Parameters => parameters ?? (parameters = ParameterImpl.FromMetadata(metadata.Parameters, this));
+        private ParameterCollection _parameters;
+        public override ParameterCollection Parameters => _parameters ?? (_parameters = ParameterImpl.FromMetadata(_metadata.Parameters, this));
 
-        private Type type;
-        public override Type Type => type ?? (type = TypeImpl.FromMetadata(metadata.Type, this));
+        private Type _type;
+        public override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this));
 
         public override string ToString()
         {

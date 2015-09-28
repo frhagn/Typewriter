@@ -8,32 +8,32 @@ namespace Typewriter.CodeModel.Implementation
 {
     public sealed class EnumImpl : Enum
     {
-        private readonly IEnumMetadata metadata;
+        private readonly IEnumMetadata _metadata;
 
         private EnumImpl(IEnumMetadata metadata, Item parent)
         {
-            this.metadata = metadata;
-            this.Parent = parent;
+            _metadata = metadata;
+            Parent = parent;
         }
 
         public override Item Parent { get; }
 
-        public override string name => CamelCase(metadata.Name);
-        public override string Name => metadata.Name;
-        public override string FullName => metadata.FullName;
-        public override string Namespace => metadata.Namespace;
+        public override string name => CamelCase(_metadata.Name.TrimStart('@'));
+        public override string Name => _metadata.Name.TrimStart('@');
+        public override string FullName => _metadata.FullName;
+        public override string Namespace => _metadata.Namespace;
 
-        private bool? isFlags;
-        public override bool IsFlags => isFlags ?? (isFlags = Attributes.Any(a => a.FullName == "System.FlagsAttribute")).Value;
+        private bool? _isFlags;
+        public override bool IsFlags => _isFlags ?? (_isFlags = Attributes.Any(a => a.FullName == "System.FlagsAttribute")).Value;
 
-        private AttributeCollection attributes;
-        public override AttributeCollection Attributes => attributes ?? (attributes = AttributeImpl.FromMetadata(metadata.Attributes, this));
+        private AttributeCollection _attributes;
+        public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
 
-        private EnumValueCollection values;
-        public override EnumValueCollection Values => values ?? (values = EnumValueImpl.FromMetadata(metadata.Values, this));
+        private EnumValueCollection _values;
+        public override EnumValueCollection Values => _values ?? (_values = EnumValueImpl.FromMetadata(_metadata.Values, this));
 
-        private Class containingClass;
-        public override Class ContainingClass => containingClass ?? (containingClass = ClassImpl.FromMetadata(metadata.ContainingClass, this));
+        private Class _containingClass;
+        public override Class ContainingClass => _containingClass ?? (_containingClass = ClassImpl.FromMetadata(_metadata.ContainingClass, this));
 
         public override string ToString()
         {

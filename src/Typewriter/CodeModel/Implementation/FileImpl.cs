@@ -4,27 +4,27 @@ namespace Typewriter.CodeModel.Implementation
 {
     public sealed class FileImpl : File
     {
-        private readonly IFileMetadata metadata;
+        private readonly IFileMetadata _metadata;
 
         public FileImpl(IFileMetadata metadata)
         {
-            this.metadata = metadata;
+            _metadata = metadata;
         }
 
-        public override string Name => metadata.Name;
-        public override string FullName => metadata.FullName;
+        public override string Name => _metadata.Name;
+        public override string FullName => _metadata.FullName;
 
-        private ClassCollection classes;
-        public override ClassCollection Classes => classes ?? (classes = ClassImpl.FromMetadata(metadata.Classes, this));
+        private ClassCollection _classes;
+        public override ClassCollection Classes => _classes ?? (_classes = ClassImpl.FromMetadata(_metadata.Classes, this));
 
-        private DelegateCollection delegates;
-        public override DelegateCollection Delegates => delegates ?? (delegates = DelegateImpl.FromMetadata(metadata.Delegates, this));
+        private DelegateCollection _delegates;
+        public override DelegateCollection Delegates => _delegates ?? (_delegates = DelegateImpl.FromMetadata(_metadata.Delegates, this));
 
-        private EnumCollection enums;
-        public override EnumCollection Enums => enums ?? (enums = EnumImpl.FromMetadata(metadata.Enums, this));
+        private EnumCollection _enums;
+        public override EnumCollection Enums => _enums ?? (_enums = EnumImpl.FromMetadata(_metadata.Enums, this));
 
-        private InterfaceCollection interfaces;
-        public override InterfaceCollection Interfaces => interfaces ?? (interfaces = InterfaceImpl.FromMetadata(metadata.Interfaces, this));
+        private InterfaceCollection _interfaces;
+        public override InterfaceCollection Interfaces => _interfaces ?? (_interfaces = InterfaceImpl.FromMetadata(_metadata.Interfaces, this));
 
         public override string ToString()
         {
