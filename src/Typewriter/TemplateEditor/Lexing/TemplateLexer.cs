@@ -116,7 +116,10 @@ namespace Typewriter.TemplateEditor.Lexing
                         stream.Advance(identifier.Name.Length);
 
                         var current = context.Pop();
+
+                        //ParseDot(stream, semanticModel, context, depth); // identifier
                         ParseBlock(stream, semanticModel, context, depth); // template
+
                         context.Push(current);
                     }
                     else
@@ -144,7 +147,7 @@ namespace Typewriter.TemplateEditor.Lexing
                         {
                             context.Push(_contexts.Find(identifier.Context));
 
-                            //ParseDot(stream, SemanticModel, Contexts.Find(identifier.Context), context); // Identifier
+                            //ParseDot(stream, semanticModel, context, depth); // identifier
                             ParseBlock(stream, semanticModel, context, depth); // template
 
                             context.Pop();
@@ -182,41 +185,62 @@ namespace Typewriter.TemplateEditor.Lexing
             }
         }
 
-        //private void ParseDot(Stream stream, SemanticModel SemanticModel, Context context, Context parentContext)
+        //private void ParseDot(Stream stream, SemanticModel semanticModel, Stack<Context> context, int depth)
         //{
         //    if (stream.Peek() == '.')
         //    {
         //        stream.Advance();
-
-        //        var word = stream.PeekWord(1);
-        //        var identifier = context.GetIdentifier(word);
-
-        //        SemanticModel.AddContext(context, stream.Position+1, stream.Position + 2);
-
+        //        var identifier = GetIdentifier(stream, semanticModel, context);
+                
         //        if (identifier != null)
         //        {
-        //            if (IsValidIdentifier(stream, identifier))
+        //            var classification = GetPropertyClassification(depth);
+        //            var parent = context.Skip(1).FirstOrDefault();
+
+        //            semanticModel.Tokens.Add(classification, stream.Position);
+        //            semanticModel.ContextSpans.Add(context.Peek(), parent, ContextType.Template, stream.Position, stream.Position + 1);
+
+        //            if (identifier.IsParent)
         //            {
-        //                SemanticModel.AddToken(Classifications.Property, stream.Line, stream.Position);
-        //                SemanticModel.AddToken(Classifications.Property, stream.Line, stream.Position + 1, word.Length, identifier.QuickInfo);
-        //                stream.Advance(word.Length);
+        //                semanticModel.Tokens.Add(classification, stream.Position + 1, identifier.Name.Length, identifier.QuickInfo.Replace("$parent", parent?.Name.ToLowerInvariant()));
+        //                stream.Advance(identifier.Name.Length);
+                        
+        //                var current = context.Pop();
+
+        //                ParseDot(stream, semanticModel, context, depth); // identifier
+        //                ParseBlock(stream, semanticModel, context, depth); // template
+
+        //                context.Push(current);
+        //            }
+        //            else
+        //            {
+        //                semanticModel.Tokens.Add(classification, stream.Position + 1, identifier.Name.Length, identifier.QuickInfo);
+        //                stream.Advance(identifier.Name.Length);
 
         //                if (identifier.IsCollection)
         //                {
-        //                    var subContext = Contexts.Find(identifier.Context);
-        //                    ParseFilter(stream, SemanticModel, subContext, braces);
-        //                    ParseBlock(stream, SemanticModel, subContext, braces); // template
-        //                    ParseBlock(stream, SemanticModel, context, braces); // separator
+        //                    context.Push(_contexts.Find(identifier.Context));
+
+        //                    ParseFilter(stream, semanticModel, context, depth);
+        //                    ParseBlock(stream, semanticModel, context, depth); // template
+
+        //                    context.Pop();
+
+        //                    ParseBlock(stream, semanticModel, context, depth); // separator
         //                }
         //                else if (identifier.IsBoolean)
         //                {
-        //                    ParseBlock(stream, SemanticModel, parentContext, braces); // true
-        //                    ParseBlock(stream, SemanticModel, parentContext, braces); // false
+        //                    ParseBlock(stream, semanticModel, context, depth); // true
+        //                    ParseBlock(stream, semanticModel, context, depth); // false
         //                }
         //                else if (identifier.HasContext)
         //                {
-        //                    ParseDot(stream, SemanticModel, Contexts.Find(identifier.Context), parentContext, braces); // Identifier
-        //                    ParseBlock(stream, SemanticModel, Contexts.Find(identifier.Context), braces); // template
+        //                    context.Push(_contexts.Find(identifier.Context));
+
+        //                    ParseDot(stream, semanticModel, context, depth); // identifier
+        //                    ParseBlock(stream, semanticModel, context, depth); // template
+
+        //                    context.Pop();
         //                }
         //            }
         //        }
