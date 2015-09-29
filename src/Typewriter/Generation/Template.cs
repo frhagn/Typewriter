@@ -11,24 +11,24 @@ namespace Typewriter.Generation
 {
     public class Template
     {
-        private readonly object locker = new object();
+        private readonly object _locker = new object();
 
-        private readonly List<Type> customExtensions = new List<Type>();
-        private readonly string template;
-        private readonly string templatePath;
-        private readonly string projectPath;
-        private readonly ProjectItem projectItem;
+        private readonly List<Type> _customExtensions = new List<Type>();
+        private readonly string _template;
+        private readonly string _templatePath;
+        private readonly string _projectPath;
+        private readonly ProjectItem _projectItem;
 
         public Template(ProjectItem projectItem)
         {
             var stopwatch = Stopwatch.StartNew();
 
-            this.projectItem = projectItem;
-            this.templatePath = projectItem.Path();
-            this.projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            
-            var code = System.IO.File.ReadAllText(templatePath);
-            this.template = TemplateCodeParser.Parse(code, customExtensions);
+            _projectItem = projectItem;
+            _templatePath = projectItem.Path();
+            _projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+
+            var code = System.IO.File.ReadAllText(_templatePath);
+            _template = TemplateCodeParser.Parse(code, _customExtensions);
 
             stopwatch.Stop();
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
@@ -36,7 +36,7 @@ namespace Typewriter.Generation
 
         public string Render(File file, out bool success)
         {
-            return Parser.Parse(template, customExtensions, file, out success);
+            return Parser.Parse(_template, _customExtensions, file, out success);
         }
 
         public bool RenderFile(File file, bool saveProjectFile)
@@ -61,93 +61,71 @@ namespace Typewriter.Generation
 
         private void SaveFile(string path, string output, bool saveProjectFile)
         {
-            ProjectItem item;
-            var outputPath = GetOutputPath(path);
-
-            if (HasChanged(outputPath, output))
+            lock (_locker)
             {
-                System.IO.File.WriteAllText(outputPath, output);
-                item = FindProjectItem(outputPath) ?? projectItem.ProjectItems.AddFromFile(outputPath);
-            }
-            else
-            {
-                item = FindProjectItem(outputPath);
-            }
+                ProjectItem item;
+                var outputPath = GetOutputPath(path);
 
-            SetMappedSourceFile(item, path);
-            if (saveProjectFile)
-                projectItem.ContainingProject.Save();
+                if (HasChanged(outputPath, output))
+                {
+                    CheckOutFileFromSourceControl(outputPath);
+
+                    System.IO.File.WriteAllText(outputPath, output);
+                    item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
+                }
+                else
+                {
+                    item = FindProjectItem(outputPath);
+                }
+
+                SetMappedSourceFile(item, path);
+
+                if (saveProjectFile)
+                    _projectItem.ContainingProject.Save();
+            }
         }
 
         public void DeleteFile(string path, bool saveProjectFile)
         {
-            lock (locker)
+            lock (_locker)
             {
                 var item = GetExistingItem(path);
 
                 if (item != null)
                 {
-                    var lastItem = FindLastProjectItem(path);
-                    if (lastItem != null && lastItem != item)
-                    {
-                        var outputPath = item.Path();
-
-                        System.IO.File.Delete(outputPath);
-                        System.IO.File.Move(lastItem.Path(), outputPath);
-                        SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
-                        lastItem.Remove();
-                    }
-                    else
-                    {
-                        item.Delete();
-                    }
+                    item.Delete();
 
                     if (saveProjectFile)
-                        projectItem.ContainingProject.Save();
+                        _projectItem.ContainingProject.Save();
                 }
             }
         }
 
         public void RenameFile(string oldPath, string newPath, bool saveProjectFile)
         {
-            lock (locker)
+            lock (_locker)
             {
                 var item = GetExistingItem(oldPath);
 
                 if (item != null)
                 {
-                    if (Path.GetFileName(oldPath).Equals(Path.GetFileName(newPath)))
+                    if (Path.GetFileName(oldPath)?.Equals(Path.GetFileName(newPath)) ?? false)
                     {
                         SetMappedSourceFile(item, newPath);
+
                         if (saveProjectFile)
-                            projectItem.ContainingProject.Save();
+                            _projectItem.ContainingProject.Save();
+
                         return;
                     }
 
                     var newOutputPath = GetOutputPath(newPath);
-                    var oldOutputPath = item.Path();
-                    var lastItem = FindLastProjectItem(oldPath);
 
-                    if (lastItem != null && lastItem != item)
-                    {
-                        System.IO.File.Move(oldOutputPath, newOutputPath);
-                        var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
-                        SetMappedSourceFile(newItem, newPath);
-
-                        System.IO.File.Move(lastItem.Path(), oldOutputPath);
-                        SetMappedSourceFile(item, GetMappedSourceFile(lastItem));
-                        lastItem.Remove();
-                    }
-                    else
-                    {
-                        System.IO.File.Move(oldOutputPath, newOutputPath);
-                        var newItem = projectItem.ProjectItems.AddFromFile(newOutputPath);
-                        SetMappedSourceFile(newItem, newPath);
-                        item.Remove();
-                    }
+                    item.Name = Path.GetFileName(newOutputPath);
+                    SetMappedSourceFile(item, newPath);
 
                     if (saveProjectFile)
-                        projectItem.ContainingProject.Save();
+                        _projectItem.ContainingProject.Save();
                 }
             }
         }
@@ -157,32 +135,32 @@ namespace Typewriter.Generation
             if (item == null) return null;
 
             var value = item.Properties.Item("CustomToolNamespace").Value as string;
-            var path = string.IsNullOrWhiteSpace(value) ? null : Path.GetFullPath(Path.Combine(projectPath, value));
+            var path = string.IsNullOrWhiteSpace(value) ? null : Path.GetFullPath(Path.Combine(_projectPath, value));
 
             return path;
         }
 
         private void SetMappedSourceFile(ProjectItem item, string path)
         {
-            if(projectItem == null) throw new ArgumentException("item");
-            if(path == null) throw new ArgumentException("path");
+            if (_projectItem == null) throw new ArgumentException("item");
+            if (path == null) throw new ArgumentException("path");
 
             var pathUri = new Uri(path);
-            var folderUri = new Uri(projectPath.Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar);
+            var folderUri = new Uri(_projectPath.Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar);
             var relativeSourcePath = Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
 
             if (relativeSourcePath.Equals(GetMappedSourceFile(item), StringComparison.InvariantCultureIgnoreCase) == false)
             {
                 var property = item.Properties.Item("CustomToolNamespace");
-                if(property== null) throw new InvalidOperationException("Cannot find CustomToolNamespace property");
+                if (property == null) throw new InvalidOperationException("Cannot find CustomToolNamespace property");
 
                 property.Value = relativeSourcePath;
             }
         }
-        
+
         private ProjectItem GetExistingItem(string path)
         {
-            foreach (ProjectItem item in projectItem.ProjectItems)
+            foreach (ProjectItem item in _projectItem.ProjectItems)
             {
                 try
                 {
@@ -202,7 +180,7 @@ namespace Typewriter.Generation
 
         private string GetOutputPath(string path)
         {
-            var directory = Path.GetDirectoryName(templatePath);
+            var directory = Path.GetDirectoryName(_templatePath);
             var fileName = Path.GetFileNameWithoutExtension(path);
             var outputPath = Path.Combine(directory, fileName) + ".ts";
 
@@ -236,7 +214,7 @@ namespace Typewriter.Generation
 
         private ProjectItem FindProjectItem(string path)
         {
-            foreach (ProjectItem item in projectItem.ProjectItems)
+            foreach (ProjectItem item in _projectItem.ProjectItems)
             {
                 try
                 {
@@ -255,35 +233,30 @@ namespace Typewriter.Generation
             return null;
         }
 
-        private ProjectItem FindLastProjectItem(string path)
+        private void CheckOutFileFromSourceControl(string path)
         {
-            ProjectItem lastItem = null;
-            var directory = Path.GetDirectoryName(templatePath);
-            var filename = Path.GetFileNameWithoutExtension(path);
-
-            for (var i = 0; i < projectItem.ProjectItems.Count; i++)
+            try
             {
-                try
-                {
-                    var indexedName = (i > 0) ? string.Format("{0} ({1})", filename, i) : filename;
-                    var outputPath = Path.Combine(directory, indexedName) + ".ts";
-                    var item = FindProjectItem(outputPath);
+                var dte = _projectItem.DTE;
+                var fileExists = System.IO.File.Exists(path) && dte.Solution.FindProjectItem(path) != null;
+                var isUnderScc = dte.SourceControl.IsItemUnderSCC(path);
+                var isCheckedOut = dte.SourceControl.IsItemCheckedOut(path);
 
-                    if (item != null) lastItem = item;
-                }
-                catch
+                if (fileExists && isUnderScc && isCheckedOut == false)
                 {
-                    // Can't read properties from project item sometimes when deleting miltiple files
+                    dte.SourceControl.CheckOutItem(path);
                 }
             }
-
-            return lastItem;
+            catch (Exception exception)
+            {
+                Log.Error(exception.Message);
+            }
         }
 
         public void VerifyProjectItem()
         {
             // ReSharper disable once UnusedVariable
-            var dummy = projectItem.FileNames[1];
+            var dummy = _projectItem.FileNames[1];
         }
     }
 }
