@@ -362,11 +362,9 @@ namespace Typewriter.TemplateEditor.Controllers
                 _currentSession.Dismiss();
                 return false;
             }
-            else
-            {
-                _currentSession.Commit();
-                return true;
-            }
+
+            _currentSession.Commit();
+            return true;
         }
 
         bool StartSession()
@@ -374,21 +372,17 @@ namespace Typewriter.TemplateEditor.Controllers
             if (_currentSession != null)
                 return false;
 
-            SnapshotPoint caret = textView.Caret.Position.BufferPosition;
+            var caret = textView.Caret.Position.BufferPosition;
 
-            if (caret.Position == 0)
-                return false;
+            //if (caret.Position == 0)
+            //    return false;
 
-            ITextSnapshot snapshot = caret.Snapshot;
+            var snapshot = caret.Snapshot;
 
-            if (!provider.CompletionBroker.IsCompletionActive(textView))
-            {
-                _currentSession = provider.CompletionBroker.CreateCompletionSession(textView, snapshot.CreateTrackingPoint(caret, PointTrackingMode.Positive), true);
-            }
-            else
-            {
-                _currentSession = provider.CompletionBroker.GetSessions(textView)[0];
-            }
+            _currentSession = provider.CompletionBroker.IsCompletionActive(textView) ?
+                provider.CompletionBroker.GetSessions(textView)[0] :
+                provider.CompletionBroker.CreateCompletionSession(textView, snapshot.CreateTrackingPoint(caret, PointTrackingMode.Positive), true);
+
             _currentSession.Dismissed += (sender, args) => _currentSession = null;
 
             if (!_currentSession.IsStarted)
