@@ -60,7 +60,23 @@
                 <div class="row">
                     <div class="col-sm-10 col-sm-push-1">
                         <h1>Change log</h1>
-                                                
+
+                        <h3>Typewriter 1.1</h3>
+                        <p class="lead">This release provides improved syntax coloring in the template editor, support for using TFS Server Workspaces and improved support for working with custom methods.</p>
+
+                        <h4>1.1.0</h4>
+                        <ul>
+                            <li>Improved syntax coloring in the template editor.</li>
+                            <li>Moved $Default from type to extensions. (Note: To use $Default, add "using Typewriter.Extensions.Types;" to your template.)</li>
+                            <li>Unwrap returns the unwrapped type instead of the type name.</li>
+                            <li>Added $IsDefined to types to determine which types are defined in the current solution.</li>
+                            <li>Removed Visual Studio 2013 remarks from quick info when using Visual Studio 2015.</li>
+                            <li>Added statement completion for adding custom code blocks.</li>
+                            <li>Added support for automatic check-out when using TFS with a server workspace.</li>
+                            <li>Added support for returning collections from custom methods.</li>
+                            <li>Bug fixes.</li>
+                        </ul>
+
                         <h3>Typewriter 1.0</h3>
                         <p class="lead">This release provides support for Visual Studio 2015 RTM, Roslyn-based code generation (vs 2015 only), improved template editor experience with statement completion and syntax coloring for templates, lambda filters and custom code blocks.</p>
 
