@@ -1,94 +1,106 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell.Interop;
 using Typewriter.VisualStudio;
 using InteropConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
-using Timer = System.Timers.Timer;
 
 namespace Typewriter.Generation.Controllers
 {
     public sealed class EventQueue : IDisposable
     {
         private readonly IVsStatusbar statusBar;
-        private readonly ICollection<GenerationEvent> queue = new HashSet<GenerationEvent>();
-        private readonly object locker = new object();
-        private Timer timer = new Timer(500);
-
-        private DateTime timestamp = DateTime.Now;
+        private readonly BlockingQueue<GenerationEvent> _queue;
+        private readonly Task _queueTask;
 
         public EventQueue(IVsStatusbar statusBar)
         {
             this.statusBar = statusBar;
-            SetupTimer();
+            _queue = new BlockingQueue<GenerationEvent>();
+
+            _queueTask = Task.Run(() => ProcessQueue());
         }
+
+        private void ProcessQueue()
+        {
+            do
+            {
+                try
+                {
+                    var generationEvent = _queue.Dequeue();
+
+                    Thread.Sleep(100);
+
+                    try
+                    {
+
+                        var count = (uint)_queue.Count+1;
+                        
+                        object icon;
+                        uint cookie;
+
+                        PrepareStatusbar(out cookie, out icon);
+
+                        var stopwatch = Stopwatch.StartNew();
+                        generationEvent.Action(generationEvent);
+                        uint i = 1;
+                        while (_queue.Count > 0)
+                        {
+                            generationEvent = _queue.Dequeue();
+
+                            generationEvent.Action(generationEvent);
+
+                            UpdateStatusbarProgress(ref cookie, ++i, count);
+
+                        }
+                        
+                        stopwatch.Stop();
+
+                        Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
+
+                        ClearStatusbar(cookie, ref icon);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error processing queue: " + ex.Message);
+                    }
+
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Log.Debug("Queue Closed: " + ex.Message);
+                }
+
+
+
+            } while (!(_queue.Closed));
+
+        }
+
 
         public void Enqueue(Action<GenerationEvent> action, GenerationType type, params string[] paths)
         {
             if (paths[0].EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase) == false) return;
+            
+            var generationEvent = new GenerationEvent { Action = action, Type = type, Paths = paths };
 
-            lock (locker)
+            var added = _queue.EnqueueIfNotContains(generationEvent);
+            if (added)
             {
-                this.timestamp = DateTime.Now;
-
-                var generationEvent = new GenerationEvent { Action = action, Type = type, Paths = paths };
-                if (queue.Any(e => e.Equals(generationEvent)))
-                {
-                    return;
-                }
-
-                queue.Add(generationEvent);
 
                 Log.Debug("{0} queued {1}", generationEvent.Type, string.Join(" -> ", generationEvent.Paths));
             }
-        }
-
-        private void SetupTimer()
-        {
-            this.timer.Enabled = true;
-            this.timer.Elapsed += (sender, args) =>
+            else
             {
-                GenerationEvent[] items;
+                Log.Debug("{0} already in queue {1}", generationEvent.Type, string.Join(" -> ", generationEvent.Paths));
 
-                lock (locker)
-                {
-                    if (timestamp.AddMilliseconds(500) > DateTime.Now)
-                    {
-                        return;
-                    }
+            }
 
-                    items = queue.ToArray();
-                    queue.Clear();
-                }
-
-                var count = (uint)items.Length;
-                if (count <= 0) return;
-
-
-                object icon;
-                uint cookie;
-                
-                PrepareStatusbar(out cookie, out icon);
-                
-                var stopwatch = Stopwatch.StartNew();
-
-                uint i = 0;
-                var parallellQueue = items.AsParallel();
-                parallellQueue.ForAll(item =>
-                {
-                    item.Action(item);
-                    UpdateStatusbarProgress(ref cookie, ++i, count);
-                });
-
-                stopwatch.Stop();
-                Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
-
-                ClearStatusbar(cookie, ref icon);
-            };
         }
-
+        
         private void PrepareStatusbar(out uint cookie, out object icon)
         {
             cookie = 0;
@@ -142,16 +154,14 @@ namespace Typewriter.Generation.Controllers
         }
 
         private bool disposed;
+
         public void Dispose()
         {
             if (disposed) return;
 
             disposed = true;
-            if (this.timer != null)
-            {
-                this.timer.Dispose();
-                this.timer = null;
-            }
+            _queue.Close();
+            _queueTask.Dispose();
         }
     }
 
@@ -162,7 +172,7 @@ namespace Typewriter.Generation.Controllers
         Rename
     }
 
-    public class GenerationEvent
+    public class GenerationEvent : IEquatable<GenerationEvent>
     {
         public GenerationType Type { get; set; }
         public string[] Paths { get; set; }
@@ -171,7 +181,7 @@ namespace Typewriter.Generation.Controllers
         public bool Equals(GenerationEvent other)
         {
             if (other == null) return false;
-            return (Type == other.Type) && Action == other.Action && (Paths.SequenceEqual(other.Paths));
+            return (Type == other.Type) && (Paths.SequenceEqual(other.Paths));
         }
     }
 }

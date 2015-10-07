@@ -13,7 +13,6 @@ namespace Typewriter.Generation.Controllers
 {
     public class TemplateController
     {
-        private static readonly object locker = new object();
 
         private readonly DTE dte;
         private readonly IMetadataProvider metadataProvider;
@@ -117,7 +116,7 @@ namespace Typewriter.Generation.Controllers
                 var metadata = metadataProvider.GetFile(path);
                 var file = new FileImpl(metadata);
 
-                var success = template.RenderFile(file, false);
+                var success = template.RenderFile(file);
 
                 if (success == false)
                 {
@@ -138,9 +137,7 @@ namespace Typewriter.Generation.Controllers
         private ICollection<Template> LoadTemplates()
         {
             var stopwatch = Stopwatch.StartNew();
-
-            //lock (locker)
-            //{
+            
             if (this.templates == null)
             {
                 var items = GetProjectItems();
@@ -176,7 +173,6 @@ namespace Typewriter.Generation.Controllers
                     }
                 }
             }
-            //}
 
             stopwatch.Stop();
             Log.Debug("Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds);
@@ -218,7 +214,7 @@ namespace Typewriter.Generation.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Log.Debug("Error finding project file name ({0})", ex.Message);
+                    Log.Error("Error finding project file name ({0})", ex.Message);
                     return null;
                 }
             });
@@ -227,7 +223,7 @@ namespace Typewriter.Generation.Controllers
                 .SelectMany(p => new System.IO.FileInfo(p).Directory?.GetFiles("*.tst", SearchOption.AllDirectories))
                 .Where(f => f != null);
 
-            return files.Select(a => dte.Solution.FindProjectItem(a.FullName));
+            return files.Select(a => dte.Solution.FindProjectItem(a.FullName)).Where(f=>f!=null);
         }
     }
 }

@@ -11,8 +11,6 @@ namespace Typewriter.Generation
 {
     public class Template
     {
-        private readonly object _locker = new object();
-
         private readonly List<Type> _customExtensions = new List<Type>();
         private readonly string _template;
         private readonly string _templatePath;
@@ -39,7 +37,7 @@ namespace Typewriter.Generation
             return Parser.Parse(_template, _customExtensions, file, out success);
         }
 
-        public bool RenderFile(File file, bool saveProjectFile)
+        public bool RenderFile(File file)
         {
             bool success;
             var output = Render(file, out success);
@@ -48,89 +46,74 @@ namespace Typewriter.Generation
             {
                 if (output == null)
                 {
-                    DeleteFile(file.FullName, saveProjectFile);
+                    DeleteFile(file.FullName);
                 }
                 else
                 {
-                    SaveFile(file.FullName, output, saveProjectFile);
+                    SaveFile(file.FullName, output);
                 }
             }
 
             return success;
         }
 
-        private void SaveFile(string path, string output, bool saveProjectFile)
+        private void SaveFile(string path, string output)
         {
-            lock (_locker)
+            
+            ProjectItem item;
+            var outputPath = GetOutputPath(path);
+
+            if (HasChanged(outputPath, output))
             {
-                ProjectItem item;
-                var outputPath = GetOutputPath(path);
+                CheckOutFileFromSourceControl(outputPath);
 
-                if (HasChanged(outputPath, output))
-                {
-                    CheckOutFileFromSourceControl(outputPath);
-
-                    System.IO.File.WriteAllText(outputPath, output);
-                    item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
-                }
-                else
-                {
-                    item = FindProjectItem(outputPath);
-                }
-
-                SetMappedSourceFile(item, path);
-
-                if (saveProjectFile)
-                    SaveProjectFile();
-
+                System.IO.File.WriteAllText(outputPath, output);
+                item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
             }
+            else
+            {
+                item = FindProjectItem(outputPath);
+            }
+
+            SetMappedSourceFile(item, path);
+            
+            
         }
 
-        public void DeleteFile(string path, bool saveProjectFile)
+        public void DeleteFile(string path)
         {
-            lock (_locker)
+            
+            var item = GetExistingItem(path);
+
+            if (item != null)
             {
-                var item = GetExistingItem(path);
+                item.Delete();
+                
 
-                if (item != null)
-                {
-                    item.Delete();
-
-                    if (saveProjectFile)
-                        SaveProjectFile();
-
-                }
             }
+            
         }
 
-        public void RenameFile(string oldPath, string newPath, bool saveProjectFile)
+        public void RenameFile(string oldPath, string newPath)
         {
-            lock (_locker)
+            var item = GetExistingItem(oldPath);
+
+            if (item != null)
             {
-                var item = GetExistingItem(oldPath);
-
-                if (item != null)
+                if (Path.GetFileName(oldPath)?.Equals(Path.GetFileName(newPath)) ?? false)
                 {
-                    if (Path.GetFileName(oldPath)?.Equals(Path.GetFileName(newPath)) ?? false)
-                    {
-                        SetMappedSourceFile(item, newPath);
-
-                        if (saveProjectFile)
-                            SaveProjectFile();
-
-
-                        return;
-                    }
-
-                    var newOutputPath = GetOutputPath(newPath);
-
-                    item.Name = Path.GetFileName(newOutputPath);
                     SetMappedSourceFile(item, newPath);
-
-                    if (saveProjectFile)
-                        SaveProjectFile();
+                    
+                    return;
                 }
+
+                var newOutputPath = GetOutputPath(newPath);
+
+                item.Name = Path.GetFileName(newOutputPath);
+                SetMappedSourceFile(item, newPath);
+
             }
+            
         }
 
         private string GetMappedSourceFile(ProjectItem item)
