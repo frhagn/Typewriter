@@ -81,7 +81,8 @@ namespace Typewriter.Generation
                 SetMappedSourceFile(item, path);
 
                 if (saveProjectFile)
-                    _projectItem.ContainingProject.Save();
+                    SaveProjectFile();
+
             }
         }
 
@@ -96,7 +97,8 @@ namespace Typewriter.Generation
                     item.Delete();
 
                     if (saveProjectFile)
-                        _projectItem.ContainingProject.Save();
+                        SaveProjectFile();
+
                 }
             }
         }
@@ -114,7 +116,8 @@ namespace Typewriter.Generation
                         SetMappedSourceFile(item, newPath);
 
                         if (saveProjectFile)
-                            _projectItem.ContainingProject.Save();
+                            SaveProjectFile();
+
 
                         return;
                     }
@@ -125,7 +128,7 @@ namespace Typewriter.Generation
                     SetMappedSourceFile(item, newPath);
 
                     if (saveProjectFile)
-                        _projectItem.ContainingProject.Save();
+                        SaveProjectFile();
                 }
             }
         }
@@ -257,6 +260,12 @@ namespace Typewriter.Generation
         {
             // ReSharper disable once UnusedVariable
             var dummy = _projectItem.FileNames[1];
+        }
+
+        public void SaveProjectFile()
+        {
+            Log.Debug("Saving Project File: {0} ", _projectItem.ContainingProject.FullName);
+            _projectItem.ContainingProject.Save();
         }
     }
 }

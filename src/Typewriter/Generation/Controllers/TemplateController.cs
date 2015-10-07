@@ -80,6 +80,10 @@ namespace Typewriter.Generation.Controllers
 
             try
             {
+                var stopwatch = Stopwatch.StartNew();
+
+                Log.Debug("FileSaved {0}", path);
+
                 var projectItem = dte.Solution.FindProjectItem(path);
                 var template = new Template(projectItem);
 
@@ -87,6 +91,13 @@ namespace Typewriter.Generation.Controllers
                 {
                     eventQueue.Enqueue(generationEvent => Render(template, generationEvent), GenerationType.Render, item.Path());
                 }
+
+                template.SaveProjectFile();
+
+                stopwatch.Stop();
+                Log.Debug("FileSaved completed in {0} ms", stopwatch.ElapsedMilliseconds);
+
+
             }
             catch (Exception e)
             {
@@ -199,7 +210,7 @@ namespace Typewriter.Generation.Controllers
 
         private IEnumerable<ProjectItem> GetProjectItems()
         {
-            var projects = dte.Solution.AllProjetcs().Select(p =>
+            var projects = dte.Solution.AllProjects().Select(p =>
             {
                 try
                 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EnvDTE;
 using EnvDTE80;
 using Typewriter.VisualStudio;
@@ -22,7 +23,7 @@ namespace Typewriter.Generation.Controllers
             return null;
         }
 
-        public static IEnumerable<Project> AllProjetcs(this Solution solution)
+        public static IEnumerable<Project> AllProjects(this Solution solution)
         {
             return GetProjects(solution.Projects);
         }
@@ -30,7 +31,7 @@ namespace Typewriter.Generation.Controllers
         public static IEnumerable<ProjectItem> AllProjectItems(this Project project)
         {
             if (project.ProjectItems == null)
-                return new List<ProjectItem>();
+                return Enumerable.Empty<ProjectItem>();
 
             return GetProjectItems(project.ProjectItems);
         }
