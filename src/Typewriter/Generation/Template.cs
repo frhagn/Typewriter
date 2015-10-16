@@ -12,10 +12,13 @@ namespace Typewriter.Generation
     public class Template
     {
         private readonly List<Type> _customExtensions = new List<Type>();
-        private readonly string _template;
         private readonly string _templatePath;
         private readonly string _projectPath;
+        private readonly string _projectFullName;
         private readonly ProjectItem _projectItem;
+        private Lazy<string> _template;
+        private bool _templateCompileException;
+        private bool _templateCompiled;
 
         public Template(ProjectItem projectItem)
         {
@@ -23,18 +26,51 @@ namespace Typewriter.Generation
 
             _projectItem = projectItem;
             _templatePath = projectItem.Path();
-            _projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+            _projectFullName = projectItem.ContainingProject.FullName;
+            _projectPath = Path.GetDirectoryName(_projectFullName);
 
-            var code = System.IO.File.ReadAllText(_templatePath);
-            _template = TemplateCodeParser.Parse(code, _customExtensions);
+
+            _template = LazyTemplate();
 
             stopwatch.Stop();
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
         }
 
+        private Lazy<string> LazyTemplate()
+        {
+            _templateCompiled = false;
+            _templateCompileException = false;
+
+            return new Lazy<string>(() =>
+            {
+                var code = System.IO.File.ReadAllText(_templatePath);
+                try
+                {
+                    var result = TemplateCodeParser.Parse(code, _customExtensions);
+                    _templateCompiled = true;
+                    return result;
+                }
+                catch (Exception)
+                {
+                    _templateCompileException = true;
+                    throw;
+                }
+            });
+        }
+
         public string Render(File file, out bool success)
         {
-            return Parser.Parse(_template, _customExtensions, file, out success);
+            try
+            {
+                return Parser.Parse(_template.Value, _customExtensions, file, out success);
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message + " Template: " + _templatePath);
+                success = false;
+                return null;
+            }
         }
 
         public bool RenderFile(File file)
@@ -247,8 +283,35 @@ namespace Typewriter.Generation
 
         public void SaveProjectFile()
         {
-            Log.Debug("Saving Project File: {0} ", _projectItem.ContainingProject.FullName);
+            Log.Debug("Saving Project File: {0} ", _projectFullName);
+            var stopwatch = Stopwatch.StartNew();
+
             _projectItem.ContainingProject.Save();
+
+            stopwatch.Stop();
+            Log.Debug("SaveProjectFile completed in {0} ms", stopwatch.ElapsedMilliseconds);
+        }
+
+        public string ProjectFullName { get { return _projectFullName; } }
+
+        public bool IsCompiled
+        {
+            get { return _templateCompiled; }
+        }
+
+        public bool HasCompileException
+        {
+            get { return _templateCompileException; }
+        }
+
+        public string TemplatePath
+        {
+            get { return _templatePath; }
+        }
+
+        public void Reload()
+        {
+            _template = LazyTemplate();
         }
     }
 }

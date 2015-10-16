@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
 using Typewriter.VisualStudio;
+using VSLangProj;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -28,12 +30,12 @@ namespace Typewriter.Generation.Controllers
             return GetProjects(solution.Projects);
         }
 
-        public static IEnumerable<ProjectItem> AllProjectItems(this Project project)
+        public static IEnumerable<ProjectItem> AllProjectItems(this Project project, string extension)
         {
             if (project.ProjectItems == null)
                 return Enumerable.Empty<ProjectItem>();
 
-            return GetProjectItems(project.ProjectItems);
+            return GetProjectItems(project.ProjectItems, extension);
         }
 
         private static IEnumerable<Project> GetProjects(Projects projects)
@@ -87,21 +89,56 @@ namespace Typewriter.Generation.Controllers
             return list;
         }
 
-        private static IEnumerable<ProjectItem> GetProjectItems(ProjectItems projectItems)
+        private static IEnumerable<ProjectItem> GetProjectItems(ProjectItems projectItems, string extension)
         {
-            var items = new List<ProjectItem>();
-
             foreach (ProjectItem item in projectItems)
             {
-                items.Add(item);
-
-                if (item.ProjectItems != null)
+                if (item.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    items.AddRange(GetProjectItems(item.ProjectItems));
+                    yield return item;
+                }
+
+                if (item.ProjectItems != null && item.ProjectItems.Count>0)
+                {
+                    foreach (var subitem in GetProjectItems(item.ProjectItems, extension))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+            
+        }
+
+
+        public static IEnumerable<ProjectItem> GetReferencedProjectItems(this VSProject vsproject, string extension)
+        {
+            
+            foreach (Reference reference in vsproject.References)
+            {
+                var sp = reference.SourceProject;
+                if (sp != null)
+                {
+                    foreach (var item in sp.AllProjectItems(extension))
+                    {
+                        yield return item;
+                    }
                 }
             }
 
-            return items;
+            foreach (var item in vsproject.Project.AllProjectItems(extension))
+            {
+                yield return item;
+            }
+            
         }
+
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
+        {
+            foreach (var item in items)
+            {
+                action(item);
+            }
+        }
+
     }
 }

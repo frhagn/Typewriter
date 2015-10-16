@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Threading;
 using EnvDTE;
-using Typewriter.CodeModel;
 using Typewriter.CodeModel.Implementation;
 using Typewriter.Metadata.Providers;
 using Typewriter.VisualStudio;
+using VSLangProj;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -17,79 +14,120 @@ namespace Typewriter.Generation.Controllers
         private readonly DTE dte;
         private readonly IMetadataProvider metadataProvider;
         private readonly TemplateController templateController;
-        private readonly EventQueue eventQueue;
-
-        public GenerationController(DTE dte, IMetadataProvider metadataProvider, SolutionMonitor solutionMonitor, TemplateController templateController, EventQueue eventQueue)
+        private readonly IEventQueue eventQueue;
+        
+        public GenerationController(DTE dte, IMetadataProvider metadataProvider, TemplateController templateController, IEventQueue eventQueue)
         {
             this.dte = dte;
             this.metadataProvider = metadataProvider;
             this.templateController = templateController;
             this.eventQueue = eventQueue;
-
-            solutionMonitor.FileAdded += (sender, args) => Process(GenerationType.Render, args.Path);
-            solutionMonitor.FileChanged += (sender, args) => Process(GenerationType.Render, args.Path);
-            solutionMonitor.FileDeleted += (sender, args) => Process( GenerationType.Delete, args.Path);
-            solutionMonitor.FileRenamed += (sender, args) => Process( GenerationType.Rename, args.OldPath, args.NewPath);
         }
 
-        private void Process(GenerationType type, params string[] paths)
-        {
-            if (paths[0].EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase) == false) return;
 
-            eventQueue.Enqueue(Render, type, paths);
-
-        }
-        
-        
-        private void Render(GenerationEvent generationEvent)
+        public void OnTemplateChanged(string templatePath)
         {
-            try
+
+            Log.Debug("{0} queued {1}", GenerationType.Template, templatePath);
+
+            var projectItem = dte.Solution.FindProjectItem(templatePath);
+
+            var vsProject = projectItem.ContainingProject.Object as VSProject;
+            var referencedItems = vsProject.GetReferencedProjectItems(Constants.CsExtension).Select(m => m.Path()).ToArray();
+
+            Log.Debug(" Will Check/Render {0} .cs files in referenced projects", referencedItems.Length);
+
+            eventQueue.Enqueue(() =>
             {
-                var templates = templateController.Templates;
-                if (templates.Any() == false) return;
-
                 var stopwatch = Stopwatch.StartNew();
-                Log.Debug("{0} {1}", generationEvent.Type, string.Join(" -> ", generationEvent.Paths));
 
-                switch (generationEvent.Type)
+                var template = templateController.TemplatesLoaded
+                    ? templateController.Templates.FirstOrDefault(m => m.TemplatePath.Equals(projectItem.Path(), StringComparison.InvariantCultureIgnoreCase))
+                    : null;
+
+                if (template == null)
                 {
-                    case GenerationType.Render:
-                        var metadata = metadataProvider.GetFile(generationEvent.Paths[0]);
-                        var file = new FileImpl(metadata);
-
-                        foreach (var template in templates)
-                        {
-                            template.RenderFile(file);
-                        }
-                        break;
-
-                    case GenerationType.Delete:
-                        foreach (var template in templates)
-                        {
-                            template.DeleteFile(generationEvent.Paths[0]);
-                        }
-                        break;
-
-                    case GenerationType.Rename:
-                        foreach (var template in templates)
-                        {
-                            template.RenameFile(generationEvent.Paths[0], generationEvent.Paths[1]);
-                        }
-                        break;
+                    template = new Template(projectItem);
+                    templateController.ResetTemplates();
+                }
+                else
+                {
+                    template.Reload();
                 }
 
-                foreach (var template in templates)
+                foreach (var path in referencedItems)
                 {
-                    template.SaveProjectFile();
+
+                    var metadata = metadataProvider.GetFile(path);
+                    var file = new FileImpl(metadata);
+
+                    template.RenderFile(file);
+
+                    if (template.HasCompileException)
+                    {
+                        break;
+                    }
                 }
+
+                template.SaveProjectFile();
+
 
                 stopwatch.Stop();
-                Log.Debug("{0} completed in {1} ms", generationEvent.Type, stopwatch.ElapsedMilliseconds);
-            }
-            catch (Exception exception)
-            {
-                Log.Error("{0} Exception: {1}, {2}", generationEvent.Type, exception.Message, exception.StackTrace);
-            }
+                Log.Debug("{0} processed {1} in {2}ms", GenerationType.Template, templatePath, stopwatch.ElapsedMilliseconds);
+
+            });
         }
+
+        public void OnCsFileChanged(string[] paths)
+        {
+            Enqueue(GenerationType.Render, paths, path => new FileImpl(metadataProvider.GetFile(path)), (path, template) => template.RenderFile(path));
+        }
+
+
+        public void OnCsFileDeleted(string[] paths)
+        {
+            Enqueue(GenerationType.Delete, paths, (path, template) => template.DeleteFile(path));
+
+        }
+        private void Enqueue(GenerationType type, string[] paths, Action<string, Template> action)
+        {
+            Enqueue(type, paths, (s, i) => s, action);
+        }
+
+        public void OnCsFileRenamed(string[] newPaths, string[] oldPaths)
+        {
+            Enqueue(GenerationType.Rename, newPaths, (path, fileIndex) => new { OldPath = oldPaths[fileIndex], NewPath = path },
+                (item, template) => template.RenameFile(item.OldPath, item.NewPath));
+        }
+
+        private void Enqueue<T>(GenerationType type, string[] paths, Func<string, T> transform, Action<T, Template> action)
+        {
+            Enqueue(type, paths, (s, i) => transform(s), action);
+        }
+
+        private void Enqueue<T>(GenerationType type, string[] paths, Func<string, int, T> transform, Action<T, Template> action)
+        {
+            var templates = templateController.Templates.Where(m => !m.HasCompileException).ToArray();
+            if (!templates.Any())
+            {
+                return;
+            }
+            Log.Debug("{0} queued {1}", type, string.Join(", ", paths));
+
+            eventQueue.Enqueue(() =>
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                paths.Select(transform).ForEach(path => templates.ForEach(template => action(path, template)));
+
+                templates.GroupBy(m => m.ProjectFullName).ForEach(template => template.First().SaveProjectFile());
+
+                stopwatch.Stop();
+                Log.Debug("{0} processed {1} in {2}ms", type, string.Join(", ", paths), stopwatch.ElapsedMilliseconds);
+
+            });
+        }
+
+
     }
 }

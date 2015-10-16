@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -21,10 +22,15 @@ namespace Typewriter.Generation.Controllers
         public event SolutionClosedEventHandler SolutionClosed;
         public event ProjectAddedEventHandler ProjectAdded;
         public event ProjectRemovedEventHandler ProjectRemoved;
-        public event FileAddedEventHandler FileAdded;
-        public event FileChangedEventHandler FileChanged;
-        public event FileDeletedEventHandler FileDeleted;
-        public event FileRenamedEventHandler FileRenamed;
+        public event FileChangedEventHandler CsFileAdded;
+        public event SingleFileChangedEventHandler CsFileChanged;
+        public event FileChangedEventHandler CsFileDeleted;
+        public event FileRenamedEventHandler CsFileRenamed;
+
+        public event FileChangedEventHandler TemplateAdded;
+        public event SingleFileChangedEventHandler TemplateChanged;
+        public event FileChangedEventHandler TemplateDeleted;
+        public event FileRenamedEventHandler TemplateRenamed;
 
         public SolutionMonitor()
         {
@@ -33,8 +39,18 @@ namespace Typewriter.Generation.Controllers
 
         public void TriggerFileChanged(string path)
         {
-            var fileChanged = FileChanged;
-            fileChanged?.Invoke(this, new FileChangedEventArgs(path));
+            if (path.EndsWith(Constants.CsExtension, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var fileChanged = CsFileChanged;
+                fileChanged?.Invoke(this, new SingleFileChangedEventArgs(FileChangeType.Changed, path));
+            }
+            else if (path.EndsWith(Constants.TemplateExtension, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var templateChanged = TemplateChanged;
+                templateChanged?.Invoke(this, new SingleFileChangedEventArgs(FileChangeType.Changed, path));
+            }
+
+            
         }
 
         #region Event registration
@@ -216,6 +232,7 @@ namespace Typewriter.Generation.Controllers
             return VSConstants.S_OK;
         }
 
+        
         public int OnBeforeDocumentWindowShow(uint docCookie, int fFirstShow, IVsWindowFrame pFrame)
         {
             return VSConstants.S_OK;
@@ -253,18 +270,12 @@ namespace Typewriter.Generation.Controllers
 
         public int OnAfterAddFilesEx(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSADDFILEFLAGS[] rgFlags)
         {
-            if (FileAdded != null)
-            {
-                var paths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments);
-                foreach (var path in paths)
-                {
-                    FileAdded(this, new FileAddedEventArgs(path));
-                }
-            }
+            HandleAddRemoveFiles(FileChangeType.Added, cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments, CsFileAdded, TemplateAdded);
 
             return VSConstants.S_OK;
         }
 
+        
         public int OnAfterRemoveDirectories(int cProjects, int cDirectories, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSREMOVEDIRECTORYFLAGS[] rgFlags)
         {
             return VSConstants.S_OK;
@@ -272,15 +283,8 @@ namespace Typewriter.Generation.Controllers
 
         public int OnAfterRemoveFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSREMOVEFILEFLAGS[] rgFlags)
         {
-            var paths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments);
-            if (FileDeleted != null)
-            {
-                foreach (var path in paths)
-                {
-                    FileDeleted(this, new FileDeletedEventArgs(path));
-                }
-            }
-
+            HandleAddRemoveFiles(FileChangeType.Deleted, cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments, CsFileDeleted, TemplateDeleted);
+            
             return VSConstants.S_OK;
         }
 
@@ -291,20 +295,12 @@ namespace Typewriter.Generation.Controllers
 
         public int OnAfterRenameFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgszMkOldNames, string[] rgszMkNewNames, VSRENAMEFILEFLAGS[] rgFlags)
         {
-            if (FileRenamed != null)
-            {
-                var oldPaths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkOldNames).ToArray();
-                var newPaths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkNewNames).ToArray();
-
-                for (var i = 0; i < oldPaths.Length; i++)
-                {
-                    FileRenamed(this, new FileRenamedEventArgs(oldPaths[i], newPaths[i]));
-                }
-            }
-
+            HandleRenameFiles(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkOldNames, rgszMkNewNames, CsFileRenamed, TemplateRenamed);
+            
             return VSConstants.S_OK;
         }
 
+        
         public int OnAfterSccStatusChanged(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, uint[] rgdwSccStatus)
         {
             return VSConstants.S_OK;
@@ -347,5 +343,79 @@ namespace Typewriter.Generation.Controllers
             GC.SuppressFinalize(this);
             UnadviceSolutionEvents();
         }
+
+
+        private void HandleAddRemoveFiles(FileChangeType changeType, int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, FileChangedEventHandler csFileEvent, FileChangedEventHandler templateEvent)
+        {
+            if (csFileEvent == null && templateEvent == null)
+            {
+                return;
+            }
+
+            var paths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgpszMkDocuments);
+            var templates = ImmutableArray.CreateBuilder<string>();
+            var csFiles = ImmutableArray.CreateBuilder<string>(cFiles);
+            foreach (var path in paths)
+            {
+                if (path.EndsWith(Constants.CsExtension, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    csFiles.Add(path);
+                }
+                else if (path.EndsWith(Constants.TemplateExtension, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    templates.Add(path);
+                }
+            }
+
+            if (csFileEvent != null && csFiles.Count > 0)
+            {
+                csFileEvent(this, new FileChangedEventArgs(changeType,csFiles.ToArray()));
+            }
+            if (templateEvent != null && templates.Count > 0)
+            {
+                templateEvent(this, new FileChangedEventArgs(changeType, templates.ToArray()));
+            }
+        }
+
+
+
+        private void HandleRenameFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgszMkOldNames, string[] rgszMkNewNames, FileRenamedEventHandler csFileEvent, FileRenamedEventHandler templateEvent)
+        {
+            if (csFileEvent == null && templateEvent == null)
+            {
+                return;
+            }
+
+            var oldPaths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkOldNames).ToArray();
+            var newPaths = ExtractPath(cProjects, cFiles, rgpProjects, rgFirstIndices, rgszMkNewNames).ToArray();
+
+            var templates = ImmutableArray.CreateBuilder<int>();
+            var csFiles = ImmutableArray.CreateBuilder<int>(cFiles);
+
+
+            for (var i = 0; i < oldPaths.Length; i++)
+            {
+                var oldPath = oldPaths[i];
+
+                if (oldPath.EndsWith(Constants.CsExtension, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    csFiles.Add(i);
+                }
+                else if (oldPath.EndsWith(Constants.TemplateExtension, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    templates.Add(i);
+                }
+            }
+
+            if (csFileEvent != null && csFiles.Count > 0)
+            {
+                csFileEvent(this, new FileRenamedEventArgs(csFiles.Select(i=>oldPaths[i]).ToArray(), csFiles.Select(i => newPaths[i]).ToArray()));
+            }
+            if (templateEvent != null && templates.Count > 0)
+            {
+                templateEvent(this, new FileRenamedEventArgs(templates.Select(i => oldPaths[i]).ToArray(), templates.Select(i => newPaths[i]).ToArray()));
+            }
+        }
+
     }
 }

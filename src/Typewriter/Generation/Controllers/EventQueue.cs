@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -9,16 +8,22 @@ using InteropConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
 
 namespace Typewriter.Generation.Controllers
 {
-    public sealed class EventQueue : IDisposable
+
+    public interface IEventQueue : IDisposable
+    {
+        void Enqueue(Action action);
+    }
+
+    public sealed class EventQueue : IEventQueue
     {
         private readonly IVsStatusbar statusBar;
-        private readonly BlockingQueue<GenerationEvent> _queue;
+        private readonly BlockingQueue<Action> _queue;
         private readonly Task _queueTask;
 
         public EventQueue(IVsStatusbar statusBar)
         {
             this.statusBar = statusBar;
-            _queue = new BlockingQueue<GenerationEvent>();
+            _queue = new BlockingQueue<Action>();
 
             _queueTask = Task.Run(() => ProcessQueue());
         }
@@ -29,10 +34,8 @@ namespace Typewriter.Generation.Controllers
             {
                 try
                 {
-                    var generationEvent = _queue.Dequeue();
-
-                    Thread.Sleep(100);
-
+                    var action = _queue.Dequeue();
+                    
                     try
                     {
 
@@ -44,13 +47,13 @@ namespace Typewriter.Generation.Controllers
                         PrepareStatusbar(out cookie, out icon);
 
                         var stopwatch = Stopwatch.StartNew();
-                        generationEvent.Action(generationEvent);
+                        action();
                         uint i = 1;
                         while (_queue.Count > 0)
                         {
-                            generationEvent = _queue.Dequeue();
+                            action = _queue.Dequeue();
 
-                            generationEvent.Action(generationEvent);
+                            action();
 
                             UpdateStatusbarProgress(ref cookie, ++i, count);
 
@@ -79,26 +82,12 @@ namespace Typewriter.Generation.Controllers
             } while (!(_queue.Closed));
 
         }
-
-
-        public void Enqueue(Action<GenerationEvent> action, GenerationType type, params string[] paths)
+        
+        public void Enqueue(Action action)
         {
-            if (paths[0].EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase) == false) return;
+
+            _queue.Enqueue(action);
             
-            var generationEvent = new GenerationEvent { Action = action, Type = type, Paths = paths };
-
-            var added = _queue.EnqueueIfNotContains(generationEvent);
-            if (added)
-            {
-
-                Log.Debug("{0} queued {1}", generationEvent.Type, string.Join(" -> ", generationEvent.Paths));
-            }
-            else
-            {
-                Log.Debug("{0} already in queue {1}", generationEvent.Type, string.Join(" -> ", generationEvent.Paths));
-
-            }
-
         }
         
         private void PrepareStatusbar(out uint cookie, out object icon)
@@ -169,19 +158,8 @@ namespace Typewriter.Generation.Controllers
     {
         Render,
         Delete,
-        Rename
+        Rename,
+        Template
     }
-
-    public class GenerationEvent : IEquatable<GenerationEvent>
-    {
-        public GenerationType Type { get; set; }
-        public string[] Paths { get; set; }
-        public Action<GenerationEvent> Action { get; set; }
-
-        public bool Equals(GenerationEvent other)
-        {
-            if (other == null) return false;
-            return (Type == other.Type) && (Paths.SequenceEqual(other.Paths));
-        }
-    }
+    
 }
