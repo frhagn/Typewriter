@@ -5,7 +5,6 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
 using Typewriter.CodeModel;
-using Typewriter.VisualStudio;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
 {
@@ -20,13 +19,14 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
     using System.Linq;
     using System.Collections.Generic;
     using Typewriter.CodeModel;
+    using Typewriter.Configuration;
     using Attribute = Typewriter.CodeModel.Attribute;
     using Enum = Typewriter.CodeModel.Enum;
     using Type = Typewriter.CodeModel.Type;
     ";
 
         private const string classTemplate = @"
-    public class __Code
+    public class Template
     {
 ";
 
@@ -150,7 +150,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
                     var isError = diagnostic.Severity == DiagnosticSeverity.Error;
 
                     quickInfo = quickInfo.Replace("__Typewriter.", string.Empty);
-                    quickInfo = quickInfo.Replace("__Code.", string.Empty);
+                    //quickInfo = quickInfo.Replace("__Code.", string.Empty);
 
                     return new Token
                     {

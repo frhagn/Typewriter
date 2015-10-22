@@ -7,28 +7,25 @@ using EnvDTE;
 using Typewriter.CodeModel.Implementation;
 using Typewriter.Metadata.Providers;
 using Typewriter.VisualStudio;
-using VSLangProj;
 
 namespace Typewriter.Generation.Controllers
 {
     public class TemplateController
     {
-        private static readonly object locker = new object();
+        private readonly DTE _dte;
+        private readonly IMetadataProvider _metadataProvider;
+        private readonly SolutionMonitor _solutionMonitor;
+        private readonly EventQueue _eventQueue;
 
-        private readonly DTE dte;
-        private readonly IMetadataProvider metadataProvider;
-        private readonly SolutionMonitor solutionMonitor;
-        private readonly EventQueue eventQueue;
-
-        private bool solutionOpen;
-        private ICollection<Template> templates;
+        private bool _solutionOpen;
+        private ICollection<Template> _templates;
 
         public TemplateController(DTE dte, IMetadataProvider metadataProvider, SolutionMonitor solutionMonitor, EventQueue eventQueue)
         {
-            this.dte = dte;
-            this.metadataProvider = metadataProvider;
-            this.solutionMonitor = solutionMonitor;
-            this.eventQueue = eventQueue;
+            _dte = dte;
+            _metadataProvider = metadataProvider;
+            _solutionMonitor = solutionMonitor;
+            _eventQueue = eventQueue;
 
             solutionMonitor.SolutionOpened += (sender, args) => SolutionOpened();
             solutionMonitor.SolutionClosed += (sender, args) => SolutionClosed();
@@ -48,26 +45,26 @@ namespace Typewriter.Generation.Controllers
         private void SolutionOpened()
         {
             Log.Debug("Solution Opened");
-            solutionOpen = true;
+            _solutionOpen = true;
         }
 
         private void SolutionClosed()
         {
             Log.Debug("Solution Closed");
-            solutionOpen = false;
+            _solutionOpen = false;
         }
 
         private void ProjectChanged()
         {
-            if (solutionOpen == false) return;
-            this.templates = null;
+            if (_solutionOpen == false) return;
+            _templates = null;
         }
 
         private bool FileChanged(string path)
         {
             if (path.EndsWith(Constants.Extension, StringComparison.InvariantCultureIgnoreCase))
             {
-                this.templates = null;
+                _templates = null;
                 return true;
             }
 
@@ -80,12 +77,12 @@ namespace Typewriter.Generation.Controllers
 
             try
             {
-                var projectItem = dte.Solution.FindProjectItem(path);
+                var projectItem = _dte.Solution.FindProjectItem(path);
                 var template = new Template(projectItem);
 
-                foreach (var item in GetReferencedProjectItems(projectItem, ".cs"))
+                foreach (var filename in template.GetFilesToRender())
                 {
-                    eventQueue.Enqueue(generationEvent => Render(template, generationEvent), GenerationType.Render, item.Path());
+                    _eventQueue.Enqueue(generationEvent => Render(template, generationEvent), GenerationType.Render, filename);
                 }
             }
             catch (Exception e)
@@ -103,14 +100,14 @@ namespace Typewriter.Generation.Controllers
                 var path = generationEvent.Paths[0];
                 Log.Debug("Render {0}", path);
 
-                var metadata = metadataProvider.GetFile(path);
+                var metadata = _metadataProvider.GetFile(path);
                 var file = new FileImpl(metadata);
 
                 var success = template.RenderFile(file, false);
 
                 if (success == false)
                 {
-                    solutionMonitor.TriggerFileChanged(path);
+                    _solutionMonitor.TriggerFileChanged(path);
                 }
 
                 stopwatch.Stop();
@@ -128,29 +125,14 @@ namespace Typewriter.Generation.Controllers
         {
             var stopwatch = Stopwatch.StartNew();
 
-            //lock (locker)
-            //{
-            if (this.templates == null)
+            if (this._templates == null)
             {
                 var items = GetProjectItems();
-                this.templates = items.Select(i =>
-                {
-                    try
-                    {
-                        return new Template(i);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Debug(e.Message);
-                        Log.Warn($"Template {i.Path()} will be ignored until the errors are removed.");
-
-                        return null;
-                    }
-                }).Where(t => t != null).ToList();
+                _templates = items.Select(LoadTemplate).Where(t => t != null).ToList();
             }
             else
             {
-                foreach (var template in this.templates)
+                foreach (var template in _templates)
                 {
                     try
                     {
@@ -159,47 +141,37 @@ namespace Typewriter.Generation.Controllers
                     catch
                     {
                         Log.Debug("Invalid template");
-                        this.templates = null;
+                        _templates = null;
 
                         return LoadTemplates();
                     }
                 }
             }
-            //}
 
             stopwatch.Stop();
             Log.Debug("Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds);
 
-            return this.templates;
+            return this._templates;
         }
 
-        private IEnumerable<ProjectItem> GetReferencedProjectItems(ProjectItem i, string extension)
+        private static Template LoadTemplate(ProjectItem projectItem)
         {
-            var vsproject = i.ContainingProject.Object as VSProject;
-            if (vsproject != null)
+            try
             {
-                foreach (Reference reference in vsproject.References)
-                {
-                    var sp = reference.SourceProject;
-                    if (sp != null)
-                    {
-                        foreach (var item in sp.AllProjectItems().Where(item => item.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            yield return item;
-                        }
-                    }
-                }
+                return new Template(projectItem);
+            }
+            catch (Exception e)
+            {
+                Log.Debug(e.Message);
+                Log.Warn($"Template {projectItem.Path()} will be ignored until the errors are removed.");
 
-                foreach (var item in i.ContainingProject.AllProjectItems().Where(item => item.Name.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    yield return item;
-                }
+                return null;
             }
         }
 
         private IEnumerable<ProjectItem> GetProjectItems()
         {
-            var projects = dte.Solution.AllProjetcs().Select(p =>
+            var projects = _dte.Solution.AllProjetcs().Select(p =>
             {
                 try
                 {
@@ -216,7 +188,7 @@ namespace Typewriter.Generation.Controllers
                 .SelectMany(p => new System.IO.FileInfo(p).Directory?.GetFiles("*.tst", SearchOption.AllDirectories))
                 .Where(f => f != null);
 
-            return files.Select(a => dte.Solution.FindProjectItem(a.FullName));
+            return files.Select(a => _dte.Solution.FindProjectItem(a.FullName));
         }
     }
 }

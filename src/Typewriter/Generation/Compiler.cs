@@ -32,7 +32,7 @@ namespace Typewriter.Generation
                 var message = error.GetMessage();
 
                 message = message.Replace("__Typewriter.", string.Empty);
-                message = message.Replace("__Code.", string.Empty);
+                //message = message.Replace("__Code.", string.Empty);
                 message = message.Replace("publicstatic", string.Empty);
 
                 Log.Warn("Template error: {0} {1}", error.Id, message);

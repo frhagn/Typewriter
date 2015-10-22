@@ -40,12 +40,16 @@ namespace Typewriter.Generation.Controllers
                 switch (generationEvent.Type)
                 {
                     case GenerationType.Render:
-                        var metadata = metadataProvider.GetFile(generationEvent.Paths[0]);
-                        var file = new FileImpl(metadata);
-
-                        foreach (var template in templates)
+                        var includedTemplates = templates.Where(t => t.ShouldRenderFile(generationEvent.Paths[0])).ToList();
+                        if (includedTemplates.Any())
                         {
-                            template.RenderFile(file, true);
+                            var metadata = metadataProvider.GetFile(generationEvent.Paths[0]);
+                            var file = new FileImpl(metadata);
+
+                            foreach (var template in includedTemplates)
+                            {
+                                template.RenderFile(file, true);
+                            }
                         }
                         break;
 
@@ -57,9 +61,15 @@ namespace Typewriter.Generation.Controllers
                         break;
 
                     case GenerationType.Rename:
+                        var rmetadata = metadataProvider.GetFile(generationEvent.Paths[1]);
+                        var rfile = new FileImpl(rmetadata);
+
+                        Log.Debug("From: " + generationEvent.Paths[0]);
+                        Log.Debug("Till: " + generationEvent.Paths[1]);
+
                         foreach (var template in templates)
                         {
-                            template.RenameFile(generationEvent.Paths[0], generationEvent.Paths[1], true);
+                            template.RenameFile(rfile, generationEvent.Paths[0], generationEvent.Paths[1], true);
                         }
                         break;
                 }
