@@ -80,6 +80,8 @@ namespace Typewriter.Generation.Controllers
                 var projectItem = _dte.Solution.FindProjectItem(path);
                 var template = new Template(projectItem);
 
+                ErrorList.Clear();
+
                 foreach (var filename in template.GetFilesToRender())
                 {
                     _eventQueue.Enqueue(generationEvent => Render(template, generationEvent), GenerationType.Render, filename);

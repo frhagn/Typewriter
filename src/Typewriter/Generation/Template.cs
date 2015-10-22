@@ -32,7 +32,7 @@ namespace Typewriter.Generation
             _projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
 
             var code = System.IO.File.ReadAllText(_templatePath);
-            _template = TemplateCodeParser.Parse(code, _customExtensions);
+            _template = TemplateCodeParser.Parse(_projectItem, code, _customExtensions);
 
             _configuration = new SettingsImpl(_projectItem);
 
@@ -58,7 +58,7 @@ namespace Typewriter.Generation
 
         public string Render(File file, out bool success)
         {
-            return Parser.Parse(_template, _customExtensions, file, out success);
+            return Parser.Parse(_projectItem, file.FullName, _template, _customExtensions, file, out success);
         }
 
         public bool RenderFile(File file, bool saveProjectFile)

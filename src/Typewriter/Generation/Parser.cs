@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EnvDTE;
 using Typewriter.CodeModel;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.VisualStudio;
@@ -10,10 +11,10 @@ namespace Typewriter.Generation
 {
     public class Parser
     {
-        public static string Parse(string template, List<Type> extensions, object context, out bool success)
+        public static string Parse(ProjectItem projectItem, string sourcePath, string template, List<Type> extensions, object context, out bool success)
         {
             var instance = new Parser(extensions);
-            var output = instance.ParseTemplate(template, context);
+            var output = instance.ParseTemplate(projectItem, sourcePath, template, context);
             success = instance.hasError == false;
 
             return instance.matchFound ? output : null;
@@ -28,7 +29,7 @@ namespace Typewriter.Generation
             this.extensions = extensions;
         }
 
-        private string ParseTemplate(string template, object context)
+        private string ParseTemplate(ProjectItem projectItem, string sourcePath, string template, object context)
         {
             if (string.IsNullOrEmpty(template)) return null;
 
@@ -37,21 +38,21 @@ namespace Typewriter.Generation
 
             while (stream.Advance())
             {
-                if (ParseDollar(stream, context, ref output)) continue;
+                if (ParseDollar(projectItem, sourcePath, stream, context, ref output)) continue;
                 output += stream.Current;
             }
 
             return output;
         }
 
-        private bool ParseDollar(Stream stream, object context, ref string output)
+        private bool ParseDollar(ProjectItem projectItem, string sourcePath, Stream stream, object context, ref string output)
         {
             if (stream.Current == '$')
             {
                 var identifier = stream.PeekWord(1);
                 object value;
                 
-                if (TryGetIdentifier(identifier, context, out value))
+                if (TryGetIdentifier(projectItem, sourcePath, identifier, context, out value))
                 {
                     stream.Advance(identifier.Length);
 
@@ -100,7 +101,7 @@ namespace Typewriter.Generation
                             {
                                 items = ItemFilter.Apply(collection, filter, ref matchFound);
                             }
-                            output += string.Join(ParseTemplate(separator, context), items.Select(item => ParseTemplate(block, item)));
+                            output += string.Join(ParseTemplate(projectItem, sourcePath, separator, context), items.Select(item => ParseTemplate(projectItem, sourcePath, block, item)));
                         }
                     }
                     else if (value is bool)
@@ -108,7 +109,7 @@ namespace Typewriter.Generation
                         var trueBlock = ParseBlock(stream, '[', ']');
                         var falseBlock = ParseBlock(stream, '[', ']');
 
-                        output += ParseTemplate((bool)value ? trueBlock : falseBlock, context);
+                        output += ParseTemplate(projectItem, sourcePath, (bool)value ? trueBlock : falseBlock, context);
                     }
                     else
                     {
@@ -117,7 +118,7 @@ namespace Typewriter.Generation
                         {
                             if (block != null)
                             {
-                                output += ParseTemplate(block, value);
+                                output += ParseTemplate(projectItem, sourcePath, block, value);
                             }
                             else
                             {
@@ -148,7 +149,7 @@ namespace Typewriter.Generation
             return null;
         }
 
-        private bool TryGetIdentifier(string identifier, object context, out object value)
+        private bool TryGetIdentifier(ProjectItem projectItem, string sourcePath, string identifier, object context, out object value)
         {
             value = null;
 
@@ -175,7 +176,12 @@ namespace Typewriter.Generation
             catch (Exception e)
             {
                 hasError = true;
-                Log.Error(e.Message);
+
+                var message = $"Error rendering template. Cannot get identifier '{identifier}'. {e.Message} Source path: {sourcePath}";
+
+                Log.Error(message);
+                ErrorList.AddError(projectItem, message);
+                ErrorList.Show();
             }
 
             return false;

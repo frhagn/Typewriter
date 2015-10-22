@@ -31,6 +31,8 @@ namespace Typewriter.Generation.Controllers
         {
             try
             {
+                ErrorList.Clear();
+
                 var templates = templateController.Templates;
                 if (templates.Any() == false) return;
 

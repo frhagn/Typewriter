@@ -22,13 +22,13 @@ namespace Typewriter.VisualStudio
     [ProvideLanguageExtension(typeof(LanguageService), Constants.Extension)]
     public sealed class ExtensionPackage : Package, IDisposable
     {
-        private DTE dte;
-        private Log log;
-        private IVsStatusbar statusBar;
-        private SolutionMonitor solutionMonitor;
-        private TemplateController templateController;
-        private EventQueue eventQueue;
-        private IMetadataProvider metadataProvider;
+        private DTE _dte;
+        private Log _log;
+        private IVsStatusbar _statusBar;
+        private SolutionMonitor _solutionMonitor;
+        private TemplateController _templateController;
+        private EventQueue _eventQueue;
+        private IMetadataProvider _metadataProvider;
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -45,26 +45,28 @@ namespace Typewriter.VisualStudio
             RegisterIcons();
             ClearTempDirectory();
             
-            this.eventQueue = new EventQueue(statusBar);
-            this.solutionMonitor = new SolutionMonitor();
-            this.templateController = new TemplateController(dte, metadataProvider, solutionMonitor, eventQueue);
-            var generationController = new GenerationController(dte, metadataProvider, solutionMonitor, templateController, eventQueue);
+            _eventQueue = new EventQueue(_statusBar);
+            _solutionMonitor = new SolutionMonitor();
+            _templateController = new TemplateController(_dte, _metadataProvider, _solutionMonitor, _eventQueue);
+            var generationController = new GenerationController(_dte, _metadataProvider, _solutionMonitor, _templateController, _eventQueue);
+
+            ErrorList.Initialize(this);
         }
-        
+
         private void GetDte()
         {
-            this.dte = GetService(typeof(DTE)) as DTE;
-            this.log = new Log(dte);
+            _dte = GetService(typeof(DTE)) as DTE;
+            _log = new Log(_dte);
 
-            if (this.dte == null)
+            if (_dte == null)
                 ErrorHandler.ThrowOnFailure(1);
         }
         
         private void GetStatusbar()
         {
-            this.statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
+            _statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
 
-            if (this.statusBar == null)
+            if (_statusBar == null)
                 ErrorHandler.ThrowOnFailure(1);
         }
 
@@ -78,12 +80,12 @@ namespace Typewriter.VisualStudio
 
                 Log.Info("Using Roslyn");
                 Constants.RoslynEnabled = true;
-                this.metadataProvider = provider;
+                _metadataProvider = provider;
             }
             catch
             {
                 Log.Info("Using CodeDom");
-                this.metadataProvider = new CodeDomMetadataProvider(this.dte);
+                _metadataProvider = new CodeDomMetadataProvider(this._dte);
             }
         }
 
@@ -141,10 +143,10 @@ namespace Typewriter.VisualStudio
 
             if (!disposing) return;
 
-            if (this.eventQueue != null)
+            if (_eventQueue != null)
             {
-                this.eventQueue.Dispose();
-                this.eventQueue = null;
+                _eventQueue.Dispose();
+                _eventQueue = null;
             }
         }
     }

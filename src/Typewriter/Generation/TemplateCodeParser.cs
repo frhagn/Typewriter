@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using EnvDTE;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
 
@@ -13,7 +14,7 @@ namespace Typewriter.Generation
     {
         private static int counter;
 
-        public static string Parse(string template, List<Type> extensions)
+        public static string Parse(ProjectItem projectItem, string template, List<Type> extensions)
         {
             if (string.IsNullOrWhiteSpace(template)) return null;
 
@@ -34,7 +35,7 @@ namespace Typewriter.Generation
             shadowClass.Parse();
 
             extensions.Clear();
-            extensions.Add(Compiler.Compile(shadowClass));
+            extensions.Add(Compiler.Compile(projectItem, shadowClass));
             extensions.AddRange(FindExtensionClasses(shadowClass));
 
             return output;
