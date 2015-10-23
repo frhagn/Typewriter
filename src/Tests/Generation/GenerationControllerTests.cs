@@ -24,7 +24,7 @@ namespace Typewriter.Tests.Generation
         }
 
         [Fact]
-        public void Expect_primitive_properties_to_be_primitive()
+        public void Expect_GenerateTemplate()
         {
             var eventQueue = Substitute.For<IEventQueue>();
             eventQueue.When(m => m.Enqueue(Arg.Any<Action>())).Do(c =>

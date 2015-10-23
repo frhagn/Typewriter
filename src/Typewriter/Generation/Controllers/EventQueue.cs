@@ -16,13 +16,13 @@ namespace Typewriter.Generation.Controllers
 
     public sealed class EventQueue : IEventQueue
     {
-        private readonly IVsStatusbar statusBar;
+        private readonly IVsStatusbar _statusBar;
         private readonly BlockingQueue<Action> _queue;
         private readonly Task _queueTask;
 
         public EventQueue(IVsStatusbar statusBar)
         {
-            this.statusBar = statusBar;
+            this._statusBar = statusBar;
             _queue = new BlockingQueue<Action>();
 
             _queueTask = Task.Run(() => ProcessQueue());
@@ -35,39 +35,34 @@ namespace Typewriter.Generation.Controllers
                 try
                 {
                     var action = _queue.Dequeue();
-                    
+                    Thread.Sleep(100);
                     try
                     {
 
-                        var count = (uint)_queue.Count+1;
-                        
                         object icon;
-                        uint cookie;
 
-                        PrepareStatusbar(out cookie, out icon);
+                        PrepareStatusbar(out icon);
 
                         var stopwatch = Stopwatch.StartNew();
                         action();
-                        uint i = 1;
+                        
                         while (_queue.Count > 0)
                         {
                             action = _queue.Dequeue();
 
                             action();
-
-                            UpdateStatusbarProgress(ref cookie, ++i, count);
-
+                            
                         }
                         
                         stopwatch.Stop();
 
                         Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
 
-                        ClearStatusbar(cookie, ref icon);
+                        ClearStatusbar(icon);
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Error processing queue: " + ex.Message);
+                        Log.Error("Error processing queue: " + ex.Message + "\n" + ex.StackTrace);
                     }
 
 
@@ -90,51 +85,40 @@ namespace Typewriter.Generation.Controllers
             
         }
         
-        private void PrepareStatusbar(out uint cookie, out object icon)
+        private void PrepareStatusbar(out object icon)
         {
-            cookie = 0;
-            icon = (short)InteropConstants.SBAI_Save;
-
+            
+            icon = (short) InteropConstants.SBAI_Save;
+            
             try
             {
                 int frozen;
-                statusBar.IsFrozen(out frozen);
-
+                _statusBar.IsFrozen(out frozen);
+                
                 if (frozen != 0) return;
+                
+                _statusBar.SetText("Rendering template...");
+                _statusBar.Animation(1, ref icon);
 
-                statusBar.Progress(ref cookie, 1, string.Empty, 0, 0);
-                statusBar.SetText("Rendering template...");
-                statusBar.Animation(1, ref icon);
+
             }
             catch (Exception exception)
             {
                 Log.Debug("Failed to prepare statusbar: {0}", exception.Message);
             }
         }
-
-        private void UpdateStatusbarProgress(ref uint cookie, uint current, uint total)
+        
+        private void ClearStatusbar(object icon)
         {
             try
             {
-                statusBar.Progress(ref cookie, 1, string.Empty, current, total);
-            }
-            catch (Exception exception)
-            {
-                Log.Debug("Failed to update statusbar progress: {0}", exception.Message);
-            }
-        }
-
-        private void ClearStatusbar(uint cookie, ref object icon)
-        {
-            try
-            {
-                //object icon = (short)InteropConstants.SBAI_Save;
-                statusBar.Animation(0, ref icon);
-                statusBar.SetText("Rendering complete");
-
-                Thread.Sleep(1000);
-
-                statusBar.Progress(ref cookie, 0, "", 0, 0);
+                
+                _statusBar.Animation(0, ref icon);
+                
+                _statusBar.SetText("Rendering complete");
+                
+                _statusBar.FreezeOutput(0);
+                
             }
             catch (Exception exception)
             {

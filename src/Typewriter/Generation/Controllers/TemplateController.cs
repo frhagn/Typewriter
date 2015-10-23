@@ -11,18 +11,18 @@ namespace Typewriter.Generation.Controllers
     public class TemplateController
     {
 
-        private readonly DTE dte;
+        private readonly DTE _dte;
         
-        private ICollection<Template> templates;
+        private ICollection<Template> _templates;
 
         public TemplateController(DTE dte)
         {
-            this.dte = dte;
+            this._dte = dte;
         }
 
         public bool TemplatesLoaded
         {
-            get { return templates != null; }
+            get { return _templates != null; }
         }
 
         public ICollection<Template> Templates => LoadTemplates();
@@ -31,10 +31,10 @@ namespace Typewriter.Generation.Controllers
         {
             var stopwatch = Stopwatch.StartNew();
             
-            if (this.templates == null)
+            if (this._templates == null)
             {
                 var items = GetProjectItems();
-                this.templates = items.Select(i =>
+                this._templates = items.Select(i =>
                 {
                     try
                     {
@@ -50,12 +50,12 @@ namespace Typewriter.Generation.Controllers
                 }).Where(t => t != null).ToList();
 
                 stopwatch.Stop();
-                Log.Debug("{1} Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds, templates.Count);
+                Log.Debug("{1} Templates loaded in {0} ms", stopwatch.ElapsedMilliseconds, _templates.Count);
 
             }
             else
             {
-                foreach (var template in this.templates)
+                foreach (var template in this._templates)
                 {
                     try
                     {
@@ -64,27 +64,27 @@ namespace Typewriter.Generation.Controllers
                     catch
                     {
                         Log.Debug("Invalid template");
-                        this.templates = null;
+                        this._templates = null;
 
                         return LoadTemplates();
                     }
                 }
                 stopwatch.Stop();
-                Log.Debug("{1} Templates verified in {0} ms", stopwatch.ElapsedMilliseconds, templates.Count);
+                Log.Debug("{1} Templates verified in {0} ms", stopwatch.ElapsedMilliseconds, _templates.Count);
 
             }
 
-            return this.templates;
+            return this._templates;
         }
 
         public void ResetTemplates()
         {
-            templates = null;
+            _templates = null;
         }
 
         private IEnumerable<ProjectItem> GetProjectItems()
         {
-            var result = dte.Solution.AllProjects().SelectMany(m => m.AllProjectItems(Constants.TemplateExtension));
+            var result = _dte.Solution.AllProjects().SelectMany(m => m.AllProjectItems(Constants.TemplateExtension));
             
             return result;
         }

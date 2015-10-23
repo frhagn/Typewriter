@@ -140,5 +140,15 @@ namespace Typewriter.Generation.Controllers
             }
         }
 
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T, int> action)
+        {
+            var ctr = 0;
+            foreach (var item in items)
+            {
+                action(item, ctr);
+                ctr++;
+            }
+        }
+
     }
 }

@@ -11,17 +11,17 @@ namespace Typewriter.Generation.Controllers
 {
     public class GenerationController
     {
-        private readonly DTE dte;
-        private readonly IMetadataProvider metadataProvider;
-        private readonly TemplateController templateController;
-        private readonly IEventQueue eventQueue;
+        private readonly DTE _dte;
+        private readonly IMetadataProvider _metadataProvider;
+        private readonly TemplateController _templateController;
+        private readonly IEventQueue _eventQueue;
         
         public GenerationController(DTE dte, IMetadataProvider metadataProvider, TemplateController templateController, IEventQueue eventQueue)
         {
-            this.dte = dte;
-            this.metadataProvider = metadataProvider;
-            this.templateController = templateController;
-            this.eventQueue = eventQueue;
+            _dte = dte;
+            _metadataProvider = metadataProvider;
+            _templateController = templateController;
+            _eventQueue = eventQueue;
         }
 
 
@@ -30,25 +30,25 @@ namespace Typewriter.Generation.Controllers
 
             Log.Debug("{0} queued {1}", GenerationType.Template, templatePath);
 
-            var projectItem = dte.Solution.FindProjectItem(templatePath);
+            var projectItem = _dte.Solution.FindProjectItem(templatePath);
 
             var vsProject = projectItem.ContainingProject.Object as VSProject;
             var referencedItems = vsProject.GetReferencedProjectItems(Constants.CsExtension).Select(m => m.Path()).ToArray();
 
             Log.Debug(" Will Check/Render {0} .cs files in referenced projects", referencedItems.Length);
 
-            eventQueue.Enqueue(() =>
+            _eventQueue.Enqueue(() =>
             {
                 var stopwatch = Stopwatch.StartNew();
 
-                var template = templateController.TemplatesLoaded
-                    ? templateController.Templates.FirstOrDefault(m => m.TemplatePath.Equals(projectItem.Path(), StringComparison.InvariantCultureIgnoreCase))
+                var template = _templateController.TemplatesLoaded
+                    ? _templateController.Templates.FirstOrDefault(m => m.TemplatePath.Equals(projectItem.Path(), StringComparison.InvariantCultureIgnoreCase))
                     : null;
 
                 if (template == null)
                 {
                     template = new Template(projectItem);
-                    templateController.ResetTemplates();
+                    _templateController.ResetTemplates();
                 }
                 else
                 {
@@ -58,7 +58,7 @@ namespace Typewriter.Generation.Controllers
                 foreach (var path in referencedItems)
                 {
 
-                    var metadata = metadataProvider.GetFile(path);
+                    var metadata = _metadataProvider.GetFile(path);
                     var file = new FileImpl(metadata);
 
                     template.RenderFile(file);
@@ -80,7 +80,7 @@ namespace Typewriter.Generation.Controllers
 
         public void OnCsFileChanged(string[] paths)
         {
-            Enqueue(GenerationType.Render, paths, path => new FileImpl(metadataProvider.GetFile(path)), (path, template) => template.RenderFile(path));
+            Enqueue(GenerationType.Render, paths, path => new FileImpl(_metadataProvider.GetFile(path)), (path, template) => template.RenderFile(path));
         }
 
 
@@ -96,8 +96,8 @@ namespace Typewriter.Generation.Controllers
 
         public void OnCsFileRenamed(string[] newPaths, string[] oldPaths)
         {
-            Enqueue(GenerationType.Rename, newPaths, (path, fileIndex) => new { OldPath = oldPaths[fileIndex], NewPath = path },
-                (item, template) => template.RenameFile(item.OldPath, item.NewPath));
+            Enqueue(GenerationType.Rename, newPaths, (path, fileIndex) => new { OldPath = oldPaths[fileIndex], NewPath = path, NewFile = new FileImpl(_metadataProvider.GetFile(path)) },
+                (item, template) => template.RenameFile(item.NewFile, item.OldPath, item.NewPath));
         }
 
         private void Enqueue<T>(GenerationType type, string[] paths, Func<string, T> transform, Action<T, Template> action)
@@ -107,18 +107,24 @@ namespace Typewriter.Generation.Controllers
 
         private void Enqueue<T>(GenerationType type, string[] paths, Func<string, int, T> transform, Action<T, Template> action)
         {
-            var templates = templateController.Templates.Where(m => !m.HasCompileException).ToArray();
+            var templates = _templateController.Templates.Where(m => !m.HasCompileException).ToArray();
             if (!templates.Any())
             {
                 return;
             }
             Log.Debug("{0} queued {1}", type, string.Join(", ", paths));
 
-            eventQueue.Enqueue(() =>
+            _eventQueue.Enqueue(() =>
             {
+
                 var stopwatch = Stopwatch.StartNew();
 
-                paths.Select(transform).ForEach(path => templates.ForEach(template => action(path, template)));
+                paths.ForEach((path,i) =>
+                {
+                    var item = transform(path, i);
+
+                    templates.ForEach(template => action(item, template));
+                });
 
                 templates.GroupBy(m => m.ProjectFullName).ForEach(template => template.First().SaveProjectFile());
 
