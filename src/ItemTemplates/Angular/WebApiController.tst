@@ -1,6 +1,6 @@
 ﻿${
     using System.Text.RegularExpressions;
-        
+    using Typewriter.Extensions.WebApi;
      
     //TODO: Manage AcceptVerbAttribute
     string Verb(Method m) {
@@ -39,8 +39,6 @@
        routePrefix = routePrefix  ?? $"api/{parent.name.Replace("Controller", "")}/";
 
        return routePrefix + route;
-
-       
     }
     
 
@@ -57,7 +55,7 @@
 
     string Params(Method m)
     { 
-        var route = Extensions.Route(m)??""; 
+        var route = m.Route()??""; 
       
         var parameters = m.Parameters
                 .Where(p=>p.name != "id")
@@ -77,7 +75,7 @@
         var parameters = Params(m);
         var data = Data(m);
 
-        var result = $"{{ url: `{url}`, method: \"{method}\", params: {parameters}, data: {data} }}";
+        var result = $"{{ url: '{url}', method: \"{method}\", params: {parameters}, data: {data} }}";
         result = result.Replace(", params: null", "");
         result = result.Replace(", data: null", "");
 
