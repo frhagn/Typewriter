@@ -255,6 +255,8 @@
     <Compile Include="CodeModel\Collections\EventCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\DelegateCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\TypeParameterCollectionImpl.cs" />
+    <Compile Include="CodeModel\Configuration\ProjectHelpers.cs" />
+    <Compile Include="CodeModel\Configuration\SettingsImpl.cs" />
     <Compile Include="CodeModel\Implementation\EventImpl.cs" />
     <Compile Include="CodeModel\Implementation\DelegateImpl.cs" />
     <Compile Include="CodeModel\Implementation\TypeParameterImpl.cs" />
@@ -308,6 +310,7 @@
     <Compile Include="TemplateEditor\Lexing\Roslyn\Snippet.cs" />
     <Compile Include="TemplateEditor\Lexing\SemanticModel.cs" />
     <Compile Include="TemplateEditor\Lexing\Tokens.cs" />
+    <Compile Include="VisualStudio\ErrorList.cs" />
     <Compile Include="VisualStudio\ThemeInfo.cs" />
     <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\PropertyFormatDefinition.cs" />

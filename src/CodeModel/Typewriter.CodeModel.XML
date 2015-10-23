@@ -1005,6 +1005,44 @@
             Represents a collection of generic type parameters.
             </summary>
         </member>
+        <member name="T:Typewriter.Configuration.Settings">
+            <summary>
+            Provides settings for Typewriter Templates
+            </summary>
+        </member>
+        <member name="M:Typewriter.Configuration.Settings.IncludeProject(System.String)">
+            <summary>
+            Includes files in the specified project when rendering the template.
+            </summary>
+        </member>
+        <member name="M:Typewriter.Configuration.Settings.IncludeCurrentProject">
+            <summary>
+            Includes files in the current project when rendering the template.
+            </summary>
+        </member>
+        <member name="M:Typewriter.Configuration.Settings.IncludeReferencedProjects">
+            <summary>
+            Includes files in all referenced projects when rendering the template.
+            </summary>
+        </member>
+        <member name="M:Typewriter.Configuration.Settings.IncludeAllProjects">
+            <summary>
+            Includes files in all projects in the solution when rendering the template.
+            Note: Including all projects can have a large impact on performance in large solutions.
+            </summary>
+        </member>
+        <member name="P:Typewriter.Configuration.Settings.OutputExtension">
+            <summary>
+            Gets or sets the file extension for output files.
+            </summary>
+        </member>
+        <member name="P:Typewriter.Configuration.Settings.OutputFilenameFactory">
+            <summary>
+            Gets or sets a filename factory for the template.
+            The factory is called for each rendered file to determine the output filename (including extension).
+            Example: file => file.Classes.First().FullName + ".ts";
+            </summary>
+        </member>
         <member name="T:Typewriter.Extensions.Types.TypeExtensions">
             <summary>
             Extension methods for working with types.

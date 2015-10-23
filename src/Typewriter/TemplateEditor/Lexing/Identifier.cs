@@ -103,7 +103,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 }
 
                 summary = summary.Replace("__Typewriter.", string.Empty);
-                summary = summary.Replace("__Code.", string.Empty);
+                //summary = summary.Replace("__Code.", string.Empty);
 
                 var documentation = symbol.GetDocumentationCommentXml();
                 summary += ParseDocumentation(documentation);

@@ -15,6 +15,7 @@ using Microsoft.CodeAnalysis.Recommendations;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CSharp.RuntimeBinder;
 using Typewriter.CodeModel;
+using Typewriter.VisualStudio;
 using File = System.IO.File;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
@@ -109,8 +110,19 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             var semanticModel = document.GetSemanticModelAsync().Result;
 
             var root = semanticModel.SyntaxTree.GetRoot();
-            var count = root.DescendantNodes().OfType<MethodDeclarationSyntax>().Count();
 
+            // Constructors
+            var count = root.DescendantNodes().OfType<ConstructorDeclarationSyntax>().Count();
+            for (var i = 0; i < count; i++)
+            {
+                var method = root.DescendantNodes().OfType<ConstructorDeclarationSyntax>().ToArray()[i];
+                var trivia = method.GetTrailingTrivia();
+                var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword).WithTrailingTrivia(trivia));
+                root = root.ReplaceNode(method, method.WithModifiers(modifiers));
+            }
+
+            // Methods
+            count = root.DescendantNodes().OfType<MethodDeclarationSyntax>().Count();
             for (var i = 0; i < count; i++)
             {
                 var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToArray()[i];

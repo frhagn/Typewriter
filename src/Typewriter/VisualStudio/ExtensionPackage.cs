@@ -59,6 +59,7 @@ namespace Typewriter.VisualStudio
             this.generationController = new GenerationController(dte, metadataProvider, templateController, eventQueue);
 
             WireupEvents();
+            ErrorList.Initialize(this);
         }
 
         private void WireupEvents()
