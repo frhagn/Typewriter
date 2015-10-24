@@ -1,8 +1,15 @@
 ﻿${
-    // Uncomment this line to enable extension methods for ASP.NET Web API e.g. $Url
-    // using Typewriter.Extensions.WebApi;
+    // Enable extension methods by adding using Typewriter.Extensions.*
+    using Typewriter.Extensions.Types;
 
-    // Custom extension methods can be used in the template e.g. $LoudName
+    // Uncomment the constructor to change template settings.
+    //Template(Settings settings)
+    //{
+    //    settings.IncludeProject("Project.Name");
+    //    settings.OutputExtension = ".tsx";
+    //}
+
+    // Custom extension methods can be used in the template by adding a $ prefix e.g. $LoudName
     string LoudName(Property property)
     {
         return property.Name.ToUpperInvariant();
@@ -17,9 +24,10 @@ module $rootnamespace$ {
 
     // More info: http://frhagn.github.io/Typewriter/
 
-    $Classes(Filter)[
-    export class $Name$TypeParameters {
+    $Classes(*Model)[
+    export class $Name {
         $Properties[
-        public $LoudName: $Type = $Type[$Default];]
+        // $LoudName
+        public $name: $Type = $Type[$Default];]
     }]
 }
