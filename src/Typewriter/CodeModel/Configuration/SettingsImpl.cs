@@ -22,7 +22,7 @@ namespace Typewriter.CodeModel.Configuration
             if (_includedProjects == null)
                 _includedProjects = new List<string>();
 
-            ProjectHelpers.AddProject(_projectItem.DTE, _includedProjects, projectName);
+            ProjectHelpers.AddProject(_projectItem, _includedProjects, projectName);
             return this;
         }
         
