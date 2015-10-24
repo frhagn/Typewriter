@@ -47,7 +47,7 @@ var Highlighter = (function () {
     }
     Highlighter.prototype.formatCsharpMethods = function (code, properties) {
         var _this = this;
-        var pattern = /(\s+\w+\s+)(\w+)(\()((\w[^\s]*\s+\w+,?\s*)*)(\))/g;
+        var pattern = /(\s+\w+\s+)?(\w+)(\()((\w[^\s]*\s+\w+,?\s*)*)(\))/g;
         return code.replace(pattern, function (match) {
             var args = [];
             for (var _i = 1; _i < arguments.length; _i++) {
@@ -59,9 +59,9 @@ var Highlighter = (function () {
                 for (var _i = 1; _i < arguments.length; _i++) {
                     args[_i - 1] = arguments[_i];
                 }
-                return _this.formatType(args[0]) + args[1];
+                return _this.formatType(args[0] || "") + args[1];
             });
-            return "" + args[0] + args[1] + args[2] + params + args[5];
+            return "" + (args[0] || "") + args[1] + args[2] + params + args[5];
         });
     };
     Highlighter.prototype.formatTypeScriptMethods = function (code) {

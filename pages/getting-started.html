@@ -62,7 +62,7 @@
                         <h1>Getting started</h1>
                         <p class="lead">Getting started with Typewriter is easy, give it a try by following the steps below.</p>
                         
-                        <h3>Install Typewriter</h3>
+                        <h3 id="install-typewriter">Install Typewriter</h3>
                         <p>You can download the Typewriter extension from the <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" target="_blank">Visual Studio Gallery</a> or install it inside Visual Studio from the Extensions and Updates menu by searching for Typewriter. You'll need to restart Visual Studio for the extension to load.</p>
                         <p>Typewriter is available for Visual Studio 2013 and later.</p>
                         
@@ -108,7 +108,7 @@ module App {
 }
                         </pre>
 
-                        <h3>Code model</h3>
+                        <h3 id="code-model">Code model</h3>
                         <p>
                             The Typewriter code model is what you use to access metadata about your C# classes, properties, methods etc. 
                             You access the code model by typing <code>$</code> followed by a keyword e.g. <code>$Classes</code> which will return all public classes.
@@ -117,7 +117,7 @@ module App {
                             Primitive keywords like <code>$Name</code>, does not require a template.                            
                         </p>
                         
-                        <h3>Filters</h3>
+                        <h3 id="filters">Filters</h3>
                         <p>
                             Filters are used to determine which C# files should be rendered by a specific template. Because of this all templates must have <b>at least one filter</b>, otherwise the template won't be rendered.
                             You can add a filter to any collection in the code model e.g. <code>$Classes</code> or <code>$Properties</code>.<br>
@@ -139,7 +139,7 @@ module App {
                             In addition to the simple filters you can also use lambda predicates to create more advanced filters. e.g. <code>$Enums(e => e.Name.StartsWith("Color"))[...]</code>
                         </p>
                         
-                        <h3>Custom methods</h3>
+                        <h3 id="custom-methods">Custom methods</h3>
                         <p>
                             You can extend the code model by adding custom methods to your template. To add a custom code block you type <code>${ }</code> at the beginning of the template.
                             Within this code block you can add using-statements and custom methods. Methods that take a single parameter of a code model type, e.g. <code>Class</code> or <code>Method</code>, will be available in the template.
@@ -161,7 +161,26 @@ module App { $Classes(*Model)[
                         </pre>
                         <p>In this example <code>$LoudName</code> will call the custom method.</p>
                         
-                        <h3>Extensions</h3>
+                        <h3 id="settings">Settings</h3>
+                        <p>
+                            Typewriter templates provide a settings API via the template constructor. 
+                            The settings API allows you to specify which projects are included when rendering the template and configure the output filename and file extension.
+                        </p>
+                        <h4>Example</h4> 
+                        <pre class="hl tst">
+${
+    Template(Settings settings)
+    {
+        settings
+            .IncludeCurrentProject()
+            .IncludeProject("Project.Name");
+        
+        settings.OutputExtension = ".tsx";
+    }
+}
+                        </pre>
+                        
+                        <h3 id="extensions">Extensions</h3>
                         <p>Typewriter provides extension methods for common tasks. To enable extension methods, add a code block with the appropriate using statement for the extensions you want to use.</p>
                         <h4>Example</h4> 
                         <pre class="hl tst">
