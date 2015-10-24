@@ -118,30 +118,30 @@
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Models\ModelsCSharp.vstemplate">
+    <None Include="Models\ModelsCSharp.vstemplate">
       <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
-    </VSTemplate>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Models\ModelsWeb.vstemplate">
+    <None Include="Models\ModelsWeb.vstemplate">
       <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
       <SubType>Designer</SubType>
-    </VSTemplate>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\tst.ico" />
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Angular\WebApiControllerCSharp.vstemplate">
+    <None Include="Angular\WebApiControllerCSharp.vstemplate">
       <SubType>Designer</SubType>
       <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
-    </VSTemplate>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Angular\WebApiControllerWeb.vstemplate">
+    <None Include="Angular\WebApiControllerWeb.vstemplate">
       <SubType>Designer</SubType>
       <OutputSubPath>Web/Scripts/TypeScript Templates</OutputSubPath>
-    </VSTemplate>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Angular\tst.ico" />
