@@ -31,6 +31,7 @@ namespace Typewriter.Generation.Controllers
 
         private ICollection<Template> LoadTemplates()
         {
+            Trace.WriteLine("TemplateController.LoadTemplates");
             var stopwatch = Stopwatch.StartNew();
             
             if (_templates == null)
@@ -90,6 +91,25 @@ namespace Typewriter.Generation.Controllers
             var result = _dte.Solution.AllProjects().SelectMany(m => m.AllProjectItems(Constants.TemplateExtension));
             
             return result;
+        }
+
+        public Template GetTemplate(ProjectItem projectItem)
+        {
+            var template = TemplatesLoaded
+                    ? Templates.FirstOrDefault(m => m.TemplatePath.Equals(projectItem.Path(), StringComparison.InvariantCultureIgnoreCase))
+                    : null;
+
+            if (template == null)
+            {
+                template = _templateFactory(projectItem);
+                ResetTemplates();
+            }
+            else
+            {
+                template.Reload();
+            }
+
+            return template;
         }
     }
 }

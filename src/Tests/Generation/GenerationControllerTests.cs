@@ -13,6 +13,7 @@ using Typewriter.Generation.Controllers;
 using Typewriter.Tests.Render.WebApiController;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
+using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.Tests.Generation
 {
@@ -36,14 +37,7 @@ namespace Typewriter.Tests.Generation
                 c.Arg<Action>()();
             });
 
-            var templateController = new TemplateController(dte, item =>
-            {
-                var template = Substitute.ForPartsOf<Template>(item);
-
-                template.When(m => m.SaveProjectFile()).DoNotCallBase();
-
-                return template;
-            });
+            var templateController = new TemplateController(dte, item => new TemplateSubstitute(item));
 
             var generationController = new GenerationController(dte, metadataProvider, templateController, eventQueue);
 
@@ -56,10 +50,27 @@ namespace Typewriter.Tests.Generation
 
             generationController.OnTemplateChanged(templateFilename);
 
-
-
+            
            
         }
     }
-    
+
+    public class TemplateSubstitute : Template
+    {
+        public TemplateSubstitute(ProjectItem projectItem) : base(projectItem)
+        {
+        }
+
+        public override void SaveProjectFile()
+        {
+            Trace.WriteLine("SaveProjectFile intercepted");
+        }
+
+        protected override void SaveFile(File file, string output)
+        {
+            Trace.WriteLine("SaveFile intercepted");
+            Trace.WriteLine("Output: ");
+            Trace.WriteLine(output);
+        }
+    }
 }

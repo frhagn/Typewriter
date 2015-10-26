@@ -27,6 +27,7 @@ namespace Typewriter.Generation.Controllers
 
         public void OnTemplateChanged(string templatePath)
         {
+            Trace.WriteLine("OnTemplateChanged " + templatePath);
 
             Log.Debug("{0} queued {1}", GenerationType.Template, templatePath);
 
@@ -39,21 +40,11 @@ namespace Typewriter.Generation.Controllers
 
             _eventQueue.Enqueue(() =>
             {
+                Trace.WriteLine("_eventQueue.Enqueue");
+
                 var stopwatch = Stopwatch.StartNew();
 
-                var template = _templateController.TemplatesLoaded
-                    ? _templateController.Templates.FirstOrDefault(m => m.TemplatePath.Equals(projectItem.Path(), StringComparison.InvariantCultureIgnoreCase))
-                    : null;
-
-                if (template == null)
-                {
-                    template = new Template(projectItem);
-                    _templateController.ResetTemplates();
-                }
-                else
-                {
-                    template.Reload();
-                }
+                var template = _templateController.GetTemplate(projectItem);
 
                 foreach (var path in referencedItems)
                 {
