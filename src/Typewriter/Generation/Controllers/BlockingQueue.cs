@@ -254,8 +254,7 @@ namespace Typewriter.Generation.Controllers
                 {
                     _base.Enqueue(obj);
                     added = true;
-                    //Else
-                    //    Trace.WriteLine("Already in Queue")
+                    
                 }
 
 

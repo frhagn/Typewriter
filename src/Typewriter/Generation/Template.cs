@@ -20,7 +20,7 @@ namespace Typewriter.Generation
         private readonly string _projectFullName;
         private readonly ProjectItem _projectItem;
         private Lazy<string> _template;
-        private readonly SettingsImpl _configuration;
+        private Lazy<SettingsImpl> _configuration;
         private bool _templateCompileException;
         private bool _templateCompiled;
 
@@ -36,16 +36,35 @@ namespace Typewriter.Generation
 
             _template = LazyTemplate();
 
-            _configuration = new SettingsImpl(_projectItem);
+            _configuration = LazyConfiguration();
 
-            var templateClass = _customExtensions.FirstOrDefault();
-            if (templateClass?.GetConstructor(new[] { typeof(Settings) }) != null)
-            {
-                Activator.CreateInstance(templateClass, _configuration);
-            }
-
+            
             stopwatch.Stop();
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
+        }
+
+        private Lazy<SettingsImpl> LazyConfiguration()
+        {
+
+            return  new Lazy<SettingsImpl>(() =>
+            {
+                var settings = new SettingsImpl(_projectItem);
+
+                if (!_template.IsValueCreated)
+                {
+                    //force initialize template so _customExtensions will be loaded
+                    var templateValue = _template.Value;
+                }
+
+                var templateClass = _customExtensions.FirstOrDefault();
+                if (templateClass?.GetConstructor(new[] { typeof(Settings) }) != null)
+                {
+                    Activator.CreateInstance(templateClass, settings);
+                }
+
+
+                return settings;
+            });
         }
 
         private Lazy<string> LazyTemplate()
@@ -60,6 +79,7 @@ namespace Typewriter.Generation
                 {
                     var result = TemplateCodeParser.Parse(_projectItem, code, _customExtensions);
                     _templateCompiled = true;
+
                     return result;
                 }
                 catch (Exception)
@@ -71,12 +91,15 @@ namespace Typewriter.Generation
         }
         public ICollection<string> GetFilesToRender()
         {
-            return ProjectHelpers.GetProjectItems(_projectItem.DTE, _configuration.IncludedProjects, "*.cs").ToList();
+            var projects = _projectItem.DTE.Solution.AllProjects().Where(m=> _configuration.Value.IncludedProjects.Any(p=>m.FullName.Equals(p,StringComparison.OrdinalIgnoreCase)));
+
+            return projects.SelectMany(m => m.AllProjectItems(Constants.CsExtension)).Select(m => m.Path()).ToList();
+            
         }
 
         public bool ShouldRenderFile(string filename)
         {
-            return ProjectHelpers.ProjectListContainsItem(_projectItem.DTE, filename, _configuration.IncludedProjects);
+            return ProjectHelpers.ProjectListContainsItem(_projectItem.DTE, filename, _configuration.Value.IncludedProjects);
         }
 
         public string Render(File file, out bool success)
@@ -257,9 +280,9 @@ namespace Typewriter.Generation
 
             try
             {
-                if (_configuration.OutputFilenameFactory != null)
+                if (_configuration.Value.OutputFilenameFactory != null)
                 {
-                    var filename = _configuration.OutputFilenameFactory(file);
+                    var filename = _configuration.Value.OutputFilenameFactory(file);
 
                     if (filename.Contains(".") == false)
                         filename += extension;
@@ -277,7 +300,7 @@ namespace Typewriter.Generation
 
         private string GetOutputExtension()
         {
-            var extension = _configuration.OutputExtension;
+            var extension = _configuration.Value.OutputExtension;
 
             if (string.IsNullOrWhiteSpace(extension))
                 return ".ts";
@@ -377,6 +400,7 @@ namespace Typewriter.Generation
         public void Reload()
         {
             _template = LazyTemplate();
+            _configuration = LazyConfiguration();
         }
     }
 }

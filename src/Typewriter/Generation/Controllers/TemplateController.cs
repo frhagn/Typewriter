@@ -31,7 +31,6 @@ namespace Typewriter.Generation.Controllers
 
         private ICollection<Template> LoadTemplates()
         {
-            Trace.WriteLine("TemplateController.LoadTemplates");
             var stopwatch = Stopwatch.StartNew();
             
             if (_templates == null)

@@ -27,28 +27,24 @@ namespace Typewriter.Generation.Controllers
 
         public void OnTemplateChanged(string templatePath)
         {
-            Trace.WriteLine("OnTemplateChanged " + templatePath);
-
+            
             Log.Debug("{0} queued {1}", GenerationType.Template, templatePath);
+
+            ErrorList.Clear();
 
             var projectItem = _dte.Solution.FindProjectItem(templatePath);
 
-            var vsProject = projectItem.ContainingProject.Object as VSProject;
-            var referencedItems = vsProject.GetReferencedProjectItems(Constants.CsExtension).Select(m => m.Path()).ToArray();
-
-            Log.Debug(" Will Check/Render {0} .cs files in referenced projects", referencedItems.Length);
-
+            var template = _templateController.GetTemplate(projectItem);
+            var filesToRender = template.GetFilesToRender();
+            Log.Debug(" Will Check/Render {0} .cs files in referenced projects", filesToRender.Count);
+            
             _eventQueue.Enqueue(() =>
             {
-                Trace.WriteLine("_eventQueue.Enqueue");
-
                 var stopwatch = Stopwatch.StartNew();
+                
 
-                var template = _templateController.GetTemplate(projectItem);
-
-                foreach (var path in referencedItems)
+                foreach (var path in filesToRender)
                 {
-
                     var metadata = _metadataProvider.GetFile(path);
                     var file = new FileImpl(metadata);
 
@@ -71,7 +67,13 @@ namespace Typewriter.Generation.Controllers
 
         public void OnCsFileChanged(string[] paths)
         {
-            Enqueue(GenerationType.Render, paths, path => new FileImpl(_metadataProvider.GetFile(path)), (path, template) => template.RenderFile(path));
+            Enqueue(GenerationType.Render, paths, path => new FileImpl(_metadataProvider.GetFile(path)), (file, template) =>
+            {
+                if (template.ShouldRenderFile(file.FullName))
+                {
+                    template.RenderFile(file);
+                }
+            });
         }
 
 
