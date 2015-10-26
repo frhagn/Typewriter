@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EnvDTE;
 using NSubstitute;
 using Should;
+using Typewriter.Generation;
 using Typewriter.Generation.Controllers;
 using Typewriter.Tests.Render.WebApiController;
 using Typewriter.Tests.TestInfrastructure;
@@ -27,24 +29,37 @@ namespace Typewriter.Tests.Generation
         public void Expect_GenerateTemplate()
         {
             var eventQueue = Substitute.For<IEventQueue>();
+
             eventQueue.When(m => m.Enqueue(Arg.Any<Action>())).Do(c =>
             {
                 Trace.WriteLine("Enqueue Called");
                 c.Arg<Action>()();
             });
 
-            var controller = new GenerationController(dte, metadataProvider, new TemplateController(dte), eventQueue);
+            var templateController = new TemplateController(dte, item =>
+            {
+                var template = Substitute.ForPartsOf<Template>(item);
+
+                template.When(m => m.SaveProjectFile()).DoNotCallBase();
+
+                return template;
+            });
+
+            var generationController = new GenerationController(dte, metadataProvider, templateController, eventQueue);
 
             var type = typeof(WebApiController);
             var nsParts = type.FullName.Remove(0, 11).Split('.');
 
             var path = string.Join(@"\", nsParts);
 
-            var filename = Path.Combine(SolutionDirectory, path + ".tstemplate");
+            var templateFilename = Path.Combine(SolutionDirectory, path + ".tstemplate");
 
-            controller.OnTemplateChanged(filename);
+            generationController.OnTemplateChanged(templateFilename);
 
 
+
+           
         }
     }
+    
 }

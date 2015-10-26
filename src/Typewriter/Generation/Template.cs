@@ -114,7 +114,7 @@ namespace Typewriter.Generation
             return success;
         }
 
-        private void SaveFile(File file, string output)
+        protected virtual void SaveFile(File file, string output)
         {
 
             ProjectItem item;
@@ -346,7 +346,7 @@ namespace Typewriter.Generation
             var dummy = _projectItem.FileNames[1];
         }
 
-        public void SaveProjectFile()
+        public virtual void SaveProjectFile()
         {
             Log.Debug("Saving Project File: {0} ", _projectFullName);
             var stopwatch = Stopwatch.StartNew();

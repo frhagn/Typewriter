@@ -12,12 +12,14 @@ namespace Typewriter.Generation.Controllers
     {
 
         private readonly DTE _dte;
-        
+        private readonly Func<ProjectItem, Template> _templateFactory;
         private ICollection<Template> _templates;
 
-        public TemplateController(DTE dte)
+        public TemplateController(DTE dte, Func<ProjectItem, Template> templateFactory = null)
         {
-            this._dte = dte;
+            _dte = dte;
+
+            _templateFactory = templateFactory ?? (item => new Template(item));
         }
 
         public bool TemplatesLoaded
@@ -31,14 +33,14 @@ namespace Typewriter.Generation.Controllers
         {
             var stopwatch = Stopwatch.StartNew();
             
-            if (this._templates == null)
+            if (_templates == null)
             {
                 var items = GetProjectItems();
-                this._templates = items.Select(i =>
+                _templates = items.Select(i =>
                 {
                     try
                     {
-                        return new Template(i);
+                        return _templateFactory(i);
                     }
                     catch (Exception e)
                     {
@@ -55,7 +57,7 @@ namespace Typewriter.Generation.Controllers
             }
             else
             {
-                foreach (var template in this._templates)
+                foreach (var template in _templates)
                 {
                     try
                     {
@@ -64,7 +66,7 @@ namespace Typewriter.Generation.Controllers
                     catch
                     {
                         Log.Debug("Invalid template");
-                        this._templates = null;
+                        _templates = null;
 
                         return LoadTemplates();
                     }
@@ -74,7 +76,7 @@ namespace Typewriter.Generation.Controllers
 
             }
 
-            return this._templates;
+            return _templates;
         }
 
         public void ResetTemplates()
