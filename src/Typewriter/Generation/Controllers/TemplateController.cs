@@ -41,6 +41,7 @@ namespace Typewriter.Generation.Controllers
                     try
                     {
                         return _templateFactory(i);
+
                     }
                     catch (Exception e)
                     {

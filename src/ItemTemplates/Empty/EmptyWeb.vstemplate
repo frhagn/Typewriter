@@ -2,7 +2,7 @@
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
     <Name>TypeScript Template File</Name>
-    <Description>Empty TypeScript Template file</Description>
+    <Description>A TypeScript Template file for generating TypeScript from C# source files.</Description>
     <Icon>tst.ico</Icon>
     <TemplateID>a5cefb29-7a4a-416f-82cf-128c9521e195</TemplateID>
     <ProjectType>Web</ProjectType>

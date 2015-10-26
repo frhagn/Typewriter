@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EnvDTE;
 using Typewriter.Generation.Controllers;
 using Typewriter.VisualStudio;
@@ -13,9 +11,9 @@ namespace Typewriter.CodeModel.Configuration
 {
     internal static class ProjectHelpers
     {
-        internal static void AddProject(DTE dte, ICollection<string> projectList, string projectName)
+        internal static void AddProject(ProjectItem projectItem, ICollection<string> projectList, string projectName)
         {
-            foreach (var project in dte.Solution.AllProjects())
+            foreach (var project in projectItem.DTE.Solution.AllProjetcs())
             {
                 try
                 {
@@ -27,11 +25,14 @@ namespace Typewriter.CodeModel.Configuration
                 }
                 catch (Exception exception)
                 {
-                    Log.Debug($"Can't add Project named '{projectName}' ({exception.Message})");
+                    Log.Debug($"Cannot add project named '{projectName}' ({exception.Message})");
                 }
             }
 
-            Log.Warn($"Can't find Project named '{projectName}'");
+            string message = $"Cannot find project named '{projectName}'";
+
+            ErrorList.AddWarning(projectItem, message);
+            Log.Warn(message);
         }
 
         internal static void AddCurrentProject(ICollection<string> projectList, ProjectItem projectItem)
@@ -77,7 +78,7 @@ namespace Typewriter.CodeModel.Configuration
                 }
                 catch (Exception exception)
                 {
-                    Log.Debug($"Can't find ProjectItem '{file.FullName}' ({exception.Message})");
+                    Log.Debug($"Cannot find project item '{file.FullName}' ({exception.Message})");
                 }
 
                 yield return file.FullName;
@@ -96,7 +97,7 @@ namespace Typewriter.CodeModel.Configuration
             }
             catch (Exception exception)
             {
-                Log.Debug($"Can't find ProjectItem '{filename}' ({exception.Message})");
+                Log.Debug($"Cannot find project item '{filename}' ({exception.Message})");
                 return false;
             }
         }
@@ -113,7 +114,7 @@ namespace Typewriter.CodeModel.Configuration
             }
             catch (Exception exception)
             {
-                Log.Debug($"Can't add Project ({exception.Message})");
+                Log.Debug($"Cannot add project ({exception.Message})");
             }
         }
     }
