@@ -84,8 +84,22 @@ namespace Typewriter.Generation
                                     var c = extensions.FirstOrDefault()?.GetMethod(predicate);
                                     if (c != null)
                                     {
-                                        items = collection.Where(x => (bool)c.Invoke(null, new object[] { x })).ToList();
-                                        matchFound = matchFound || items.Any();
+                                        try
+                                        {
+                                            items = collection.Where(x => (bool)c.Invoke(null, new object[] { x })).ToList();
+                                            matchFound = matchFound || items.Any();
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            items = new Item[0];
+                                            hasError = true;
+
+                                            var message = $"Error rendering template. Cannot apply filter to identifier '{identifier}'. {e.Message} Source path: {sourcePath}";
+
+                                            Log.Error(message);
+                                            ErrorList.AddError(projectItem, message);
+                                            ErrorList.Show();
+                                        }
                                     }
                                     else
                                     {
