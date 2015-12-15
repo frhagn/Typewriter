@@ -13,7 +13,7 @@ namespace Typewriter.VisualStudio
         [Export, Name(Constants.ContentType), BaseDefinition(Constants.BaseDefinition)]
         internal static ContentTypeDefinition TstContentTypeDefinition { get; set; }
 
-        [Export, ContentType(Constants.ContentType), FileExtension(Constants.Extension)]
+        [Export, ContentType(Constants.ContentType), FileExtension(Constants.TemplateExtension)]
         internal static FileExtensionToContentTypeDefinition TstFileExtensionDefinition { get; set; }
 
         [Export, Name(Classifications.Property)]
@@ -44,7 +44,7 @@ namespace Typewriter.VisualStudio
 
         public int GetFileExtensions(out string pbstrExtensions)
         {
-            pbstrExtensions = Constants.Extension;
+            pbstrExtensions = Constants.TemplateExtension;
             return 0;
         }
 

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using EnvDTE;
@@ -8,9 +11,12 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using Typewriter.CodeModel.Implementation;
+using Typewriter.Generation;
 using Typewriter.Generation.Controllers;
 using Typewriter.Metadata.CodeDom;
 using Typewriter.Metadata.Providers;
+using VSLangProj;
 
 namespace Typewriter.VisualStudio
 {
@@ -19,16 +25,17 @@ namespace Typewriter.VisualStudio
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideLanguageService(typeof(LanguageService), Constants.LanguageName, 100, DefaultToInsertSpaces = true)]
-    [ProvideLanguageExtension(typeof(LanguageService), Constants.Extension)]
+    [ProvideLanguageExtension(typeof(LanguageService), Constants.TemplateExtension)]
     public sealed class ExtensionPackage : Package, IDisposable
     {
-        private DTE _dte;
-        private Log _log;
-        private IVsStatusbar _statusBar;
-        private SolutionMonitor _solutionMonitor;
-        private TemplateController _templateController;
-        private EventQueue _eventQueue;
-        private IMetadataProvider _metadataProvider;
+        private DTE dte;
+        private Log log;
+        private IVsStatusbar statusBar;
+        private SolutionMonitor solutionMonitor;
+        private TemplateController templateController;
+        private IEventQueue eventQueue;
+        private IMetadataProvider metadataProvider;
+        private GenerationController generationController;
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -45,28 +52,54 @@ namespace Typewriter.VisualStudio
             RegisterIcons();
             ClearTempDirectory();
             
-            _eventQueue = new EventQueue(_statusBar);
-            _solutionMonitor = new SolutionMonitor();
-            _templateController = new TemplateController(_dte, _metadataProvider, _solutionMonitor, _eventQueue);
-            var generationController = new GenerationController(_dte, _metadataProvider, _solutionMonitor, _templateController, _eventQueue);
+            
+            this.solutionMonitor = new SolutionMonitor();
+            this.templateController = new TemplateController(dte);
+            this.eventQueue = new EventQueue(statusBar);
+            this.generationController = new GenerationController(dte, metadataProvider, templateController, eventQueue);
 
+            WireupEvents();
             ErrorList.Initialize(this);
+        }
+
+        private void WireupEvents()
+        {
+
+            solutionMonitor.ProjectAdded += (sender, args) => templateController.ResetTemplates();
+            solutionMonitor.ProjectRemoved += (sender, args) => templateController.ResetTemplates();
+
+            solutionMonitor.TemplateAdded += (sender, args) => templateController.ResetTemplates();
+            solutionMonitor.TemplateDeleted += (sender, args) => templateController.ResetTemplates();
+            solutionMonitor.TemplateRenamed += (sender, args) => templateController.ResetTemplates();
+            solutionMonitor.TemplateChanged += (sender, args) => generationController.OnTemplateChanged(args.Path);
+
+
+            solutionMonitor.CsFileAdded += (sender, args) => generationController.OnCsFileChanged(args.Paths);
+            solutionMonitor.CsFileChanged += (sender, args) => generationController.OnCsFileChanged(args.Paths);
+
+            solutionMonitor.CsFileDeleted += (sender, args) => generationController.OnCsFileDeleted(args.Paths);
+
+
+            solutionMonitor.CsFileRenamed += (sender, args) => generationController.OnCsFileRenamed(args.Paths, args.OldPaths);
+            
+
+
         }
 
         private void GetDte()
         {
-            _dte = GetService(typeof(DTE)) as DTE;
-            _log = new Log(_dte);
+            this.dte = GetService(typeof(DTE)) as DTE;
+            this.log = new Log(dte);
 
-            if (_dte == null)
+            if (this.dte == null)
                 ErrorHandler.ThrowOnFailure(1);
         }
         
         private void GetStatusbar()
         {
-            _statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
+            this.statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
 
-            if (_statusBar == null)
+            if (this.statusBar == null)
                 ErrorHandler.ThrowOnFailure(1);
         }
 
@@ -80,12 +113,12 @@ namespace Typewriter.VisualStudio
 
                 Log.Info("Using Roslyn");
                 Constants.RoslynEnabled = true;
-                _metadataProvider = provider;
+                this.metadataProvider = provider;
             }
             catch
             {
                 Log.Info("Using CodeDom");
-                _metadataProvider = new CodeDomMetadataProvider(this._dte);
+                this.metadataProvider = new CodeDomMetadataProvider(this.dte);
             }
         }
 
@@ -106,7 +139,7 @@ namespace Typewriter.VisualStudio
                 {
                     if (classes == null) return;
 
-                    using (var key = classes.CreateSubKey(Constants.Extension + "\\DefaultIcon"))
+                    using (var key = classes.CreateSubKey(Constants.TemplateExtension + "\\DefaultIcon"))
                     {
                         key?.SetValue(string.Empty, path);
                     }
@@ -143,10 +176,10 @@ namespace Typewriter.VisualStudio
 
             if (!disposing) return;
 
-            if (_eventQueue != null)
+            if (this.eventQueue != null)
             {
-                _eventQueue.Dispose();
-                _eventQueue = null;
+                this.eventQueue.Dispose();
+                this.eventQueue = null;
             }
         }
     }

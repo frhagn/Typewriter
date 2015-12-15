@@ -13,7 +13,7 @@ namespace Typewriter.CodeModel.Configuration
     {
         internal static void AddProject(ProjectItem projectItem, ICollection<string> projectList, string projectName)
         {
-            foreach (var project in projectItem.DTE.Solution.AllProjetcs())
+            foreach (var project in projectItem.DTE.Solution.AllProjects())
             {
                 try
                 {
@@ -58,7 +58,7 @@ namespace Typewriter.CodeModel.Configuration
 
         internal static void AddAllProjects(DTE dte, ICollection<string> projectList)
         {
-            foreach (var project in dte.Solution.AllProjetcs())
+            foreach (var project in dte.Solution.AllProjects())
             {
                 AddProject(projectList, project);
             }

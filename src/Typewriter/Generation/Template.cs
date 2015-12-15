@@ -14,14 +14,15 @@ namespace Typewriter.Generation
 {
     public class Template
     {
-        private readonly object _locker = new object();
-
         private readonly List<Type> _customExtensions = new List<Type>();
-        private readonly string _template;
         private readonly string _templatePath;
         private readonly string _projectPath;
+        private readonly string _projectFullName;
         private readonly ProjectItem _projectItem;
-        private readonly SettingsImpl _configuration;
+        private Lazy<string> _template;
+        private Lazy<SettingsImpl> _configuration;
+        private bool _templateCompileException;
+        private bool _templateCompiled;
 
         public Template(ProjectItem projectItem)
         {
@@ -29,39 +30,94 @@ namespace Typewriter.Generation
 
             _projectItem = projectItem;
             _templatePath = projectItem.Path();
-            _projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+            _projectFullName = projectItem.ContainingProject.FullName;
+            _projectPath = Path.GetDirectoryName(_projectFullName);
 
-            var code = System.IO.File.ReadAllText(_templatePath);
-            _template = TemplateCodeParser.Parse(_projectItem, code, _customExtensions);
 
-            _configuration = new SettingsImpl(_projectItem);
+            _template = LazyTemplate();
 
-            var templateClass = _customExtensions.FirstOrDefault();
-            if (templateClass?.GetConstructor(new []{typeof(Settings)}) != null)
-            {
-                Activator.CreateInstance(templateClass, _configuration);
-            }
+            _configuration = LazyConfiguration();
 
+            
             stopwatch.Stop();
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
         }
 
+        private Lazy<SettingsImpl> LazyConfiguration()
+        {
+
+            return  new Lazy<SettingsImpl>(() =>
+            {
+                var settings = new SettingsImpl(_projectItem);
+
+                if (!_template.IsValueCreated)
+                {
+                    //force initialize template so _customExtensions will be loaded
+                    var templateValue = _template.Value;
+                }
+
+                var templateClass = _customExtensions.FirstOrDefault();
+                if (templateClass?.GetConstructor(new[] { typeof(Settings) }) != null)
+                {
+                    Activator.CreateInstance(templateClass, settings);
+                }
+
+
+                return settings;
+            });
+        }
+
+        private Lazy<string> LazyTemplate()
+        {
+            _templateCompiled = false;
+            _templateCompileException = false;
+
+            return new Lazy<string>(() =>
+            {
+                var code = System.IO.File.ReadAllText(_templatePath);
+                try
+                {
+                    var result = TemplateCodeParser.Parse(_projectItem, code, _customExtensions);
+                    _templateCompiled = true;
+
+                    return result;
+                }
+                catch (Exception)
+                {
+                    _templateCompileException = true;
+                    throw;
+                }
+            });
+        }
         public ICollection<string> GetFilesToRender()
         {
-            return ProjectHelpers.GetProjectItems(_projectItem.DTE, _configuration.IncludedProjects, "*.cs").ToList();
+            var projects = _projectItem.DTE.Solution.AllProjects().Where(m=> _configuration.Value.IncludedProjects.Any(p=>m.FullName.Equals(p,StringComparison.OrdinalIgnoreCase)));
+
+            return projects.SelectMany(m => m.AllProjectItems(Constants.CsExtension)).Select(m => m.Path()).ToList();
+            
         }
 
         public bool ShouldRenderFile(string filename)
         {
-            return ProjectHelpers.ProjectListContainsItem(_projectItem.DTE, filename, _configuration.IncludedProjects);
+            return ProjectHelpers.ProjectListContainsItem(_projectItem.DTE, filename, _configuration.Value.IncludedProjects);
         }
 
         public string Render(File file, out bool success)
         {
-            return Parser.Parse(_projectItem, file.FullName, _template, _customExtensions, file, out success);
+            try
+            {
+                return Parser.Parse(_projectItem, file.FullName, _template.Value, _customExtensions, file, out success);
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message + " Template: " + _templatePath);
+                success = false;
+                return null;
+            }
         }
 
-        public bool RenderFile(File file, bool saveProjectFile)
+        public bool RenderFile(File file)
         {
             bool success;
             var output = Render(file, out success);
@@ -70,86 +126,74 @@ namespace Typewriter.Generation
             {
                 if (output == null)
                 {
-                    DeleteFile(file.FullName, saveProjectFile);
+                    DeleteFile(file.FullName);
                 }
                 else
                 {
-                    SaveFile(file, output, saveProjectFile);
+                    SaveFile(file, output);
                 }
             }
 
             return success;
         }
 
-        private void SaveFile(File file, string output, bool saveProjectFile)
+        protected virtual void SaveFile(File file, string output)
         {
-            lock (_locker)
+
+            ProjectItem item;
+            var outputPath = GetOutputPath(file);
+
+            if (HasChanged(outputPath, output))
             {
-                ProjectItem item;
-                var outputPath = GetOutputPath(file);
+                CheckOutFileFromSourceControl(outputPath);
 
-                if (HasChanged(outputPath, output))
-                {
-                    CheckOutFileFromSourceControl(outputPath);
-
-                    System.IO.File.WriteAllText(outputPath, output);
-                    item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
-                }
-                else
-                {
-                    item = FindProjectItem(outputPath);
-                }
-
-                SetMappedSourceFile(item, file.FullName);
-
-                if (saveProjectFile)
-                    _projectItem.ContainingProject.Save();
+                System.IO.File.WriteAllText(outputPath, output);
+                item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
             }
+            else
+            {
+                item = FindProjectItem(outputPath);
+            }
+
+            SetMappedSourceFile(item, file.FullName);
+
+
         }
 
-        public void DeleteFile(string path, bool saveProjectFile)
+        public void DeleteFile(string path)
         {
-            lock (_locker)
+
+            var item = GetExistingItem(path);
+
+            if (item != null)
             {
-                var item = GetExistingItem(path);
+                item.Delete();
 
-                if (item != null)
-                {
-                    item.Delete();
 
-                    if (saveProjectFile)
-                        _projectItem.ContainingProject.Save();
-                }
             }
+
         }
 
-        public void RenameFile(File file, string oldPath, string newPath, bool saveProjectFile)
+        public void RenameFile(File file, string oldPath, string newPath)
         {
-            lock (_locker)
+            var item = GetExistingItem(oldPath);
+
+            if (item != null)
             {
-                var item = GetExistingItem(oldPath);
-
-                if (item != null)
+                if (Path.GetFileName(oldPath)?.Equals(Path.GetFileName(newPath)) ?? false)
                 {
-                    if (Path.GetFileName(oldPath)?.Equals(Path.GetFileName(newPath)) ?? false)
-                    {
-                        SetMappedSourceFile(item, newPath);
-
-                        if (saveProjectFile)
-                            _projectItem.ContainingProject.Save();
-
-                        return;
-                    }
-
-                    var newOutputPath = GetOutputPath(file);
-
-                    item.Name = Path.GetFileName(newOutputPath);
                     SetMappedSourceFile(item, newPath);
 
-                    if (saveProjectFile)
-                        _projectItem.ContainingProject.Save();
+                    return;
                 }
+
+                var newOutputPath = GetOutputPath(file);
+
+                item.Name = Path.GetFileName(newOutputPath);
+                SetMappedSourceFile(item, newPath);
+
             }
+
         }
 
         private string GetMappedSourceFile(ProjectItem item)
@@ -219,8 +263,8 @@ namespace Typewriter.Generation
                     filename.Substring(0, filename.Length - 5) :
                     filename.Substring(0, filename.LastIndexOf(".", StringComparison.Ordinal));
 
-                var extension = filename.EndsWith(".d.ts", StringComparison.OrdinalIgnoreCase) ? 
-                    ".d.ts" : 
+                var extension = filename.EndsWith(".d.ts", StringComparison.OrdinalIgnoreCase) ?
+                    ".d.ts" :
                     filename.Substring(filename.LastIndexOf(".", StringComparison.Ordinal));
 
                 outputPath = Path.Combine(directory, $"{name} ({i}){extension}");
@@ -236,9 +280,9 @@ namespace Typewriter.Generation
 
             try
             {
-                if (_configuration.OutputFilenameFactory != null)
+                if (_configuration.Value.OutputFilenameFactory != null)
                 {
-                    var filename = _configuration.OutputFilenameFactory(file);
+                    var filename = _configuration.Value.OutputFilenameFactory(file);
 
                     if (filename.Contains(".") == false)
                         filename += extension;
@@ -256,7 +300,7 @@ namespace Typewriter.Generation
 
         private string GetOutputExtension()
         {
-            var extension = _configuration.OutputExtension;
+            var extension = _configuration.Value.OutputExtension;
 
             if (string.IsNullOrWhiteSpace(extension))
                 return ".ts";
@@ -323,6 +367,40 @@ namespace Typewriter.Generation
         {
             // ReSharper disable once UnusedVariable
             var dummy = _projectItem.FileNames[1];
+        }
+
+        public virtual void SaveProjectFile()
+        {
+            Log.Debug("Saving Project File: {0} ", _projectFullName);
+            var stopwatch = Stopwatch.StartNew();
+
+            _projectItem.ContainingProject.Save();
+
+            stopwatch.Stop();
+            Log.Debug("SaveProjectFile completed in {0} ms", stopwatch.ElapsedMilliseconds);
+        }
+
+        public string ProjectFullName { get { return _projectFullName; } }
+
+        public bool IsCompiled
+        {
+            get { return _templateCompiled; }
+        }
+
+        public bool HasCompileException
+        {
+            get { return _templateCompileException; }
+        }
+
+        public string TemplatePath
+        {
+            get { return _templatePath; }
+        }
+
+        public void Reload()
+        {
+            _template = LazyTemplate();
+            _configuration = LazyConfiguration();
         }
     }
 }

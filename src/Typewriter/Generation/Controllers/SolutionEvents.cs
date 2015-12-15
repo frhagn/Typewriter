@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -6,9 +7,8 @@ namespace Typewriter.Generation.Controllers
     public delegate void SolutionClosedEventHandler(object sender, SolutionClosedEventArgs e);
     public delegate void ProjectAddedEventHandler(object sender, ProjectAddedEventArgs e);
     public delegate void ProjectRemovedEventHandler(object sender, ProjectRemovedEventArgs e);
-    public delegate void FileAddedEventHandler(object sender, FileAddedEventArgs e);
     public delegate void FileChangedEventHandler(object sender, FileChangedEventArgs e);
-    public delegate void FileDeletedEventHandler(object sender, FileDeletedEventArgs e);
+    public delegate void SingleFileChangedEventHandler(object sender, SingleFileChangedEventArgs e);
     public delegate void FileRenamedEventHandler(object sender, FileRenamedEventArgs e);
 
     public class SolutionOpenedEventArgs : EventArgs
@@ -27,45 +27,43 @@ namespace Typewriter.Generation.Controllers
     {
     }
 
-    public class FileAddedEventArgs : EventArgs
+    public enum FileChangeType
     {
-        public string Path { get; private set; }
-
-        public FileAddedEventArgs(string path)
-        {
-            Path = path;
-        }
+        Added,
+        Changed,
+        Deleted,
+        Renamed
     }
 
     public class FileChangedEventArgs : EventArgs
     {
+        public FileChangeType ChangeType { get; private set; }
+        public string[] Paths { get; private set; }
+
+        public FileChangedEventArgs(FileChangeType changeType, params string[] paths)
+        {
+            ChangeType = changeType;
+            Paths = paths;
+        }
+    }
+    
+    public class FileRenamedEventArgs : FileChangedEventArgs
+    {
+        public string[] OldPaths { get; private set; }
+        
+        public FileRenamedEventArgs(string[] oldPaths, string[] newPaths) : base(FileChangeType.Renamed, newPaths)
+        {
+            OldPaths = oldPaths;
+        }
+    }
+    public class SingleFileChangedEventArgs : FileChangedEventArgs
+    {
         public string Path { get; private set; }
 
-        public FileChangedEventArgs(string path)
+        public SingleFileChangedEventArgs(FileChangeType changeType, string path) : base(changeType,path)
         {
             Path = path;
         }
     }
 
-    public class FileDeletedEventArgs : EventArgs
-    {
-        public string Path { get; private set; }
-
-        public FileDeletedEventArgs(string path)
-        {
-            Path = path;
-        }
-    }
-
-    public class FileRenamedEventArgs : EventArgs
-    {
-        public string OldPath { get; private set; }
-        public string NewPath { get; private set; }
-
-        public FileRenamedEventArgs(string oldPath, string newPath)
-        {
-            OldPath = oldPath;
-            NewPath = newPath;
-        }
-    }
 }
