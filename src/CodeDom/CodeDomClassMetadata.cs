@@ -40,7 +40,7 @@ namespace Typewriter.Metadata.CodeDom
         private string GetNamespace()
         {
             var parent = codeClass.Parent as CodeClass2;
-            return parent != null ? parent.FullName : codeClass.Namespace.FullName;
+            return parent != null ? parent.FullName : (codeClass.Namespace?.FullName ?? string.Empty);
         }
 
         internal static IEnumerable<IClassMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)

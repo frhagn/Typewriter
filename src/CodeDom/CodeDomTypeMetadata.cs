@@ -55,7 +55,7 @@ namespace Typewriter.Metadata.CodeDom
         private string GetNamespace()
         {
             var parent = CodeType.Parent as CodeClass2;
-            return parent != null ? parent.FullName : CodeType.Namespace.FullName;
+            return parent != null ? parent.FullName : (CodeType.Namespace?.FullName ?? string.Empty);
         }
 
         protected string GetName(string name)

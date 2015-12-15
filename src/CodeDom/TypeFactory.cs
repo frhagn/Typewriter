@@ -39,7 +39,8 @@ namespace Typewriter.Metadata.CodeDom
                     var name = Guid.NewGuid().ToString("N");
 
                     var currentNamespace = projectItem.FileCodeModel.CodeElements.OfType<CodeNamespace>().FirstOrDefault();
-                    var codeClass = currentNamespace.Children.OfType<CodeClass>().FirstOrDefault();
+                    var codeClass = currentNamespace != null ? currentNamespace.Children.OfType<CodeClass>().FirstOrDefault() :
+                        projectItem.FileCodeModel.CodeElements.OfType<CodeClass>().FirstOrDefault();
 
                     if (codeClass == null)
                     {

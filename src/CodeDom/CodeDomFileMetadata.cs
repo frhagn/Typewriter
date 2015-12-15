@@ -20,10 +20,21 @@ namespace Typewriter.Metadata.CodeDom
 
         public string Name => projectItem.Name;
         public string FullName => projectItem.FileNames[1];
-        public IEnumerable<IClassMetadata> Classes => Namespaces.SelectMany(n => CodeDomClassMetadata.FromCodeElements(n.Members, this));
-        public IEnumerable<IDelegateMetadata> Delegates => Namespaces.SelectMany(n => CodeDomDelegateMetadata.FromCodeElements(n.Members, this));
-        public IEnumerable<IEnumMetadata> Enums => Namespaces.SelectMany(n => CodeDomEnumMetadata.FromCodeElements(n.Members, this));
-        public IEnumerable<IInterfaceMetadata> Interfaces => Namespaces.SelectMany(n => CodeDomInterfaceMetadata.FromCodeElements(n.Members, this));
+        public IEnumerable<IClassMetadata> Classes => 
+            CodeDomClassMetadata.FromCodeElements(projectItem.FileCodeModel.CodeElements, this)
+            .Concat(Namespaces.SelectMany(n => CodeDomClassMetadata.FromCodeElements(n.Members, this)));
+
+        public IEnumerable<IDelegateMetadata> Delegates =>
+            CodeDomDelegateMetadata.FromCodeElements(projectItem.FileCodeModel.CodeElements, this)
+            .Concat(Namespaces.SelectMany(n => CodeDomDelegateMetadata.FromCodeElements(n.Members, this)));
+
+        public IEnumerable<IEnumMetadata> Enums =>
+            CodeDomEnumMetadata.FromCodeElements(projectItem.FileCodeModel.CodeElements, this)
+            .Concat(Namespaces.SelectMany(n => CodeDomEnumMetadata.FromCodeElements(n.Members, this)));
+
+        public IEnumerable<IInterfaceMetadata> Interfaces =>
+            CodeDomInterfaceMetadata.FromCodeElements(projectItem.FileCodeModel.CodeElements, this)
+            .Concat(Namespaces.SelectMany(n => CodeDomInterfaceMetadata.FromCodeElements(n.Members, this)));
 
         internal CodeType GetType(string fullName)
         {

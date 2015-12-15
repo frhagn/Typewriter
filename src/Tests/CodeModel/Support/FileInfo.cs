@@ -1,4 +1,45 @@
-﻿namespace Typewriter.Tests.CodeModel.Support
+﻿
+public class PublicClassNoNamespace
+{
+    public class PublicNestedClassNoNamespace
+    {
+    }
+
+    public delegate void PublicNestedDelegateNoNamespace();
+
+    public enum PublicNestedEnumNoNamespace
+    {
+    }
+
+    public interface PublicNestedInterfaceNoNamespace
+    {
+    }
+}
+
+internal class InternalClassNoNamespace
+{
+}
+
+public delegate void PublicDelegateNoNamespace();
+internal delegate void InternalDelegateNoNamespace();
+
+public enum PublicEnumNoNamespace
+{
+}
+
+internal enum InternalEnumNoNamespace
+{
+}
+
+public interface PublicInterfaceNoNamespace
+{
+}
+
+internal interface InternalInterfaceNoNamespace
+{
+}
+
+namespace Typewriter.Tests.CodeModel.Support
 {
     public class PublicClass
     {

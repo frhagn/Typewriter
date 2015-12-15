@@ -31,9 +31,13 @@ namespace Typewriter.Metadata.Roslyn
 
         private IEnumerable<INamedTypeSymbol> GetNamespaceChildNodes<T>() where T : SyntaxNode
         {
-            return root.ChildNodes().OfType<NamespaceDeclarationSyntax>()
-                .SelectMany(n => n.ChildNodes().OfType<T>())
+            return root.ChildNodes().OfType<T>().Concat(root.ChildNodes().OfType<NamespaceDeclarationSyntax>()
+                .SelectMany(n => n.ChildNodes().OfType<T>()))
                 .Select(c => semanticModel.GetDeclaredSymbol(c) as INamedTypeSymbol);
+
+            //return root.ChildNodes().OfType<NamespaceDeclarationSyntax>()
+            //    .SelectMany(n => n.ChildNodes().OfType<T>())
+            //    .Select(c => semanticModel.GetDeclaredSymbol(c) as INamedTypeSymbol);
         }
     }
 }
