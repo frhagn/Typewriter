@@ -284,6 +284,17 @@ namespace Typewriter.Generation
                 {
                     var filename = _configuration.Value.OutputFilenameFactory(file);
 
+                    filename = filename
+                        .Replace("<", "-")
+                        .Replace(">", "-")
+                        .Replace(":", "-")
+                        .Replace("\"", "-")
+                        .Replace("/", "-")
+                        .Replace("\\", "-")
+                        .Replace("|", "-")
+                        .Replace("?", "-")
+                        .Replace("*", "-");
+
                     if (filename.Contains(".") == false)
                         filename += extension;
 

@@ -132,7 +132,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 var isString = match == '"' || match == '\'';
                 if (isString)
                 {
-                    if (Peek(index - 1) == '\\') return false;
+                    if (Peek(index - 1) == '\\' && Peek(index - 2) != '\\') return false;
                 }
 
                 return true;

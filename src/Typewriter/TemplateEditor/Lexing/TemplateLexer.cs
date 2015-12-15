@@ -287,7 +287,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
                     if (stream.Current == open)
                     {
-                        if (stream.Peek(-1) != '\\')
+                        if (stream.Peek(-1) != '\\' || stream.Peek(-2) == '\\')
                         {
                             semanticModel.Tokens.Add(Classifications.String, start, stream.Position + 1 - start);
                             return true;
