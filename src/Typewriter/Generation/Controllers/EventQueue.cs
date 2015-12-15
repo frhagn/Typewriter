@@ -1,139 +1,124 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell.Interop;
 using Typewriter.VisualStudio;
 using InteropConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
-using Timer = System.Timers.Timer;
 
 namespace Typewriter.Generation.Controllers
 {
-    public sealed class EventQueue : IDisposable
-    {
-        private readonly IVsStatusbar statusBar;
-        private readonly ICollection<GenerationEvent> queue = new HashSet<GenerationEvent>();
-        private readonly object locker = new object();
-        private Timer timer = new Timer(500);
 
-        private DateTime timestamp = DateTime.Now;
+    public interface IEventQueue : IDisposable
+    {
+        void Enqueue(Action action);
+    }
+
+    public sealed class EventQueue : IEventQueue
+    {
+        private readonly IVsStatusbar _statusBar;
+        private readonly BlockingQueue<Action> _queue;
+        private readonly Task _queueTask;
 
         public EventQueue(IVsStatusbar statusBar)
         {
-            this.statusBar = statusBar;
-            SetupTimer();
+            this._statusBar = statusBar;
+            _queue = new BlockingQueue<Action>();
+
+            _queueTask = Task.Run(() => ProcessQueue());
         }
 
-        public void Enqueue(Action<GenerationEvent> action, GenerationType type, params string[] paths)
+        private void ProcessQueue()
         {
-            if (paths[0].EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase) == false) return;
-
-            lock (locker)
+            do
             {
-                this.timestamp = DateTime.Now;
-
-                var generationEvent = new GenerationEvent { Action = action, Type = type, Paths = paths };
-                if (queue.Any(e => e.Equals(generationEvent)))
+                try
                 {
-                    return;
-                }
-
-                queue.Add(generationEvent);
-
-                Log.Debug("{0} queued {1}", generationEvent.Type, string.Join(" -> ", generationEvent.Paths));
-            }
-        }
-
-        private void SetupTimer()
-        {
-            this.timer.Enabled = true;
-            this.timer.Elapsed += (sender, args) =>
-            {
-                GenerationEvent[] items;
-
-                lock (locker)
-                {
-                    if (timestamp.AddMilliseconds(500) > DateTime.Now)
+                    var action = _queue.Dequeue();
+                    Thread.Sleep(100);
+                    try
                     {
-                        return;
+
+                        object icon;
+
+                        PrepareStatusbar(out icon);
+
+                        var stopwatch = Stopwatch.StartNew();
+                        action();
+                        
+                        while (_queue.Count > 0)
+                        {
+                            action = _queue.Dequeue();
+
+                            action();
+                            
+                        }
+                        
+                        stopwatch.Stop();
+
+                        Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
+
+                        ClearStatusbar(icon);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error processing queue: " + ex.Message + "\n" + ex.StackTrace);
                     }
 
-                    items = queue.ToArray();
-                    queue.Clear();
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Log.Debug("Queue Closed: " + ex.Message);
                 }
 
-                var count = (uint)items.Length;
-                if (count <= 0) return;
 
 
-                object icon;
-                uint cookie;
-                
-                PrepareStatusbar(out cookie, out icon);
-                
-                var stopwatch = Stopwatch.StartNew();
+            } while (!(_queue.Closed));
 
-                uint i = 0;
-                var parallellQueue = items.AsParallel();
-                parallellQueue.ForAll(item =>
-                {
-                    item.Action(item);
-                    UpdateStatusbarProgress(ref cookie, ++i, count);
-                });
-
-                stopwatch.Stop();
-                Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
-
-                ClearStatusbar(cookie, ref icon);
-            };
         }
-
-        private void PrepareStatusbar(out uint cookie, out object icon)
+        
+        public void Enqueue(Action action)
         {
-            cookie = 0;
-            icon = (short)InteropConstants.SBAI_Save;
 
+            _queue.Enqueue(action);
+            
+        }
+        
+        private void PrepareStatusbar(out object icon)
+        {
+            
+            icon = (short) InteropConstants.SBAI_Save;
+            
             try
             {
                 int frozen;
-                statusBar.IsFrozen(out frozen);
-
+                _statusBar.IsFrozen(out frozen);
+                
                 if (frozen != 0) return;
+                
+                _statusBar.SetText("Rendering template...");
+                _statusBar.Animation(1, ref icon);
 
-                statusBar.Progress(ref cookie, 1, string.Empty, 0, 0);
-                statusBar.SetText("Rendering template...");
-                statusBar.Animation(1, ref icon);
+
             }
             catch (Exception exception)
             {
                 Log.Debug("Failed to prepare statusbar: {0}", exception.Message);
             }
         }
-
-        private void UpdateStatusbarProgress(ref uint cookie, uint current, uint total)
+        
+        private void ClearStatusbar(object icon)
         {
             try
             {
-                statusBar.Progress(ref cookie, 1, string.Empty, current, total);
-            }
-            catch (Exception exception)
-            {
-                Log.Debug("Failed to update statusbar progress: {0}", exception.Message);
-            }
-        }
-
-        private void ClearStatusbar(uint cookie, ref object icon)
-        {
-            try
-            {
-                //object icon = (short)InteropConstants.SBAI_Save;
-                statusBar.Animation(0, ref icon);
-                statusBar.SetText("Rendering complete");
-
-                Thread.Sleep(1000);
-
-                statusBar.Progress(ref cookie, 0, "", 0, 0);
+                
+                _statusBar.Animation(0, ref icon);
+                
+                _statusBar.SetText("Rendering complete");
+                
+                _statusBar.FreezeOutput(0);
+                
             }
             catch (Exception exception)
             {
@@ -142,16 +127,14 @@ namespace Typewriter.Generation.Controllers
         }
 
         private bool disposed;
+
         public void Dispose()
         {
             if (disposed) return;
 
             disposed = true;
-            if (this.timer != null)
-            {
-                this.timer.Dispose();
-                this.timer = null;
-            }
+            _queue.Close();
+            _queueTask.Dispose();
         }
     }
 
@@ -159,19 +142,8 @@ namespace Typewriter.Generation.Controllers
     {
         Render,
         Delete,
-        Rename
+        Rename,
+        Template
     }
-
-    public class GenerationEvent
-    {
-        public GenerationType Type { get; set; }
-        public string[] Paths { get; set; }
-        public Action<GenerationEvent> Action { get; set; }
-
-        public bool Equals(GenerationEvent other)
-        {
-            if (other == null) return false;
-            return (Type == other.Type) && Action == other.Action && (Paths.SequenceEqual(other.Paths));
-        }
-    }
+    
 }

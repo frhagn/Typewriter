@@ -5,9 +5,11 @@ namespace Typewriter
 {
     internal static class Constants
     {
-        internal const string Extension = ".tst";
+        internal const string TemplateExtension = ".tst";
         internal const string ContentType = "tst";
         internal const string LanguageName = "TST";
+
+        internal const string CsExtension = ".cs";
 
         internal const string ExtensionPackageId = "45b6b392-ce2f-409c-a39f-bbf90b34349e";
         internal const string LanguageServiceId = "aa5d6809-9c5d-443c-a37c-c29e6af2fe15";

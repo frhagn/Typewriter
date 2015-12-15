@@ -41,7 +41,7 @@ namespace Typewriter.VisualStudio
 
         private void Write(string type, string message, object[] parameters)
         {
-            message = $"{DateTime.Now:HH:mm:ss} {type}: {message}";
+            message = $"{DateTime.Now:HH:mm:ss.fff} {type}: {message}";
 
             try
             {

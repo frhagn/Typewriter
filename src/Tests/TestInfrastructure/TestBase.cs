@@ -11,8 +11,8 @@ namespace Typewriter.Tests.TestInfrastructure
 {
     public abstract class TestBase
     {
-        private readonly DTE dte;
-        private readonly IMetadataProvider metadataProvider;
+        protected readonly DTE dte;
+        protected readonly IMetadataProvider metadataProvider;
 
         protected readonly bool isRoslyn;
         protected readonly bool isCodeDom;
