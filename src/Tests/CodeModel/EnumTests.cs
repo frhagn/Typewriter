@@ -114,6 +114,20 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_hexadecimal_values_converted_to_their_integer_value()
+        {
+            var hexEnumInfo = fileInfo.Enums.First(e => e.Name == "HexEnumInfo");
+            var firstValue = hexEnumInfo.Values.First(v => v.Name == "ValueA");
+            var thirdValue = hexEnumInfo.Values.First(v => v.Name == "ValueC");
+
+            firstValue.Value.ShouldEqual(1);
+            firstValue.Value.ShouldEqual(0x01);
+
+            thirdValue.Value.ShouldEqual(3);
+            thirdValue.Value.ShouldEqual(0x03);
+        }
+
+        [Fact]
         public void Expect_to_find_containing_class_on_nested_enum()
         {
             var classInfo = fileInfo.Classes.First();

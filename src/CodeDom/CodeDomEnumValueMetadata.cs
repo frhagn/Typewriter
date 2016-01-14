@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
@@ -8,6 +10,8 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class CodeDomEnumValueMetadata : IEnumValueMetadata
     {
+        private static readonly Int32Converter _converter = new Int32Converter();
+
         private readonly CodeVariable2 codeVariable;
         private readonly CodeDomFileMetadata file;
         private readonly int value;
@@ -40,9 +44,18 @@ namespace Typewriter.Metadata.CodeDom
                     {
                         // Handle init expressions from char constants e.g. 'A' = 65
                         if (initExpression.Length == 3 && initExpression.StartsWith("'") && initExpression.EndsWith("'"))
+                        {
                             value = initExpression[1];
+                        }
+                        else if (initExpression.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var convertedValue = _converter.ConvertFromString(initExpression);
+                            value = (int?)convertedValue ?? -1;
+                        }
                         else
+                        {
                             value = -1;
+                        }
                     }
                 }
 
