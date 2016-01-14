@@ -36,58 +36,46 @@ namespace Typewriter.Generation.Controllers
                 {
                     var action = _queue.Dequeue();
                     Thread.Sleep(100);
+
+                    object icon;
+                    PrepareStatusbar(out icon);
+
                     try
                     {
-
-                        object icon;
-
-                        PrepareStatusbar(out icon);
-
                         var stopwatch = Stopwatch.StartNew();
                         action();
                         
                         while (_queue.Count > 0)
                         {
                             action = _queue.Dequeue();
-
                             action();
-                            
                         }
                         
                         stopwatch.Stop();
 
                         Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
-
-                        ClearStatusbar(icon);
                     }
                     catch (Exception ex)
                     {
                         Log.Error("Error processing queue: " + ex.Message + "\n" + ex.StackTrace);
                     }
-
-
+                    
+                    ClearStatusbar(icon);
                 }
                 catch (InvalidOperationException ex)
                 {
                     Log.Debug("Queue Closed: " + ex.Message);
                 }
-
-
-
             } while (!(_queue.Closed));
-
         }
         
         public void Enqueue(Action action)
         {
-
             _queue.Enqueue(action);
-            
         }
         
         private void PrepareStatusbar(out object icon)
         {
-            
             icon = (short) InteropConstants.SBAI_Save;
             
             try
@@ -99,8 +87,6 @@ namespace Typewriter.Generation.Controllers
                 
                 _statusBar.SetText("Rendering template...");
                 _statusBar.Animation(1, ref icon);
-
-
             }
             catch (Exception exception)
             {
@@ -112,13 +98,9 @@ namespace Typewriter.Generation.Controllers
         {
             try
             {
-                
                 _statusBar.Animation(0, ref icon);
-                
                 _statusBar.SetText("Rendering complete");
-                
                 _statusBar.FreezeOutput(0);
-                
             }
             catch (Exception exception)
             {
