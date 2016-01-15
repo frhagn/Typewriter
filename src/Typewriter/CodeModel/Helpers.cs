@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Typewriter.Metadata.Interfaces;
 
@@ -6,11 +7,25 @@ namespace Typewriter.CodeModel
 {
     public static class Helpers
     {
-        public static string CamelCase(string name)
+        public static string CamelCase(string s)
         {
-            if (name.Length > 1)
-                return name.Substring(0, 1).ToLowerInvariant() + name.Substring(1);
-            return name.ToLowerInvariant();
+            if (string.IsNullOrEmpty(s)) return s;
+            if (char.IsUpper(s[0]) == false) return s;
+
+            var chars = s.ToCharArray();
+
+            for (var i = 0; i < chars.Length; i++)
+            {
+                var hasNext = (i + 1 < chars.Length);
+                if (i > 0 && hasNext && char.IsUpper(chars[i + 1]) == false)
+                {
+                    break;
+                }
+
+                chars[i] = char.ToLowerInvariant(chars[i]);
+            }
+
+            return new string(chars);
         }
 
         public static string GetTypeScriptName(ITypeMetadata metadata)
