@@ -288,9 +288,9 @@ namespace Typewriter.Generation
                         .Replace("<", "-")
                         .Replace(">", "-")
                         .Replace(":", "-")
-                        .Replace("\"", "-")
+                        //.Replace("\"", "-")
                         .Replace("/", "-")
-                        .Replace("\\", "-")
+                        //.Replace("\\", "-")
                         .Replace("|", "-")
                         .Replace("?", "-")
                         .Replace("*", "-");
