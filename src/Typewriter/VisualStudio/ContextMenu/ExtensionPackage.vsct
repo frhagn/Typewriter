@@ -60,7 +60,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         
         <Strings>
-          <ButtonText>Invoke RenderTemplate</ButtonText>
+          <ButtonText>Render Template</ButtonText>
         </Strings>
       </Button>
     </Buttons>
