@@ -184,6 +184,7 @@
     <Compile Include="TestInfrastructure\RoslynMetadataProviderStub.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Render\RoutedApiController\BooksController.result" />
     <None Include="Render\RoutedApiController\BooksController.tstemplate" />

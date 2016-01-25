@@ -17,6 +17,7 @@ using Typewriter.Generation.Controllers;
 using Typewriter.Metadata.CodeDom;
 using Typewriter.Metadata.Providers;
 using VSLangProj;
+using Typewriter.VisualStudio.ContextMenu;
 
 namespace Typewriter.VisualStudio
 {
@@ -26,6 +27,7 @@ namespace Typewriter.VisualStudio
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideLanguageService(typeof(LanguageService), Constants.LanguageName, 100, DefaultToInsertSpaces = true)]
     [ProvideLanguageExtension(typeof(LanguageService), Constants.TemplateExtension)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class ExtensionPackage : Package, IDisposable
     {
         private DTE dte;
@@ -57,6 +59,7 @@ namespace Typewriter.VisualStudio
             this.templateController = new TemplateController(dte);
             this.eventQueue = new EventQueue(statusBar);
             this.generationController = new GenerationController(dte, metadataProvider, templateController, eventQueue);
+            RenderTemplate.Initialize(this);
 
             WireupEvents();
             ErrorList.Initialize(this);
@@ -81,7 +84,8 @@ namespace Typewriter.VisualStudio
 
 
             solutionMonitor.CsFileRenamed += (sender, args) => generationController.OnCsFileRenamed(args.Paths, args.OldPaths);
-            
+
+            RenderTemplate.Instance.RenderTemplateClicked += (sender, args) => generationController.OnTemplateChanged(args.Path);
 
 
         }
