@@ -78,13 +78,15 @@ module Models { $Classes(*Model)[
                         <h4>Models.tst</h4>
                         <pre class="hl tst">
 ${
+    using Typewriter.Extensions.Types;
+
     string KnockoutInitializer(Property property)
     {
         var type = property.Type;
 
         return type.IsEnumerable ?
-            $"KnockoutObservableArray&lt;{type.Name.TrimEnd('[', ']')}&gt; = ko.observableArray({type.Default})" :
-            $"KnockoutObservable&lt;{type.Name}&gt; = ko.observable({type.Default})";
+            $"KnockoutObservableArray&lt;{type.Name.TrimEnd('[', ']')}&gt; = ko.observableArray({type.Default()})" :
+            $"KnockoutObservable&lt;{type.Name}&gt; = ko.observable({type.Default()})";
     }
 
     string TypeMap(Property property)
