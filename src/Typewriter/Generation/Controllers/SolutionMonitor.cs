@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -220,14 +221,18 @@ namespace Typewriter.Generation.Controllers
 
         public int OnAfterSave(uint docCookie)
         {
-            uint flags, readlocks, editlocks;
-            string name;
-            IVsHierarchy hier;
-            uint itemid;
-            IntPtr docData;
-            runningDocumentTable.GetDocumentInfo(docCookie, out flags, out readlocks, out editlocks, out name, out hier, out itemid, out docData);
+            // Can run on save file?
+            if (ExtensionPackage.Instance.RunOnFileSave)
+            {
+                uint flags, readlocks, editlocks;
+                string name;
+                IVsHierarchy hier;
+                uint itemid;
+                IntPtr docData;
+                runningDocumentTable.GetDocumentInfo(docCookie, out flags, out readlocks, out editlocks, out name, out hier, out itemid, out docData);
 
-            TriggerFileChanged(name);
+                TriggerFileChanged(name);
+            }
 
             return VSConstants.S_OK;
         }

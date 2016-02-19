@@ -21,6 +21,7 @@ using Typewriter.VisualStudio.ContextMenu;
 
 namespace Typewriter.VisualStudio
 {
+    [ProvideOptionPage(typeof(TypewriterOptionsPage), "Typewriter", "General", 101, 106, true)]
     [Guid(Constants.ExtensionPackageId)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
@@ -38,6 +39,21 @@ namespace Typewriter.VisualStudio
         private IEventQueue eventQueue;
         private IMetadataProvider metadataProvider;
         private GenerationController generationController;
+
+        /// <summary>
+        /// This read-only property returns the package instance.
+        /// </summary>
+        internal static ExtensionPackage Instance { get; private set; }
+
+        public bool RunOnFileSave
+        {
+            get
+            {
+                TypewriterOptionsPage typewriterOptionsPage = (TypewriterOptionsPage)GetDialogPage(typeof(TypewriterOptionsPage));
+
+                return typewriterOptionsPage.RunOnFileSave;
+            }
+        }
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -63,6 +79,8 @@ namespace Typewriter.VisualStudio
 
             WireupEvents();
             ErrorList.Initialize(this);
+
+            ExtensionPackage.Instance = this;
         }
 
         private void WireupEvents()
@@ -185,6 +203,8 @@ namespace Typewriter.VisualStudio
                 this.eventQueue.Dispose();
                 this.eventQueue = null;
             }
+
+            ExtensionPackage.Instance = null;
         }
     }
 }
