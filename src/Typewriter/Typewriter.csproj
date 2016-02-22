@@ -376,6 +376,9 @@
     <Compile Include="Generation\Controllers\SolutionMonitor.cs" />
     <Compile Include="Generation\Controllers\TemplateController.cs" />
     <Compile Include="Generation\Controllers\SolutionExtensions.cs" />
+    <Compile Include="VisualStudio\TypewriterOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\VSPackage.resx">
