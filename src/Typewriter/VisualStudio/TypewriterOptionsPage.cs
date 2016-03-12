@@ -3,18 +3,18 @@ using System.ComponentModel;
 
 namespace Typewriter.VisualStudio
 {
-    // References
-    //https://social.msdn.microsoft.com/Forums/vstudio/en-US/303fce01-dfc0-43b3-a578-8b3258c0b83f/get-a-dialogpage-outside-of-the-package-class?forum=vsx
-    //https://msdn.microsoft.com/en-us/library/bb166553.aspx
-    //https://msdn.microsoft.com/en-us/library/bb166195.aspx
-    //https://msdn.microsoft.com/en-us/library/bb165657.aspx
-    //https://msdn.microsoft.com/en-us/library/bb166030.aspx
-    //https://msdn.microsoft.com/en-us/library/bb166195.aspx
     public class TypewriterOptionsPage : DialogPage
     {
-        [Category("General options")]
-        [DisplayName("Run on file save")]
-        [Description("Enable/disable to run Typewriter on save files.")]
-        public bool RunOnFileSave { get; set; }
+        [Category("Rendering")]
+        [DisplayName("Auto-render when C# files changes")]
+        [Description("If set to True, Typewriter will track changes to the C# source files in the solution and auto-render matching TypeScript Templates (.tst).")]
+        [DefaultValue(true)]
+        public bool TrackSourceFiles { get; set; } = true;
+
+        [Category("Rendering")]
+        [DisplayName("Render template on save")]
+        [Description("If set to True, TypeScript Templates (.tst) will be re-rendered when saved.")]
+        [DefaultValue(true)]
+        public bool RenderOnSave { get; set; } = true;
     }
 }

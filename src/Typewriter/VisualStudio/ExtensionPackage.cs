@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using EnvDTE;
@@ -11,12 +8,9 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
-using Typewriter.CodeModel.Implementation;
-using Typewriter.Generation;
 using Typewriter.Generation.Controllers;
 using Typewriter.Metadata.CodeDom;
 using Typewriter.Metadata.Providers;
-using VSLangProj;
 using Typewriter.VisualStudio.ContextMenu;
 
 namespace Typewriter.VisualStudio
@@ -45,15 +39,7 @@ namespace Typewriter.VisualStudio
         /// </summary>
         internal static ExtensionPackage Instance { get; private set; }
 
-        public bool RunOnFileSave
-        {
-            get
-            {
-                TypewriterOptionsPage typewriterOptionsPage = (TypewriterOptionsPage)GetDialogPage(typeof(TypewriterOptionsPage));
-
-                return typewriterOptionsPage.RunOnFileSave;
-            }
-        }
+        public TypewriterOptionsPage Options => (TypewriterOptionsPage) GetDialogPage(typeof (TypewriterOptionsPage));
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -80,12 +66,11 @@ namespace Typewriter.VisualStudio
             WireupEvents();
             ErrorList.Initialize(this);
 
-            ExtensionPackage.Instance = this;
+            Instance = this;
         }
 
         private void WireupEvents()
         {
-
             solutionMonitor.ProjectAdded += (sender, args) => templateController.ResetTemplates();
             solutionMonitor.ProjectRemoved += (sender, args) => templateController.ResetTemplates();
 
@@ -103,9 +88,7 @@ namespace Typewriter.VisualStudio
 
             solutionMonitor.CsFileRenamed += (sender, args) => generationController.OnCsFileRenamed(args.Paths, args.OldPaths);
 
-            RenderTemplate.Instance.RenderTemplateClicked += (sender, args) => generationController.OnTemplateChanged(args.Path);
-
-
+            RenderTemplate.Instance.RenderTemplateClicked += (sender, args) => generationController.OnTemplateChanged(args.Path, true);
         }
 
         private void GetDte()

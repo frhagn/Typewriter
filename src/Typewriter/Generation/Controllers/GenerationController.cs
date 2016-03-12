@@ -25,7 +25,7 @@ namespace Typewriter.Generation.Controllers
             _eventQueue = eventQueue;
         }
         
-        public void OnTemplateChanged(string templatePath)
+        public void OnTemplateChanged(string templatePath, bool force = false)
         {
             Log.Debug("{0} queued {1}", GenerationType.Template, templatePath);
 
@@ -34,6 +34,13 @@ namespace Typewriter.Generation.Controllers
             var projectItem = _dte.Solution.FindProjectItem(templatePath);
 
             var template = _templateController.GetTemplate(projectItem);
+
+            if (force == false && ExtensionPackage.Instance.Options.RenderOnSave == false)
+            {
+                Log.Debug("Render skipped {0}", templatePath);
+                return;
+            }
+
             var filesToRender = template.GetFilesToRender();
             Log.Debug(" Will Check/Render {0} .cs files in referenced projects", filesToRender.Count);
 
@@ -67,6 +74,12 @@ namespace Typewriter.Generation.Controllers
 
         public void OnCsFileChanged(string[] paths)
         {
+            if (ExtensionPackage.Instance.Options.TrackSourceFiles == false)
+            {
+                Log.Debug("Render skipped {0}", paths?.FirstOrDefault());
+                return;
+            }
+
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
             Task.Delay(1000).ContinueWith(task =>
             {
@@ -82,6 +95,12 @@ namespace Typewriter.Generation.Controllers
         
         public void OnCsFileDeleted(string[] paths)
         {
+            if (ExtensionPackage.Instance.Options.TrackSourceFiles == false)
+            {
+                Log.Debug("Delete skipped {0}", paths?.FirstOrDefault());
+                return;
+            }
+
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
             Task.Delay(1000).ContinueWith(task =>
             {
@@ -95,6 +114,12 @@ namespace Typewriter.Generation.Controllers
 
         public void OnCsFileRenamed(string[] newPaths, string[] oldPaths)
         {
+            if (ExtensionPackage.Instance.Options.TrackSourceFiles == false)
+            {
+                Log.Debug("Rename skipped {0}", oldPaths?.FirstOrDefault());
+                return;
+            }
+
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
             Task.Delay(1000).ContinueWith(task =>
             {

@@ -200,10 +200,15 @@ namespace Typewriter.Generation
         {
             if (item == null) return null;
 
-            var value = item.Properties.Item("CustomToolNamespace").Value as string;
-            var path = string.IsNullOrWhiteSpace(value) ? null : Path.GetFullPath(Path.Combine(_projectPath, value));
-
-            return path;
+            try
+            {
+                var value = item.Properties.Item("CustomToolNamespace").Value as string;
+                return string.IsNullOrWhiteSpace(value) ? null : Path.GetFullPath(Path.Combine(_projectPath, value));
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private void SetMappedSourceFile(ProjectItem item, string path)
@@ -217,10 +222,17 @@ namespace Typewriter.Generation
 
             if (relativeSourcePath.Equals(GetMappedSourceFile(item), StringComparison.InvariantCultureIgnoreCase) == false)
             {
-                var property = item.Properties.Item("CustomToolNamespace");
-                if (property == null) throw new InvalidOperationException("Cannot find CustomToolNamespace property");
+                try
+                {
+                    var property = item.Properties.Item("CustomToolNamespace");
+                    if (property == null) throw new InvalidOperationException("Cannot find CustomToolNamespace property");
 
-                property.Value = relativeSourcePath;
+                    property.Value = relativeSourcePath;
+                }
+                catch
+                {
+                    Log.Warn("Falied to save source map for '{0}'. Project type not supported.", path);
+                }
             }
         }
 

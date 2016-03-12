@@ -116,6 +116,7 @@ namespace Typewriter.Generation.Controllers
 
             disposed = true;
             _queue.Close();
+            _queueTask.Wait(1000);
             _queueTask.Dispose();
         }
     }
