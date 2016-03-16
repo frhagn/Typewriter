@@ -127,7 +127,7 @@ namespace Typewriter.Extensions.WebApi
 
         private static string ConvertRouteParameters(string route)
         {
-            return Regex.Replace(route, @"\{(\w+):?\w*\??\}", m => $"${{{m.Groups[1].Value}}}");
+            return Regex.Replace(route, @"\{\*?(\w+):?\w*\??\}", m => $"${{{m.Groups[1].Value}}}");
         }
 
         private static string AppendQueryString(Method method, string route)
