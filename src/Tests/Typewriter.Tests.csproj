@@ -158,6 +158,7 @@
     <Compile Include="CodeModel\TypeTests.cs" />
     <Compile Include="Extensions\Support\HttpMethodController.cs" />
     <Compile Include="Extensions\Support\RouteController.cs" />
+    <Compile Include="Extensions\WebApiRouteTests.cs" />
     <Compile Include="Extensions\WebApiTests.cs" />
     <Compile Include="Generation\GenerationControllerTests.cs" />
     <Compile Include="Support\AcceptVerbsAttribute.cs" />

@@ -62,27 +62,38 @@ namespace Typewriter.Extensions.WebApi
             {
                 var parent = method.Parent as Class;
                 var routePrefix = parent?.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix")?.Value.TrimEnd('/');
+                var value = ParseAttributeValue(routeAttribute.Value);
 
-                if (string.IsNullOrEmpty(routeAttribute.Value))
+                if (string.IsNullOrEmpty(value))
                 {
                     // Todo: What happens with empty route and no route prefix?
                     route = routePrefix ?? string.Empty;
                 }
-                else if (routeAttribute.Value.StartsWith("~"))
+                else if (value.StartsWith("~"))
                 {
-                    route = routeAttribute.Value.Remove(0, 1);
+                    route = value.Remove(0, 1);
                 }
                 else if (routePrefix == null)
                 {
-                    route = routeAttribute.Value;
+                    route = value;
                 }
                 else
                 {
-                    route = string.Concat(routePrefix, "/", routeAttribute.Value);
+                    route = string.Concat(routePrefix, "/", value);
                 }
             }
 
             return route;
+        }
+
+        private static string ParseAttributeValue(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            if (value.StartsWith("\"") == false) return value;
+
+            // Extract the route part for named and/or ordered routes
+            var expression = new Regex(@"(?<="")(?:\\.|[^""\\])*(?="")");
+            return expression.Match(value).Value;
         }
 
         private static string RemoveUnmatchedOptionalParameters(Method method, string route)
