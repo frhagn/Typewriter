@@ -39,6 +39,11 @@ namespace Typewriter.CodeModel
         public abstract Type Type { get; }
 
         /// <summary>
+        /// The value of the constant.
+        /// </summary>
+        public abstract string Value { get; }
+
+        /// <summary>
         /// Converts the current instance to string.
         /// </summary>
         public static implicit operator string (Constant instance)
