@@ -48,7 +48,7 @@ namespace Typewriter.Tests.CodeModel
             var classInfo = fileInfo.Classes.First();
             var constantInfo = classInfo.Constants.First();
 
-            constantInfo.Value.ShouldEqual("test");
+            constantInfo.Value.ShouldEqual("test\"quotes\"");
         }
 
         [Fact]

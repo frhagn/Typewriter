@@ -8,26 +8,27 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class CodeDomConstantMetadata : CodeDomFieldMetadata, IConstantMetadata
     {
-        private readonly string value;
-
-        private CodeDomConstantMetadata(CodeVariable2 codeVariable, CodeDomFileMetadata file, string value) : base(codeVariable, file)
+        private CodeDomConstantMetadata(CodeVariable2 codeVariable, CodeDomFileMetadata file) : base(codeVariable, file)
         {
-            this.value = value;
+            var initValue = codeVariable.InitExpression.ToString();
+            var value = initValue == "null" ? string.Empty : initValue;
+
+            if (value.Length >= 2 && value.StartsWith("\"") && value.EndsWith("\""))
+            {
+                Value = value.Substring(1, value.Length - 2).Replace("\\\"", "\"");
+            }
+            else
+            {
+                Value = value;
+            }
         }
         
-        public string Value => value;
+        public string Value { get; }
 
         internal new static IEnumerable<IConstantMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)
         {
-            return codeElements
-                .OfType<CodeVariable2>()
-                .Where(v => v.IsConstant && v.Access == vsCMAccess.vsCMAccessPublic)
-                .Select(v =>
-                {
-                    var initValue = (string)v.InitExpression.ToString();
-                    var constantValue = initValue == "null" ? string.Empty : $"{initValue}".Trim('"');
-                    return new CodeDomConstantMetadata(v, file, constantValue);
-                });
+            return codeElements.OfType<CodeVariable2>().Where(v => v.IsConstant && v.Access == vsCMAccess.vsCMAccessPublic)
+                .Select(v => new CodeDomConstantMetadata(v, file));
         }
     }
 }
