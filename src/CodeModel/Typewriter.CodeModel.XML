@@ -223,6 +223,11 @@
             The type of the constant.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Constant.Value">
+            <summary>
+            The value of the constant.
+            </summary>
+        </member>
         <member name="M:Typewriter.CodeModel.Constant.op_Implicit(Typewriter.CodeModel.Constant)~System.String">
             <summary>
             Converts the current instance to string.

@@ -28,6 +28,8 @@ namespace Typewriter.CodeModel.Implementation
         private Type _type;
         public override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this));
 
+        public override string Value => _metadata.Value;
+
         public override string ToString()
         {
             return Name;
