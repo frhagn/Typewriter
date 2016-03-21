@@ -10,5 +10,7 @@ namespace Typewriter.Tests.Support
         {
             this.v = v;
         }
+
+        public string Name { get; set; }
     }
 }

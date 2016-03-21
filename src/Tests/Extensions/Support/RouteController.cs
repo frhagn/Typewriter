@@ -14,5 +14,17 @@ namespace Typewriter.Tests.Extensions.Support
         {
             return null;
         }
+
+        [Route("api/{*key:string}")]
+        public string WildcardRoute(string key)
+        {
+            return null;
+        }
+
+        [Route("api/{id}", Name = "name")]
+        public string NamedRoute(int id)
+        {
+            return null;
+        }
     }
 }
