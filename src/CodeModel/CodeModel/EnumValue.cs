@@ -14,6 +14,11 @@ namespace Typewriter.CodeModel
         public abstract AttributeCollection Attributes { get; }
 
         /// <summary>
+        /// The XML documentation comment of the enum value.
+        /// </summary>
+        public abstract DocComment DocComment { get; }
+
+        /// <summary>
         /// The full original name of the enum value including namespace and containing class names.
         /// </summary>
         public abstract string FullName { get; }

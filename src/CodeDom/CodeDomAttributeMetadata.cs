@@ -14,7 +14,7 @@ namespace Typewriter.Metadata.CodeDom
         private CodeDomAttributeMetadata(CodeAttribute2 codeAttribute)
         {
             this.codeAttribute = codeAttribute;
-            this.value = codeAttribute.Value;//.Trim('"');
+            this.value = codeAttribute.Value;
 
             if (string.IsNullOrEmpty(this.value))
                 this.value = null;
@@ -22,7 +22,7 @@ namespace Typewriter.Metadata.CodeDom
 
         public string Name => codeAttribute.Name;
         public string FullName => codeAttribute.FullName;
-        public string Value => value; // Todo!
+        public string Value => value;
 
         internal static IEnumerable<IAttributeMetadata> FromCodeElements(CodeElements codeElements)
         {

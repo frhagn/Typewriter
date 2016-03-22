@@ -51,6 +51,7 @@
     <Compile Include="CodeModel\Class.cs" />
     <Compile Include="CodeModel\Constant.cs" />
     <Compile Include="CodeModel\Delegate.cs" />
+    <Compile Include="CodeModel\DocComment.cs" />
     <Compile Include="CodeModel\Enum.cs" />
     <Compile Include="CodeModel\EnumValue.cs" />
     <Compile Include="CodeModel\Event.cs" />

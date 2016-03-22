@@ -17,6 +17,7 @@ namespace Typewriter.Metadata.CodeDom
             this.file = file;
         }
 
+        public string DocComment => codeEnum.DocComment;
         public string Name => codeEnum.Name;
         public string FullName => codeEnum.FullName;
         public string Namespace => GetNamespace();

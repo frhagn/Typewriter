@@ -42,6 +42,9 @@ namespace Typewriter.CodeModel.Implementation
         private AttributeCollection _attributes;
         public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
 
+        private DocComment _docComment;
+        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+
         private ConstantCollection _constants;
         public override ConstantCollection Constants => _constants ?? (_constants = ConstantImpl.FromMetadata(_metadata.Constants, this));
 

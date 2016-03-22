@@ -2,6 +2,9 @@
 
 namespace Typewriter.Tests.CodeModel.Support
 {
+    /// <summary>
+    /// summary
+    /// </summary>
     [AttributeInfo]
     public enum EnumInfo
     {

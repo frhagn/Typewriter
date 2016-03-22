@@ -43,6 +43,14 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_doc_comment()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var constantInfo = classInfo.Constants.First();
+            constantInfo.DocComment.Summary.ShouldEqual("summary");
+        }
+
+        [Fact]
         public void Expect_value_not_empty()
         {
             var classInfo = fileInfo.Classes.First();

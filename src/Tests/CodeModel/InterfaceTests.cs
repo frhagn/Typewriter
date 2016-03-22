@@ -43,6 +43,13 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_doc_comment()
+        {
+            var interfaceInfo = fileInfo.Interfaces.First();
+            interfaceInfo.DocComment.Summary.ShouldEqual("summary");
+        }
+
+        [Fact]
         public void Expect_to_find_attributes()
         {
             var interfaceInfo = fileInfo.Interfaces.First();

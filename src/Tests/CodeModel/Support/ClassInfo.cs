@@ -1,5 +1,9 @@
-﻿namespace Typewriter.Tests.CodeModel.Support
+﻿#pragma warning disable 67
+namespace Typewriter.Tests.CodeModel.Support
 {
+    /// <summary>
+    /// summary
+    /// </summary>
     [AttributeInfo]
     public class ClassInfo : BaseClassInfo, IInterfaceInfo
     {
