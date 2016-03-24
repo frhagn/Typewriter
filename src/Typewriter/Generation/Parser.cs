@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using EnvDTE;
 using Typewriter.CodeModel;
 using Typewriter.TemplateEditor.Lexing;
@@ -95,10 +96,7 @@ namespace Typewriter.Generation
                                             hasError = true;
 
                                             var message = $"Error rendering template. Cannot apply filter to identifier '{identifier}'. {e.Message} Source path: {sourcePath}";
-
-                                            Log.Error(message);
-                                            ErrorList.AddError(projectItem, message);
-                                            ErrorList.Show();
+                                            LogException(e, message, projectItem);
                                         }
                                     }
                                     else
@@ -192,13 +190,24 @@ namespace Typewriter.Generation
                 hasError = true;
 
                 var message = $"Error rendering template. Cannot get identifier '{identifier}'. {e.Message} Source path: {sourcePath}";
-
-                Log.Error(message);
-                ErrorList.AddError(projectItem, message);
-                ErrorList.Show();
+                LogException(e, message, projectItem);
             }
 
             return false;
+        }
+
+        private void LogException(Exception exception, string message, ProjectItem projectItem)
+        {
+            // skip the target invokation exception, get the real exception instead.
+            if (exception is TargetInvocationException && exception.InnerException != null)
+            {
+                exception = exception.InnerException;
+            }
+
+            var logMessage = message = $"{message}{Environment.NewLine}{exception}";
+            Log.Error(logMessage);
+            ErrorList.AddError(projectItem, message);
+            ErrorList.Show();
         }
     }
 }
