@@ -13,7 +13,8 @@ namespace Typewriter.Metadata.Roslyn
         {
             this.symbol = symbol;
         }
-        
+
+        public string DocComment => symbol.GetDocumentationCommentXml();
         public string Name => symbol.Name;
         public string FullName => symbol.ToDisplayString();
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());

@@ -19,6 +19,7 @@ namespace Typewriter.Metadata.Roslyn
             this.isTask = isTask;
         }
 
+        public string DocComment => symbol.GetDocumentationCommentXml();
         public string Name => symbol.Name + (IsNullable? "?" : string.Empty);
         public string FullName => symbol.GetFullName() + (IsNullable? "?" : string.Empty);
         public bool IsGeneric => (symbol as INamedTypeSymbol)?.TypeParameters.Any() ?? false;
@@ -119,6 +120,7 @@ namespace Typewriter.Metadata.Roslyn
 
     public class RoslynVoidTaskMetadata : ITypeMetadata
     {
+        public string DocComment => null;
         public string Name => "Void";
         public string FullName => "System.Void";
         public bool IsEnum => false;

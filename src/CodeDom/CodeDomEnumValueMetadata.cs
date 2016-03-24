@@ -22,7 +22,8 @@ namespace Typewriter.Metadata.CodeDom
             this.file = file;
             this.value = value;
         }
-        
+
+        public string DocComment => codeVariable.DocComment;
         public string Name => codeVariable.Name;
         public string FullName => codeVariable.FullName;
         public int Value => value;

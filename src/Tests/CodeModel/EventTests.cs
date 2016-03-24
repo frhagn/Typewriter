@@ -35,21 +35,29 @@ namespace Typewriter.Tests.CodeModel
         public void Expect_name_to_match_property_name()
         {
             var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Events.First(p => p.Name == "DelegateEvent");
+            var enumInfo = classInfo.Events.First(p => p.Name == "DelegateEvent");
             
-            propertyInfo.Name.ShouldEqual("DelegateEvent");
-            propertyInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.EventInfo.DelegateEvent");
-            propertyInfo.Parent.ShouldEqual(classInfo);
+            enumInfo.Name.ShouldEqual("DelegateEvent");
+            enumInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.EventInfo.DelegateEvent");
+            enumInfo.Parent.ShouldEqual(classInfo);
+        }
+
+        [Fact]
+        public void Expect_to_find_doc_comment()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var enumInfo = classInfo.Events.First(p => p.Name == "DelegateEvent");
+            enumInfo.DocComment.Summary.ShouldEqual("summary");
         }
 
         [Fact]
         public void Expect_to_find_attributes()
         {
             var classInfo = fileInfo.Classes.First();
-            var propertyInfo = classInfo.Events.First(p => p.Name == "DelegateEvent");
-            var attributeInfo = propertyInfo.Attributes.First();
+            var enumInfo = classInfo.Events.First(p => p.Name == "DelegateEvent");
+            var attributeInfo = enumInfo.Attributes.First();
 
-            propertyInfo.Attributes.Count.ShouldEqual(1);
+            enumInfo.Attributes.Count.ShouldEqual(1);
             attributeInfo.Name.ShouldEqual("AttributeInfo");
             attributeInfo.FullName.ShouldEqual("Typewriter.Tests.CodeModel.Support.AttributeInfoAttribute");
         }

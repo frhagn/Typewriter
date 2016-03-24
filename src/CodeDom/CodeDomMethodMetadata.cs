@@ -17,6 +17,7 @@ namespace Typewriter.Metadata.CodeDom
             this.file = file;
         }
 
+        public string DocComment => codeFunction.DocComment;
         public string Name => codeFunction.Name;
         public string FullName => codeFunction.FullName;
         public bool IsGeneric => codeFunction.IsGeneric;

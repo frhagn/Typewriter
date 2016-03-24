@@ -11,7 +11,8 @@ namespace Typewriter.Metadata.CodeDom
         {
             this.fullName = fullName;
         }
-        
+
+        public string DocComment => null;
         public string FullName => fullName;
         public bool IsEnum => false;
         public bool IsEnumerable => false;

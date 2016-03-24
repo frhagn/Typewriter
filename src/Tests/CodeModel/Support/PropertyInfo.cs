@@ -6,6 +6,9 @@ namespace Typewriter.Tests.CodeModel.Support
 {
     public class PropertyInfo
     {
+        /// <summary>
+        /// summary
+        /// </summary>
         public string GetterOnly { get; }
         public string SetterOnly { set { } }
         public string PrivateGetter { private get; set; }

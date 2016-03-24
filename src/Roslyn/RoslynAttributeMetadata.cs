@@ -41,6 +41,7 @@ namespace Typewriter.Metadata.Roslyn
                 name = name.Substring(0, name.Length - 9);
         }
 
+        public string DocComment => symbol.GetDocumentationCommentXml();
         public string Name => name;
         public string FullName => symbol.ToDisplayString();
         public string Value => value;

@@ -14,6 +14,7 @@ namespace Typewriter.Metadata.Roslyn
             this.symbol = symbol;
         }
 
+        public string DocComment => symbol.GetDocumentationCommentXml();
         public string Name => symbol.Name;
         public string FullName => symbol.ToDisplayString();
         public bool IsGeneric => symbol.TypeParameters.Any(); // Todo: IsGeneric???

@@ -8,7 +8,7 @@ using Typewriter.CodeModel.Attributes;
 namespace Typewriter.CodeModel
 {
     /// <summary>
-    /// Represents a delegate.
+    /// Represents an event.
     /// </summary>
     [Context("Event", "Events")]
     public abstract class Event : Item
@@ -17,6 +17,11 @@ namespace Typewriter.CodeModel
         /// All attributes defined on the event.
         /// </summary>
         public abstract AttributeCollection Attributes { get; }
+
+        /// <summary>
+        /// The XML documentation comment of the event.
+        /// </summary>
+        public abstract DocComment DocComment { get; }
 
         /// <summary>
         /// The full original name of the event including namespace and containing class names.

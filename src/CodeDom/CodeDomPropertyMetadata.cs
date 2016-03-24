@@ -17,6 +17,7 @@ namespace Typewriter.Metadata.CodeDom
             this.file = file;
         }
 
+        public string DocComment => codeProperty.DocComment;
         public string Name => codeProperty.Name;
         public string FullName => codeProperty.FullName;
         public bool HasGetter => codeProperty.Getter != null && codeProperty.Getter.Access == vsCMAccess.vsCMAccessPublic;

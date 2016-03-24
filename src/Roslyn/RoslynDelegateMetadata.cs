@@ -16,6 +16,7 @@ namespace Typewriter.Metadata.Roslyn
             this.methodSymbol = symbol.DelegateInvokeMethod;
         }
 
+        public string DocComment => symbol.GetDocumentationCommentXml();
         public string Name => symbol.Name;
         public string FullName => symbol.GetFullName();
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());

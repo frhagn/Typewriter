@@ -43,6 +43,16 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_doc_comment()
+        {
+            var methodInfo = GetMethod("Method");
+            methodInfo.DocComment.Summary.ShouldEqual("summary");
+            methodInfo.DocComment.Returns.ShouldEqual("returns");
+            methodInfo.DocComment.Parameters.First().Name.ShouldEqual("parameter");
+            methodInfo.DocComment.Parameters.First().Description.ShouldEqual("param");
+        }
+
+        [Fact]
         public void Expect_to_find_attributes()
         {
             var methodInfo = GetMethod("Method");

@@ -19,6 +19,11 @@ namespace Typewriter.CodeModel
         public abstract Class ContainingClass { get; }
 
         /// <summary>
+        /// The XML documentation comment of the interface.
+        /// </summary>
+        public abstract DocComment DocComment { get; }
+
+        /// <summary>
         /// All events defined in the interface.
         /// </summary>
         public abstract EventCollection Events { get; }

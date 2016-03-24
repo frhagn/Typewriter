@@ -20,6 +20,7 @@ namespace Typewriter.Metadata.CodeDom
             this.file = file;
         }
 
+        public string DocComment => codeEvent.DocComment;
         public string Name => codeEvent.Name;
         public string FullName => codeEvent.FullName;
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeEvent.Attributes);

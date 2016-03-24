@@ -43,6 +43,16 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_doc_comment()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var delegateInfo = classInfo.Delegates.First(p => p.Name == "Delegate");
+            delegateInfo.DocComment.Summary.ShouldEqual("summary");
+            delegateInfo.DocComment.Parameters.First().Name.ShouldEqual("parameter");
+            delegateInfo.DocComment.Parameters.First().Description.ShouldEqual("param");
+        }
+
+        [Fact]
         public void Expect_to_find_attributes()
         {
             var classInfo = fileInfo.Classes.First();

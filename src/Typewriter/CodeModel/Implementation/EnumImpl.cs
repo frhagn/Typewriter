@@ -29,6 +29,9 @@ namespace Typewriter.CodeModel.Implementation
         private AttributeCollection _attributes;
         public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
 
+        private DocComment _docComment;
+        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+
         private EnumValueCollection _values;
         public override EnumValueCollection Values => _values ?? (_values = EnumValueImpl.FromMetadata(_metadata.Values, this));
 

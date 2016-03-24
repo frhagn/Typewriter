@@ -8,6 +8,10 @@ namespace Typewriter.Tests.CodeModel.Support
 
     public class DelegateInfo
     {
+        /// <summary>
+        /// summary
+        /// </summary>
+        /// <param name="parameter">param</param>
         [AttributeInfo]
         public delegate void Delegate([AttributeInfo] string parameter);
         public delegate T Generic<T>(T parameter);

@@ -5,6 +5,11 @@ namespace Typewriter.Tests.CodeModel.Support
 {
     public class MethodInfo
     {
+        /// <summary>
+        /// summary
+        /// </summary>
+        /// <returns>returns</returns>
+        /// <param name="parameter">param</param>
         [AttributeInfo]
         public void Method([AttributeInfo]string parameter)
         {

@@ -23,6 +23,7 @@ namespace Typewriter.Metadata.CodeDom
             this.file = file;
         }
 
+        public string DocComment => CodeType.DocComment;
         public virtual string Name => GetName(CodeType.Name);
         public virtual string FullName => GetFullName(CodeType.FullName);
         public virtual string Namespace => GetNamespace();

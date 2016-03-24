@@ -34,6 +34,11 @@ namespace Typewriter.CodeModel
         public abstract DelegateCollection Delegates { get; }
 
         /// <summary>
+        /// The XML documentation comment of the class.
+        /// </summary>
+        public abstract DocComment DocComment { get; }
+
+        /// <summary>
         /// All events defined in the class.
         /// </summary>
         public abstract EventCollection Events { get; }

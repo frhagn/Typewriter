@@ -94,6 +94,11 @@
             All delegates defined in the class.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.DocComment">
+            <summary>
+            The XML documentation comment of the class.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Class.Events">
             <summary>
             All events defined in the class.
@@ -198,6 +203,11 @@
             All attributes defined on the constant.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Constant.DocComment">
+            <summary>
+            The XML documentation comment of the constant.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Constant.FullName">
             <summary>
             The full original name of the constant including namespace and containing class names.
@@ -246,6 +256,11 @@
         <member name="P:Typewriter.CodeModel.Delegate.Attributes">
             <summary>
             All attributes defined on the delegate.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Delegate.DocComment">
+            <summary>
+            The XML documentation comment of the delegate.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Delegate.FullName">
@@ -299,6 +314,66 @@
             Represents a collection of classes.
             </summary>
         </member>
+        <member name="T:Typewriter.CodeModel.DocComment">
+            <summary>
+            Represents an XML documentation comment.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.DocComment.Summary">
+            <summary>
+            The contents of the summary tag.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.DocComment.Returns">
+            <summary>
+            The contents of the returns tag.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.DocComment.Parameters">
+            <summary>
+            All parameter tags of the documentation comment.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.DocComment.Parent">
+            <summary>
+            The parent context of the documentation comment.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.DocComment.op_Implicit(Typewriter.CodeModel.DocComment)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.ParameterComment">
+            <summary>
+            Represents an XML documentation comment parameter tag.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.ParameterComment.Name">
+            <summary>
+            The name of the parameter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.ParameterComment.Description">
+            <summary>
+            The parameter description.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.ParameterComment.Parent">
+            <summary>
+            The parent context of the documentation comment parameter.
+            </summary>
+        </member>
+        <member name="M:Typewriter.CodeModel.ParameterComment.op_Implicit(Typewriter.CodeModel.ParameterComment)~System.String">
+            <summary>
+            Converts the current instance to string.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.ParameterCommentCollection">
+            <summary>
+            Represents a collection of parameter comments.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.Enum">
             <summary>
             Represents an enum.
@@ -312,6 +387,11 @@
         <member name="P:Typewriter.CodeModel.Enum.ContainingClass">
             <summary>
             The containing class of the enum if it is nested.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.DocComment">
+            <summary>
+            The XML documentation comment of the enum.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Enum.FullName">
@@ -369,6 +449,11 @@
             All attributes defined on the enum value.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.EnumValue.DocComment">
+            <summary>
+            The XML documentation comment of the enum value.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.EnumValue.FullName">
             <summary>
             The full original name of the enum value including namespace and containing class names.
@@ -406,12 +491,17 @@
         </member>
         <member name="T:Typewriter.CodeModel.Event">
             <summary>
-            Represents a delegate.
+            Represents an event.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Event.Attributes">
             <summary>
             All attributes defined on the event.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Event.DocComment">
+            <summary>
+            The XML documentation comment of the event.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Event.FullName">
@@ -462,6 +552,11 @@
         <member name="P:Typewriter.CodeModel.Field.Attributes">
             <summary>
             All attributes defined on the field.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Field.DocComment">
+            <summary>
+            The XML documentation comment of the field.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Field.FullName">
@@ -547,6 +642,11 @@
         <member name="P:Typewriter.CodeModel.Interface.ContainingClass">
             <summary>
             The containing class of the interface if it is nested.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Interface.DocComment">
+            <summary>
+            The XML documentation comment of the interface.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Interface.Events">
@@ -663,6 +763,11 @@
             All attributes defined on the method.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Method.DocComment">
+            <summary>
+            The XML documentation comment of the method.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Method.FullName">
             <summary>
             The full original name of the method including namespace and containing class names.
@@ -769,6 +874,11 @@
             All attributes defined on the property.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Property.DocComment">
+            <summary>
+            The XML documentation comment of the property.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Property.FullName">
             <summary>
             The full original name of the property including namespace and containing class names.
@@ -842,6 +952,11 @@
         <member name="P:Typewriter.CodeModel.Type.Delegates">
             <summary>
             All delegates defined in the type.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Type.DocComment">
+            <summary>
+            The XML documentation comment of the type.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Type.Fields">

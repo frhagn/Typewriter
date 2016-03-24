@@ -194,8 +194,8 @@ namespace Typewriter.VisualStudio.ContextMenu
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "RenderTemplate";
+            //string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
+            //string title = "RenderTemplate";
 
             var renderTemplateClicked = RenderTemplateClicked;
             renderTemplateClicked?.Invoke(this, new SingleFileChangedEventArgs(FileChangeType.Changed, itemFullPath));

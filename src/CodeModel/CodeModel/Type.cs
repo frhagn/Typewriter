@@ -34,6 +34,11 @@ namespace Typewriter.CodeModel
         public abstract DelegateCollection Delegates { get; }
 
         /// <summary>
+        /// The XML documentation comment of the type.
+        /// </summary>
+        public abstract DocComment DocComment { get; }
+
+        /// <summary>
         /// All fields defined in the type.
         /// </summary>
         public abstract FieldCollection Fields { get; }

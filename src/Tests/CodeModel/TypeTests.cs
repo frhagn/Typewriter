@@ -46,6 +46,15 @@ namespace Typewriter.Tests.CodeModel
         }
 
         [Fact]
+        public void Expect_to_find_doc_comment()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var propertyInfo = classInfo.Properties.First(p => p.Name == "Class");
+            var typeInfo = propertyInfo.Type;
+            typeInfo.DocComment.Summary.ShouldEqual("summary");
+        }
+
+        [Fact]
         public void Expect_to_find_type_attributes()
         {
             var classInfo = fileInfo.Classes.First();
