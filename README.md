@@ -1,8 +1,13 @@
 # Typewriter
-Automatic TypeScript Template generation for Visual Studio
+Typewriter is a Visual Studio extensions that generates TypeScript files from c# code files using TypeScript Templates.
+This allows you to create fully typed TypeScript representations of server side API, models, controllers, SignalR hubs etc. that automatically updates when you make changes to your c# code.
 
 [Documentation](http://frhagn.github.io/Typewriter)  
 [Download from Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6)
+
+## Issues
+The issue tracker is the preferred channel for bug reports, features requests and submitting pull requests.   
+For personal support requests Stack Overflow is a better place to get help. Please use the   [typewriter](http://stackoverflow.com/questions/tagged/typewriter) tag when posting your questions.
 
 ## Getting started
 Step 1: Add a TypeScript Template file (.tst)  
