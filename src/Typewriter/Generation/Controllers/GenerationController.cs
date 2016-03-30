@@ -6,7 +6,6 @@ using EnvDTE;
 using Typewriter.CodeModel.Implementation;
 using Typewriter.Metadata.Providers;
 using Typewriter.VisualStudio;
-using VSLangProj;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -54,6 +53,12 @@ namespace Typewriter.Generation.Controllers
                     foreach (var path in filesToRender)
                     {
                         var metadata = _metadataProvider.GetFile(path);
+                        if (metadata == null)
+                        {
+                            // the cs-file was found, but the build-action is not set to compile.
+                            continue;
+                        }
+
                         var file = new FileImpl(metadata);
 
                         template.RenderFile(file);
@@ -83,8 +88,15 @@ namespace Typewriter.Generation.Controllers
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
             Task.Delay(1000).ContinueWith(task =>
             {
-                Enqueue(GenerationType.Render, paths, path => new FileImpl(_metadataProvider.GetFile(path)), (file, template) =>
+                Enqueue(GenerationType.Render, paths, path => _metadataProvider.GetFile(path), (fileMeta, template) =>
                 {
+                    if (fileMeta == null)
+                    {
+                        // the cs-file was found, but the build-action is not set to compile.
+                        return;
+                    }
+
+                    var file = new FileImpl(fileMeta);
                     if (template.ShouldRenderFile(file.FullName))
                     {
                         template.RenderFile(file);
@@ -123,8 +135,18 @@ namespace Typewriter.Generation.Controllers
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
             Task.Delay(1000).ContinueWith(task =>
             {
-                Enqueue(GenerationType.Rename, newPaths, (path, fileIndex) => new { OldPath = oldPaths[fileIndex], NewPath = path, NewFile = new FileImpl(_metadataProvider.GetFile(path)) },
-                (item, template) => template.RenameFile(item.NewFile, item.OldPath, item.NewPath));
+                Enqueue(GenerationType.Rename, newPaths, (path, fileIndex) => new { OldPath = oldPaths[fileIndex], NewPath = path, NewFileMeta = _metadataProvider.GetFile(path) },
+                    (item, template) =>
+                    {
+                        if (item.NewFileMeta == null)
+                        {
+                            // the cs-file was found, but the build-action is not set to compile.
+                            return;
+                        }
+
+                        var newFile = new FileImpl(item.NewFileMeta);
+                        template.RenameFile(newFile, item.OldPath, item.NewPath);
+                    });
             });
         }
 
