@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using EnvDTE;
 using Typewriter.CodeModel;
 using Typewriter.TemplateEditor.Lexing;
@@ -94,11 +95,8 @@ namespace Typewriter.Generation
                                             items = new Item[0];
                                             hasError = true;
 
-                                            var message = $"Error rendering template. Cannot apply filter to identifier '{identifier}'. {e.Message} Source path: {sourcePath}";
-
-                                            Log.Error(message);
-                                            ErrorList.AddError(projectItem, message);
-                                            ErrorList.Show();
+                                            var message = $"Error rendering template. Cannot apply filter to identifier '{identifier}'.";
+                                            LogException(e, message, projectItem, sourcePath);
                                         }
                                     }
                                     else
@@ -191,14 +189,27 @@ namespace Typewriter.Generation
             {
                 hasError = true;
 
-                var message = $"Error rendering template. Cannot get identifier '{identifier}'. {e.Message} Source path: {sourcePath}";
-
-                Log.Error(message);
-                ErrorList.AddError(projectItem, message);
-                ErrorList.Show();
+                var message = $"Error rendering template. Cannot get identifier '{identifier}'.";
+                LogException(e, message, projectItem, sourcePath);
             }
 
             return false;
+        }
+
+        private void LogException(Exception exception, string message, ProjectItem projectItem, string sourcePath)
+        {
+            // skip the target invokation exception, get the real exception instead.
+            if (exception is TargetInvocationException && exception.InnerException != null)
+            {
+                exception = exception.InnerException;
+            }
+
+            var studioMessage = $"{message} Error: {exception.Message}. Source path: {sourcePath}. See Typewriter output for more detail.";
+            var logMessage = $"{message} Source path: {sourcePath}{Environment.NewLine}{exception}";
+            
+            Log.Error(logMessage);
+            ErrorList.AddError(projectItem, studioMessage);
+            ErrorList.Show();
         }
     }
 }
