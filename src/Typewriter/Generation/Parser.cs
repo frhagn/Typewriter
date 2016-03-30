@@ -95,8 +95,8 @@ namespace Typewriter.Generation
                                             items = new Item[0];
                                             hasError = true;
 
-                                            var message = $"Error rendering template. Cannot apply filter to identifier '{identifier}'. {e.Message} Source path: {sourcePath}";
-                                            LogException(e, message, projectItem);
+                                            var message = $"Error rendering template. Cannot apply filter to identifier '{identifier}'.";
+                                            LogException(e, message, projectItem, sourcePath);
                                         }
                                     }
                                     else
@@ -189,14 +189,14 @@ namespace Typewriter.Generation
             {
                 hasError = true;
 
-                var message = $"Error rendering template. Cannot get identifier '{identifier}'. {e.Message} Source path: {sourcePath}";
-                LogException(e, message, projectItem);
+                var message = $"Error rendering template. Cannot get identifier '{identifier}'.";
+                LogException(e, message, projectItem, sourcePath);
             }
 
             return false;
         }
 
-        private void LogException(Exception exception, string message, ProjectItem projectItem)
+        private void LogException(Exception exception, string message, ProjectItem projectItem, string sourcePath)
         {
             // skip the target invokation exception, get the real exception instead.
             if (exception is TargetInvocationException && exception.InnerException != null)
@@ -204,9 +204,11 @@ namespace Typewriter.Generation
                 exception = exception.InnerException;
             }
 
-            var logMessage = message = $"{message}{Environment.NewLine}{exception}";
+            var studioMessage = $"{message} Error: {exception.Message}. Source path: {sourcePath}. See Typewriter output for more detail.";
+            var logMessage = $"{message} Source path: {sourcePath}{Environment.NewLine}{exception}";
+            
             Log.Error(logMessage);
-            ErrorList.AddError(projectItem, message);
+            ErrorList.AddError(projectItem, studioMessage);
             ErrorList.Show();
         }
     }
