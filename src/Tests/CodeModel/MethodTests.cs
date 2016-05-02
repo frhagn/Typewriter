@@ -209,6 +209,23 @@ namespace Typewriter.Tests.CodeModel
             methodInfo.Parameters.First().Type.IsPrimitive.ShouldEqual(true);
         }
 
+        [Fact]
+        public void Expect_parameter_without_default_values_not_to_have_a_default_value()
+        {
+            var methodInfo = GetMethod("Method");
+            methodInfo.Parameters.First().HasDefaultValue.ShouldBeFalse();
+            methodInfo.Parameters.First().DefaultValue.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Expect_parameter_default_values_to_return_correct_values()
+        {
+            var methodInfo = GetMethod("DefaultValueParameter");
+            methodInfo.Parameters.First().HasDefaultValue.ShouldBeTrue();
+            methodInfo.Parameters.First().DefaultValue.ShouldEqual("null");
+            methodInfo.Parameters.Last().DefaultValue.ShouldEqual("\"str\\\\ing\\\"quotes\\\"\"");
+        }
+
         private Method GetMethod(string name)
         {
             var classInfo = fileInfo.Classes.First();

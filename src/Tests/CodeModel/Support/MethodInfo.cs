@@ -37,7 +37,10 @@ namespace Typewriter.Tests.CodeModel.Support
 
         public void ArrayParameter(byte[] byteArray)
         {
-            
+        }
+
+        public void DefaultValueParameter(string nullValue = null, string stringValue = "str\\ing\"quotes\"")
+        {
         }
     }
 

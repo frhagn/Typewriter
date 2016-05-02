@@ -16,8 +16,24 @@ namespace Typewriter.Metadata.Roslyn
 
         public string Name => symbol.Name;
         public string FullName => symbol.ToDisplayString();
+        public bool HasDefaultValue => symbol.HasExplicitDefaultValue;
+        public string DefaultValue => GetDefaultValue();
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
         public ITypeMetadata Type => RoslynTypeMetadata.FromTypeSymbol(symbol.Type);
+
+        private string GetDefaultValue()
+        {
+            if (symbol.HasExplicitDefaultValue == false)
+                return null;
+
+            if (symbol.ExplicitDefaultValue == null)
+                return "null";
+
+            var stringValue = symbol.ExplicitDefaultValue as string;
+            return stringValue != null ? 
+                $"\"{stringValue.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"" : 
+                symbol.ExplicitDefaultValue.ToString();
+        }
 
         public static IEnumerable<IParameterMetadata> FromParameterSymbols(IEnumerable<IParameterSymbol> symbols)
         {

@@ -19,6 +19,8 @@ namespace Typewriter.Metadata.CodeDom
 
         public string Name => codeParameter.Name;
         public string FullName => codeParameter.FullName;
+        public bool HasDefaultValue => codeParameter.DefaultValue != null;
+        public string DefaultValue => codeParameter.DefaultValue;
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeParameter.Attributes);
         public ITypeMetadata Type => CodeDomTypeMetadata.FromCodeElement(codeParameter, file);
 

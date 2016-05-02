@@ -834,6 +834,16 @@
             The full original name of the parameter.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Parameter.DefaultValue">
+            <summary>
+            The default value of the parameter if it's optional.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Parameter.HasDefaultValue">
+            <summary>
+            Determines if the parameter has a default value.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Parameter.name">
             <summary>
             The name of the parameter (camelCased).

@@ -19,6 +19,16 @@ namespace Typewriter.CodeModel
         public abstract string FullName { get; }
 
         /// <summary>
+        /// The default value of the parameter if it's optional.
+        /// </summary>
+        public abstract string DefaultValue { get; }
+
+        /// <summary>
+        /// Determines if the parameter has a default value.
+        /// </summary>
+        public abstract bool HasDefaultValue { get; }
+
+        /// <summary>
         /// The name of the parameter (camelCased).
         /// </summary>
         public abstract string name { get; }
