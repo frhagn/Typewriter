@@ -39,7 +39,7 @@ namespace Typewriter.Tests.CodeModel.Support
         {
         }
 
-        public void DefaultValueParameter(string nullValue = null, string stringValue = "str\\ing\"quotes\"")
+        public void DefaultValueParameter(string nullValue = null, string stringValue = "str\\ing\"quotes\"", bool boolValue = true)
         {
         }
     }

@@ -223,7 +223,8 @@ namespace Typewriter.Tests.CodeModel
             var methodInfo = GetMethod("DefaultValueParameter");
             methodInfo.Parameters.First().HasDefaultValue.ShouldBeTrue();
             methodInfo.Parameters.First().DefaultValue.ShouldEqual("null");
-            methodInfo.Parameters.Last().DefaultValue.ShouldEqual("\"str\\\\ing\\\"quotes\\\"\"");
+            methodInfo.Parameters.First(p => p.name == "stringValue").DefaultValue.ShouldEqual("\"str\\\\ing\\\"quotes\\\"\"");
+            methodInfo.Parameters.First(p => p.name == "boolValue").DefaultValue.ShouldEqual("true");
         }
 
         private Method GetMethod(string name)

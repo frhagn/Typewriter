@@ -30,9 +30,13 @@ namespace Typewriter.Metadata.Roslyn
                 return "null";
 
             var stringValue = symbol.ExplicitDefaultValue as string;
-            return stringValue != null ? 
-                $"\"{stringValue.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"" : 
-                symbol.ExplicitDefaultValue.ToString();
+            if (stringValue != null)
+                return $"\"{stringValue.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"";
+
+            if(symbol.ExplicitDefaultValue is bool)
+                return (bool)symbol.ExplicitDefaultValue ? "true" : "false";
+
+            return symbol.ExplicitDefaultValue.ToString();
         }
 
         public static IEnumerable<IParameterMetadata> FromParameterSymbols(IEnumerable<IParameterSymbol> symbols)
