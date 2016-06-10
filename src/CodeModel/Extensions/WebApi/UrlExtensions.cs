@@ -152,9 +152,9 @@ namespace Typewriter.Extensions.WebApi
 
                 foreach (var parameter in method.Parameters.Where(p => p.Type.IsPrimitive && p.Attributes.Any(a => a.Name == "FromBody") == false))
                 {
-                    if (route.Contains($"${{{parameter.name}}}") == false)
+                    if (route.Contains($"${{{parameter.Name}}}") == false)
                     {
-                        route += $"{prefix}{parameter.name}=${{{parameter.name}}}";
+                        route += $"{prefix}{parameter.Name}=${{{parameter.Name}}}";
                         prefix = "&";
                     }
                 }

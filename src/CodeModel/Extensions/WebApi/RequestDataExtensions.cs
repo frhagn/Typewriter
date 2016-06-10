@@ -24,16 +24,16 @@ namespace Typewriter.Extensions.WebApi
         public static string RequestData(this Method method, string route)
         {
             var url = method.Url(route);
-            var dataParameters = method.Parameters.Where(p => url.Contains($"${{{p.name}}}") == false).ToList();
+            var dataParameters = method.Parameters.Where(p => url.Contains($"${{{p.Name}}}") == false).ToList();
 
             if (dataParameters.Count == 1)
             {
-                return dataParameters.First().name;
+                return dataParameters.First().Name;
             }
 
             if (dataParameters.Count > 1)
             {
-                return $"{{ {string.Join(", ", dataParameters.Select(p => $"{p.name}: {p.name}"))} }}";
+                return $"{{ {string.Join(", ", dataParameters.Select(p => $"{p.Name}: {p.Name}"))} }}";
             }
 
             return "null";
