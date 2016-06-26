@@ -40,7 +40,7 @@ namespace Typewriter.Extensions.WebApi
             route = ReplaceSpecialParameters(method, route);
             route = ConvertRouteParameters(route);
             route = AppendQueryString(method, route);
-            
+
             return route;
         }
 
@@ -112,7 +112,7 @@ namespace Typewriter.Extensions.WebApi
 
         private static string ReplaceSpecialParameters(Method method, string route)
         {
-            if (route.Contains("{controller}") && method.Parameters.Any(p => p.name == "controller") == false)
+            if ((route.Contains("{controller}") || route.Contains("[controller]")) && method.Parameters.Any(p => p.name == "controller") == false)
             {
                 var parent = method.Parent as Class;
                 if (parent != null)
@@ -123,14 +123,14 @@ namespace Typewriter.Extensions.WebApi
                         controller = controller.Substring(0, controller.Length - 10);
                     }
 
-                    route = route.Replace("{controller}", controller);
+                    route = route.Replace("{controller}", controller).Replace("[controller]", controller);
                 }
             }
 
-            if (route.Contains("{action}") && method.Parameters.Any(p => p.name == "action") == false)
+            if ((route.Contains("{action}") || route.Contains("[action]")) && method.Parameters.Any(p => p.name == "action") == false)
             {
                 var action = method.Attributes.FirstOrDefault(a => a.Name == "ActionName")?.Value ?? method.name;
-                route = route.Replace("{action}", action);
+                route = route.Replace("{action}", action).Replace("[action]", action);
             }
 
             return route;
@@ -145,20 +145,21 @@ namespace Typewriter.Extensions.WebApi
         {
             // Todo: Add support for FromUri attribute
 
-            var httpMethod = method.HttpMethod();
-            if (httpMethod == "get" || httpMethod == "head")
-            {
-                var prefix = route.Contains("?") ? "&" : "?";
+            //var httpMethod = method.HttpMethod();
+            //if (httpMethod == "get" || httpMethod == "head")
+            //{
+            var prefix = route.Contains("?") ? "&" : "?";
 
-                foreach (var parameter in method.Parameters.Where(p => p.Type.IsPrimitive && p.Attributes.Any(a => a.Name == "FromBody") == false))
+            foreach (var parameter in method.Parameters.Where(p => p.Type.IsPrimitive && p.Attributes.Any(a => a.Name == "FromBody") == false))
+            {
+                if (route.Contains($"${{{parameter.Name}}}") == false)
                 {
-                    if (route.Contains($"${{{parameter.Name}}}") == false)
-                    {
-                        route += $"{prefix}{parameter.Name}=${{{parameter.Name}}}";
-                        prefix = "&";
-                    }
+                    route += $"{prefix}{parameter.Name}=${{{parameter.Name}}}";
+                    prefix = "&";
                 }
             }
+            //}
+
             return route;
         }
     }
