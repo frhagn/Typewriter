@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -112,19 +113,60 @@ namespace Typewriter.VisualStudio
         {
             try
             {
-                var assembly = Assembly.LoadFrom(Path.Combine(Constants.TypewriterDirectory, "Typewriter.Metadata.Roslyn.dll"));
-                var type = assembly.GetType("Typewriter.Metadata.Roslyn.RoslynMetadataProvider");
-                var provider = (IMetadataProvider)Activator.CreateInstance(type);
+                var version = GetVisualStudioVersion();
+                Log.Debug($"Visual Studio Version: {version}");
 
-                Log.Debug("Using Roslyn");
-                Constants.RoslynEnabled = true;
-                this.metadataProvider = provider;
+                if (version.Major >= 14 || version.Major == 0)
+                {
+                    var assembly = Assembly.LoadFrom(Path.Combine(Constants.TypewriterDirectory, "Typewriter.Metadata.Roslyn.dll"));
+                    var type = assembly.GetType("Typewriter.Metadata.Roslyn.RoslynMetadataProvider");
+                    var provider = (IMetadataProvider) Activator.CreateInstance(type);
+
+                    Log.Debug("Using Roslyn");
+                    Constants.RoslynEnabled = true;
+                    this.metadataProvider = provider;
+
+                    return;
+                }
             }
-            catch
+            catch(Exception exception)
             {
-                Log.Debug("Using CodeDom");
-                this.metadataProvider = new CodeDomMetadataProvider(this.dte);
+                Log.Debug(exception.Message);
             }
+
+            Log.Debug("Using CodeDom");
+            this.metadataProvider = new CodeDomMetadataProvider(this.dte);
+        }
+
+        private static Version GetVisualStudioVersion()
+        {
+            try
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "msenv.dll");
+
+                if (File.Exists(path))
+                {
+                    var versionInfo = FileVersionInfo.GetVersionInfo(path);
+                    var productVersion = versionInfo.ProductVersion;
+
+                    for (var i = 0; i < productVersion.Length; i++)
+                    {
+                        if (char.IsDigit(productVersion, i) == false && productVersion[i] != '.')
+                        {
+                            productVersion = productVersion.Substring(0, i);
+                            break;
+                        }
+                    }
+
+                    return new Version(productVersion);
+                }
+            }
+            catch (Exception exception)
+            {
+                Log.Debug(exception.Message);
+            }
+
+            return new Version(0, 0); // Not running inside Visual Studio!
         }
 
         private void RegisterLanguageService()
