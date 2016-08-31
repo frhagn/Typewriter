@@ -85,8 +85,8 @@ ${
         var type = property.Type;
 
         return type.IsEnumerable ?
-            $"KnockoutObservableArray&lt;{type.Name.TrimEnd('[', ']')}&gt; = ko.observableArray({type.Default()})" :
-            $"KnockoutObservable&lt;{type.Name}&gt; = ko.observable({type.Default()})";
+            $"KnockoutObservableArray&lt;{type.Name.TrimEnd('[', ']')}&gt; = ko.observableArray&lt;{type.Name.TrimEnd('[', ']')}&gt;({type.Default()})" :
+            $"KnockoutObservable&lt;{type.Name}&gt; = ko.observable&lt;{type.Name}&gt;({type.Default()})";
     }
 
     string TypeMap(Property property)
