@@ -990,6 +990,11 @@
             Determines if the type is a DateTime.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Type.IsDateTimeOffset">
+            <summary>
+            Determines if the type is a DateTimeOffset.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Type.IsDefined">
             <summary>
             Determines if the type is defined in the current solution.
