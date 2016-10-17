@@ -124,7 +124,7 @@
     <value>Typewriter</value>
   </data>
   <data name="112" xml:space="preserve">
-    <value>Provides automatic TypeScript Template generation from C# source files</value>
+    <value>Typewriter generates TypeScript files from c# code files using TypeScript Templates. This allows you to create fully typed TypeScript representations of server side API that automatically updates when you make changes to your c# code.</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
