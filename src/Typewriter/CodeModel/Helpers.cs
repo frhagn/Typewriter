@@ -37,6 +37,20 @@ namespace Typewriter.CodeModel
             {
                 var typeArguments = metadata.TypeArguments.ToList();
 
+                if (typeArguments.Count == 0)
+                {
+                    if (metadata.BaseClass != null && metadata.BaseClass.IsGeneric)
+                    {
+                        typeArguments = metadata.BaseClass.TypeArguments.ToList();
+                    }
+                    else
+                    {
+                        var genericInterface = metadata.Interfaces.FirstOrDefault(i => i.IsGeneric);
+                        if (genericInterface != null)
+                            typeArguments = genericInterface.TypeArguments.ToList();
+                    }
+                }
+
                 if (typeArguments.Count == 1)
                     return GetTypeScriptName(typeArguments.FirstOrDefault()) + "[]";
 

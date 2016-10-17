@@ -20,7 +20,7 @@ namespace Typewriter.Metadata.Roslyn
         }
 
         public string DocComment => symbol.GetDocumentationCommentXml();
-        public string Name => symbol.Name + (IsNullable? "?" : string.Empty);
+        public string Name => symbol.GetName() + (IsNullable? "?" : string.Empty);
         public string FullName => symbol.GetFullName() + (IsNullable? "?" : string.Empty);
         public bool IsGeneric => (symbol as INamedTypeSymbol)?.TypeParameters.Any() ?? false;
         public bool IsDefined => symbol.Locations.Any(l => l.IsInSource);

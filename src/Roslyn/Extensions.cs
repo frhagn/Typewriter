@@ -5,6 +5,12 @@ namespace Typewriter.Metadata.Roslyn
 {
     public static class Extensions
     {
+        public static string GetName(this ISymbol symbol)
+        {
+            var array = symbol as IArrayTypeSymbol;
+            return array != null ? $"{array.ElementType}[]" : symbol.Name;
+        }
+
         public static string GetFullName(this ISymbol symbol)
         {
             if (symbol is ITypeParameterSymbol)
