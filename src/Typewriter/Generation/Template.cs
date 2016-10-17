@@ -130,18 +130,24 @@ namespace Typewriter.Generation
                 }
                 else
                 {
-                    SaveFile(file, output);
+                    SaveFile(file, output, ref success);
                 }
             }
 
             return success;
         }
 
-        protected virtual void SaveFile(File file, string output)
+        protected virtual void SaveFile(File file, string output, ref bool success)
         {
-
             ProjectItem item;
             var outputPath = GetOutputPath(file);
+
+            if (string.Equals(file.FullName, outputPath, StringComparison.InvariantCultureIgnoreCase))
+            {
+                Log.Error("Output filename cannot match source filename.");
+                success = false;
+                return;
+            }
 
             if (HasChanged(outputPath, output))
             {
@@ -156,22 +162,12 @@ namespace Typewriter.Generation
             }
 
             SetMappedSourceFile(item, file.FullName);
-
-
         }
 
         public void DeleteFile(string path)
         {
-
             var item = GetExistingItem(path);
-
-            if (item != null)
-            {
-                item.Delete();
-
-
-            }
-
+            item?.Delete();
         }
 
         public void RenameFile(File file, string oldPath, string newPath)
@@ -183,7 +179,6 @@ namespace Typewriter.Generation
                 if (Path.GetFileName(oldPath)?.Equals(Path.GetFileName(newPath)) ?? false)
                 {
                     SetMappedSourceFile(item, newPath);
-
                     return;
                 }
 
@@ -191,9 +186,7 @@ namespace Typewriter.Generation
 
                 item.Name = Path.GetFileName(newOutputPath);
                 SetMappedSourceFile(item, newPath);
-
             }
-
         }
 
         private string GetMappedSourceFile(ProjectItem item)
