@@ -51,6 +51,13 @@ namespace Typewriter.TemplateEditor.Lexing
         {
             if (stream.Current == '$' && stream.Peek() == '{' && context.Peek() == fileContext)
             {
+                for (var i = 0; ; i--)
+                {
+                    var current = stream.Peek(i);
+                    if (current == '`' || (current == '/' && stream.Peek(i - 1) == '/')) return;
+                    if (current == '\n' || current == char.MinValue) break;
+                }
+
                 stream.Advance();
 
                 var block = stream.PeekBlock(1, '{', '}');

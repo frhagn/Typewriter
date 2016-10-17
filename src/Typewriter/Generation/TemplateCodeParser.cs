@@ -66,6 +66,13 @@ namespace Typewriter.Generation
         {
             if (stream.Current == '$' && stream.Peek() == '{')
             {
+                for (var i = 0; ; i--)
+                {
+                    var current = stream.Peek(i);
+                    if (current == '`' || (current == '/' && stream.Peek(i-1) == '/')) return false;
+                    if (current == '\n' || current == char.MinValue) break;
+                }
+
                 stream.Advance();
 
                 var block = stream.PeekBlock(1, '{', '}');

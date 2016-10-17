@@ -79,6 +79,13 @@ namespace Typewriter.TemplateEditor.Lexing
         {
             if (stream.Current == '$' && stream.Peek() == '{' && context.Peek() == _fileContext)
             {
+                for (var i = 0; ; i--)
+                {
+                    var current = stream.Peek(i);
+                    if (current == '`' || (current == '/' && stream.Peek(i - 1) == '/')) return false;
+                    if (current == '\n' || current == char.MinValue) break;
+                }
+
                 semanticModel.Tokens.Add(Classifications.Property, stream.Position);
 
                 stream.Advance();
@@ -270,7 +277,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
         private bool ParseString(Stream stream, SemanticModel semanticModel, Stack<Context> context, int depth)
         {
-            if (stream.Current == '\'' || stream.Current == '"')
+            if (stream.Current == '\'' || stream.Current == '"' || stream.Current == '`')
             {
                 var start = stream.Position;
                 var open = stream.Current;
