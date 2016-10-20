@@ -49,6 +49,11 @@ namespace Typewriter.CodeModel
                         if (genericInterface != null)
                             typeArguments = genericInterface.TypeArguments.ToList();
                     }
+
+                    if (typeArguments.Any(t => t.FullName == metadata.FullName))
+                    {
+                        return "any[]";
+                    }
                 }
 
                 if (typeArguments.Count == 1)
