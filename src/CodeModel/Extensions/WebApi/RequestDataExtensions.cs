@@ -24,7 +24,9 @@ namespace Typewriter.Extensions.WebApi
         public static string RequestData(this Method method, string route)
         {
             var url = method.Url(route);
-            var dataParameters = method.Parameters.Where(p => url.Contains($"${{{p.Name}}}") == false).ToList();
+
+            // CancellationToken will never be send from TypeScript, filter them out before generating RequestData
+            var dataParameters = method.Parameters.Where(x => x.Type.Name != "CancellationToken").Where(p => url.Contains($"${{{p.Name}}}") == false).ToList();
 
             if (dataParameters.Count == 1)
             {
