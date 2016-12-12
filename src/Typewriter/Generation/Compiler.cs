@@ -54,7 +54,12 @@ namespace Typewriter.Generation
                 ErrorList.Show();
 
             if (result.Success)
-                return Assembly.LoadFrom(path).GetTypes().FirstOrDefault();
+            {
+                var assembly = Assembly.LoadFrom(path);
+                var type = assembly.GetType("__Typewriter.Template");
+
+                return type;
+            }
 
             throw new Exception("Failed to compile template.");
         }
