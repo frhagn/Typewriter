@@ -27,4 +27,7 @@
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="Typewriter.ItemTemplates" d:TargetPath="|Typewriter.ItemTemplates;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="Resources\Icons.pkgdef" />
   </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0.25904.2,16.0)" DisplayName="C# and Visual Basic" />
+  </Prerequisites>
 </PackageManifest>
