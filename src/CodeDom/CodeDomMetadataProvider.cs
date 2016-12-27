@@ -1,4 +1,6 @@
 ﻿using EnvDTE;
+using System;
+using Typewriter.Configuration;
 using Typewriter.Metadata.Interfaces;
 using Typewriter.Metadata.Providers;
 
@@ -13,7 +15,7 @@ namespace Typewriter.Metadata.CodeDom
             this.dte = dte;
         }
 
-        public IFileMetadata GetFile(string path)
+        public IFileMetadata GetFile(string path, Settings settings, Action<string[]> requestRender)
         {
             var projectItem = dte.Solution.FindProjectItem(path);
             if (projectItem != null)

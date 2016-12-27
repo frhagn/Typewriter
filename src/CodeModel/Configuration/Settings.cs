@@ -40,5 +40,10 @@ namespace Typewriter.Configuration
         /// Example: file => file.Classes.First().FullName + ".ts";
         /// </summary>
         public Func<File, string> OutputFilenameFactory { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public PartialRenderingMode PartialRenderingMode { get; set; } = PartialRenderingMode.Partial;
     }
 }

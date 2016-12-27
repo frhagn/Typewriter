@@ -133,6 +133,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeModel\Typewriter.CodeModel.csproj">
+      <Project>{4EC6C920-D234-49F1-B17B-98A4DE24FF87}</Project>
+      <Name>Typewriter.CodeModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Metadata\Typewriter.Metadata.csproj">
       <Project>{511e50cc-6073-43ee-9e8b-dd6f584c81a8}</Project>
       <Name>Typewriter.Metadata</Name>

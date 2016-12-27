@@ -137,6 +137,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CodeModel\AttributeTests.cs" />
+    <Compile Include="CodeModel\PartialClassTests.cs" />
     <Compile Include="CodeModel\ConstantTests.cs" />
     <Compile Include="CodeModel\EnumTests.cs" />
     <Compile Include="CodeModel\DelegateTests.cs" />
@@ -149,6 +150,8 @@
     <Compile Include="CodeModel\Support\DelegateInfo.cs" />
     <Compile Include="CodeModel\Support\MethodInfo.cs" />
     <Compile Include="CodeModel\Support\EventInfo.cs" />
+    <Compile Include="CodeModel\Support\PartialClassInfo2.cs" />
+    <Compile Include="CodeModel\Support\PartialClassInfo.cs" />
     <Compile Include="CodeModel\Support\TypeInfo.cs" />
     <Compile Include="CodeModel\Support\PropertyInfo.cs" />
     <Compile Include="CodeModel\Support\IInterfaceInfo.cs" />

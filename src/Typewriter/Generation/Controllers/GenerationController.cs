@@ -15,7 +15,7 @@ namespace Typewriter.Generation.Controllers
         private readonly IMetadataProvider _metadataProvider;
         private readonly TemplateController _templateController;
         private readonly IEventQueue _eventQueue;
-        
+
         public GenerationController(DTE dte, IMetadataProvider metadataProvider, TemplateController templateController, IEventQueue eventQueue)
         {
             _dte = dte;
@@ -23,7 +23,7 @@ namespace Typewriter.Generation.Controllers
             _templateController = templateController;
             _eventQueue = eventQueue;
         }
-        
+
         public void OnTemplateChanged(string templatePath, bool force = false)
         {
             Log.Debug("{0} queued {1}", GenerationType.Template, templatePath);
@@ -49,10 +49,10 @@ namespace Typewriter.Generation.Controllers
                 _eventQueue.Enqueue(() =>
                 {
                     var stopwatch = Stopwatch.StartNew();
-                    
+
                     foreach (var path in filesToRender)
                     {
-                        var metadata = _metadataProvider.GetFile(path);
+                        var metadata = _metadataProvider.GetFile(path, template.Settings, null);
                         if (metadata == null)
                         {
                             // the cs-file was found, but the build-action is not set to compile.
@@ -70,7 +70,7 @@ namespace Typewriter.Generation.Controllers
                     }
 
                     template.SaveProjectFile();
-                    
+
                     stopwatch.Stop();
                     Log.Debug("{0} processed {1} in {2}ms", GenerationType.Template, templatePath, stopwatch.ElapsedMilliseconds);
                 });
@@ -85,10 +85,15 @@ namespace Typewriter.Generation.Controllers
                 return;
             }
 
+            RenderFile(paths);
+        }
+
+        private void RenderFile(string[] paths)
+        {
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
             Task.Delay(1000).ContinueWith(task =>
             {
-                Enqueue(GenerationType.Render, paths, path => _metadataProvider.GetFile(path), (fileMeta, template) =>
+                Enqueue(GenerationType.Render, paths, (path, template) => _metadataProvider.GetFile(path, template.Settings, RenderFile), (fileMeta, template) =>
                 {
                     if (fileMeta == null)
                     {
@@ -104,7 +109,7 @@ namespace Typewriter.Generation.Controllers
                 });
             });
         }
-        
+
         public void OnCsFileDeleted(string[] paths)
         {
             if (ExtensionPackage.Instance.Options.TrackSourceFiles == false)
@@ -121,7 +126,7 @@ namespace Typewriter.Generation.Controllers
         }
         private void Enqueue(GenerationType type, string[] paths, Action<string, Template> action)
         {
-            Enqueue(type, paths, (s, i) => s, action);
+            Enqueue(type, paths, (s, t, i) => s, action);
         }
 
         public void OnCsFileRenamed(string[] newPaths, string[] oldPaths)
@@ -135,7 +140,7 @@ namespace Typewriter.Generation.Controllers
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
             Task.Delay(1000).ContinueWith(task =>
             {
-                Enqueue(GenerationType.Rename, newPaths, (path, fileIndex) => new { OldPath = oldPaths[fileIndex], NewPath = path, NewFileMeta = _metadataProvider.GetFile(path) },
+                Enqueue(GenerationType.Rename, newPaths, (path, template, fileIndex) => new { OldPath = oldPaths[fileIndex], NewPath = path, NewFileMeta = _metadataProvider.GetFile(path, template.Settings, null) },
                     (item, template) =>
                     {
                         if (item.NewFileMeta == null)
@@ -150,12 +155,12 @@ namespace Typewriter.Generation.Controllers
             });
         }
 
-        private void Enqueue<T>(GenerationType type, string[] paths, Func<string, T> transform, Action<T, Template> action)
+        private void Enqueue<T>(GenerationType type, string[] paths, Func<string, Template, T> transform, Action<T, Template> action)
         {
-            Enqueue(type, paths, (s, i) => transform(s), action);
+            Enqueue(type, paths, (s, t, i) => transform(s, t), action);
         }
 
-        private void Enqueue<T>(GenerationType type, string[] paths, Func<string, int, T> transform, Action<T, Template> action)
+        private void Enqueue<T>(GenerationType type, string[] paths, Func<string, Template, int, T> transform, Action<T, Template> action)
         {
             var templates = _templateController.Templates.Where(m => !m.HasCompileException).ToArray();
             if (!templates.Any())
@@ -169,11 +174,13 @@ namespace Typewriter.Generation.Controllers
 
                 var stopwatch = Stopwatch.StartNew();
 
-                paths.ForEach((path,i) =>
+                paths.ForEach((path, i) =>
                 {
-                    var item = transform(path, i);
-
-                    templates.ForEach(template => action(item, template));
+                    templates.ForEach(template =>
+                    {
+                        var item = transform(path, template, i);
+                        action(item, template);
+                    });
                 });
 
                 templates.GroupBy(m => m.ProjectFullName).ForEach(template => template.First().SaveProjectFile());

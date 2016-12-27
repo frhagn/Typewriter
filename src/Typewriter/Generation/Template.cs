@@ -23,6 +23,8 @@ namespace Typewriter.Generation
         private Lazy<SettingsImpl> _configuration;
         private bool _templateCompileException;
         private bool _templateCompiled;
+        
+        public Settings Settings => _configuration.Value;
 
         public Template(ProjectItem projectItem)
         {
@@ -38,7 +40,7 @@ namespace Typewriter.Generation
 
             _configuration = LazyConfiguration();
 
-            
+
             stopwatch.Stop();
             Log.Debug("Template ctor {0} ms", stopwatch.ElapsedMilliseconds);
         }
@@ -46,25 +48,25 @@ namespace Typewriter.Generation
         private Lazy<SettingsImpl> LazyConfiguration()
         {
 
-            return  new Lazy<SettingsImpl>(() =>
-            {
-                var settings = new SettingsImpl(_projectItem);
+            return new Lazy<SettingsImpl>(() =>
+           {
+               var settings = new SettingsImpl(_projectItem);
 
-                if (!_template.IsValueCreated)
-                {
+               if (!_template.IsValueCreated)
+               {
                     //force initialize template so _customExtensions will be loaded
                     var templateValue = _template.Value;
-                }
+               }
 
-                var templateClass = _customExtensions.FirstOrDefault();
-                if (templateClass?.GetConstructor(new[] { typeof(Settings) }) != null)
-                {
-                    Activator.CreateInstance(templateClass, settings);
-                }
+               var templateClass = _customExtensions.FirstOrDefault();
+               if (templateClass?.GetConstructor(new[] { typeof(Settings) }) != null)
+               {
+                   Activator.CreateInstance(templateClass, settings);
+               }
 
 
-                return settings;
-            });
+               return settings;
+           });
         }
 
         private Lazy<string> LazyTemplate()
@@ -89,12 +91,11 @@ namespace Typewriter.Generation
                 }
             });
         }
+
         public ICollection<string> GetFilesToRender()
         {
-            var projects = _projectItem.DTE.Solution.AllProjects().Where(m=> _configuration.Value.IncludedProjects.Any(p=>m.FullName.Equals(p,StringComparison.OrdinalIgnoreCase)));
-
+            var projects = _projectItem.DTE.Solution.AllProjects().Where(m => _configuration.Value.IncludedProjects.Any(p => m.FullName.Equals(p, StringComparison.OrdinalIgnoreCase)));
             return projects.SelectMany(m => m.AllProjectItems(Constants.CsExtension)).Select(m => m.Path()).ToList();
-            
         }
 
         public bool ShouldRenderFile(string filename)

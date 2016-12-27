@@ -1135,6 +1135,23 @@
             Represents a collection of generic type parameters.
             </summary>
         </member>
+        <member name="T:Typewriter.Configuration.PartialRenderingMode">
+            <summary>
+            Determines how partial classes and interfaces are rendered.
+            </summary>
+        </member>
+        <member name="F:Typewriter.Configuration.PartialRenderingMode.Partial">
+            <summary>
+            Partial types are rendered as defined in the c# source containing only the parts defined in each file. (This is the default rendering mode)
+            </summary>
+        </member>
+        <member name="F:Typewriter.Configuration.PartialRenderingMode.Combined">
+            <summary>
+            Partial type definitions are combined to a single type acting as if the full type was 
+            defined only once in the c# source (using the filename of the first file containing a part of the type).
+            (Unsupported in Visual Studio 2013)
+            </summary>
+        </member>
         <member name="T:Typewriter.Configuration.Settings">
             <summary>
             Provides settings for Typewriter Templates
@@ -1171,6 +1188,11 @@
             Gets or sets a filename factory for the template.
             The factory is called for each rendered file to determine the output filename (including extension).
             Example: file => file.Classes.First().FullName + ".ts";
+            </summary>
+        </member>
+        <member name="P:Typewriter.Configuration.Settings.PartialRenderingMode">
+            <summary>
+            
             </summary>
         </member>
         <member name="T:Typewriter.Extensions.Types.TypeExtensions">

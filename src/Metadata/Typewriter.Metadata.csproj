@@ -65,6 +65,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\IMetadataProvider.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeModel\Typewriter.CodeModel.csproj">
+      <Project>{4EC6C920-D234-49F1-B17B-98A4DE24FF87}</Project>
+      <Name>Typewriter.CodeModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

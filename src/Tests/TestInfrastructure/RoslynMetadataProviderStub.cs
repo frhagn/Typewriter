@@ -4,6 +4,8 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Typewriter.Metadata.Interfaces;
 using Typewriter.Metadata.Providers;
 using Typewriter.Metadata.Roslyn;
+using Typewriter.Configuration;
+using System;
 
 namespace Typewriter.Tests.TestInfrastructure
 {
@@ -22,12 +24,12 @@ namespace Typewriter.Tests.TestInfrastructure
             this.workspace = msBuildWorkspace;
         }
 
-        public IFileMetadata GetFile(string path)
+        public IFileMetadata GetFile(string path, Settings settings, Action<string[]> requestRender)
         {
             var document = workspace.CurrentSolution.GetDocumentIdsWithFilePath(path).FirstOrDefault();
             if (document != null)
             {
-                return new RoslynFileMetadata(workspace.CurrentSolution.GetDocument(document));
+                return new RoslynFileMetadata(workspace.CurrentSolution.GetDocument(document), settings, requestRender);
             }
 
             return null;
