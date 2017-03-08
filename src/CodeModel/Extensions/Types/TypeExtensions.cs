@@ -31,7 +31,7 @@ namespace Typewriter.Extensions.Types
             if (type.Name == "boolean") return "false";
             if (type.Name == "number") return "0";
             if (type.Name == "void") return "void(0)";
-            if (type.IsGuid) return "00000000-0000-0000-0000-000000000000";
+            if (type.IsGuid) return "'00000000-0000-0000-0000-000000000000'";
 
             return "null";
         }
