@@ -5,6 +5,7 @@ namespace Typewriter.Metadata.Interfaces
     public interface IClassMetadata : INamedItem
     {
         string DocComment { get; }
+        bool IsAbstract { get; }
         bool IsGeneric { get; }
         string Namespace { get; }
         IEnumerable<IAttributeMetadata> Attributes { get; }

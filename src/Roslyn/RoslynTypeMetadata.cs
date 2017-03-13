@@ -22,6 +22,7 @@ namespace Typewriter.Metadata.Roslyn
         public string DocComment => symbol.GetDocumentationCommentXml();
         public string Name => symbol.GetName() + (IsNullable? "?" : string.Empty);
         public string FullName => symbol.GetFullName() + (IsNullable? "?" : string.Empty);
+        public bool IsAbstract => (symbol as INamedTypeSymbol)?.IsAbstract ?? false;
         public bool IsGeneric => (symbol as INamedTypeSymbol)?.TypeParameters.Any() ?? false;
         public bool IsDefined => symbol.Locations.Any(l => l.IsInSource);
         public string Namespace => symbol.GetNamespace();
@@ -123,6 +124,7 @@ namespace Typewriter.Metadata.Roslyn
         public string DocComment => null;
         public string Name => "Void";
         public string FullName => "System.Void";
+        public bool IsAbstract => false;
         public bool IsEnum => false;
         public bool IsEnumerable => false;
         public bool IsGeneric => false;

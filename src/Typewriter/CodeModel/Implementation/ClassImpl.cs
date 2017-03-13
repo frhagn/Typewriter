@@ -22,6 +22,7 @@ namespace Typewriter.CodeModel.Implementation
         public override string Name => _metadata.Name.TrimStart('@');
         public override string FullName => _metadata.FullName;
         public override string Namespace => _metadata.Namespace;
+        public override bool IsAbstract => _metadata.IsAbstract;
         public override bool IsGeneric => _metadata.IsGeneric;
 
         private AttributeCollection _attributes;
