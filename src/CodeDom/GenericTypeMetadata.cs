@@ -14,6 +14,7 @@ namespace Typewriter.Metadata.CodeDom
 
         public string DocComment => null;
         public string FullName => fullName;
+        public bool IsAbstract => false;
         public bool IsEnum => false;
         public bool IsEnumerable => false;
         public bool IsGeneric => false;

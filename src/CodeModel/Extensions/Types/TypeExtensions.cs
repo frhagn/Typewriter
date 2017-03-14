@@ -28,10 +28,10 @@ namespace Typewriter.Extensions.Types
 
             if (type.IsEnumerable) return "[]";
 
-            if (type.Name == "boolean") return "false";
-            if (type.Name == "number") return "0";
+            if (type.Name == "boolean" && type.IsNullable == false) return "false";
+            if (type.Name == "number" && type.IsNullable == false) return "0";
             if (type.Name == "void") return "void(0)";
-            if (type.IsGuid) return "'00000000-0000-0000-0000-000000000000'";
+            if (type.IsGuid && type.IsNullable == false) return "\"00000000-0000-0000-0000-000000000000\"";
 
             return "null";
         }

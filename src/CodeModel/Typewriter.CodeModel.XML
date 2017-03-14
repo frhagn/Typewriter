@@ -119,6 +119,11 @@
             All interfaces implemented by the class.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.IsAbstract">
+            <summary>
+            Determines if the class is abstract.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Class.IsGeneric">
             <summary>
             Determines if the class is generic.

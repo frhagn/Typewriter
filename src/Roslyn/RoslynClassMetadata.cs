@@ -41,6 +41,7 @@ namespace Typewriter.Metadata.Roslyn
         public string DocComment => _symbol.GetDocumentationCommentXml();
         public string Name => _symbol.Name;
         public string FullName => _symbol.ToDisplayString();
+        public bool IsAbstract => _symbol.IsAbstract;
         public bool IsGeneric => _symbol.TypeParameters.Any();
         public string Namespace => _symbol.GetNamespace();
 

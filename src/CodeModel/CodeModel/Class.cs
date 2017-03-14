@@ -59,6 +59,11 @@ namespace Typewriter.CodeModel
         public abstract InterfaceCollection Interfaces { get; }
 
         /// <summary>
+        /// Determines if the class is abstract.
+        /// </summary>
+        public abstract bool IsAbstract { get; }
+
+        /// <summary>
         /// Determines if the class is generic.
         /// </summary>
         public abstract bool IsGeneric { get; }

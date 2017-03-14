@@ -28,6 +28,7 @@ namespace Typewriter.Metadata.CodeDom
         public virtual string FullName => GetFullName(CodeType.FullName);
         public virtual string Namespace => GetNamespace();
 
+        public bool IsAbstract => (codeType as CodeClass2)?.IsAbstract ?? false;
         public bool IsEnum => CodeType.Kind == vsCMElement.vsCMElementEnum;
         public bool IsEnumerable => IsCollection(FullName);
         public bool IsGeneric => FullName.IndexOf("<", StringComparison.Ordinal) > -1 && IsNullable == false;
