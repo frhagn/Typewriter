@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Typewriter.CodeModel;
@@ -57,11 +58,16 @@ namespace Typewriter.Extensions.WebApi
         /// </summary>
         public static string Route(this Method method, string route)
         {
-            var routeAttribute = method.Attributes.FirstOrDefault(a => a.Name == "Route");
+            var attributeNames = new List<String> {
+                    "HttpGet", "HttpPost", "HttpHead",
+                    "HttpPatch", "HttpPut", "HttpDelete", "HttpOptions", "Route"
+            };
+            var routeAttribute = method.Attributes.FirstOrDefault(a => attributeNames.Contains(a.Name));
+
             if (routeAttribute != null)
             {
                 var parent = method.Parent as Class;
-                var routePrefix = parent?.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix")?.Value.TrimEnd('/');
+                var routePrefix = parent?.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix" || a.Name == "Route")?.Value.TrimEnd('/');
                 var value = ParseAttributeValue(routeAttribute.Value);
 
                 if (string.IsNullOrEmpty(value))
@@ -117,7 +123,8 @@ namespace Typewriter.Extensions.WebApi
                 var parent = method.Parent as Class;
                 if (parent != null)
                 {
-                    var controller = parent.name;
+                    // Probably it doesn't work for classic asp.net projects...
+                    var controller = parent.Name;
                     if (controller.EndsWith("Controller"))
                     {
                         controller = controller.Substring(0, controller.Length - 10);
@@ -143,22 +150,36 @@ namespace Typewriter.Extensions.WebApi
 
         private static string AppendQueryString(Method method, string route)
         {
-            // Todo: Add support for FromUri attribute
-
-            //var httpMethod = method.HttpMethod();
-            //if (httpMethod == "get" || httpMethod == "head")
-            //{
+            var httpMethod = method.HttpMethod();
             var prefix = route.Contains("?") ? "&" : "?";
 
-            foreach (var parameter in method.Parameters.Where(p => p.Type.IsPrimitive && p.Attributes.Any(a => a.Name == "FromBody") == false))
+            // The parameter list. This way we can filter out later:
+            IQueryable<Parameter> mParams = method.Parameters.AsQueryable();
+
+            if (httpMethod == "get" || httpMethod == "head")
             {
-                if (route.Contains($"${{{parameter.Name}}}") == false)
+                // Filter the params list for the parameters that don't have "FromBody" attribute
+                mParams = from p in mParams
+                          where p.Attributes.Any(a => a.Name == "FromQuery" || a.Name == "FromUri" || a.Name != "FromBody")
+                          select p;
+            }
+            else
+            {
+                // Only the parameters that have "FromQuery" or "FromUri"
+                mParams = from p in mParams
+                          where p.Attributes.Any(a => a.Name == "FromQuery" || a.Name == "FromUri")
+                          select p;
+            }
+
+            // Finally, process them
+            foreach (var p in mParams)
+            {
+                if (route.Contains($"${{{p.Name}}}") == false)
                 {
-                    route += $"{prefix}{parameter.Name}=${{{parameter.Name}}}";
+                    route += $"{prefix}{p.Name}=${{{p.Name}}}";
                     prefix = "&";
                 }
             }
-            //}
 
             return route;
         }
