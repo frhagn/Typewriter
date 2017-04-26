@@ -158,3 +158,6 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# Include VS2013 SDK libraries
+!lib/*.dll
