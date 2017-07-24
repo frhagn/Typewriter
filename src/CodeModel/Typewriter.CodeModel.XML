@@ -1220,8 +1220,10 @@
         <member name="M:Typewriter.Extensions.Types.TypeExtensions.Default(Typewriter.CodeModel.Type)">
             <summary>
             The default value of the type.
-            (Dictionary types returns {}, enumerable types returns [], boolean types returns false, 
-            numeric types returns 0, void returns void(0), all other types return null)
+            (Dictionary types returns {}, enumerable types returns [],
+            boolean types returns false, numeric types returns 0, void returns void(0),
+            Guid types return empty guid string, Date types return new Date(0),
+            all other types return null)
             </summary>
         </member>
         <member name="M:Typewriter.Extensions.Types.TypeExtensions.Unwrap(Typewriter.CodeModel.Type)">
