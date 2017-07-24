@@ -18,8 +18,10 @@ namespace Typewriter.Extensions.Types
 
         /// <summary>
         /// The default value of the type.
-        /// (Dictionary types returns {}, enumerable types returns [], boolean types returns false, 
-        /// numeric types returns 0, void returns void(0), all other types return null)
+        /// (Dictionary types returns {}, enumerable types returns [],
+        /// boolean types returns false, numeric types returns 0, void returns void(0),
+        /// Guid types return empty guid string, Date types return new Date(0),
+        /// all other types return null)
         /// </summary>
         public static string Default(this Type type)
         {
@@ -32,6 +34,7 @@ namespace Typewriter.Extensions.Types
             if (type.Name == "number" && type.IsNullable == false) return "0";
             if (type.Name == "void") return "void(0)";
             if (type.IsGuid && type.IsNullable == false) return "\"00000000-0000-0000-0000-000000000000\"";
+            if (type.IsDate && type.IsNullable == false) return "new Date(0)";
 
             return "null";
         }
