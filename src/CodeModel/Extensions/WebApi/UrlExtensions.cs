@@ -138,7 +138,7 @@ namespace Typewriter.Extensions.WebApi
 
         private static string ConvertRouteParameters(string route)
         {
-            return Regex.Replace(route, @"\{\*?(\w+):?\w*\??\}", m => $"${{{m.Groups[1].Value}}}");
+            return Regex.Replace(route, @"\{\*?(\w+):?\w*\??\}", m => $"${{encodeURIComponent({m.Groups[1].Value})}}");
         }
 
         private static string AppendQueryString(Method method, string route)
@@ -152,9 +152,9 @@ namespace Typewriter.Extensions.WebApi
 
             foreach (var parameter in method.Parameters.Where(p => p.Type.IsPrimitive && p.Attributes.Any(a => a.Name == "FromBody") == false))
             {
-                if (route.Contains($"${{{parameter.Name}}}") == false)
+                if (route.Contains($"${{encodeURIComponent({parameter.Name})}}") == false)
                 {
-                    route += $"{prefix}{parameter.Name}=${{{parameter.Name}}}";
+                    route += $"{prefix}{parameter.Name}=${{encodeURIComponent({parameter.Name})}}";
                     prefix = "&";
                 }
             }
