@@ -163,7 +163,7 @@ namespace Typewriter.Extensions.WebApi
             return route;
         }
 
-        private static string GetParameterValue(Method method, string name)
+        internal static string GetParameterValue(Method method, string name)
         {
             var parameter = method.Parameters.FirstOrDefault(p => p.Name == name);
             if (parameter?.Type.Name == "string")

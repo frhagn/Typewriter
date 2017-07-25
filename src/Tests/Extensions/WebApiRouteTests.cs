@@ -49,5 +49,14 @@ namespace Typewriter.Tests.Extensions
 
             methodInfo.Url().ShouldEqual("api/${id}");
         }
+
+        [Fact]
+        public void Expect_request_data_to_ignore_route_parameters()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "NamedRoute");
+
+            methodInfo.RequestData().ShouldEqual("null");
+        }
     }
 }
