@@ -47,7 +47,7 @@ namespace Typewriter.Tests.Extensions
             var classInfo = fileInfo.Classes.First();
             var methodInfo = classInfo.Methods.First(p => p.Name == "NamedRoute");
 
-            methodInfo.Url().ShouldEqual("api/${encodeURIComponent(id)}");
+            methodInfo.Url().ShouldEqual("api/${id}");
         }
     }
 }

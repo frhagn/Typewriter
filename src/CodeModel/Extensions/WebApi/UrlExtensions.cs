@@ -38,7 +38,7 @@ namespace Typewriter.Extensions.WebApi
             route = Route(method, route);
             route = RemoveUnmatchedOptionalParameters(method, route);
             route = ReplaceSpecialParameters(method, route);
-            route = ConvertRouteParameters(route);
+            route = ConvertRouteParameters(method, route);
             route = AppendQueryString(method, route);
 
             return route;
@@ -136,9 +136,9 @@ namespace Typewriter.Extensions.WebApi
             return route;
         }
 
-        private static string ConvertRouteParameters(string route)
+        private static string ConvertRouteParameters(Method method, string route)
         {
-            return Regex.Replace(route, @"\{\*?(\w+):?\w*\??\}", m => $"${{encodeURIComponent({m.Groups[1].Value})}}");
+            return Regex.Replace(route, @"\{\*?(\w+):?\w*\??\}", m => $"${{{GetParameterValue(method, m.Groups[1].Value)}}}");
         }
 
         private static string AppendQueryString(Method method, string route)
@@ -152,15 +152,26 @@ namespace Typewriter.Extensions.WebApi
 
             foreach (var parameter in method.Parameters.Where(p => p.Type.IsPrimitive && p.Attributes.Any(a => a.Name == "FromBody") == false))
             {
-                if (route.Contains($"${{encodeURIComponent({parameter.Name})}}") == false)
+                if (route.Contains($"${{{GetParameterValue(method, parameter.Name)}}}") == false)
                 {
-                    route += $"{prefix}{parameter.Name}=${{encodeURIComponent({parameter.Name})}}";
+                    route += $"{prefix}{parameter.Name}=${{{GetParameterValue(method, parameter.Name)}}}";
                     prefix = "&";
                 }
             }
             //}
 
             return route;
+        }
+
+        private static string GetParameterValue(Method method, string name)
+        {
+            var parameter = method.Parameters.FirstOrDefault(p => p.Name == name);
+            if (parameter?.Type.Name == "string")
+            {
+                return $"encodeURIComponent({name})";
+            }
+
+            return name;
         }
     }
 }
