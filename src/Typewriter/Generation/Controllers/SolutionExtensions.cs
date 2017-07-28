@@ -50,7 +50,12 @@ namespace Typewriter.Generation.Controllers
                     continue;
                 }
 
-                if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+                if (string.Equals(project.Kind, EnvDTE.Constants.vsProjectKindUnmodeled, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (string.Equals(project.Kind, ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
                 {
                     list.AddRange(GetSolutionFolderProjects(project));
                 }
@@ -75,8 +80,13 @@ namespace Typewriter.Generation.Controllers
                     continue;
                 }
 
+                if (string.Equals(subProject.Kind, EnvDTE.Constants.vsProjectKindUnmodeled, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 // If this is another solution folder, do a recursive call, otherwise add
-                if (subProject.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+                if (string.Equals(subProject.Kind, ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
                 {
                     list.AddRange(GetSolutionFolderProjects(subProject));
                 }

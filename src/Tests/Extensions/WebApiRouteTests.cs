@@ -38,7 +38,7 @@ namespace Typewriter.Tests.Extensions
             var classInfo = fileInfo.Classes.First();
             var methodInfo = classInfo.Methods.First(p => p.Name == "WildcardRoute");
 
-            methodInfo.Url().ShouldEqual("api/${key}");
+            methodInfo.Url().ShouldEqual("api/${encodeURIComponent(key)}");
         }
 
         [Fact]
@@ -60,5 +60,14 @@ namespace Typewriter.Tests.Extensions
         }
 
         
+
+        [Fact]
+        public void Expect_request_data_to_ignore_route_parameters()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "NamedRoute");
+
+            methodInfo.RequestData().ShouldEqual("null");
+        }
     }
 }

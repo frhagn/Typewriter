@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>TypeScript Template File</Name>
+    <Description>A TypeScript Template file for generating TypeScript from C# source files.</Description>
+    <Icon>tst.ico</Icon>
+    <TemplateID>abf556a6-677e-4c55-9550-4563e5829810</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <TemplateGroupID>AspNetCore</TemplateGroupID>
+    <NumberOfParentCategoriesToRollUp>2</NumberOfParentCategoriesToRollUp>
+    <DefaultName>Template.tst</DefaultName>
+    <ShowByDefault>false</ShowByDefault>
+  </TemplateData>
+  <TemplateContent>
+    <References/>
+    <ProjectItem ReplaceParameters="true" ItemType="None">Template.tst</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

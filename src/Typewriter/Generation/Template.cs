@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using EnvDTE;
 using Typewriter.CodeModel.Configuration;
 using Typewriter.Configuration;
@@ -154,7 +155,7 @@ namespace Typewriter.Generation
             {
                 CheckOutFileFromSourceControl(outputPath);
 
-                System.IO.File.WriteAllText(outputPath, output);
+                System.IO.File.WriteAllText(outputPath, output, new UTF8Encoding(true));
                 item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
             }
             else
