@@ -1,0 +1,369 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="utf-8">
+        <title>Typewriter - Change log</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../content/stylesheets/bootstrap.min.css" media="screen">
+        <link rel="stylesheet" href="../content/stylesheets/font-awesome.min.css" />
+        <link rel="stylesheet" href="../css/site.css?v=1" />
+        <script src="../content/scripts/jquery.min.js"></script>
+        <script src="../content/scripts/bootstrap.min.js"></script>
+        <script src="../content/scripts/highlighter.js"></script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-66685500-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </head>
+    
+    <body>
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="../index.html" class="navbar-brand">Typewriter</a>
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar-main">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="getting-started.html">Getting started</a>
+                        </li>
+                        <li>
+                            <a href="examples.html">Examples</a>
+                        </li>
+                        <li>
+                            <a href="documentation.html">Documentation</a>
+                        </li>
+                        <li>
+                            <a href="changelog.html">Change log</a>
+                        </li>
+                        <li>
+                            <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" target="_blank"><i class="fa fa-fw fa-download"></i>&nbsp;&nbsp;Download</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/frhagn/Typewriter"><i class="fa fa-github"></i>&nbsp;&nbsp;GitHub</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+                
+        <section>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-10 col-sm-push-1">
+                        <h1>Change log</h1>
+                        
+                        <h3>Typewriter 1.12</h3>
+                        <p class="lead">Item template for ASP.NET Core projects, bug fixes</p>
+                        
+                        <h4>1.12.2</h4>
+                        <ul>
+                            <li>Fixed request data bug caused by url encoding parameters. (<a href="https://github.com/frhagn/Typewriter/issues/198">#198</a>)</li>
+                        </ul>
+                        
+                        <h4>1.12.1</h4>
+                        <ul>
+                            <li>Fixed url encoding bug. (<a href="https://github.com/frhagn/Typewriter/issues/197">#197</a>)</li>
+                        </ul>
+                        
+                        <h4>1.12.0</h4>
+                        <ul>
+                            <li>Added url encoding to arguments in the $Url extension method. (<a href="https://github.com/frhagn/Typewriter/issues/172">#172</a>)</li>
+                            <li>Added item template for asp.net core projects. (<a href="https://github.com/frhagn/Typewriter/issues/185">#185</a>)</li>
+                            <li>Fixed bug where unloaded projects caused generation to crash. (<a href="https://github.com/frhagn/Typewriter/issues/168">#168</a>)</li>
+                            <li>Fixed bug where output files are written as UTF-8 and read as ANSI by Visual Studio. (<a href="https://github.com/frhagn/Typewriter/issues/178">#178</a>)</li>
+                            <li>Added default value for Date type. (<a href="https://github.com/frhagn/Typewriter/pull/169">#165</a>)</li>
+                        </ul>
+                        
+                        <h3>Typewriter 1.11</h3>
+                        <p class="lead">Improved support for Visual Studio 2017 RTM.</p>
+                        
+                        <h4>1.11.0</h4>
+                        <ul>
+                            <li>Improved support Visual Studio 2017 RTM.</li>
+                            <li>Added default value for empty Guids. (<a href="https://github.com/frhagn/Typewriter/pull/165">#165</a>)</li>
+                            <li>Changed default value to null for int? and bool?</li>
+                            <li>Added Class.IsAbstract. (<a href="https://github.com/frhagn/Typewriter/issues/155">#155</a>)</li>
+                        </ul>
+                        
+                        <h3>Typewriter 1.10</h3>
+                        <p class="lead">Improved support for partial types.</p>
+                        
+                        <div class="alert alert-warning">
+                            <h4>Breaking changes!</h4>
+                            <p>This release changes the default behavior when rendering partial classes and interfaces. 
+                                To keep the old behavior you'll need to set the PartialRenderingMode in the template constructor to Legacy.</p>
+                        </div>
+                        
+                        <h4>1.10.0</h4>
+                        <ul>
+                            <li>Improved support for partial classes and interfaces. (<a href="https://github.com/frhagn/Typewriter/issues/127">#127</a>)</li>
+                        </ul>
+                        
+                        <h3>Typewriter 1.9</h3>
+                        <p class="lead">Support for Visual Studio 2017.</p>
+                        
+                        <h4>1.9.0</h4>
+                        <ul>
+                            <li>Added Visual Studio 2017 install target. (<a href="https://github.com/frhagn/Typewriter/issues/152">#152</a>)</li>
+                            <li>Fixed a bug where using Linq statements in the template caused the generation to fail. (<a href="https://github.com/frhagn/Typewriter/pull/154">#154</a>)</li>
+                            <li>Added syntax coloring for new TypeScript keywords.</li>
+                        </ul>
+
+                        <h3>Typewriter 1.8</h3>
+                        <p class="lead">Support for interpolated strings, bug fixes.</p>
+                        
+                        <h4>1.8.2</h4>
+                        <ul>
+                            <li>Fixed camel-case bug. (<a href="https://github.com/frhagn/Typewriter/issues/146">#146</a>)</li>
+                            <li>CancellationToken parameters are now removed before generating RequestData. (<a href="https://github.com/frhagn/Typewriter/pull/145">#145</a>)</li>
+                        </ul>
+                        
+                        <h4>1.8.1</h4>
+                        <ul>
+                            <li>Fixed bug where classes recursively implementing IEnumerable caused Visual Studio to hang when resolving the type name. (<a href="https://github.com/frhagn/Typewriter/issues/144">#144</a>)</li>
+                        </ul>
+                        
+                        <h4>1.8.0</h4>
+                        <ul>
+                            <li>Fixed bug where interpolated strings caused render errors. (<a href="https://github.com/frhagn/Typewriter/issues/129">#129</a>)</li>
+                            <li>Added support for getting the correct type from custom collections inheriting from IEnumerable&lt;T&gt;. (<a href="https://github.com/frhagn/Typewriter/issues/131">#131</a>)</li>
+                            <li>Fixed bug where Type.OriginalName returned empty string for array types. (<a href="https://github.com/frhagn/Typewriter/issues/132">#132</a>)</li>
+                            <li>Fixed bug where the original source file could be overwritten. (<a href="https://github.com/frhagn/Typewriter/issues/142">#142</a>)</li>
+                        </ul>
+
+                        <h3>Typewriter 1.7</h3>
+                        <p class="lead">Support for parameter default values.</p>
+                        
+                        <h4>1.7.4</h4>
+                        <ul>
+                            <li>Fixed bug where Visual Studio 2013 incorrectly loaded the Roslyn-based metadata provider.</li>
+                        </ul>
+                        
+                        <h4>1.7.3</h4>
+                        <ul>
+                            <li>Fixed bug where WebAPI routes didn't render correctly.</li>
+                            <li>Added support for [controller] and [action] tokens in routes.</li>
+                        </ul>
+                        
+                        <h4>1.7.2</h4>
+                        <ul>
+                            <li>Fixed bug where pascal cased route parameters produced invalid urls.</li>
+                        </ul>
+                        
+                        <h4>1.7.1</h4>
+                        <ul>
+                            <li>Fixed bug where boolean default values returned as True/False instead of true/false.</li>
+                        </ul>
+                        
+                        <h4>1.7.0</h4>
+                        <ul>
+                            <li>Added support for getting default values of method parameters.</li>
+                        </ul>
+
+                        <h3>Typewriter 1.6</h3>
+                        <p class="lead">Improved error messages when rendering templates.</p>
+                        
+                        <h4>1.6.0</h4>
+                        <ul>
+                            <li>Error list now shows the actual exception message instead of "Exception has been thrown by the target of an invocation".</li>
+                            <li>Stack trace from template errors are now displayed in the Typewriter output pane.</li>
+                            <li>Only source files with build action "Compile" are included when rendering templates.</li>
+                        </ul>
+
+                        <h3>Typewriter 1.5</h3>
+                        <p class="lead">Support for documentation comments and constant values.</p>
+                        
+                        <h4>1.5.0</h4>
+                        <ul>
+                            <li>Added basic support for documentation comments.</li>
+                            <li>Added support for getting constant values.</li>
+                        </ul>
+
+                        <h3>Typewriter 1.4</h3>
+                        <p class="lead">Options for auto-rendering.</p>
+                        
+                        <h4>1.4.1</h4>
+                        <ul>
+                            <li>Fixed bug where route attributes with wildcard parameters didn't render correctly.</li>
+                            <li>Fixed bug where named routes didn't render correctly.</li>
+                        </ul>
+                        
+                        <h4>1.4.0</h4>
+                        <ul>
+                            <li>Added a Typewriter section in the Visual Studio options dialog.</li>
+                            <li>Added option to enable/disable rendering when saving TypeScript Template (.tst) files.</li>
+                            <li>Added option to enable/disable auto-render when changing C# files.</li>
+                        </ul>
+
+                        <h3>Typewriter 1.3</h3>
+                        <p class="lead">Support for hexadecimal enum values, rendering source files without namespace and performance improvements.</p>
+                        
+                        <h4>1.3.2</h4>
+                        <ul>
+                            <li>Added a context menu to trigger rendering of a template.</li>
+                        </ul>
+
+                        <h4>1.3.1</h4>
+                        <ul>
+                            <li>Fixed bug when camel-casing properties with consecutive uppercase letters e.g. <code>IPAddress</code> is now translated to <code>ipAddess</code>.</li>
+                            <li>Restored possibility to change output folder in OutputFilenameFactory.</li>
+                        </ul>
+
+                        <div class="alert alert-warning">
+                            <h4>Warning</h4>
+                            <p>Changing the output folder using OutputFilenameFactory is NOT supported and can lead to unexpected behaviour resulting in loss of files.</p> 
+                        </div>
+                        
+                        <h4>1.3.0</h4>
+                        <ul>
+                            <li>Improvements to the rendering queue implementation.</li>
+                            <li>Support for rendering source files without namespace.</li>
+                            <li>Support for hexadecimal enum values.</li>
+                            <li>Invalid item filters are displayed in the Visual Studio Error List.</li>
+                            <li>Bug fixes.</li>
+                        </ul>
+
+                        <h3>Typewriter 1.2</h3>
+                        <p class="lead">Template settings API and improved error handling.</p>
+
+                        <h4>1.2.0</h4>
+                        <ul>
+                            <li>Added a settings API to templates via an optional template constructor (see <a href="getting-started.html#settings">Getting started</a> for more info).</li>
+                            <li>Added setting to specify which projects are included when rendering templates.</li>
+                            <li>Added settings for output filename and file extension.</li>
+                            <li>Errors and warnings from template compilation and rendering are displayed in the Visual Studio Error List.</li>                            
+                            <li>Updated the default item template.</li>
+                        </ul>
+
+                        <h3>Typewriter 1.1</h3>
+                        <p class="lead">Improved syntax coloring in the template editor, support for using TFS Server Workspaces and improved support for working with custom methods.</p>
+
+                        <h4>1.1.0</h4>
+                        <ul>
+                            <li>Improved syntax coloring in the template editor.</li>
+                            <li>Moved $Default from type to extensions. (Note: To use $Default, add "using Typewriter.Extensions.Types;" to your template.)</li>
+                            <li>Unwrap returns the unwrapped type instead of the type name.</li>
+                            <li>Added $IsDefined to types to determine which types are defined in the current solution.</li>
+                            <li>Removed Visual Studio 2013 remarks from quick info when using Visual Studio 2015.</li>
+                            <li>Added statement completion for adding custom code blocks.</li>
+                            <li>Added support for automatic check-out when using TFS with a server workspace.</li>
+                            <li>Added support for returning collections from custom methods.</li>
+                            <li>Bug fixes.</li>
+                        </ul>
+
+                        <h3>Typewriter 1.0</h3>
+                        <p class="lead">Support for Visual Studio 2015 RTM, Roslyn-based code generation (vs 2015 only), improved template editor experience with statement completion and syntax coloring for templates, lambda filters and custom code blocks.</p>
+
+                        <div class="alert alert-warning">
+                            <h4>Breaking changes!</h4>
+                            <p>If you have been using the preview version (0.9.*) you'll need to modify  your templates after installing 1.0. 
+                                The last preview version (0.9.13) is still available for download from the GitHub repository under 
+                                <a href="https://github.com/frhagn/Typewriter/releases" class="alert-link">releases</a> of you prefer to continue using the preview.</p>
+                        </div>
+                        
+                        <h4>1.0.4</h4>
+                        <ul>
+                            <li>Fixed bug where calling IsPrimitive on array-types caused a crash.</li>
+                            <li>Fixed bug where deleting a c# file didn't delete the corresponding TypeScript file.</li>
+                        </ul>
+                        
+                        <h4>1.0.3</h4>
+                        <ul>
+                            <li>Added $Events and $Delegates to the code model.</li>
+                            <li>Removed the wrapper object for methods with only one parameter in extension method RequestData.</li>
+                            <li>Minor bug fixes.</li>
+                        </ul>
+                        
+                        <h4>1.0.2</h4>
+                        <ul>
+                            <li>Fixed a bug where templates would sometimes crash when using custom code blocks.</li>
+                            <li>Fixed a bug where QuickInfo on .NET Framework Types didn't display the summary.</li>
+                        </ul>
+                        
+                        <h4>1.0.1</h4>
+                        <ul>
+                            <li>Added class properties e.g. $BaseClass, $ContaintingClass and $Methods to types.</li>
+                            <li>Renamed extension method PostData to RequestData.</li>
+                            <li>Fixed bug where $IsGeneric on interfaces would sometimes cause a crash.</li>
+                        </ul>
+                        <h4>1.0.0</h4>
+                        <ul>
+                            <li>Support for Visual Studio 2015 RTM (Community, Professional and Enterprise).</li>
+                            <li>Roslyn-based metadata engine for Visual Studio 2015.</li>
+                            <li>Consolidated code model.</li>
+                            <li>IntelliSense and syntax highlighting for code blocks and lambda filters.</li>
+                            <li>Statement completion for custom methods.</li>
+                            <li>Changed syntax for code blocks from lambda vaiables to proper methods.</li>
+                            <li>Enabled using-statements for code blocks.</li>
+                            <li>Support for C# 6.0 features in code blocks.</li>
+                            <li>Full generics support for classes and methods.</li>
+                            <li>Removed type shortcuts from constants, fields, properties and methods.</li>
+                            <li>Support for ContainingClass on classes, namespaces and enums.</li>
+                            <li>Support for Parent to get the parent context on code items.</li>
+                            <li>Extension methods for ASP.NET Web API.</li>
+                            <li>Performance improvements.</li>
+                            <li>Bug fixes.</li>
+                        </ul>
+                            
+                        <h3>Typewriter preview</h3>
+                        <h4>0.9.13</h4>
+                        <ul>
+                            <li>Basic support for Generic classes.</li>
+                            <li>Added BaseClass property to classes.</li>
+                        </ul>
+                        <h4>0.9.12</h4>
+                        <ul>
+                            <li>Support for Visual Studio 2015 RC (except ASP.NET vNext applications).</li>
+                            <li>Changed the source file path mapping to be relative to the project directory instead of the solution directory.</li>
+                            <li>Minor bug fixes</li>
+                        </ul>
+                        <h4>0.9.11</h4>
+                        <ul>
+                            <li>Performance optimizations when scanning solution for template files.</li>
+                        </ul>
+                        <h4>0.9.10</h4>
+                        <ul>
+                            <li>Performance optimizations when saving template file with advanced filters.</li>
+                            <li>Added one retry when failing to render when saving template file.</li>
+                        </ul>
+                        <h4>0.9.9</h4>
+                        <ul>
+                            <li>Fixed bug when renaming files.</li>
+                        </ul>
+                        <h4>0.9.8</h4>
+                        <ul>
+                            <li>Support for lambda expressions in filters.</li>
+                            <li>Changed syntax for custom methods.</li>
+                            <li>Minor bug fixes</li>
+                        </ul>
+                        <h4>0.9.7</h4>
+                        <ul>
+                            <li>Basic support for custom methods.</li>
+                        </ul>
+                        <h4>0.9.6</h4>
+                        <ul>
+                            <li>Support for IsDate eg. $IsDate[true template][false template].</li>
+                        </ul>
+                        <h4>0.9.5</h4>
+                        <ul>
+                            <li>Support for interface filters by starting filter string with ":" eg. $Classes(:IModel)[template].</li>
+                            <li>Support for attribute filters by encapsulating filter string with "[]" eg. $Classes([Model])[template].</li>
+                            <li>Fixed bug when renaming files.</li>
+                            <li>The project file is now saved when rendering templates.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,1056 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="utf-8">
+        <title>Typewriter - Documentation</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../content/stylesheets/bootstrap.min.css" media="screen">
+        <link rel="stylesheet" href="../content/stylesheets/font-awesome.min.css" />
+        <link rel="stylesheet" href="../css/site.css?v=1" />
+        <script src="../content/scripts/jquery.min.js"></script>
+        <script src="../content/scripts/bootstrap.min.js"></script>
+        <script src="../content/scripts/highlighter.js"></script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-66685500-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </head>
+    
+    <body>
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="../index.html" class="navbar-brand">Typewriter</a>
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar-main">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="getting-started.html">Getting started</a>
+                        </li>
+                        <li>
+                            <a href="examples.html">Examples</a>
+                        </li>
+                        <li>
+                            <a href="documentation.html">Documentation</a>
+                        </li>
+                        <li>
+                            <a href="changelog.html">Change log</a>
+                        </li>
+                        <li>
+                            <a href="https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6" target="_blank"><i class="fa fa-fw fa-download"></i>&nbsp;&nbsp;Download</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/frhagn/Typewriter"><i class="fa fa-github"></i>&nbsp;&nbsp;GitHub</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+                
+        <section>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-10 col-sm-push-1">
+                        <h1>Documentation</h1>
+                                                
+                        <h3>Code model</h3>
+                        
+                        <h4>Attribute</h4>
+                        <p>Represents an attribute, not the attribute class, but the declared attribute usage on for instance a class.<br>Attributes are implicitly convertible to string, a conversion will return the name of the attribute.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the attribute including namespace and containing class names.<br>e.g. App.Attributes.RouteAttribute</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the attribute excluding the &quot;Attribute&quot;-suffix.<br>e.g. Route</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the attribute excluding the &quot;Attribute&quot;-suffix, camel cased.<br>e.g. route</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the attribute.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Value</td>
+                                    <td>The value of the attribute as string.</td>
+                                    <td>string</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>AttributeCollection</h4>
+                        <p>Represents a collection of attributes.</p>
+                        
+                        <hr>
+                        
+                        <h4>Class</h4>
+                        <p>Represents a C# class.<br>Classes are implicitly convertible to string, a conversion will return the name of the class.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the class.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>BaseClass</td>
+                                    <td>The base class of the class.<br>Returns null if the class inherits from System.Object.</td>
+                                    <td>Class</td>
+                                </tr>
+                                <tr>
+                                    <td>Constants</td>
+                                    <td>All public constants defined in the class.</td>
+                                    <td>ConstantCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>ContainingClass</td>
+                                    <td>The containing class of the class if it's nested.</td>
+                                    <td>Class</td>
+                                </tr>
+                                <tr>
+                                    <td>Fields</td>
+                                    <td>All public fields defined in the class.</td>
+                                    <td>FieldCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the class including namespace, type parameters and containing class names.<br>e.g. App.Models.CustomerModel</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Interfaces</td>
+                                    <td>All interfaces implemented by the class.</td>
+                                    <td>InterfaceCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>IsGeneric</td>
+                                    <td>Determines if the class is generic.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>Methods</td>
+                                    <td>All public methods defined in the class.</td>
+                                    <td>MethodCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the class excluding type parameters.<br>e.g. CustomerModel</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the class excluding type parameters, camel cased.<br>e.g. customerModel</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Namespace</td>
+                                    <td>The namespace of the class.<br>e.g. App.Models</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>NestedClasses</td>
+                                    <td>All public classes defined in the class.</td>
+                                    <td>ClassCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>NestedEnums</td>
+                                    <td>All public enums defined in the class.</td>
+                                    <td>EnumCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>NestedInterfaces</td>
+                                    <td>All public interfaces defined in the class.</td>
+                                    <td>InterfaceCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the class.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Properties</td>
+                                    <td>All public properties defined in the class.</td>
+                                    <td>PropertyCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>TypeArguments</td>
+                                    <td>
+                                        All generic type arguments of the class.<br>
+                                        TypeArguments are the specified arguments for the TypeParametes on a generic class e.g. &lt;string&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
+                                    <td>TypeParameterCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>TypeParameters</td>
+                                    <td>
+                                        All generic type parameters of the class.<br>
+                                        TypeParameters are the type placeholders of a generic class e.g. &lt;T&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
+                                    <td>TypeParameterCollection</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>ClassCollection</h4>
+                        <p>Represents a collection of classes.</p>
+                        
+                        <hr>
+                        
+                        <h4>Constant</h4>
+                        <p>Represents a constant.<br>Constants are implicitly convertible to string, a conversion will return the name of the constant.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the constant.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the constant including namespace, type parameters and containing class names.<br>e.g. App.Models.CustomerModel.TempPath</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the constant.<br>e.g. TempPath</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the constant, camel cased.<br>e.g. tempPath</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the constant.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Type</td>
+                                    <td>The type of the constant.</td>
+                                    <td>Type</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>ConstantCollection</h4>
+                        <p>Represents a collection of constants.</p>
+                        
+                        <hr>
+                        
+                        <h4>Enum</h4>
+                        <p>Represents a C# enum.<br>Enums are implicitly convertible to string, a conversion will return the name of the enum.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the enum.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>ContainingClass</td>
+                                    <td>The containing class of the enum if it's nested.</td>
+                                    <td>Class</td>
+                                </tr>
+                                <tr>
+                                    <td>IsFlags</td>
+                                    <td>Determines if the enum is decorated with the Flags attribute.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the enum including namespace, type parameters and containing class names.<br>e.g. App.Enums.AddressType</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the enum.<br>e.g. AddressType</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the enum, camel cased.<br>e.g. addressType</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Namespace</td>
+                                    <td>The namespace of the enum.<br>e.g. App.Enums</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the enum.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Values</td>
+                                    <td>All values defined in the enum.</td>
+                                    <td>EnumValueCollection</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>EnumCollection</h4>
+                        <p>Represents a collection of enums.</p>
+                        
+                        <hr>
+                        
+                        <h4>EnumValue</h4>
+                        <p>Represents an enum value.<br>EnumValues are implicitly convertible to string, a conversion will return the name of the enum value.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the enum value.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the enum including namespace, type parameters and containing class names.<br>e.g. App.Enums.AddressType.Shipping</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the enum.<br>e.g. Shipping</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the enum, camel cased.<br>e.g. shipping</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Value</td>
+                                    <td>The numeric value of the enum value.</td>
+                                    <td>int</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>EnumValueCollection</h4>
+                        <p>Represents a collection of enum values.</p>
+                        
+                        <hr>
+                        
+                        <h4>Field</h4>
+                        <p>Represents a field.<br>Fields are implicitly convertible to string, a conversion will return the name of the field.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the field.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the field including namespace, type parameters and containing class names.<br>e.g. App.Models.CustomerModel.ShippingAddress</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the field.<br>e.g. ShippingAddress</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the field, camel cased.<br>e.g. shippingAddress</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the field.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Type</td>
+                                    <td>The type of the field.</td>
+                                    <td>Type</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>FieldCollection</h4>
+                        <p>Represents a collection of fields.</p>
+                        
+                        <hr>
+                        
+                        <h4>File</h4>
+                        <p>Represents a C# code file.<br>File is the root context in the Typewriter code model.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full path of the file.<br>e.g. C:\Dev\App\Models\CustomerModel.cs</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the file.<br>e.g. CustomerModel.cs</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Classes</td>
+                                    <td>All public classes defined in the file.</td>
+                                    <td>ClassCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>Enums</td>
+                                    <td>All public enums defined in the file.</td>
+                                    <td>EnumCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>Interfaces</td>
+                                    <td>All public interfaces defined in the file.</td>
+                                    <td>InterfaceCollection</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <hr>
+                        
+                        <h4>Interface</h4>
+                        <p>Represents a C# interface.<br>Interfaces are implicitly convertible to string, a conversion will return the name of the interface.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the interface.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>ContainingClass</td>
+                                    <td>The containing class of the interface if it's nested.</td>
+                                    <td>Class</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the interface including namespace, type parameters and containing class names.<br>e.g. App.Models.ICustomerModel</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Interfaces</td>
+                                    <td>All interfaces implemented by the interface.</td>
+                                    <td>InterfaceCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>IsGeneric</td>
+                                    <td>Determines if the interface is generic.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>Methods</td>
+                                    <td>All methods defined in the interface.</td>
+                                    <td>MethodCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the interface excluding type parameters.<br>e.g. ICustomerModel</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the interface excluding type parameters, camel cased.<br>e.g. iCustomerModel</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Namespace</td>
+                                    <td>The namespace of the interface.<br>e.g. App.Models</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the interface.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Properties</td>
+                                    <td>All properties defined in the interface.</td>
+                                    <td>PropertyCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>TypeArguments</td>
+                                    <td>
+                                        All generic type arguments of the interface.<br>
+                                        TypeArguments are the specified arguments for the TypeParametes on a generic interface e.g. &lt;string&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
+                                    <td>TypeParameterCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>TypeParameters</td>
+                                    <td>
+                                        All generic type parameters of the interface.<br>
+                                        TypeParameters are the type placeholders of a generic interface e.g. &lt;T&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
+                                    <td>TypeParameterCollection</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                        
+                        <h4>InterfaceCollection</h4>
+                        <p>Represents a collection of interfaces.</p>
+                        
+                        <hr>
+                        
+                        <h4>Method</h4>
+                        <p>Represents a method.<br>Methods are implicitly convertible to string, a conversion will return the name of the method.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the method.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the method including namespace, type parameters and containing class names.<br>e.g. App.Models.CustomerModel.GetName</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>IsGeneric</td>
+                                    <td>Determines if the method is generic.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the method excluding type parameters.<br>e.g. GetName</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the method excluding type parameters, camel cased.<br>e.g. getName</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parameters</td>
+                                    <td>All parameters of method.</td>
+                                    <td>ParameterCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the method.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Type</td>
+                                    <td>The return type of the method.</td>
+                                    <td>Type</td>
+                                </tr>
+                                <tr>
+                                    <td>TypeParameters</td>
+                                    <td>
+                                        All generic type parameters of the method.<br>
+                                        TypeParameters are the type placeholders of a generic method e.g. &lt;T&gt;.
+                                    </td>
+                                    <td>TypeParameterCollection</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>MethodCollection</h4>
+                        <p>Represents a collection of methods.</p>
+                        
+                        <hr>
+                        
+                        <h4>Parameter</h4>
+                        <p>Represents a method parameter.<br>Parameters are implicitly convertible to string, a conversion will return the name of the parameter.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the parameter.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the parameter including namespace, type parameters and containing class names.<br>e.g. App.Models.CustomerModel.GetName.id</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the parameter.<br>e.g. id</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the parameter, camel cased.<br>e.g. id</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the parameter.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Type</td>
+                                    <td>The type of the parameter.</td>
+                                    <td>Type</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>ParameterCollection</h4>
+                        <p>Represents a collection of parameters.</p>
+                        
+                        <hr>
+                        
+                        <h4>Property</h4>
+                        <p>Represents a property.<br>Properties are implicitly convertible to string, a conversion will return the name of the property.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the property.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the property including namespace, type parameters and containing class names.<br>e.g. App.Models.CustomerModel.Orders</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>HasGetter</td>
+                                    <td>Determines if the property has a getter</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>HasSetter</td>
+                                    <td>Determines if the property has a setter</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the property.<br>e.g. Orders</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the property, camel cased.<br>e.g. orders</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the property.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Type</td>
+                                    <td>The type of the property.</td>
+                                    <td>Type</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>PropertyCollection</h4>
+                        <p>Represents a collection of properties.</p>
+                        
+                        <hr>
+                        
+                        <h4>Type</h4>
+                        <p>Represents a type.<br>Types are implicitly convertible to string, a conversion will return the name of the type.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attributes</td>
+                                    <td>All attributes declared on the type.</td>
+                                    <td>AttributeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>BaseClass</td>
+                                    <td>The base class of the type.</td>
+                                    <td>Class</td>
+                                </tr>
+                                <tr>
+                                    <td>Constants</td>
+                                    <td>All constants defined in the type.</td>
+                                    <td>ConstantCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>ContainingClass</td>
+                                    <td>The containing class of the type if it's nested.</td>
+                                    <td>Class</td>
+                                </tr>
+                                <tr>
+                                    <td>Default</td>
+                                    <td>The default value of the type.<br>e.g. strings returns null, integers returns 0 and IEnumerable&lt;CustomerModel&gt; returns []</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Fields</td>
+                                    <td>All fields defined in the type.</td>
+                                    <td>FieldCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>FullName</td>
+                                    <td>The full original name of the type including namespace, type parameters and containing class names.<br>e.g. System.Int32</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Interfaces</td>
+                                    <td>
+                                        All interfaces implemented by the type.<br>
+                                        (In Visual Studio 2013 Interfaces are not available on Types)
+                                    </td>
+                                    <td>InterfaceCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>IsDate</td>
+                                    <td>Determines if the type is a DateTime or DateTimeOffset.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>IsEnum</td>
+                                    <td>Determines if the type is an enum.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>IsEnumerable</td>
+                                    <td>Determines if the type is enumerable.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>IsGeneric</td>
+                                    <td>Determines if the type is generic.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>IsGuid</td>
+                                    <td>Determines if the type is a Guid. (Type.Name returns string for Guids)</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>IsNullable</td>
+                                    <td>Determines if the type is nullable.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>IsPrimitive</td>
+                                    <td>Determines if the type is primitive.</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>IsTimeSpan</td>
+                                    <td>Determines if the type is a TimeSpan. (Type.Name returns string for TimeSpans)</td>
+                                    <td>bool</td>
+                                </tr>
+                                <tr>
+                                    <td>Methods</td>
+                                    <td>All methods defined in the type.</td>
+                                    <td>MethodCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the type converted to a TypeScript firendly representation including type arguments.<br>e.g. number</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the type converted to a TypeScript firendly representation including type arguments, camel cased.<br>e.g. number</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Namespace</td>
+                                    <td>The namespace of the type.<br>e.g. System</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>NestedClasses</td>
+                                    <td>All classes defined in the type.</td>
+                                    <td>ClassCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>NestedEnums</td>
+                                    <td>All enums defined in the type.</td>
+                                    <td>EnumCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>NestedInterfaces</td>
+                                    <td>All interfaces defined in the type.</td>
+                                    <td>InterfaceCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>OriginalName</td>
+                                    <td>The original name of the type as it was specified in C#.<br>e.g. int</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the type.</td>
+                                    <td>Item</td>
+                                </tr>
+                                <tr>
+                                    <td>Properties</td>
+                                    <td>All properties defined in the type.</td>
+                                    <td>PropertyCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>TypeArguments</td>
+                                    <td>
+                                        All generic type parameters of the type.
+                                        TypeArguments are the specified arguments for the TypeParametes on a generic type e.g. &lt;string&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
+                                    <td>TypeCollection</td>
+                                </tr>
+                                <tr>
+                                    <td>TypeParameters</td>
+                                    <td>
+                                        All generic type parameters of the type.<br>
+                                        TypeParameters are the type placeholders of a generic type e.g. &lt;T&gt;.<br>
+                                        (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
+                                    </td>
+                                    <td>TypeParameterCollection</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>TypeCollection</h4>
+                        <p>Represents a collection of types. Calling ToString() on a TypeCollection will return a string with the names of all Types in the collection surrounded by <nobr>&quot;&lt;&quot;&nbsp;and&nbsp;&quot;&gt;&quot;</nobr> e.g. &lt;string, number&gt;. If the collection is empty it will return an emty string.</p>
+                        
+                        <hr>
+                        
+                        <h4>TypeParameter</h4>
+                        <p>Represents a generic type parameter on a class, interface or method.<br>TypeParameters are implicitly convertible to string, a conversion will return the name of the type parameter.</p>
+                        
+                        <h5>Properties</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Property</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>The name of the type parameter.<br>e.g. T</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>The name of the type parameter, camel cased.<br>e.g. t</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Parent</td>
+                                    <td>The parent context of the type parameter.</td>
+                                    <td>Item</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>TypeParameterCollection</h4>
+                        <p>Represents a collection of type parameters. Calling ToString() on a TypeParameterCollection will return a string with the names of all TypeParameters in the collection surrounded by <nobr>&quot;&lt;&quot;&nbsp;and&nbsp;&quot;&gt;&quot;</nobr> e.g. &lt;T1, T2&gt;. If the collection is empty it will return an emty string.</p>
+                        
+                        <hr>
+                        
+                        <h3>Extensions</h3>
+                        
+                        <h4>Typewriter.Extensions.WebApi</h4>
+                        <p>Extension methods for working with ASP.NET Web API Controllers</p>
+                        
+                        <h5>Methods</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Method</th>
+                                    <th>Description</th>
+                                    <th style="width: 150px;">Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>HttpMethod</td>
+                                    <td>
+                                        Returns the http method from a Web API action.<br>
+                                        The http method is extracted from Http* or AcceptVerbs attribute or by naming convension if no attributes are specified.
+                                    </td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>RequestData</td>
+                                    <td>
+                                        Creates an object literal containing the parameters that should be sent in the request body of a Web API request.
+                                        If no parameters are required the literal "null" is returned.
+                                    </td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Route</td>
+                                    <td>Returns the route for the Web API action based on route attributes (or "api/{controller}/{id?}" if no attributes are present).</td>
+                                    <td>string</td>
+                                </tr>
+                                <tr>
+                                    <td>Url</td>
+                                    <td>
+                                        Returns the url for the Web API action based on route attributes (or "api/{controller}/{id?}" if no attributes are present).
+                                        Route parameters are converted to TypeScript string interpolation syntax by prefixing all parameters with $ e.g. ${id}.
+                                        Optional parameters are added as QueryString parameters for GET and HEAD requests.
+                                    </td>
+                                    <td>string</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <hr>
+                        <!--
+                                       
+                        <h3>Automatic conversions</h3>
+                        <p class="lead">...</p>
+                        
+                        <h4>DateTime and DateTimeOffset</h4>
+                        <p>...</p>
+                        
+                        <h4>Guid</h4>
+                        <p>...</p>
+                        
+                        <h4>Nullable&lt;T&gt;</h4>
+                        <p>...</p>
+                        
+                        <h4>Object and dynamic</h4>
+                        <p>...</p>
+                        
+                        <h4>Task&lt;T&gt; and Task</h4>
+                        <p>...</p>
+                        
+                        <h4>TimeSpan</h4>
+                        <p>...</p>
+                        
+                        -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+
+</html>

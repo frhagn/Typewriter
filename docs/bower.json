@@ -1,0 +1,20 @@
+{
+  "name": "Typewriter2",
+  "version": "0.0.0",
+  "homepage": "https://github.com/frhagn/Typewriter",
+  "authors": [
+    "asahlin <malakeen@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {    
+    "bootswatch": "*",
+    "font-awesome": "*"
+  }
+}
