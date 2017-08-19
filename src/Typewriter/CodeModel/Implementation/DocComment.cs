@@ -18,10 +18,10 @@ namespace Typewriter.CodeModel.Implementation
         public override Item Parent { get; }
 
         private string _summary;
-        public override string Summary => _summary ?? (_summary = FormatValue(_root.Element("summary")?.Value));
+        public override string Summary => _summary ?? (_summary = FormatValue(_root.Element("summary") == null ? string.Empty : string.Concat(_root.Element("summary").Nodes())));
 
         private string _returns;
-        public override string Returns => _returns ?? (_returns = FormatValue(_root.Element("returns")?.Value));
+        public override string Returns => _returns ?? (_returns = FormatValue(_root.Element("returns") == null ? string.Empty : string.Concat(_root.Element("returns").Nodes())));
 
         private ParameterCommentCollection _parameters;
         public override ParameterCommentCollection Parameters => _parameters ?? (_parameters = ParameterCommentImpl.FromXElements(_root.Elements("param"), this));
