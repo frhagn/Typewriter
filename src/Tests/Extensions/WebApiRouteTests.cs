@@ -51,6 +51,17 @@ namespace Typewriter.Tests.Extensions
         }
 
         [Fact]
+        public void Expect_to_find_url_on_httpget_route()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "HttpGetRoute");
+
+            methodInfo.Url().ShouldEqual("api/${id}");
+        }
+
+        
+
+        [Fact]
         public void Expect_request_data_to_ignore_route_parameters()
         {
             var classInfo = fileInfo.Classes.First();

@@ -57,11 +57,13 @@ namespace Typewriter.Extensions.WebApi
         /// </summary>
         public static string Route(this Method method, string route)
         {
-            var routeAttribute = method.Attributes.FirstOrDefault(a => a.Name == "Route");
+            var routeAttribute = method.Attributes.FirstOrDefault(a => a.Name == "Route") ??
+                                 method.Attributes.FirstOrDefault(a => a.Name.StartsWith("Http"));
+
+            var routePrefix = GetRoutePrefix(method.Parent as Class);
+
             if (routeAttribute != null)
             {
-                var parent = method.Parent as Class;
-                var routePrefix = parent?.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix")?.Value.TrimEnd('/');
                 var value = ParseAttributeValue(routeAttribute.Value);
 
                 if (string.IsNullOrEmpty(value))
@@ -82,8 +84,29 @@ namespace Typewriter.Extensions.WebApi
                     route = string.Concat(routePrefix, "/", value);
                 }
             }
+            else
+            {
+                route = string.Concat(routePrefix, "/", route);
+            }
 
             return route;
+        }
+
+        private static string GetRoutePrefix(Class @class)
+        {
+            if (@class == null)
+            {
+                return null;
+            }
+
+            var routePrefix = @class?.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix")?.Value.TrimEnd('/');
+
+            if (String.IsNullOrEmpty(routePrefix))
+            {
+                routePrefix = @class?.Attributes.FirstOrDefault(a => a.Name == "Route")?.Value.TrimEnd('/');
+            }
+
+            return routePrefix;
         }
 
         private static string ParseAttributeValue(string value)
@@ -117,7 +140,7 @@ namespace Typewriter.Extensions.WebApi
                 var parent = method.Parent as Class;
                 if (parent != null)
                 {
-                    var controller = parent.name;
+                    var controller = parent.Name;
                     if (controller.EndsWith("Controller"))
                     {
                         controller = controller.Substring(0, controller.Length - 10);
