@@ -38,7 +38,7 @@ namespace Typewriter.Tests.Extensions
             var classInfo = fileInfo.Classes.First();
             var methodInfo = classInfo.Methods.First(p => p.Name == "WildcardRoute");
             var result = methodInfo.Url();
-            result.ShouldEqual("api/RouteControllerWithDefaultRoute/${key}");
+            result.ShouldEqual("api/RouteControllerWithDefaultRoute/${encodeURIComponent(key)}");
         }
 
         [Fact]
