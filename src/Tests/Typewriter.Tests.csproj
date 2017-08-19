@@ -162,7 +162,9 @@
     <Compile Include="CodeModel\FileTests.cs" />
     <Compile Include="CodeModel\TypeTests.cs" />
     <Compile Include="Extensions\Support\HttpMethodController.cs" />
+    <Compile Include="Extensions\Support\RouteControllerWithDefaultRoute.cs" />
     <Compile Include="Extensions\Support\RouteController.cs" />
+    <Compile Include="Extensions\WebApiRouteTestsClassRoute.cs" />
     <Compile Include="Extensions\WebApiRouteTests.cs" />
     <Compile Include="Extensions\WebApiTests.cs" />
     <Compile Include="Helpers\CamelCaseTests.cs" />

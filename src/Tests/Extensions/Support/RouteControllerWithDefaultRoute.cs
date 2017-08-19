@@ -7,30 +7,38 @@ using Typewriter.Tests.Support;
 
 namespace Typewriter.Tests.Extensions.Support
 {
-    public class RouteController
+    [Route("api/[controller]")]
+    public class RouteControllerWithDefaultRouteController
     {
-        [Route("api/{controller}/a/{name}/{id?}")]
+        [Route("a/{name}/{id?}")]
         public string GetRoute(string name, string filter = null, int count = 0)
         {
             return null;
         }
 
-        [Route("api/{*key:string}")]
+        [Route("{*key:string}")]
         public string WildcardRoute(string key)
         {
             return null;
         }
 
-        [Route("api/{id}", Name = "name")]
+        [Route("{id}", Name = "name")]
         public string NamedRoute(int id)
         {
             return null;
         }
 
-        [HttpGet("api/{id}")]
-        public string HttpGetRoute(int id)
+        [HttpGet("{id}")]
+        public string RouteInHttpAttribute(int id)
         {
             return null;
         }
+
+        [HttpGet("sub/{id}")]
+        public string SubRouteInHttpAttribute(int id)
+        {
+            return null;
+        }
+
     }
 }
