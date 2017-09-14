@@ -281,6 +281,7 @@
     <Compile Include="CodeModel\Implementation\DelegateImpl.cs" />
     <Compile Include="CodeModel\Implementation\TypeParameterImpl.cs" />
     <Compile Include="Generation\Controllers\BlockingQueue.cs" />
+    <Compile Include="Generation\SolutionFilesHelper.cs" />
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
     <Compile Include="CodeModel\Collections\AttributeCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\ClassCollectionImpl.cs" />
