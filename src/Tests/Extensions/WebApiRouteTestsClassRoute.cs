@@ -67,5 +67,38 @@ namespace Typewriter.Tests.Extensions
 
             methodInfo.Url().ShouldEqual("api/RouteControllerWithDefaultRoute/sub/${id}");
         }
+
+        [Fact]
+        public void Expect_to_find_url_on_in_httpget_action_attribute()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "ActionTestInheritedClassController");
+
+            var result = methodInfo.Url();
+            result.ShouldEqual("api/RouteControllerWithDefaultRoute/actionTestInheritedClassController");
+        }
+
+        [Fact]
+        public void Expect_to_find_url_on_in_httpget_action_withparameter()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "ActionTestInheritedClassControllerPostWithParameter");
+
+            var result = methodInfo.Url();
+            result.ShouldEqual("api/RouteControllerWithDefaultRoute/actionTestInheritedClassControllerPostWithParameter/${id}");
+        }
+
+        [Fact]
+        public void Expect_to_find_url_on_in_httppost_action_withparameter()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "ActionTestInheritedClassControllerPostWithParameter");
+
+            var result = methodInfo.Url();
+            result.ShouldEqual("api/RouteControllerWithDefaultRoute/actionTestInheritedClassControllerPostWithParameter/${id}");
+        }
+
+        
+
     }
 }

@@ -40,5 +40,23 @@ namespace Typewriter.Tests.Extensions.Support
             return null;
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<string> ActionTestInheritedClassController()
+        {
+            return null; // just for testing
+        }
+
+        [HttpPost("[action]/{id}")]
+        public IEnumerable<string> ActionTestInheritedClassControllerPostWithParameter(int id)
+        {
+            return null; // just for testing
+        }
+
+        [HttpGet("sub/[action]/{id}")]
+        public IEnumerable<string> ActionTestInheritedClassControllerSubWithParameter(int id)
+        {
+            return null; // just for testing
+        }
+
     }
 }

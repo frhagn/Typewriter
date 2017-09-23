@@ -13,6 +13,8 @@ using Microsoft.VisualStudio;
 using System.IO;
 using System.Runtime.InteropServices;
 using Typewriter.Generation.Controllers;
+using Typewriter.Generation;
+using System.Linq;
 
 namespace Typewriter.VisualStudio.ContextMenu
 {
@@ -24,7 +26,8 @@ namespace Typewriter.VisualStudio.ContextMenu
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 0x0100;
+        public const int RenderOneCommandId = 0x0100;
+        public const int RenderAllCommandId = 0x0101;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -57,9 +60,19 @@ namespace Typewriter.VisualStudio.ContextMenu
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                var menuCommandID = new CommandID(CommandSet, CommandId);
+                var menuCommandID = new CommandID(CommandSet, RenderOneCommandId);
 
-                var menuItem = new OleMenuCommand(MenuItemCallback, menuCommandID);
+                var menuItem = new OleMenuCommand(MenuItemCallbackRenderOne, menuCommandID);
+                menuItem.BeforeQueryStatus += menuCommand_BeforeQueryStatus;
+
+                commandService.AddCommand(menuItem);
+            }
+
+            if (commandService != null)
+            {
+                var menuCommandID = new CommandID(CommandSet, RenderAllCommandId);
+
+                var menuItem = new OleMenuCommand(MenuItemCallbackRenderAll, menuCommandID);
                 menuItem.BeforeQueryStatus += menuCommand_BeforeQueryStatus;
 
                 commandService.AddCommand(menuItem);
@@ -86,7 +99,7 @@ namespace Typewriter.VisualStudio.ContextMenu
                 var transformFileInfo = new FileInfo(itemFullPath);
 
                 bool isTemplate = transformFileInfo.Name.EndsWith(".tst");
-               
+
                 // if not leave the menu hidden
                 if (!isTemplate) return;
 
@@ -192,13 +205,27 @@ namespace Typewriter.VisualStudio.ContextMenu
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
-        private void MenuItemCallback(object sender, EventArgs e)
+        private void MenuItemCallbackRenderOne(object sender, EventArgs e)
         {
             //string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
             //string title = "RenderTemplate";
 
             var renderTemplateClicked = RenderTemplateClicked;
             renderTemplateClicked?.Invoke(this, new SingleFileChangedEventArgs(FileChangeType.Changed, itemFullPath));
+        }
+
+        private void MenuItemCallbackRenderAll(object sender, EventArgs e)
+        {
+            var renderTemplateClicked = RenderTemplateClicked;
+
+            // trigger a change and have it queue up
+            var helper = new SolutionFilesHelper();
+            var templates = helper.SolutionFiles().Select(x => x.Name).Where(x => x.EndsWith(Constants.TemplateExtension));
+            foreach (var itm in templates)
+            {
+                Log.Debug($"Invoke renderTemplateClicked for '{itm}'.");
+                renderTemplateClicked?.Invoke(this, new SingleFileChangedEventArgs(FileChangeType.Changed, itm));
+            }
         }
     }
 }
