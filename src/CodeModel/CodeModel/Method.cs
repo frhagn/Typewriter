@@ -24,6 +24,11 @@ namespace Typewriter.CodeModel
         public abstract string FullName { get; }
 
         /// <summary>
+        /// Determines if the method is abstract.
+        /// </summary>
+        public abstract bool IsAbstract { get; }
+
+        /// <summary>
         /// Determines if the method is generic.
         /// </summary>
         public abstract bool IsGeneric { get; }

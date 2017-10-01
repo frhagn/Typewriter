@@ -22,6 +22,9 @@ namespace Typewriter.Metadata.CodeDom
         public string FullName => codeProperty.FullName;
         public bool HasGetter => codeProperty.Getter != null && codeProperty.Getter.Access == vsCMAccess.vsCMAccessPublic;
         public bool HasSetter => codeProperty.Setter != null && codeProperty.Setter.Access == vsCMAccess.vsCMAccessPublic;
+        public bool IsAbstract => 
+            (codeProperty.Getter != null && codeProperty.Getter.MustImplement) || 
+            (codeProperty.Setter != null && codeProperty.Setter.MustImplement);
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeProperty.Attributes);
         public ITypeMetadata Type => CodeDomTypeMetadata.FromCodeElement(codeProperty, file);
         

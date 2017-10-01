@@ -22,6 +22,7 @@ namespace Typewriter.Metadata.CodeDom
         public string DocComment => codeDelegate.DocComment;
         public string Name => codeDelegate.Name;
         public string FullName => codeDelegate.FullName;
+        public bool IsAbstract => false;
         public bool IsGeneric => codeDelegate.IsGeneric;
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeDelegate.Attributes);
         public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeDelegate.Parent as CodeClass2, file);
