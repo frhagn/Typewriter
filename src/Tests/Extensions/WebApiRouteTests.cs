@@ -58,9 +58,7 @@ namespace Typewriter.Tests.Extensions
 
             methodInfo.Url().ShouldEqual("api/${id}");
         }
-
         
-
         [Fact]
         public void Expect_request_data_to_ignore_route_parameters()
         {
@@ -68,6 +66,26 @@ namespace Typewriter.Tests.Extensions
             var methodInfo = classInfo.Methods.First(p => p.Name == "NamedRoute");
 
             methodInfo.RequestData().ShouldEqual("null");
+        }
+
+        [Fact]
+        public void Expect_to_find_url_on_action_without_route_attribute_and_id()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "NoRouteWithId");
+
+            var result = methodInfo.Url();
+            result.ShouldEqual("api/Route/${id}");
+        }
+
+        [Fact]
+        public void Expect_to_find_url_on_action_without_route_attribute()
+        {
+            var classInfo = fileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "NoRoute");
+
+            var result = methodInfo.Url();
+            result.ShouldEqual("api/Route/");
         }
     }
 }

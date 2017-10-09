@@ -84,7 +84,7 @@ namespace Typewriter.Extensions.WebApi
                     route = string.Concat(routePrefix, "/", value);
                 }
             }
-            else
+            else if(routePrefix != null)
             {
                 route = string.Concat(routePrefix, "/", route);
             }
