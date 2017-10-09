@@ -106,6 +106,11 @@ namespace Typewriter.Extensions.WebApi
                 routePrefix = @class?.Attributes.FirstOrDefault(a => a.Name == "Route")?.Value.TrimEnd('/');
             }
 
+            if (String.IsNullOrEmpty(routePrefix) && @class.BaseClass != null)
+            {
+                routePrefix = GetRoutePrefix(@class.BaseClass);
+            }
+
             return routePrefix;
         }
 

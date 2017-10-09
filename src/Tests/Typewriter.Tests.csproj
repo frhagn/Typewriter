@@ -162,6 +162,8 @@
     <Compile Include="CodeModel\FileTests.cs" />
     <Compile Include="CodeModel\TypeTests.cs" />
     <Compile Include="Extensions\Support\HttpMethodController.cs" />
+    <Compile Include="Extensions\Support\BaseController.cs" />
+    <Compile Include="Extensions\Support\InheritedController.cs" />
     <Compile Include="Extensions\Support\RouteControllerWithDefaultRoute.cs" />
     <Compile Include="Extensions\Support\RouteController.cs" />
     <Compile Include="Extensions\WebApiRouteTestsClassRoute.cs" />
