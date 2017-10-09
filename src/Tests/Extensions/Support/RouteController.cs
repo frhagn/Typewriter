@@ -32,5 +32,15 @@ namespace Typewriter.Tests.Extensions.Support
         {
             return null;
         }
+
+        public string NoRoute()
+        {
+            return null;
+        }
+
+        public string NoRouteWithId(int id)
+        {
+            return null;
+        }
     }
 }
