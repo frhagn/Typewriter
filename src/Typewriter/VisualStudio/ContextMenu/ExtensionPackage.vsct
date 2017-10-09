@@ -58,9 +58,20 @@
 
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
-        
+
         <Strings>
           <ButtonText>Render Template</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExtensionPackageCmdSet" id="RenderAllTemplatesId" priority="0x0100" type="Button">
+        <Parent guid="guidExtensionPackageCmdSet" id="MyMenuGroup" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+
+        <Strings>
+          <ButtonText>Render All Templates</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -84,6 +95,7 @@
     <GuidSymbol name="guidExtensionPackageCmdSet" value="{7d06724e-3bb6-47e7-99d2-bb4ba983191d}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="RenderTemplateId" value="0x0100" />
+      <IDSymbol name="RenderAllTemplatesId" value="0x0101" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{f4d281d4-8652-47a9-8de3-23833947bd91}" >

@@ -34,6 +34,11 @@ namespace Typewriter.CodeModel
         public abstract bool HasSetter { get; }
 
         /// <summary>
+        /// Determines if the property is abstract.
+        /// </summary>
+        public abstract bool IsAbstract { get; }
+
+        /// <summary>
         /// The name of the property (camelCased).
         /// </summary>
         public abstract string name { get; }

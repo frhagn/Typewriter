@@ -162,3 +162,4 @@ $RECYCLE.BIN/
 # Include VS2013 SDK libraries
 !lib/*.dll
 /.vs/Typewriter/v15/sqlite3/storage.ide
+/.vs/config/applicationhost.config

@@ -12,7 +12,7 @@ namespace Typewriter.TemplateEditor.Lexing
         private static readonly string[] _symbolKeywords = { "as", "class", "extends", "implements", "import", "instanceof", "interface", "module", "new", "namespace", "typeof" };
         private static readonly string[] _keywords =
         {
-            "any", "as", "async", "await", "boolean", "break", "case", "catch", "class", "const", "constructor", "continue", "declare", "default",
+            "abstract", "any", "as", "async", "await", "boolean", "break", "case", "catch", "class", "const", "constructor", "continue", "declare", "default",
             "do", "else", "enum", "export", "extends", "delete", "debugger", "default", "false", "finally", "for", "from",
             "function", "get", "if", "implements", "import", "in", "instanceof", "interface", "keyof", "let", "module", "namespace", "new",
             "null", "number", "of", "private", "protected", "public", "readonly", "require", "return", "set", "static", "string",

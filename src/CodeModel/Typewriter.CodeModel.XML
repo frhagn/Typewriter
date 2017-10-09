@@ -778,6 +778,11 @@
             The full original name of the method including namespace and containing class names.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Method.IsAbstract">
+            <summary>
+            Determines if the method is abstract.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Method.IsGeneric">
             <summary>
             Determines if the method is generic.
@@ -907,6 +912,11 @@
         <member name="P:Typewriter.CodeModel.Property.HasSetter">
             <summary>
             Determines if the property has a setter.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Property.IsAbstract">
+            <summary>
+            Determines if the property is abstract.
             </summary>
         </member>
         <member name="P:Typewriter.CodeModel.Property.name">

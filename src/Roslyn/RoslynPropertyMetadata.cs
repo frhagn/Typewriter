@@ -20,6 +20,7 @@ namespace Typewriter.Metadata.Roslyn
         public string FullName => symbol.ToDisplayString();
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
         public ITypeMetadata Type => RoslynTypeMetadata.FromTypeSymbol(symbol.Type);
+        public bool IsAbstract => symbol.IsAbstract;
         public bool HasGetter => symbol.GetMethod != null && symbol.GetMethod.DeclaredAccessibility == Accessibility.Public;
         public bool HasSetter => symbol.SetMethod != null && symbol.SetMethod.DeclaredAccessibility == Accessibility.Public;
         

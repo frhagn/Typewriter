@@ -20,6 +20,7 @@ namespace Typewriter.Metadata.Roslyn
         public string FullName => symbol.GetFullName();
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
         public ITypeMetadata Type => RoslynTypeMetadata.FromTypeSymbol(symbol.ReturnType);
+        public bool IsAbstract => symbol.IsAbstract;
         public bool IsGeneric => symbol.IsGenericMethod;
         public IEnumerable<ITypeParameterMetadata> TypeParameters => RoslynTypeParameterMetadata.FromTypeParameterSymbols(symbol.TypeParameters);
         public IEnumerable<IParameterMetadata> Parameters => RoslynParameterMetadata.FromParameterSymbols(symbol.Parameters);

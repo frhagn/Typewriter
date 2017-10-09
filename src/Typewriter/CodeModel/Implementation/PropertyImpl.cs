@@ -23,6 +23,7 @@ namespace Typewriter.CodeModel.Implementation
         public override string FullName => _metadata.FullName;
         public override bool HasGetter => _metadata.HasGetter;
         public override bool HasSetter => _metadata.HasSetter;
+        public override bool IsAbstract => _metadata.IsAbstract;
 
         private AttributeCollection _attributes;
         public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
