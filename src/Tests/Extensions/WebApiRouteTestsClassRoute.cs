@@ -26,10 +26,13 @@ namespace Typewriter.Tests.Extensions
     public abstract class WebApiRouteClassRouteExtensionsTests : TestBase
     {
         private readonly File fileInfo;
+        private readonly File inheritedFileInfo;
+
 
         protected WebApiRouteClassRouteExtensionsTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\Extensions\Support\RouteControllerWithDefaultRoute.cs");
+            inheritedFileInfo = GetFile(@"Tests\Extensions\Support\InheritedController.cs");
         }
 
         [Fact]
@@ -77,6 +80,16 @@ namespace Typewriter.Tests.Extensions
             var result = methodInfo.Url();
             result.ShouldEqual("api/RouteControllerWithDefaultRoute/actionTestInheritedClassController");
         }
+        [Fact]
+        public void Expect_to_find_url_on_BaseController_HttpGet_Parameter()
+        {
+            var classInfo = inheritedFileInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "RoutePrefixFromBaseHttpGetWithParameter");
+
+            var result = methodInfo.Url();
+            result.ShouldEqual("api/Inherited/inherited/${id}");
+        }
+        
 
         [Fact]
         public void Expect_to_find_url_on_in_httpget_action_withparameter()
