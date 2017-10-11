@@ -20,7 +20,7 @@ namespace Typewriter.VisualStudio
     [Guid(Constants.ExtensionPackageId)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
-    [InstalledProductRegistration("#110", "#112", "1.14.1", IconResourceID = 401)]
+    [InstalledProductRegistration("#110", "#112", "1.14.2", IconResourceID = 401)]
     [ProvideLanguageService(typeof(LanguageService), Constants.LanguageName, 100, DefaultToInsertSpaces = true)]
     [ProvideLanguageExtension(typeof(LanguageService), Constants.TemplateExtension)]
     [ProvideMenuResource("Menus.ctmenu", 1)]

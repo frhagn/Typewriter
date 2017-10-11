@@ -68,7 +68,6 @@ namespace Typewriter.Extensions.WebApi
 
                 if (string.IsNullOrEmpty(value))
                 {
-                    // Todo: What happens with empty route and no route prefix?
                     route = routePrefix ?? route;
                 }
                 else if (value.StartsWith("~"))
