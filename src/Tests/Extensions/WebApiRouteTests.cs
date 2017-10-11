@@ -26,11 +26,41 @@ namespace Typewriter.Tests.Extensions
     public abstract class WebApiRouteExtensionsTests : TestBase
     {
         private readonly File fileInfo;
+        private readonly File routeLessControllerInfo;
 
         protected WebApiRouteExtensionsTests(ITestFixture fixture) : base(fixture)
         {
             fileInfo = GetFile(@"Tests\Extensions\Support\RouteController.cs");
+            routeLessControllerInfo = GetFile(@"Tests\Extensions\Support\RouteLessController.cs");
         }
+
+        [Fact]
+        public void Expect_to_route_on_routless_Controller_with_methodattribute()
+        {
+            var classInfo = routeLessControllerInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "Test");
+
+            methodInfo.Url().ShouldEqual("api/RouteLess/${id}");
+        }
+
+        [Fact]
+        public void Expect_to_route_on_routless_Controller_without_methodattribute()
+        {
+            var classInfo = routeLessControllerInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "Test2");
+
+            methodInfo.Url().ShouldEqual("api/RouteLess/${id}");
+        }
+
+        [Fact]
+        public void Expect_to_route_on_routless_Controller_without_methodattribute_and_inputparam()
+        {
+            var classInfo = routeLessControllerInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "Test3");
+
+            methodInfo.Url().ShouldEqual("api/RouteLess/");
+        }
+
 
         [Fact]
         public void Expect_to_find_parameters_on_wildcard_route_url()
