@@ -166,6 +166,7 @@
     <Compile Include="Extensions\Support\InheritedController.cs" />
     <Compile Include="Extensions\Support\RouteControllerWithDefaultRoute.cs" />
     <Compile Include="Extensions\Support\RouteController.cs" />
+    <Compile Include="Extensions\Support\RouteLessController.cs" />
     <Compile Include="Extensions\WebApiRouteTestsClassRoute.cs" />
     <Compile Include="Extensions\WebApiRouteTests.cs" />
     <Compile Include="Extensions\WebApiTests.cs" />
