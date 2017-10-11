@@ -61,6 +61,15 @@ namespace Typewriter.Tests.Extensions
             methodInfo.Url().ShouldEqual("api/RouteLess/");
         }
 
+        [Fact]
+        public void Expect_to_route_on_routless_Controller_with_methodattribute_and_inputparam_custom_route()
+        {
+            var classInfo = routeLessControllerInfo.Classes.First();
+            var methodInfo = classInfo.Methods.First(p => p.Name == "Test");
+
+            methodInfo.Url("api/{controller}/{action}/{id?}").ShouldEqual("api/RouteLess/test/${id}");
+        }
+
 
         [Fact]
         public void Expect_to_find_parameters_on_wildcard_route_url()
