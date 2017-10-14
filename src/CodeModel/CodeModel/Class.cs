@@ -89,6 +89,11 @@ namespace Typewriter.CodeModel
         public abstract string Namespace { get; }
 
         /// <summary>
+        /// The Type of the class.
+        /// </summary>
+        public abstract Type Type { get; }
+
+        /// <summary>
         /// All classes defined in the class.
         /// </summary>
         public abstract ClassCollection NestedClasses { get; }
