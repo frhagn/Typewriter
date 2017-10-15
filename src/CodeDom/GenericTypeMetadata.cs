@@ -23,6 +23,7 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsDefined => false;
         public string Name => fullName;
         public string Namespace => null;
+        public ITypeMetadata Type => this;
 
         public IEnumerable<IAttributeMetadata> Attributes => new IAttributeMetadata[0];
         public IClassMetadata BaseClass => null;

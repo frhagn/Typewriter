@@ -163,3 +163,4 @@ $RECYCLE.BIN/
 !lib/*.dll
 /.vs/Typewriter/v15/sqlite3/storage.ide
 /.vs/config/applicationhost.config
+/.vs

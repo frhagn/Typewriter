@@ -149,6 +149,11 @@
             The namespace of the class.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.Type">
+            <summary>
+            The Type of the class.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Class.NestedClasses">
             <summary>
             All classes defined in the class.

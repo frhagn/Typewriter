@@ -45,6 +45,8 @@ namespace Typewriter.Metadata.Roslyn
         public bool IsGeneric => _symbol.TypeParameters.Any();
         public string Namespace => _symbol.GetNamespace();
 
+        public ITypeMetadata Type => RoslynTypeMetadata.FromTypeSymbol(_symbol);
+
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(_symbol.GetAttributes());
         public IClassMetadata BaseClass => RoslynClassMetadata.FromNamedTypeSymbol(_symbol.BaseType);
         public IClassMetadata ContainingClass => RoslynClassMetadata.FromNamedTypeSymbol(_symbol.ContainingType);

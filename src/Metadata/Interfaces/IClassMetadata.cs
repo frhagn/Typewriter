@@ -8,6 +8,7 @@ namespace Typewriter.Metadata.Interfaces
         bool IsAbstract { get; }
         bool IsGeneric { get; }
         string Namespace { get; }
+        ITypeMetadata Type { get; }
         IEnumerable<IAttributeMetadata> Attributes { get; }
         IClassMetadata BaseClass { get; }
         IClassMetadata ContainingClass { get; }

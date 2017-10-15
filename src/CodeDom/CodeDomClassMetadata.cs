@@ -21,6 +21,7 @@ namespace Typewriter.Metadata.CodeDom
         public string Name => codeClass.Name;
         public string FullName => codeClass.FullName;
         public string Namespace => GetNamespace();
+        public ITypeMetadata Type => new LazyCodeDomTypeMetadata(codeClass.FullName, false, true, file);
         public bool IsAbstract => codeClass.IsAbstract;
         public bool IsGeneric => codeClass.IsGeneric;
         public IClassMetadata BaseClass => CodeDomClassMetadata.FromCodeElements(codeClass.Bases, file).FirstOrDefault();
