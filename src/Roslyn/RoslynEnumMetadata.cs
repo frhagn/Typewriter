@@ -7,21 +7,23 @@ namespace Typewriter.Metadata.Roslyn
 {
     public class RoslynEnumMetadata : IEnumMetadata
     {
-        private INamedTypeSymbol symbol;
+        private readonly INamedTypeSymbol _symbol;
 
         public RoslynEnumMetadata(INamedTypeSymbol symbol)
         {
-            this.symbol = symbol;
+            _symbol = symbol;
         }
 
-        public string DocComment => symbol.GetDocumentationCommentXml();
-        public string Name => symbol.Name;
-        public string FullName => symbol.ToDisplayString();
-        public string Namespace => symbol.GetNamespace();
+        public string DocComment => _symbol.GetDocumentationCommentXml();
+        public string Name => _symbol.Name;
+        public string FullName => _symbol.ToDisplayString();
+        public string Namespace => _symbol.GetNamespace();
 
-        public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
-        public IClassMetadata ContainingClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.ContainingType);
-        public IEnumerable<IEnumValueMetadata> Values => RoslynEnumValueMetadata.FromFieldSymbols(symbol.GetMembers().OfType<IFieldSymbol>());
+        public ITypeMetadata Type => RoslynTypeMetadata.FromTypeSymbol(_symbol);
+
+        public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(_symbol.GetAttributes());
+        public IClassMetadata ContainingClass => RoslynClassMetadata.FromNamedTypeSymbol(_symbol.ContainingType);
+        public IEnumerable<IEnumValueMetadata> Values => RoslynEnumValueMetadata.FromFieldSymbols(_symbol.GetMembers().OfType<IFieldSymbol>());
         
         internal static IEnumerable<IEnumMetadata> FromNamedTypeSymbols(IEnumerable<INamedTypeSymbol> symbols)
         {

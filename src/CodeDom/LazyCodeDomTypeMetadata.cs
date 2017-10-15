@@ -7,29 +7,29 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class LazyCodeDomTypeMetadata : CodeDomTypeMetadata
     {
-        private readonly string fullName;
-        private readonly CodeDomFileMetadata file;
+        private readonly string _fullName;
+        private readonly CodeDomFileMetadata _file;
 
-        public LazyCodeDomTypeMetadata(string fullName, bool isNullable, bool isType, CodeDomFileMetadata file) : base(null, isNullable, isType, file)
+        public LazyCodeDomTypeMetadata(string fullName, bool isNullable, bool isTask, CodeDomFileMetadata file) : base(null, isNullable, isTask, file)
         {
-            this.fullName = fullName;
-            this.file = file;
+            _fullName = fullName;
+            _file = file;
         }
 
         protected override CodeType CodeType => base.CodeType ?? (codeType = LoadType());
 
         private CodeType LoadType()
         {
-            return file.GetType(fullName);
+            return _file.GetType(_fullName);
         }
 
         public override string Name => GetName(ExtractName());
-        public override string FullName => GetFullName(fullName);
+        public override string FullName => GetFullName(_fullName);
         public override string Namespace => ExtractNamespace();
 
         private string ExtractName()
         {
-            var name = fullName;
+            var name = _fullName;
 
             // Remove generic arguments from containing class
             var continingIndex = name.LastIndexOf(">.", StringComparison.Ordinal);
@@ -42,7 +42,7 @@ namespace Typewriter.Metadata.CodeDom
 
         private string ExtractNamespace()
         {
-            var name = fullName;
+            var name = _fullName;
             var parentName = string.Empty;
 
             // Remove generic arguments from containing class

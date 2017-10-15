@@ -8,34 +8,35 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class CodeDomInterfaceMetadata : IInterfaceMetadata
     {
-        private readonly CodeInterface2 codeInterface;
-        private readonly CodeDomFileMetadata file;
+        private readonly CodeInterface2 _codeInterface;
+        private readonly CodeDomFileMetadata _file;
 
         private CodeDomInterfaceMetadata(CodeInterface2 codeInterface, CodeDomFileMetadata file)
         {
-            this.codeInterface = codeInterface;
-            this.file = file;
+            _codeInterface = codeInterface;
+            _file = file;
         }
 
-        public string DocComment => codeInterface.DocComment;
-        public string Name => codeInterface.Name;
-        public string FullName => codeInterface.FullName;
+        public string DocComment => _codeInterface.DocComment;
+        public string Name => _codeInterface.Name;
+        public string FullName => _codeInterface.FullName;
         public string Namespace => GetNamespace();
-        public bool IsGeneric => codeInterface.FullName.EndsWith(">");
+        public bool IsGeneric => _codeInterface.FullName.EndsWith(">");
 
-        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeInterface.Attributes);
-        public IEnumerable<IEventMetadata> Events => CodeDomEventMetadata.FromCodeElements(codeInterface.Children, file);
-        public IEnumerable<ITypeParameterMetadata> TypeParameters => CodeDomTypeParameterMetadata.FromFullName(codeInterface.FullName);
-        public IEnumerable<ITypeMetadata> TypeArguments => CodeDomTypeMetadata.LoadGenericTypeArguments(IsGeneric, FullName, file);
-        public IEnumerable<IInterfaceMetadata> Interfaces => CodeDomInterfaceMetadata.FromCodeElements(codeInterface.Bases, file);
-        public IEnumerable<IMethodMetadata> Methods => CodeDomMethodMetadata.FromCodeElements(codeInterface.Children, file);
-        public IEnumerable<IPropertyMetadata> Properties => CodeDomPropertyMetadata.FromCodeElements(codeInterface.Children, file);
-        public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeInterface.Parent as CodeClass2, file);
+        public ITypeMetadata Type => new LazyCodeDomTypeMetadata(_codeInterface.FullName, false, false, _file);
+        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(_codeInterface.Attributes);
+        public IEnumerable<IEventMetadata> Events => CodeDomEventMetadata.FromCodeElements(_codeInterface.Children, _file);
+        public IEnumerable<ITypeParameterMetadata> TypeParameters => CodeDomTypeParameterMetadata.FromFullName(_codeInterface.FullName);
+        public IEnumerable<ITypeMetadata> TypeArguments => CodeDomTypeMetadata.LoadGenericTypeArguments(IsGeneric, FullName, _file);
+        public IEnumerable<IInterfaceMetadata> Interfaces => FromCodeElements(_codeInterface.Bases, _file);
+        public IEnumerable<IMethodMetadata> Methods => CodeDomMethodMetadata.FromCodeElements(_codeInterface.Children, _file);
+        public IEnumerable<IPropertyMetadata> Properties => CodeDomPropertyMetadata.FromCodeElements(_codeInterface.Children, _file);
+        public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(_codeInterface.Parent as CodeClass2, _file);
 
         private string GetNamespace()
         {
-            var parent = codeInterface.Parent as CodeClass2;
-            return parent != null ? parent.FullName : (codeInterface.Namespace?.FullName ?? string.Empty);
+            var parent = _codeInterface.Parent as CodeClass2;
+            return parent != null ? parent.FullName : (_codeInterface.Namespace?.FullName ?? string.Empty);
         }
 
         internal static IEnumerable<IInterfaceMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)

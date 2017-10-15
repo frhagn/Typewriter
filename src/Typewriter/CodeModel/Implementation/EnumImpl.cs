@@ -23,6 +23,9 @@ namespace Typewriter.CodeModel.Implementation
         public override string FullName => _metadata.FullName;
         public override string Namespace => _metadata.Namespace;
 
+        private Type _type;
+        protected override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent));
+
         private bool? _isFlags;
         public override bool IsFlags => _isFlags ?? (_isFlags = Attributes.Any(a => a.FullName == "System.FlagsAttribute")).Value;
 

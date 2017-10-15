@@ -26,9 +26,8 @@ namespace Typewriter.CodeModel.Implementation
         public override bool IsGeneric => _metadata.IsGeneric;
 
         private Type _type;
-        public override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this));
-
-
+        protected override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent));
+        
         private AttributeCollection _attributes;
         public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
 

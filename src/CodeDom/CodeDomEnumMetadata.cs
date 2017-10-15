@@ -8,27 +8,28 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class CodeDomEnumMetadata : IEnumMetadata
     {
-        private readonly CodeEnum codeEnum;
-        private readonly CodeDomFileMetadata file;
+        private readonly CodeEnum _codeEnum;
+        private readonly CodeDomFileMetadata _file;
 
         private CodeDomEnumMetadata(CodeEnum codeEnum, CodeDomFileMetadata file)
         {
-            this.codeEnum = codeEnum;
-            this.file = file;
+            _codeEnum = codeEnum;
+            _file = file;
         }
 
-        public string DocComment => codeEnum.DocComment;
-        public string Name => codeEnum.Name;
-        public string FullName => codeEnum.FullName;
+        public string DocComment => _codeEnum.DocComment;
+        public string Name => _codeEnum.Name;
+        public string FullName => _codeEnum.FullName;
         public string Namespace => GetNamespace();
-        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeEnum.Attributes);
-        public IEnumerable<IEnumValueMetadata> Values => CodeDomEnumValueMetadata.FromCodeElements(codeEnum.Members, file);
-        public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(codeEnum.Parent as CodeClass2, file);
+        public ITypeMetadata Type => new LazyCodeDomTypeMetadata(_codeEnum.FullName, false, false, _file);
+        public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(_codeEnum.Attributes);
+        public IEnumerable<IEnumValueMetadata> Values => CodeDomEnumValueMetadata.FromCodeElements(_codeEnum.Members, _file);
+        public IClassMetadata ContainingClass => CodeDomClassMetadata.FromCodeClass(_codeEnum.Parent as CodeClass2, _file);
 
         private string GetNamespace()
         {
-            var parent = codeEnum.Parent as CodeClass2;
-            return parent != null ? parent.FullName : (codeEnum.Namespace?.FullName ?? string.Empty);
+            var parent = _codeEnum.Parent as CodeClass2;
+            return parent != null ? parent.FullName : (_codeEnum.Namespace?.FullName ?? string.Empty);
         }
 
         internal static IEnumerable<IEnumMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)

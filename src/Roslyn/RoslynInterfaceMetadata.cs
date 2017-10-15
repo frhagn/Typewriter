@@ -9,7 +9,7 @@ namespace Typewriter.Metadata.Roslyn
 {
     public class RoslynInterfaceMetadata : IInterfaceMetadata
     {
-        private INamedTypeSymbol _symbol;
+        private readonly INamedTypeSymbol _symbol;
         private readonly RoslynFileMetadata _file;
 
         public RoslynInterfaceMetadata(INamedTypeSymbol symbol, RoslynFileMetadata file)
@@ -43,6 +43,8 @@ namespace Typewriter.Metadata.Roslyn
         public string FullName => _symbol.ToDisplayString();
         public bool IsGeneric => _symbol.TypeParameters.Any();
         public string Namespace => _symbol.GetNamespace();
+
+        public ITypeMetadata Type => RoslynTypeMetadata.FromTypeSymbol(_symbol);
 
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(_symbol.GetAttributes());
         public IClassMetadata ContainingClass => RoslynClassMetadata.FromNamedTypeSymbol(_symbol.ContainingType);

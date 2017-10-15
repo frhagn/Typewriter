@@ -94,6 +94,16 @@ namespace Typewriter.CodeModel
         {
             return instance.ToString();
         }
+
+        protected abstract Type Type { get; }
+
+        /// <summary>
+        /// Converts the current instance to a Type.
+        /// </summary>
+        public static implicit operator Type(Interface instance)
+        {
+            return instance?.Type;
+        }
     }
 
     /// <summary>

@@ -65,6 +65,16 @@ namespace Typewriter.CodeModel
         {
             return instance.ToString();
         }
+
+        protected abstract Type Type { get; }
+
+        /// <summary>
+        /// Converts the current instance to a Type.
+        /// </summary>
+        public static implicit operator Type(Enum instance)
+        {
+            return instance?.Type;
+        }
     }
 
     /// <summary>

@@ -89,11 +89,6 @@ namespace Typewriter.CodeModel
         public abstract string Namespace { get; }
 
         /// <summary>
-        /// The Type of the class.
-        /// </summary>
-        public abstract Type Type { get; }
-
-        /// <summary>
         /// All classes defined in the class.
         /// </summary>
         public abstract ClassCollection NestedClasses { get; }
@@ -132,12 +127,23 @@ namespace Typewriter.CodeModel
         /// </summary>
         public abstract TypeParameterCollection TypeParameters { get; }
 
+
         /// <summary>
         /// Converts the current instance to string.
         /// </summary>
-        public static implicit operator string (Class instance)
+        public static implicit operator string(Class instance)
         {
             return instance.ToString();
+        }
+
+        protected abstract Type Type { get; }
+
+        /// <summary>
+        /// Converts the current instance to a Type.
+        /// </summary>
+        public static implicit operator Type(Class instance)
+        {
+            return instance?.Type;
         }
     }
 
