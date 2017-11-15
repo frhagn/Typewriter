@@ -106,6 +106,11 @@ namespace Typewriter.CodeModel
         public abstract bool IsTimeSpan { get; }
 
         /// <summary>
+        /// Determines if the type is a ValueTuple.
+        /// </summary>
+        public abstract bool IsValueTuple { get; }
+
+        /// <summary>
         /// All methods defined in the type.
         /// </summary>
         public abstract MethodCollection Methods { get; }

@@ -1066,6 +1066,11 @@
             Determines if the type is a TimeSpan.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Type.IsValueTuple">
+            <summary>
+            Determines if the type is a ValueTuple.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Type.Methods">
             <summary>
             All methods defined in the type.

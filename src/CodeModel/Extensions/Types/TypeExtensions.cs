@@ -26,7 +26,7 @@ namespace Typewriter.Extensions.Types
         public static string Default(this Type type)
         {
             // Dictionary = { [key: type]: type; }
-            if (type.Name.StartsWith("{")) return "{}";
+            if (type.Name.StartsWith("{") && type.IsValueTuple == false) return "{}";
 
             if (type.IsEnumerable) return "[]";
 

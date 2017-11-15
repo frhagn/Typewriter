@@ -27,6 +27,8 @@ namespace Typewriter.Metadata.Roslyn
         public bool IsAbstract => (symbol as INamedTypeSymbol)?.IsAbstract ?? false;
         public bool IsGeneric => (symbol as INamedTypeSymbol)?.TypeParameters.Any() ?? false;
         public bool IsDefined => symbol.Locations.Any(l => l.IsInSource);
+        public bool IsValueTuple => symbol.Name == "" && symbol.BaseType?.Name == "ValueType" && symbol.BaseType.ContainingNamespace.Name == "System";
+
         public string Namespace => symbol.GetNamespace();
         public ITypeMetadata Type => this;
 
@@ -74,12 +76,10 @@ namespace Typewriter.Metadata.Roslyn
         {
             get
             {
-                var namedTypeSymbol = symbol as INamedTypeSymbol;
-                if (namedTypeSymbol != null)
+                if (symbol is INamedTypeSymbol namedTypeSymbol)
                     return FromTypeSymbols(namedTypeSymbol.TypeArguments);
 
-                var arrayTypeSymbol = symbol as IArrayTypeSymbol;
-                if (arrayTypeSymbol != null)
+                if (symbol is IArrayTypeSymbol arrayTypeSymbol)
                     return FromTypeSymbols(new [] { arrayTypeSymbol.ElementType});
 
                 return new ITypeMetadata[0];
@@ -90,8 +90,7 @@ namespace Typewriter.Metadata.Roslyn
         {
             get
             {
-                var namedTypeSymbol = symbol as INamedTypeSymbol;
-                if (namedTypeSymbol != null)
+                if (symbol is INamedTypeSymbol namedTypeSymbol)
                     return RoslynTypeParameterMetadata.FromTypeParameterSymbols(namedTypeSymbol.TypeParameters);
 
                 return new ITypeParameterMetadata[0];
@@ -159,6 +158,7 @@ namespace Typewriter.Metadata.Roslyn
         public bool IsNullable => false;
         public bool IsTask => true;
         public bool IsDefined => false;
+        public bool IsValueTuple => false;
         public string Namespace => "System";
         public ITypeMetadata Type => null;
 

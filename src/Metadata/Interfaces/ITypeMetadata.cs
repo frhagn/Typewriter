@@ -10,6 +10,7 @@ namespace Typewriter.Metadata.Interfaces
         bool IsNullable { get; }
         bool IsTask { get; }
         bool IsDefined { get; }
+        bool IsValueTuple { get; }
         IEnumerable<IFieldMetadata> TupleElements { get; }
     }
 }

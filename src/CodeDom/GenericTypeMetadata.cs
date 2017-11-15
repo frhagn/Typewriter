@@ -21,6 +21,7 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsNullable => false;
         public bool IsTask => false;
         public bool IsDefined => false;
+        public bool IsValueTuple => false;
         public string Name => fullName;
         public string Namespace => null;
         public ITypeMetadata Type => this;

@@ -75,6 +75,12 @@ namespace Typewriter.CodeModel
                 return "any[]";
             }
 
+            if (metadata.IsValueTuple)
+            {
+                var types = string.Join(", ", metadata.TupleElements.Select(p => $"{p.Name}: {GetTypeScriptName(p.Type)}"));
+                return $"{{ {types} }}";
+            }
+
             if (metadata.IsGeneric)
                 return metadata.Name + string.Concat("<", string.Join(", ", metadata.TypeArguments.Select(GetTypeScriptName)), ">");
 

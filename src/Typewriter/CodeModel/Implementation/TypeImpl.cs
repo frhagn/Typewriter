@@ -38,6 +38,8 @@ namespace Typewriter.CodeModel.Implementation
         public override bool IsDefined => _metadata.IsDefined;
         public override bool IsGuid => FullName == "System.Guid" || FullName == "System.Guid?";
         public override bool IsTimeSpan => FullName == "System.TimeSpan" || FullName == "System.TimeSpan?";
+        public override bool IsValueTuple => _metadata.IsValueTuple;
+
 
         private AttributeCollection _attributes;
         public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));
