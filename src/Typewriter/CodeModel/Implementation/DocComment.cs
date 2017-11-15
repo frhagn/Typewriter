@@ -41,10 +41,17 @@ namespace Typewriter.CodeModel.Implementation
 
         public static DocComment FromXml(string xml, Item parent)
         {
-            if (string.IsNullOrEmpty(xml)) return null;
+            try
+            {
+                if (string.IsNullOrEmpty(xml)) return null;
 
-            var root = XDocument.Parse(xml).Root;
-            return root != null ? new DocCommentImpl(root, parent) : null;
+                var root = XDocument.Parse(xml).Root;
+                return root != null ? new DocCommentImpl(root, parent) : null;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
     
