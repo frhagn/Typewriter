@@ -1130,6 +1130,11 @@
             (In Visual Studio 2013 TypeParameters and TypeArguments are the same)
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Type.TupleElements">
+            <summary>
+            The named ValueTuple fields of the type.
+            </summary>
+        </member>
         <member name="M:Typewriter.CodeModel.Type.op_Implicit(Typewriter.CodeModel.Type)~System.String">
             <summary>
             Converts the current instance to string.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Typewriter.Metadata.Interfaces
 {
@@ -9,5 +10,6 @@ namespace Typewriter.Metadata.Interfaces
         bool IsNullable { get; }
         bool IsTask { get; }
         bool IsDefined { get; }
+        IEnumerable<IFieldMetadata> TupleElements { get; }
     }
 }

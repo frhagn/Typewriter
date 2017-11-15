@@ -170,6 +170,11 @@ namespace Typewriter.CodeModel
         public abstract TypeParameterCollection TypeParameters { get; }
 
         /// <summary>
+        /// The named ValueTuple fields of the type.
+        /// </summary>
+        public abstract FieldCollection TupleElements { get; }
+
+        /// <summary>
         /// Converts the current instance to string.
         /// </summary>
         public static implicit operator string (Type instance)

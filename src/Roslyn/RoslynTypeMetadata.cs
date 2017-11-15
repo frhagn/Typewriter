@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -41,7 +43,32 @@ namespace Typewriter.Metadata.Roslyn
         public IEnumerable<IClassMetadata> NestedClasses => RoslynClassMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Class));
         public IEnumerable<IEnumMetadata> NestedEnums => RoslynEnumMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Enum));
         public IEnumerable<IInterfaceMetadata> NestedInterfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(symbol.GetMembers().OfType<INamedTypeSymbol>().Where(s => s.TypeKind == TypeKind.Interface));
+        public IEnumerable<IFieldMetadata> TupleElements
+        {
+            get
+            {
+                try
+                {
+                    if (symbol is INamedTypeSymbol n)
+                    {
+                        if (n.Name == "" && n.BaseType?.Name == "ValueType" && n.BaseType.ContainingNamespace.Name == "System")
+                        {
+                            var property = n.GetType().GetProperty(nameof(TupleElements));
+                            if (property != null)
+                            {
+                                var value = property.GetValue(symbol);
+                                var tupleElements = value as IEnumerable<IFieldSymbol>;
 
+                                return RoslynFieldMetadata.FromFieldSymbols(tupleElements);
+                            }
+                        }
+                    }
+                }
+                catch { }
+                
+                return new IFieldMetadata[0];
+            }
+        }
 
         public IEnumerable<ITypeMetadata> TypeArguments
         {
@@ -150,5 +177,6 @@ namespace Typewriter.Metadata.Roslyn
         public IEnumerable<IInterfaceMetadata> NestedInterfaces => new IInterfaceMetadata[0];
         public IEnumerable<ITypeMetadata> TypeArguments => new ITypeMetadata[0];
         public IEnumerable<ITypeParameterMetadata> TypeParameters => new ITypeParameterMetadata[0];
+        public IEnumerable<IFieldMetadata> TupleElements => new IFieldMetadata[0];
     }
 }
