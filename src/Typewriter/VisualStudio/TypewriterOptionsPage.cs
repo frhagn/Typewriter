@@ -16,5 +16,12 @@ namespace Typewriter.VisualStudio
         [Description("If set to True, TypeScript Templates (.tst) will be re-rendered when saved.")]
         [DefaultValue(true)]
         public bool RenderOnSave { get; set; } = true;
+
+        [Category("Rendering")]
+        [DisplayName("Add generated files to VS project")]
+        [Description("If set to True, Typewriter will add generated files to Visual Studio Project.")]
+        [DefaultValue(true)]
+        public bool AddGeneratedFilesToProject { get; set; } = true;
+
     }
 }
