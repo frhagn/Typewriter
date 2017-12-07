@@ -139,6 +139,11 @@ namespace Typewriter.Generation
             return success;
         }
 
+        protected virtual void WriteFile(string outputPath, string outputContent)
+        {
+            System.IO.File.WriteAllText(outputPath, outputContent, new UTF8Encoding(true));
+        }
+
         protected virtual void SaveFile(File file, string output, ref bool success)
         {
             ProjectItem item;
@@ -151,11 +156,22 @@ namespace Typewriter.Generation
                 return;
             }
 
-            if (HasChanged(outputPath, output))
+            var hasChanged = HasChanged(outputPath, output);
+
+            if (!ExtensionPackage.Instance.Options.AddGeneratedFilesToProject)
+            {
+                if (hasChanged)
+                {
+                    WriteFile(outputPath, output);
+                    Log.Info($"Output file {outputPath} had been wrote.");
+                }
+                return;
+            }
+
+            if (hasChanged)
             {
                 CheckOutFileFromSourceControl(outputPath);
-
-                System.IO.File.WriteAllText(outputPath, output, new UTF8Encoding(true));
+                WriteFile(outputPath, output);
                 item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
             }
             else
