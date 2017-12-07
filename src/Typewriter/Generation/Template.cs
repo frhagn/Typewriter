@@ -158,12 +158,12 @@ namespace Typewriter.Generation
 
             var hasChanged = HasChanged(outputPath, output);
 
-            if (!ExtensionPackage.Instance.Options.AddGeneratedFilesToProject)
+            if (ExtensionPackage.Instance.Options.AddGeneratedFilesToProject == false)
             {
                 if (hasChanged)
                 {
                     WriteFile(outputPath, output);
-                    Log.Info($"Output file {outputPath} had been wrote.");
+                    Log.Debug($"Output file '{outputPath}' saved.");
                 }
                 return;
             }
@@ -172,7 +172,19 @@ namespace Typewriter.Generation
             {
                 CheckOutFileFromSourceControl(outputPath);
                 WriteFile(outputPath, output);
-                item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
+                item = FindProjectItem(outputPath);
+
+                if (item == null)
+                {
+                    try
+                    {
+                        item = _projectItem.ProjectItems.AddFromFile(outputPath);
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Error($"Unable to add '{outputPath}' to project. {exception.Message}");
+                    }
+                }
             }
             else
             {
