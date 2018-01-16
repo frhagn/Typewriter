@@ -10,13 +10,13 @@ namespace Typewriter.Metadata.CodeDom
 {
     public class CodeDomEnumValueMetadata : IEnumValueMetadata
     {
-        private static readonly Int32Converter _converter = new Int32Converter();
+        private static readonly Int64Converter _converter = new Int64Converter();
 
         private readonly CodeVariable2 codeVariable;
         private readonly CodeDomFileMetadata file;
-        private readonly int value;
+        private readonly long value;
 
-        private CodeDomEnumValueMetadata(CodeVariable2 codeVariable, CodeDomFileMetadata file, int value)
+        private CodeDomEnumValueMetadata(CodeVariable2 codeVariable, CodeDomFileMetadata file, long value)
         {
             this.codeVariable = codeVariable;
             this.file = file;
@@ -26,12 +26,12 @@ namespace Typewriter.Metadata.CodeDom
         public string DocComment => codeVariable.DocComment;
         public string Name => codeVariable.Name;
         public string FullName => codeVariable.FullName;
-        public int Value => value;
+        public long Value => value;
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeVariable.Attributes);
         
         internal static IEnumerable<IEnumValueMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)
         {
-            var value = -1;
+            long value = -1;
 
             foreach (var codeVariable in codeElements.OfType<CodeVariable2>())
             {
@@ -41,7 +41,7 @@ namespace Typewriter.Metadata.CodeDom
                 {
                     string initExpression = codeVariable.InitExpression.ToString();
 
-                    if (int.TryParse(initExpression, out value) == false)
+                    if (long.TryParse(initExpression, out value) == false)
                     {
                         // Handle init expressions from char constants e.g. 'A' = 65
                         if (initExpression.Length == 3 && initExpression.StartsWith("'") && initExpression.EndsWith("'"))
@@ -51,7 +51,7 @@ namespace Typewriter.Metadata.CodeDom
                         else if (initExpression.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                         {
                             var convertedValue = _converter.ConvertFromString(initExpression);
-                            value = (int?)convertedValue ?? -1;
+                            value = (long?)convertedValue ?? -1;
                         }
                         else
                         {

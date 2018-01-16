@@ -6,6 +6,6 @@ namespace Typewriter.Metadata.Interfaces
     {
         string DocComment { get; }
         IEnumerable<IAttributeMetadata> Attributes { get; }
-        int Value { get; }
+        long Value { get; }
     }
 }
