@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using EnvDTE;
+using Typewriter.Generation.Controllers;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
+using Typewriter.VisualStudio;
+using Stream = Typewriter.TemplateEditor.Lexing.Stream;
 
 namespace Typewriter.Generation
 {
@@ -27,6 +31,7 @@ namespace Typewriter.Generation
 
             while (stream.Advance())
             {
+                if (ParseReference(stream, shadowClass, projectItem)) continue;
                 if (ParseCodeBlock(stream, shadowClass)) continue;
                 if (ParseLambda(stream, shadowClass, contexts, ref output)) continue;
                 output += stream.Current;
@@ -163,6 +168,37 @@ namespace Typewriter.Generation
                         }
                         catch
                         {
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool ParseReference(Stream stream, ShadowClass shadowClass, ProjectItem projectItem)
+        {
+            if (stream.Current == '$')
+            {
+                var identifier = stream.PeekWord(1);
+                if (identifier == "Reference")
+                {
+                    var path = stream.PeekBlock(identifier.Length + 2, '(', ')');
+                    if (path != null)
+                    {
+                        try
+                        {
+                            var absPath = Path.IsPathRooted(path)
+                                ? path
+                                : Path.Combine(Path.GetDirectoryName(projectItem.Path()) ?? "", path);
+
+                            shadowClass.AddReference(absPath);
+                            stream.Advance(path.Length + 2 + identifier.Length);
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error("Reference Error: " + ex);
                         }
                     }
                 }

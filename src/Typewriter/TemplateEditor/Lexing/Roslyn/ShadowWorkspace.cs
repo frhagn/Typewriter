@@ -48,7 +48,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             var projectInfo = ProjectInfo.Create(projectId, new VersionStamp(), name, name + ".dll", LanguageNames.CSharp, metadataReferences: references, compilationOptions: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             OnProjectAdded(projectInfo);
-
+            
             var documentId = DocumentId.CreateNewId(projectId);
             var documentInfo = DocumentInfo.Create(documentId, fileName, loader: TextLoader.From(TextAndVersion.Create(SourceText.From(text, Encoding.UTF8), VersionStamp.Create())));
 
@@ -137,11 +137,21 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             UpdateText(documentId, text.ToString());
         }
 
+        public void AddMetadataReferences(DocumentId documentId, IEnumerable<Assembly> references)
+        {
+            var metadataReferences = references.Except(defaultReferences).Select(CreateReference).ToList();
+            if (metadataReferences.Count == 0) return;
+
+            var project = CurrentSolution.GetDocument(documentId).Project;
+            project = project.AddMetadataReferences(metadataReferences);
+            metadataReferences.ForEach(x => OnMetadataReferenceAdded(project.Id, x));
+        }
+
         public EmitResult Compile(DocumentId documentId, string path)
         {
             var document = CurrentSolution.GetDocument(documentId);
             var compilation = document.Project.GetCompilationAsync().Result;
-
+            
             using (var fileStream = File.Create(path))
             {
                 return compilation.Emit(fileStream);

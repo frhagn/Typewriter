@@ -41,19 +41,26 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         private readonly ShadowWorkspace workspace;
         private readonly DocumentId documentId;
         private readonly List<Snippet> snippets = new List<Snippet>();
-        
+        private readonly List<Assembly> referencedAssemblies = new List<Assembly>();
         private int offset;
         private bool classAdded;
-        
+
         public ShadowClass()
         {
+            referencedAssemblies.Add(typeof(Class).Assembly);
             workspace = new ShadowWorkspace();
             documentId = workspace.AddProjectWithDocument("ShadowClass.cs", "");
         }
 
         public IEnumerable<Snippet> Snippets => snippets;
 
-        public IEnumerable<Assembly> ReferencedAssemblies => new[] { typeof (Class).Assembly };
+        public IEnumerable<Assembly> ReferencedAssemblies => referencedAssemblies;
+
+        public void AddReference(string path)
+        {
+            var asm = Assembly.LoadFile(path);
+            referencedAssemblies.Add(asm);
+        }
 
         public void AddUsing(string code, int startIndex)
         {
@@ -239,6 +246,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         public EmitResult Compile(string outputPath)
         {
             workspace.ChangeAllMethodsToPublicStatic(documentId);
+            workspace.AddMetadataReferences(documentId, ReferencedAssemblies);
             return workspace.Compile(documentId, outputPath);
         }
 
