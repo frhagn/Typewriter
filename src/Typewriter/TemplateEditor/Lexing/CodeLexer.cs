@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using Typewriter.CodeModel;
+using EnvDTE;
+using Typewriter.Generation.Controllers;
+using Typewriter.VisualStudio;
+using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
@@ -41,10 +45,40 @@ namespace Typewriter.TemplateEditor.Lexing
 
             do
             {
+                //TODO: get hold of ProjectItem somehow
+                ParseReference(stream, null);
                 ParseCodeBlock(stream);
                 ParseDollar(stream);
             }
             while (stream.Advance());
+        }
+
+        private void ParseReference(Stream stream, ProjectItem projectItem)
+        {
+            if (stream.Current == '$')
+            {
+                var identifier = stream.PeekWord(1);
+                if (identifier == "Reference")
+                {
+                    var path = stream.PeekBlock(identifier.Length + 2, '(', ')');
+                    if (path != null)
+                    {
+                        try
+                        {
+                            var absPath = Path.IsPathRooted(path) || projectItem == null
+                                ? path
+                                : Path.Combine(Path.GetDirectoryName(projectItem.Path()) ?? "", path);
+
+                            semanticModel.ShadowClass.AddReference(absPath);
+                            stream.Advance(path.Length + 2 + identifier.Length);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error("Reference Error: " + ex);
+                        }
+                    }
+                }
+            }
         }
 
         private void ParseCodeBlock(Stream stream)

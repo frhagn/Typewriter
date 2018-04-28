@@ -41,13 +41,13 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         private readonly ShadowWorkspace workspace;
         private readonly DocumentId documentId;
         private readonly List<Snippet> snippets = new List<Snippet>();
-        private readonly List<Assembly> referencedAssemblies = new List<Assembly>();
+        private readonly HashSet<Assembly> referencedAssemblies = new HashSet<Assembly>();
         private int offset;
         private bool classAdded;
 
         public ShadowClass()
         {
-            referencedAssemblies.Add(typeof(Class).Assembly);
+            AddDefaultReferencedAssemblies();
             workspace = new ShadowWorkspace();
             documentId = workspace.AddProjectWithDocument("ShadowClass.cs", "");
         }
@@ -56,10 +56,23 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
 
         public IEnumerable<Assembly> ReferencedAssemblies => referencedAssemblies;
 
+        private void AddDefaultReferencedAssemblies()
+        {
+            referencedAssemblies.Add(typeof(Class).Assembly);
+        }
+
+        internal void ResetReferencedAssemblies()
+        {
+            referencedAssemblies.Clear();
+            AddDefaultReferencedAssemblies();
+            workspace.SetMetadataReferences(documentId, referencedAssemblies);
+        }
+
         public void AddReference(string path)
         {
             var asm = Assembly.LoadFile(path);
-            referencedAssemblies.Add(asm);
+            if (referencedAssemblies.Add(asm))
+                workspace.SetMetadataReferences(documentId, referencedAssemblies);
         }
 
         public void AddUsing(string code, int startIndex)
@@ -110,6 +123,8 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             snippets.Add(Snippet.Create(SnippetType.Class, startTemplate));
             offset = startTemplate.Length;
             classAdded = false;
+
+            ResetReferencedAssemblies();
         }
 
         public void Parse()
@@ -246,7 +261,6 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         public EmitResult Compile(string outputPath)
         {
             workspace.ChangeAllMethodsToPublicStatic(documentId);
-            workspace.AddMetadataReferences(documentId, ReferencedAssemblies);
             return workspace.Compile(documentId, outputPath);
         }
 

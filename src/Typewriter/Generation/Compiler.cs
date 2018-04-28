@@ -22,7 +22,15 @@ namespace Typewriter.Generation
             {
                 var asmSourcePath = assembly.Location;
                 var asmDestPath = Path.Combine(Constants.TempDirectory, Path.GetFileName(asmSourcePath));
-                File.Copy(asmSourcePath, asmDestPath, true);
+                try
+                {
+                    //File may be in use
+                    File.Copy(asmSourcePath, asmDestPath, true);
+                }
+                catch (Exception e)
+                {
+                    Log.Warn(e.ToString());
+                }
             }
 
             var filname = Path.GetRandomFileName();
