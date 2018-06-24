@@ -40,10 +40,15 @@ namespace Typewriter.TemplateEditor
 
             var code = currentSnapshot.GetText();
 
-            codeLexer.Tokenize(semanticModelCache, code);
+            codeLexer.Tokenize(semanticModelCache, code, GetFilePath(buffer));
             templateLexer.Tokenize(semanticModelCache, code);
-            
+
             return semanticModelCache;
+        }
+
+        private static string GetFilePath(ITextBuffer textBuffer)
+        {
+            return textBuffer.Properties.TryGetProperty<ITextDocument>(typeof(ITextDocument), out var doc) ? doc.FilePath : null;
         }
 
         // Outlining
@@ -100,7 +105,7 @@ namespace Typewriter.TemplateEditor
         {
             var tokens = GetSemanticModel(buffer);
             var type = tokens.GetContextSpan(point).Type;
-            
+
             return type == ContextType.CodeBlock || type == ContextType.Lambda;
         }
 

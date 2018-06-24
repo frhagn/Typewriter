@@ -16,6 +16,7 @@ namespace Typewriter.TemplateEditor.Lexing
         
         private SemanticModel semanticModel;
         private Stack<Context> context;
+        private string documentFilePath;
 
         public CodeLexer(Contexts contexts)
         {
@@ -23,9 +24,11 @@ namespace Typewriter.TemplateEditor.Lexing
             this.fileContext = contexts.Find(nameof(File));
         }
 
-        public void Tokenize(SemanticModel semanticModel, string code)
+        public void Tokenize(SemanticModel semanticModel, string code, string documentFilePath)
         {
             this.semanticModel = semanticModel;
+            this.documentFilePath = documentFilePath;
+
             context = new Stack<Context>(new[] { fileContext });
 
             semanticModel.ShadowClass.Clear();
@@ -45,15 +48,14 @@ namespace Typewriter.TemplateEditor.Lexing
 
             do
             {
-                //TODO: get hold of ProjectItem somehow
-                ParseReference(stream, null);
+                ParseReference(stream);
                 ParseCodeBlock(stream);
                 ParseDollar(stream);
             }
             while (stream.Advance());
         }
 
-        private void ParseReference(Stream stream, ProjectItem projectItem)
+        private void ParseReference(Stream stream)
         {
             if (stream.Current == '$')
             {
@@ -63,19 +65,22 @@ namespace Typewriter.TemplateEditor.Lexing
                     var path = stream.PeekBlock(identifier.Length + 2, '(', ')');
                     if (path != null)
                     {
+                        int pathLen = path.Length;
+                        path = path.Trim('"');
                         try
                         {
-                            var absPath = Path.IsPathRooted(path) || projectItem == null
+                            var absPath = Path.IsPathRooted(path) || String.IsNullOrEmpty(this.documentFilePath)
                                 ? path
-                                : Path.Combine(Path.GetDirectoryName(projectItem.Path()) ?? "", path);
+                                : Path.Combine(Path.GetDirectoryName(this.documentFilePath) ?? "", path);
 
                             semanticModel.ShadowClass.AddReference(absPath);
-                            stream.Advance(path.Length + 2 + identifier.Length);
                         }
                         catch (Exception ex)
                         {
                             Log.Error("Reference Error: " + ex);
                         }
+
+                        stream.Advance(pathLen + 2 + identifier.Length);
                     }
                 }
             }

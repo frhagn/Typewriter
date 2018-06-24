@@ -186,6 +186,9 @@ namespace Typewriter.Generation
                     var path = stream.PeekBlock(identifier.Length + 2, '(', ')');
                     if (path != null)
                     {
+                        int pathLen = path.Length;
+                        path = path.Trim('"');
+
                         try
                         {
                             var absPath = Path.IsPathRooted(path)
@@ -193,12 +196,15 @@ namespace Typewriter.Generation
                                 : Path.Combine(Path.GetDirectoryName(projectItem.Path()) ?? "", path);
 
                             shadowClass.AddReference(absPath);
-                            stream.Advance(path.Length + 2 + identifier.Length);
                             return true;
                         }
                         catch (Exception ex)
                         {
                             Log.Error("Reference Error: " + ex);
+                        }
+                        finally
+                        {
+                            stream.Advance(pathLen + 2 + identifier.Length);
                         }
                     }
                 }
