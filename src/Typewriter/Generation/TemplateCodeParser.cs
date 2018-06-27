@@ -18,7 +18,7 @@ namespace Typewriter.Generation
     {
         private static int counter;
 
-        public static string Parse(ProjectItem projectItem, string template, List<Type> extensions)
+        public static string Parse(ProjectItem templateProjectItem, string template, List<Type> extensions)
         {
             if (string.IsNullOrWhiteSpace(template)) return null;
 
@@ -31,7 +31,7 @@ namespace Typewriter.Generation
 
             while (stream.Advance())
             {
-                if (ParseReference(stream, shadowClass, projectItem)) continue;
+                if (ParseReference(stream, shadowClass, templateProjectItem)) continue;
                 if (ParseCodeBlock(stream, shadowClass)) continue;
                 if (ParseLambda(stream, shadowClass, contexts, ref output)) continue;
                 output += stream.Current;
@@ -40,7 +40,7 @@ namespace Typewriter.Generation
             shadowClass.Parse();
 
             extensions.Clear();
-            extensions.Add(Compiler.Compile(projectItem, shadowClass));
+            extensions.Add(Compiler.Compile(templateProjectItem, shadowClass));
             extensions.AddRange(FindExtensionClasses(shadowClass));
 
             return output;
@@ -176,7 +176,7 @@ namespace Typewriter.Generation
             return false;
         }
 
-        private static bool ParseReference(Stream stream, ShadowClass shadowClass, ProjectItem projectItem)
+        private static bool ParseReference(Stream stream, ShadowClass shadowClass, ProjectItem templateProjectItem)
         {
             if (stream.Current == '$')
             {
@@ -188,14 +188,11 @@ namespace Typewriter.Generation
                     {
                         int pathLen = path.Length;
                         path = path.Trim('"');
-
                         try
                         {
-                            var absPath = Path.IsPathRooted(path)
-                                ? path
-                                : Path.Combine(Path.GetDirectoryName(projectItem.Path()) ?? "", path);
+                            path = PathResolver.ResolveRelative(path, templateProjectItem);
 
-                            shadowClass.AddReference(absPath);
+                            shadowClass.AddReference(path);
                             return true;
                         }
                         catch (Exception ex)

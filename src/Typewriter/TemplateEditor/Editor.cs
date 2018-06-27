@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using EnvDTE;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
+using Microsoft.VisualStudio.TextManager.Interop;
 using Typewriter.CodeModel;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
@@ -40,10 +44,24 @@ namespace Typewriter.TemplateEditor
 
             var code = currentSnapshot.GetText();
 
-            codeLexer.Tokenize(semanticModelCache, code, GetFilePath(buffer));
+            codeLexer.Tokenize(semanticModelCache, code, GetProjectItem(buffer));
             templateLexer.Tokenize(semanticModelCache, code);
 
             return semanticModelCache;
+        }
+
+        private static ProjectItem GetProjectItem(ITextBuffer textBuffer)
+        {
+            if (!textBuffer.Properties.TryGetProperty<IVsTextBuffer>(typeof(IVsTextBuffer), out var vstb))
+                return null;
+
+            //HACK: reflection on internal property of VsTextBufferAdapter. 
+            //Yes, I know... It's bad.
+            //Is there any better way of getting the automation object?
+            var adapterType = vstb.GetType();
+            var prop = adapterType.BaseType?.GetProperty("DTEDocument", BindingFlags.Instance | BindingFlags.NonPublic);
+            var doc = prop?.GetValue(vstb) as Document;
+            return doc?.ProjectItem;
         }
 
         private static string GetFilePath(ITextBuffer textBuffer)

@@ -16,7 +16,7 @@ namespace Typewriter.TemplateEditor.Lexing
         
         private SemanticModel semanticModel;
         private Stack<Context> context;
-        private string documentFilePath;
+        private ProjectItem templateProjectItem;
 
         public CodeLexer(Contexts contexts)
         {
@@ -24,10 +24,10 @@ namespace Typewriter.TemplateEditor.Lexing
             this.fileContext = contexts.Find(nameof(File));
         }
 
-        public void Tokenize(SemanticModel semanticModel, string code, string documentFilePath)
+        public void Tokenize(SemanticModel semanticModel, string code, ProjectItem templateProjectItem)
         {
             this.semanticModel = semanticModel;
-            this.documentFilePath = documentFilePath;
+            this.templateProjectItem = templateProjectItem;
 
             context = new Stack<Context>(new[] { fileContext });
 
@@ -55,6 +55,8 @@ namespace Typewriter.TemplateEditor.Lexing
             while (stream.Advance());
         }
 
+
+
         private void ParseReference(Stream stream)
         {
             if (stream.Current == '$')
@@ -65,19 +67,16 @@ namespace Typewriter.TemplateEditor.Lexing
                     var path = stream.PeekBlock(identifier.Length + 2, '(', ')');
                     if (path != null)
                     {
-                        int pathLen = path.Length;
+                        var pathLen = path.Length;
                         path = path.Trim('"');
                         try
                         {
-                            var absPath = Path.IsPathRooted(path) || String.IsNullOrEmpty(this.documentFilePath)
-                                ? path
-                                : Path.Combine(Path.GetDirectoryName(this.documentFilePath) ?? "", path);
-
-                            semanticModel.ShadowClass.AddReference(absPath);
+                            path = PathResolver.ResolveRelative(path, this.templateProjectItem);
+                            semanticModel.ShadowClass.AddReference(path);
                         }
                         catch (Exception ex)
                         {
-                            Log.Error("Reference Error: " + ex);
+                            Log.Debug("Reference Error: " + ex.Message);
                         }
 
                         stream.Advance(pathLen + 2 + identifier.Length);
