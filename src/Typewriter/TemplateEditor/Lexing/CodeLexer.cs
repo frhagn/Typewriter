@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using EnvDTE;
 using Typewriter.Generation.Controllers;
@@ -13,7 +14,7 @@ namespace Typewriter.TemplateEditor.Lexing
     {
         private readonly Contexts contexts;
         private readonly Context fileContext;
-        
+
         private SemanticModel semanticModel;
         private Stack<Context> context;
         private ProjectItem templateProjectItem;
@@ -36,7 +37,7 @@ namespace Typewriter.TemplateEditor.Lexing
             Parse(code, 0);
 
             semanticModel.ShadowClass.Parse();
-            
+
             semanticModel.Tokens.AddRange(semanticModel.ShadowClass.GetTokens());
             semanticModel.ErrorTokens.AddRange(semanticModel.ShadowClass.GetErrorTokens());
             semanticModel.TempIdentifiers.Add(semanticModel.ShadowClass.GetIdentifiers(contexts));
@@ -64,22 +65,24 @@ namespace Typewriter.TemplateEditor.Lexing
                 var identifier = stream.PeekWord(1);
                 if (identifier == "Reference")
                 {
-                    var path = stream.PeekBlock(identifier.Length + 2, '(', ')');
-                    if (path != null)
+                    var reference = stream.PeekBlock(identifier.Length + 2, '(', ')');
+                    if (reference != null)
                     {
-                        var pathLen = path.Length;
-                        path = path.Trim('"');
+                        var len = reference.Length;
+                        reference = reference.Trim('"');
                         try
                         {
-                            path = PathResolver.ResolveRelative(path, this.templateProjectItem);
-                            semanticModel.ShadowClass.AddReference(path);
+                            if (reference.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                                reference = PathResolver.ResolveRelative(reference, this.templateProjectItem);
+
+                            semanticModel.ShadowClass.AddReference(reference);
                         }
                         catch (Exception ex)
                         {
                             Log.Debug("Reference Error: " + ex.Message);
                         }
 
-                        stream.Advance(pathLen + 2 + identifier.Length);
+                        stream.Advance(len + 2 + identifier.Length);
                     }
                 }
             }
@@ -101,7 +104,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 var block = stream.PeekBlock(1, '{', '}');
 
                 semanticModel.ContextSpans.Add(null, null, ContextType.CodeBlock, stream.Position + 1, stream.Position + block.Length + 1);
-                
+
                 var codeStream = new Stream(block, stream.Position + 1);
 
                 ParseUsings(codeStream);
@@ -114,7 +117,7 @@ namespace Typewriter.TemplateEditor.Lexing
         private void ParseUsings(Stream stream)
         {
             stream.Advance();
-            
+
             while (true)
             {
                 stream.SkipWhitespace();
@@ -153,8 +156,8 @@ namespace Typewriter.TemplateEditor.Lexing
                     open = stream.Current;
                     isString = true;
                 }
-                
-                if(isString == false)
+
+                if (isString == false)
                 {
                     semanticModel.Tokens.AddBrace(stream);
                 }
@@ -191,7 +194,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     else if (identifier.IsParent)
                     {
                         var current = context.Pop();
-                        
+
                         ParseBlock(stream); // template
 
                         context.Push(current);

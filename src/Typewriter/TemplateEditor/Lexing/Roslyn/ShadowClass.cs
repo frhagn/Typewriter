@@ -68,9 +68,11 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             workspace.SetMetadataReferences(documentId, referencedAssemblies);
         }
 
-        public void AddReference(string path)
+        public void AddReference(string pathOrName)
         {
-            var asm = Assembly.LoadFile(path);
+            var asm = pathOrName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)
+                ? Assembly.LoadFile(pathOrName)
+                : Assembly.Load(pathOrName);
             if (referencedAssemblies.Add(asm))
                 workspace.SetMetadataReferences(documentId, referencedAssemblies);
         }
