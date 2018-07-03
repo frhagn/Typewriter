@@ -20,6 +20,8 @@ namespace Typewriter.Generation
 
             foreach (Assembly assembly in shadowClass.ReferencedAssemblies)
             {
+                if (assembly.GlobalAssemblyCache) continue;
+
                 var asmSourcePath = assembly.Location;
                 var asmDestPath = Path.Combine(Constants.TempDirectory, Path.GetFileName(asmSourcePath));
                 try

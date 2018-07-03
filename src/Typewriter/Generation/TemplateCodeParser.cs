@@ -183,16 +183,17 @@ namespace Typewriter.Generation
                 var identifier = stream.PeekWord(1);
                 if (identifier == "Reference")
                 {
-                    var path = stream.PeekBlock(identifier.Length + 2, '(', ')');
-                    if (path != null)
+                    var reference = stream.PeekBlock(identifier.Length + 2, '(', ')');
+                    if (reference != null)
                     {
-                        int pathLen = path.Length;
-                        path = path.Trim('"');
+                        var len = reference.Length;
+                        reference = reference.Trim('"');
                         try
                         {
-                            path = PathResolver.ResolveRelative(path, templateProjectItem);
+                            if (reference.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                                reference = PathResolver.ResolveRelative(reference, templateProjectItem);
 
-                            shadowClass.AddReference(path);
+                            shadowClass.AddReference(reference);
                             return true;
                         }
                         catch (Exception ex)
@@ -201,7 +202,7 @@ namespace Typewriter.Generation
                         }
                         finally
                         {
-                            stream.Advance(pathLen + 2 + identifier.Length);
+                            stream.Advance(len + 2 + identifier.Length);
                         }
                     }
                 }
