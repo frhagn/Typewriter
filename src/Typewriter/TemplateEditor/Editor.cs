@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using Typewriter.CodeModel;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
+using Typewriter.VisualStudio;
 
 namespace Typewriter.TemplateEditor
 {
@@ -52,12 +53,25 @@ namespace Typewriter.TemplateEditor
 
         private static ProjectItem GetProjectItem(ITextBuffer textBuffer)
         {
+            var ret = GetProjectItemFastAndHacky(textBuffer);
+            if (ret == null)
+            {
+                Log.Debug("Unable to find the ProjectItem the fast way.");
+
+                //Fallback
+                string templatePath = GetFilePath(textBuffer);
+                ret = ExtensionPackage.Instance.Dte.Solution.FindProjectItem(templatePath);
+            }
+
+            return ret;
+        }
+
+        private static ProjectItem GetProjectItemFastAndHacky(ITextBuffer textBuffer)
+        {
             if (!textBuffer.Properties.TryGetProperty<IVsTextBuffer>(typeof(IVsTextBuffer), out var vstb))
                 return null;
 
             //HACK: reflection on internal property of VsTextBufferAdapter. 
-            //Yes, I know... It's bad.
-            //Is there any better way of getting the automation object?
             var adapterType = vstb.GetType();
             var prop = adapterType.BaseType?.GetProperty("DTEDocument", BindingFlags.Instance | BindingFlags.NonPublic);
             var doc = prop?.GetValue(vstb) as Document;
