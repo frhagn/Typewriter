@@ -178,32 +178,30 @@ namespace Typewriter.Generation
 
         private static bool ParseReference(Stream stream, ShadowClass shadowClass, ProjectItem templateProjectItem)
         {
-            if (stream.Current == '$')
-            {
-                var identifier = stream.PeekWord(1);
-                if (identifier == "Reference")
-                {
-                    var reference = stream.PeekBlock(identifier.Length + 2, '(', ')');
-                    if (reference != null)
-                    {
-                        var len = reference.Length;
-                        reference = reference.Trim('"');
-                        try
-                        {
-                            if (reference.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-                                reference = PathResolver.ResolveRelative(reference, templateProjectItem);
+            const string keyword = "reference";
 
-                            shadowClass.AddReference(reference);
-                            return true;
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error("Reference Error: " + ex);
-                        }
-                        finally
-                        {
-                            stream.Advance(len + 2 + identifier.Length);
-                        }
+            if (stream.Current == '#' && stream.Peek() == keyword[0] && stream.PeekWord(1) == keyword)
+            {
+                var reference = stream.PeekLine(keyword.Length + 1);
+                if (reference != null)
+                {
+                    var len = reference.Length + keyword.Length + 1;
+                    reference = reference.Trim('"', ' ', '\n', '\r');
+                    try
+                    {
+                        if (reference.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                            reference = PathResolver.ResolveRelative(reference, templateProjectItem);
+
+                        shadowClass.AddReference(reference);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Reference Error: " + ex);
+                    }
+                    finally
+                    {
+                        stream.Advance(len - 1);
                     }
                 }
             }

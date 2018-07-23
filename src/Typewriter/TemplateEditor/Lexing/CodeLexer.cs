@@ -60,30 +60,28 @@ namespace Typewriter.TemplateEditor.Lexing
 
         private void ParseReference(Stream stream)
         {
-            if (stream.Current == '$')
+            const string keyword = "reference";
+
+            if (stream.Current == '#' && stream.Peek() == keyword[0] && stream.PeekWord(1) == keyword)
             {
-                var identifier = stream.PeekWord(1);
-                if (identifier == "Reference")
+                var reference = stream.PeekLine(keyword.Length + 1);
+                if (reference != null)
                 {
-                    var reference = stream.PeekBlock(identifier.Length + 2, '(', ')');
-                    if (reference != null)
+                    var len = reference.Length + keyword.Length + 1;
+                    reference = reference.Trim('"', ' ', '\n', '\r');
+                    try
                     {
-                        var len = reference.Length;
-                        reference = reference.Trim('"');
-                        try
-                        {
-                            if (reference.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-                                reference = PathResolver.ResolveRelative(reference, this.templateProjectItem);
+                        if (reference.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                            reference = PathResolver.ResolveRelative(reference, this.templateProjectItem);
 
-                            semanticModel.ShadowClass.AddReference(reference);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Debug("Reference Error: " + ex.Message);
-                        }
-
-                        stream.Advance(len + 2 + identifier.Length);
+                        semanticModel.ShadowClass.AddReference(reference);
                     }
+                    catch (Exception ex)
+                    {
+                        Log.Debug("Reference Error: " + ex.Message);
+                    }
+
+                    stream.Advance(len - 1);
                 }
             }
         }
