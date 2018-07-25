@@ -161,6 +161,7 @@ namespace Typewriter.TemplateEditor
                 var imageSource = glyphService.GetGlyph(StandardGlyphGroup.GlyphGroupProperty, StandardGlyphItem.GlyphItemPublic);
                 var codeBlock = new[]
                 {
+                    new Completion("#reference", "#reference", "Add a reference to an external assembly.", imageSource, null),
                     new Completion("${ }", "${\r\n}", "Insert a custom C# code block.", imageSource, null)
                 };
 

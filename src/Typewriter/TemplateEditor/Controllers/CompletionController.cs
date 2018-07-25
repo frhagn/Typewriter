@@ -66,7 +66,7 @@ namespace Typewriter.TemplateEditor.Controllers
                 for (var i = index; i > 0; i--)
                 {
                     var current = text[i - 1];
-                    if (current == '$')
+                    if (current == '$' || current == '#')
                     {
                         start = i - 1;
                         break;
@@ -292,7 +292,7 @@ namespace Typewriter.TemplateEditor.Controllers
                         break;
                     case VSCommand.TYPECHAR:
                         char ch = GetTypeChar(pvaIn);
-                        if (ch == '.' || ch == '[' || ch == '(' || ch == '$' || ch == ' ' || ch == ';' || ch == '<')
+                        if (ch == '.' || ch == '[' || ch == '(' || ch == '$' || ch == '#' || ch == ' ' || ch == ';' || ch == '<')
                             Complete(false);
                         else if (ch == '"')
                             Cancel();
@@ -322,7 +322,7 @@ namespace Typewriter.TemplateEditor.Controllers
                             else if (char.IsPunctuation(ch) == false && char.IsControl(ch) == false)
                                 StartSession();
                         }
-                        else if (ch == '$')
+                        else if (ch == '$' || ch == '#')
                         {
                             StartSession();
                         }
