@@ -18,6 +18,23 @@ namespace Typewriter.Generation
                 Directory.CreateDirectory(Constants.TempDirectory);
             }
 
+            foreach (Assembly assembly in shadowClass.ReferencedAssemblies)
+            {
+                if (assembly.GlobalAssemblyCache) continue;
+
+                var asmSourcePath = assembly.Location;
+                var asmDestPath = Path.Combine(Constants.TempDirectory, Path.GetFileName(asmSourcePath));
+                try
+                {
+                    //File may be in use
+                    File.Copy(asmSourcePath, asmDestPath, true);
+                }
+                catch (Exception e)
+                {
+                    Log.Warn(e.ToString());
+                }
+            }
+
             var filname = Path.GetRandomFileName();
             var path = Path.Combine(Constants.TempDirectory, filname);
 

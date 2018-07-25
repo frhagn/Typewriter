@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using EnvDTE;
+using Typewriter.Generation.Controllers;
 using Typewriter.TemplateEditor.Lexing;
 using Typewriter.TemplateEditor.Lexing.Roslyn;
+using Typewriter.VisualStudio;
+using Stream = Typewriter.TemplateEditor.Lexing.Stream;
 
 namespace Typewriter.Generation
 {
@@ -14,7 +18,7 @@ namespace Typewriter.Generation
     {
         private static int counter;
 
-        public static string Parse(ProjectItem projectItem, string template, List<Type> extensions)
+        public static string Parse(ProjectItem templateProjectItem, string template, List<Type> extensions)
         {
             if (string.IsNullOrWhiteSpace(template)) return null;
 
@@ -27,6 +31,7 @@ namespace Typewriter.Generation
 
             while (stream.Advance())
             {
+                if (ParseReference(stream, shadowClass, templateProjectItem)) continue;
                 if (ParseCodeBlock(stream, shadowClass)) continue;
                 if (ParseLambda(stream, shadowClass, contexts, ref output)) continue;
                 output += stream.Current;
@@ -35,7 +40,7 @@ namespace Typewriter.Generation
             shadowClass.Parse();
 
             extensions.Clear();
-            extensions.Add(Compiler.Compile(projectItem, shadowClass));
+            extensions.Add(Compiler.Compile(templateProjectItem, shadowClass));
             extensions.AddRange(FindExtensionClasses(shadowClass));
 
             return output;
@@ -164,6 +169,39 @@ namespace Typewriter.Generation
                         catch
                         {
                         }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool ParseReference(Stream stream, ShadowClass shadowClass, ProjectItem templateProjectItem)
+        {
+            const string keyword = "reference";
+
+            if (stream.Current == '#' && stream.Peek() == keyword[0] && stream.PeekWord(1) == keyword)
+            {
+                var reference = stream.PeekLine(keyword.Length + 1);
+                if (reference != null)
+                {
+                    var len = reference.Length + keyword.Length + 1;
+                    reference = reference.Trim('"', ' ', '\n', '\r');
+                    try
+                    {
+                        if (reference.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                            reference = PathResolver.ResolveRelative(reference, templateProjectItem);
+
+                        shadowClass.AddReference(reference);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Reference Error: " + ex);
+                    }
+                    finally
+                    {
+                        stream.Advance(len - 1);
                     }
                 }
             }

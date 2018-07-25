@@ -311,7 +311,7 @@ namespace Typewriter.TemplateEditor.Controllers
                     {
                         Filter();
                     }
-                    else
+                    else if (textView != null)
                     {
                         var ch = GetTypeChar(pvaIn);
 

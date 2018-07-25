@@ -40,6 +40,8 @@ namespace Typewriter.VisualStudio
         /// </summary>
         internal static ExtensionPackage Instance { get; private set; }
 
+        internal DTE Dte => dte;
+
         public TypewriterOptionsPage Options => (TypewriterOptionsPage) GetDialogPage(typeof (TypewriterOptionsPage));
 
         /// <summary>

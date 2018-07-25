@@ -333,6 +333,7 @@
     <Compile Include="TemplateEditor\Lexing\Tokens.cs" />
     <Compile Include="VisualStudio\ContextMenu\RenderTemplate.cs" />
     <Compile Include="VisualStudio\ErrorList.cs" />
+    <Compile Include="VisualStudio\PathResolver.cs" />
     <Compile Include="VisualStudio\ThemeInfo.cs" />
     <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\PropertyFormatDefinition.cs" />

@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
-using Typewriter.CodeModel;
+using EnvDTE;
+using Typewriter.Generation.Controllers;
+using Typewriter.VisualStudio;
+using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
@@ -9,9 +14,10 @@ namespace Typewriter.TemplateEditor.Lexing
     {
         private readonly Contexts contexts;
         private readonly Context fileContext;
-        
+
         private SemanticModel semanticModel;
         private Stack<Context> context;
+        private ProjectItem templateProjectItem;
 
         public CodeLexer(Contexts contexts)
         {
@@ -19,9 +25,11 @@ namespace Typewriter.TemplateEditor.Lexing
             this.fileContext = contexts.Find(nameof(File));
         }
 
-        public void Tokenize(SemanticModel semanticModel, string code)
+        public void Tokenize(SemanticModel semanticModel, string code, ProjectItem templateProjectItem)
         {
             this.semanticModel = semanticModel;
+            this.templateProjectItem = templateProjectItem;
+
             context = new Stack<Context>(new[] { fileContext });
 
             semanticModel.ShadowClass.Clear();
@@ -29,7 +37,7 @@ namespace Typewriter.TemplateEditor.Lexing
             Parse(code, 0);
 
             semanticModel.ShadowClass.Parse();
-            
+
             semanticModel.Tokens.AddRange(semanticModel.ShadowClass.GetTokens());
             semanticModel.ErrorTokens.AddRange(semanticModel.ShadowClass.GetErrorTokens());
             semanticModel.TempIdentifiers.Add(semanticModel.ShadowClass.GetIdentifiers(contexts));
@@ -41,10 +49,41 @@ namespace Typewriter.TemplateEditor.Lexing
 
             do
             {
+                ParseReference(stream);
                 ParseCodeBlock(stream);
                 ParseDollar(stream);
             }
             while (stream.Advance());
+        }
+
+
+
+        private void ParseReference(Stream stream)
+        {
+            const string keyword = "reference";
+
+            if (stream.Current == '#' && stream.Peek() == keyword[0] && stream.PeekWord(1) == keyword)
+            {
+                var reference = stream.PeekLine(keyword.Length + 1);
+                if (reference != null)
+                {
+                    var len = reference.Length + keyword.Length + 1;
+                    reference = reference.Trim('"', ' ', '\n', '\r');
+                    try
+                    {
+                        if (reference.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                            reference = PathResolver.ResolveRelative(reference, this.templateProjectItem);
+
+                        semanticModel.ShadowClass.AddReference(reference);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug("Reference Error: " + ex.Message);
+                    }
+
+                    stream.Advance(len - 1);
+                }
+            }
         }
 
         private void ParseCodeBlock(Stream stream)
@@ -63,7 +102,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 var block = stream.PeekBlock(1, '{', '}');
 
                 semanticModel.ContextSpans.Add(null, null, ContextType.CodeBlock, stream.Position + 1, stream.Position + block.Length + 1);
-                
+
                 var codeStream = new Stream(block, stream.Position + 1);
 
                 ParseUsings(codeStream);
@@ -76,7 +115,7 @@ namespace Typewriter.TemplateEditor.Lexing
         private void ParseUsings(Stream stream)
         {
             stream.Advance();
-            
+
             while (true)
             {
                 stream.SkipWhitespace();
@@ -115,8 +154,8 @@ namespace Typewriter.TemplateEditor.Lexing
                     open = stream.Current;
                     isString = true;
                 }
-                
-                if(isString == false)
+
+                if (isString == false)
                 {
                     semanticModel.Tokens.AddBrace(stream);
                 }
@@ -153,7 +192,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     else if (identifier.IsParent)
                     {
                         var current = context.Pop();
-                        
+
                         ParseBlock(stream); // template
 
                         context.Push(current);
