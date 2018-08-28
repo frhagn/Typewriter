@@ -24,6 +24,8 @@ namespace Typewriter.Metadata.CodeDom
         public string FullName => codeAttribute.FullName;
         public string Value => value;
 
+        public IEnumerable<IAttributeArgumentMetadata> Arguments => throw new System.NotSupportedException();
+
         internal static IEnumerable<IAttributeMetadata> FromCodeElements(CodeElements codeElements)
         {
             return codeElements.OfType<CodeAttribute2>().Select(a => new CodeDomAttributeMetadata(a));

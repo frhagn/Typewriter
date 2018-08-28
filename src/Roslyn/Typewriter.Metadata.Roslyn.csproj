@@ -165,6 +165,7 @@
     </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="RoslynAttributeMetadata.cs" />
+    <Compile Include="RoslynAttrubuteParameterMetadata.cs" />
     <Compile Include="RoslynClassMetadata.cs" />
     <Compile Include="RoslynConstantMetadata.cs" />
     <Compile Include="RoslynEnumMetadata.cs" />
