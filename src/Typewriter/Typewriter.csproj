@@ -276,6 +276,7 @@
     <Compile Include="CodeModel\Collections\TypeParameterCollectionImpl.cs" />
     <Compile Include="CodeModel\Configuration\ProjectHelpers.cs" />
     <Compile Include="CodeModel\Configuration\SettingsImpl.cs" />
+    <Compile Include="CodeModel\Implementation\AttributeParameterImpl.cs" />
     <Compile Include="CodeModel\Implementation\DocComment.cs" />
     <Compile Include="CodeModel\Implementation\EventImpl.cs" />
     <Compile Include="CodeModel\Implementation\DelegateImpl.cs" />

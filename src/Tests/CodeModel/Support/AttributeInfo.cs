@@ -26,6 +26,10 @@ namespace Typewriter.Tests.CodeModel.Support
         public AttributeInfoAttribute(int parameter, params string[] parameters)
         {
         }
+
+        public AttributeInfoAttribute(Type parameter)
+        {
+        }
     }
 
     public class AttributeTestClass
@@ -47,5 +51,8 @@ namespace Typewriter.Tests.CodeModel.Support
 
         [AttributeInfo(1, "parameter")]
         public string IntAndParamsParameter { get; set; }
+
+        [AttributeInfo(typeof(AttributeTestClass))]
+        public string Type { get; set; }
     }
 }

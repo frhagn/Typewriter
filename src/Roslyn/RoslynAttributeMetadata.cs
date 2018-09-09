@@ -39,12 +39,15 @@ namespace Typewriter.Metadata.Roslyn
 
             if (name.EndsWith("Attribute"))
                 name = name.Substring(0, name.Length - 9);
+
+            this.Arguments = a.ConstructorArguments.Concat(a.NamedArguments.Select(p=>p.Value)).Select(p => new RoslynAttrubuteArgumentMetadata(p));
         }
 
         public string DocComment => symbol.GetDocumentationCommentXml();
         public string Name => name;
         public string FullName => symbol.ToDisplayString();
         public string Value => value;
+        public IEnumerable<IAttributeArgumentMetadata> Arguments { get; private set; }
 
         public static IEnumerable<IAttributeMetadata> FromAttributeData(IEnumerable<AttributeData> attributes)
         {

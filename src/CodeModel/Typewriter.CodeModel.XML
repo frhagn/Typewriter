@@ -34,6 +34,11 @@
             The value of the attribute as string.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Attribute.Arguments">
+            <summary>
+            The arguments of the attribute.
+            </summary>
+        </member>
         <member name="M:Typewriter.CodeModel.Attribute.op_Implicit(Typewriter.CodeModel.Attribute)~System.String">
             <summary>
             Converts the current instance to string.

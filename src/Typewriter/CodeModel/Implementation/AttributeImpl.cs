@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Typewriter.CodeModel.Collections;
+using Typewriter.CodeModel.Typescript.Implementation;
 using Typewriter.Metadata.Interfaces;
 using static Typewriter.CodeModel.Helpers;
 
@@ -22,6 +23,8 @@ namespace Typewriter.CodeModel.Implementation
         public override string Name => _metadata.Name.TrimStart('@');
         public override string FullName => _metadata.FullName;
         public override string Value => GetValue(_metadata.Value);
+
+        public override IEnumerable<AttributeArgument> Arguments => _metadata.Arguments.Select(argument => new AttributeArgumentImpl(argument, this));
 
         private static string GetValue(string value)
         {
