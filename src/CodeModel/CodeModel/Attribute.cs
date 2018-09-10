@@ -37,7 +37,7 @@ namespace Typewriter.CodeModel
         /// <summary>
         /// The arguments of the attribute.
         /// </summary>
-        public abstract IEnumerable<AttributeArgument> Arguments { get; }
+        public abstract AttributeArgumentCollection Arguments { get; }
 
         /// <summary>
         /// Converts the current instance to string.

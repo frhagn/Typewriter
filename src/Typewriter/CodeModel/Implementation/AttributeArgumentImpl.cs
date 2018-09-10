@@ -1,7 +1,9 @@
-﻿using Typewriter.CodeModel.Implementation;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Typewriter.CodeModel.Collections;
 using Typewriter.Metadata.Interfaces;
 
-namespace Typewriter.CodeModel.Typescript.Implementation
+namespace Typewriter.CodeModel.Implementation
 {
     public class AttributeArgumentImpl : AttributeArgument
     {
@@ -18,5 +20,10 @@ namespace Typewriter.CodeModel.Typescript.Implementation
         public override Type TypeValue => TypeImpl.FromMetadata(_metadata.TypeValue, parent);
 
         public override object Value => _metadata.Value;
+
+        public static AttributeArgumentCollection FromMetadata(IEnumerable<IAttributeArgumentMetadata> metadata, Item parent)
+        {
+            return new AttributeArgumentCollectionImpl(metadata.Select(a => new AttributeArgumentImpl(a, parent)));
+        }
     }
 }

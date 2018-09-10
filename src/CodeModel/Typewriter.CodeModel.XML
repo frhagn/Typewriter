@@ -69,6 +69,31 @@
             Initializes a new instance of the ContextAttribute.
             </summary>
         </member>
+        <member name="T:Typewriter.CodeModel.AttributeArgument">
+            <summary>
+            Represents an attribute argument.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.AttributeArgument.Type">
+            <summary>
+            The type of the argument.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.AttributeArgument.TypeValue">
+            <summary>
+            The type value of the argument.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.AttributeArgument.Value">
+            <summary>
+            The value of the argument.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.AttributeArgumentCollection">
+            <summary>
+            Represents a collection of attribute arguments.
+            </summary>
+        </member>
         <member name="T:Typewriter.CodeModel.Class">
             <summary>
             Represents a class.
