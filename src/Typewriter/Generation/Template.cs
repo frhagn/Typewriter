@@ -254,7 +254,7 @@ namespace Typewriter.Generation
                 }
                 catch
                 {
-                    Log.Warn("Falied to save source map for '{0}'. Project type not supported.", path);
+                    Log.Warn("Failed to save source map for '{0}'. Project type not supported.", path);
                 }
             }
         }
@@ -272,7 +272,7 @@ namespace Typewriter.Generation
                 }
                 catch
                 {
-                    // Can't read properties from project item sometimes when deleting miltiple files
+                    // Can't read properties from project item sometimes when deleting multiple files
                 }
             }
 
@@ -382,7 +382,7 @@ namespace Typewriter.Generation
                 }
                 catch
                 {
-                    // Can't read properties from project item sometimes when deleting miltiple files
+                    // Can't read properties from project item sometimes when deleting multiple files
                 }
             }
 
