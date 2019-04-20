@@ -1,5 +1,6 @@
-﻿using Microsoft.VisualStudio.Shell;
+﻿using System;
 using System.ComponentModel;
+using Microsoft.VisualStudio.Shell;
 
 namespace Typewriter.VisualStudio
 {
@@ -23,5 +24,14 @@ namespace Typewriter.VisualStudio
         [DefaultValue(true)]
         public bool AddGeneratedFilesToProject { get; set; } = true;
 
+        public event EventHandler OptionsChanged;
+
+        public void Watch()
+        {
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(this, new Attribute[] { DesignerSerializationVisibilityAttribute.Visible }))
+            {
+                property.AddValueChanged(this, (s, e) => { OptionsChanged?.Invoke(this, e); });
+            }
+        }
     }
 }

@@ -158,7 +158,7 @@ namespace Typewriter.Generation
 
             var hasChanged = HasChanged(outputPath, output);
 
-            if (ExtensionPackage.Instance.Options.AddGeneratedFilesToProject == false)
+            if (ExtensionPackage.Instance.AddGeneratedFilesToProject == false)
             {
                 if (hasChanged)
                 {
