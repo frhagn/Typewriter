@@ -24,6 +24,16 @@ namespace Typewriter.Generation
 
                 var asmSourcePath = assembly.Location;
                 var asmDestPath = Path.Combine(Constants.TempDirectory, Path.GetFileName(asmSourcePath));
+                AssemblyName sourceAssemblerInfo = AssemblyName.GetAssemblyName(asmSourcePath);
+                AssemblyName destAssemblerInfo = null;
+
+                // Ignores the Assembler if versions are equals.
+                if (File.Exists(asmDestPath))
+                {
+                    destAssemblerInfo = AssemblyName.GetAssemblyName(asmDestPath);
+                    if (sourceAssemblerInfo.Version.CompareTo(destAssemblerInfo.Version) == 0) continue;
+                }
+
                 try
                 {
                     //File may be in use
@@ -31,7 +41,7 @@ namespace Typewriter.Generation
                 }
                 catch (Exception e)
                 {
-                    Log.Warn(e.ToString());
+                    Log.Warn($"{e.ToString()} \r\n  Source Version {sourceAssemblerInfo.Version}, Target Verison  {destAssemblerInfo?.Version.ToString() ?? "None"} ");
                 }
             }
 
