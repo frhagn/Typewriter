@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Typewriter.CodeModel.Attributes;
+﻿using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {

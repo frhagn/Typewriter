@@ -14,7 +14,7 @@ namespace Typewriter.Generation.Controllers
     {
 
 
-        private Queue<T> _base;
+        private readonly Queue<T> _base;
 
         private bool _open;
         /// <summary>
@@ -313,7 +313,7 @@ namespace Typewriter.Generation.Controllers
         }
 
 
-        private object _SyncRoot = new object();
+        private readonly object _SyncRoot = new object();
         public object SyncRoot
         {
             get { return _SyncRoot; }

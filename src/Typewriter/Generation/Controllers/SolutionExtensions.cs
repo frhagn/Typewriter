@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
@@ -44,8 +43,7 @@ namespace Typewriter.Generation.Controllers
             var item = projects.GetEnumerator();
             while (item.MoveNext())
             {
-                var project = item.Current as Project;
-                if (project == null)
+                if (!(item.Current is Project project))
                 {
                     continue;
                 }

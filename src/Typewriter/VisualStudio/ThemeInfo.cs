@@ -24,8 +24,7 @@ namespace Typewriter.VisualStudio
 
         private static bool GetIsDark()
         {
-            var storage = Package.GetGlobalService(typeof(SVsFontAndColorStorage)) as IVsFontAndColorStorage;
-            if (storage == null) return false;
+            if (!(Package.GetGlobalService(typeof(SVsFontAndColorStorage)) is IVsFontAndColorStorage storage)) return false;
 
             var category = Microsoft.VisualStudio.Editor.DefGuidList.guidTextEditorFontCategory;
             var success = storage.OpenCategory(ref category, (uint)(__FCSTORAGEFLAGS.FCSF_READONLY | __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS | __FCSTORAGEFLAGS.FCSF_NOAUTOCOLORS));

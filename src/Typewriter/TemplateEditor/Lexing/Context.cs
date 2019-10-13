@@ -33,16 +33,14 @@ namespace Typewriter.TemplateEditor.Lexing
         {
             if (name == null) return null;
 
-            Identifier i;
-            return identifiers.TryGetValue(name, out i) ? i : null;
+            return identifiers.TryGetValue(name, out var i) ? i : null;
         }
 
         public Identifier GetExtensionIdentifier(string extensionNamespace, string name)
         {
             if (name == null) return null;
 
-            Identifier i;
-            return extensionIdentifiers.TryGetValue(extensionNamespace + "." + name, out i) ? i : null;
+            return extensionIdentifiers.TryGetValue(extensionNamespace + "." + name, out var i) ? i : null;
         }
 
         public IEnumerable<Identifier> GetExtensionIdentifiers(string extensionNamespace)

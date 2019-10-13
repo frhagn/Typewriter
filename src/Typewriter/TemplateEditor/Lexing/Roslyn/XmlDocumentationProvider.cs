@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Threading;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Host.Mef;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn
 {
@@ -32,8 +31,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
 
         public override bool Equals(object obj)
         {
-            var other = obj as XmlDocumentationProvider;
-            return other != null && filePath == other.filePath;
+            return obj is XmlDocumentationProvider other && filePath == other.filePath;
         }
 
         public override int GetHashCode()
@@ -41,16 +39,17 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             return filePath.GetHashCode();
         }
 
-        protected override string GetDocumentationForSymbol(string documentationMemberId, CultureInfo preferredCulture, CancellationToken cancellationToken = default(CancellationToken))
+        protected override string GetDocumentationForSymbol(
+            string documentationMemberId,
+            CultureInfo preferredCulture,
+            CancellationToken cancellationToken = default)
         {
-            string docComment;
-            return docComments.Value.TryGetValue(documentationMemberId, out docComment) ? docComment : "";
+            return docComments.Value.TryGetValue(documentationMemberId, out var docComment) ? docComment : "";
         }
 
         public string GetDocumentationForSymbol(string documentationMemberId)
         {
-            string docComment;
-            return docComments.Value.TryGetValue(documentationMemberId, out docComment) ? docComment : "";
+            return docComments.Value.TryGetValue(documentationMemberId, out var docComment) ? docComment : "";
         }
 
         private Dictionary<string, string> CreateDocComments()

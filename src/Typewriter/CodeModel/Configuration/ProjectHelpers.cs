@@ -37,8 +37,7 @@ namespace Typewriter.CodeModel.Configuration
 
         internal static void AddCurrentProject(ICollection<string> projectList, ProjectItem projectItem)
         {
-            var vsproject = projectItem.ContainingProject.Object as VSProject;
-            if (vsproject != null)
+            if (projectItem.ContainingProject.Object is VSProject)
             {
                 AddProject(projectList, projectItem.ContainingProject);
             }
@@ -46,8 +45,7 @@ namespace Typewriter.CodeModel.Configuration
 
         internal static void AddReferencedProjects(ICollection<string> projectList, ProjectItem projectItem)
         {
-            var vsproject = projectItem.ContainingProject.Object as VSProject;
-            if (vsproject != null)
+            if (projectItem.ContainingProject.Object is VSProject vsproject)
             {
                 foreach (Reference reference in vsproject.References)
                 {

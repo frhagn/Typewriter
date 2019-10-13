@@ -29,8 +29,7 @@ namespace Typewriter.Metadata.Roslyn
             if (symbol.ExplicitDefaultValue == null)
                 return "null";
 
-            var stringValue = symbol.ExplicitDefaultValue as string;
-            if (stringValue != null)
+            if (symbol.ExplicitDefaultValue is string stringValue)
                 return $"\"{stringValue.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"";
 
             if(symbol.ExplicitDefaultValue is bool)

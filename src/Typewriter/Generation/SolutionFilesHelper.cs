@@ -7,7 +7,7 @@ namespace Typewriter.Generation
 {
     public class SolutionFilesHelper
     {
-        private DTE dte;
+        private readonly DTE dte;
 
         public SolutionFilesHelper()
         {

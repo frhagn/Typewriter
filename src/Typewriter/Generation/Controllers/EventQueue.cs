@@ -37,8 +37,7 @@ namespace Typewriter.Generation.Controllers
                     var action = _queue.Dequeue();
                     Thread.Sleep(100);
 
-                    object icon;
-                    PrepareStatusbar(out icon);
+                    PrepareStatusbar(out var icon);
 
                     try
                     {
@@ -80,8 +79,7 @@ namespace Typewriter.Generation.Controllers
             
             try
             {
-                int frozen;
-                _statusBar.IsFrozen(out frozen);
+                _statusBar.IsFrozen(out var frozen);
                 
                 if (frozen != 0) return;
                 

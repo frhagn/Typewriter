@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Typewriter.Metadata.Interfaces
+﻿namespace Typewriter.Metadata.Interfaces
 {
     public interface IAttributeMetadata : INamedItem
     {

@@ -51,14 +51,12 @@ namespace Typewriter.Generation
             if (stream.Current == '$')
             {
                 var identifier = stream.PeekWord(1);
-                object value;
-                
-                if (TryGetIdentifier(projectItem, sourcePath, identifier, context, out value))
+
+                if (TryGetIdentifier(projectItem, sourcePath, identifier, context, out var value))
                 {
                     stream.Advance(identifier.Length);
 
-                    var collection = value as IEnumerable<Item>;
-                    if (collection != null)
+                    if (value is IEnumerable<Item> collection)
                     {
                         var filter = ParseBlock(stream, '(', ')');
                         var block = ParseBlock(stream, '[', ']');

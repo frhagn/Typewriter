@@ -35,8 +35,7 @@ namespace Typewriter.Metadata.CodeDom
 
         private string GetNamespace()
         {
-            var parent = _codeInterface.Parent as CodeClass2;
-            return parent != null ? parent.FullName : (_codeInterface.Namespace?.FullName ?? string.Empty);
+            return _codeInterface.Parent is CodeClass2 parent ? parent.FullName : (_codeInterface.Namespace?.FullName ?? string.Empty);
         }
 
         internal static IEnumerable<IInterfaceMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)

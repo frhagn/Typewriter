@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
@@ -50,12 +49,7 @@ namespace Typewriter.VisualStudio.ContextMenu
         /// <param name="package">Owner package, not null.</param>
         private RenderTemplate(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
-
-            this.package = package;
+            this.package = package ?? throw new ArgumentNullException("package");
 
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
@@ -82,17 +76,12 @@ namespace Typewriter.VisualStudio.ContextMenu
         private void menuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             // get the menu that fired the event
-            var menuCommand = sender as OleMenuCommand;
-            if (menuCommand != null)
+            if (sender is OleMenuCommand menuCommand)
             {
                 // start by assuming that the menu will not be shown
                 menuCommand.Visible = false;
                 menuCommand.Enabled = false;
-
-                IVsHierarchy hierarchy = null;
-                uint itemid = VSConstants.VSITEMID_NIL;
-
-                if (!IsSingleProjectItemSelection(out hierarchy, out itemid)) return;
+                if (!IsSingleProjectItemSelection(out var hierarchy, out var itemid)) return;
                 // Get the file path
                 itemFullPath = null;
                 ((IVsProject)hierarchy).GetMkDocument(itemid, out itemFullPath);
@@ -112,22 +101,19 @@ namespace Typewriter.VisualStudio.ContextMenu
         {
             hierarchy = null;
             itemid = VSConstants.VSITEMID_NIL;
-            int hr = VSConstants.S_OK;
 
-            var monitorSelection = Package.GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
-            var solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
-            if (monitorSelection == null || solution == null)
+            if (!(Package.GetGlobalService(typeof(SVsShellMonitorSelection)) is IVsMonitorSelection monitorSelection)
+                || !(Package.GetGlobalService(typeof(SVsSolution)) is IVsSolution solution))
             {
                 return false;
             }
 
-            IVsMultiItemSelect multiItemSelect = null;
             IntPtr hierarchyPtr = IntPtr.Zero;
             IntPtr selectionContainerPtr = IntPtr.Zero;
 
             try
             {
-                hr = monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, out multiItemSelect, out selectionContainerPtr);
+                var hr = monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, out var multiItemSelect, out selectionContainerPtr);
 
                 if (ErrorHandler.Failed(hr) || hierarchyPtr == IntPtr.Zero || itemid == VSConstants.VSITEMID_NIL)
                 {

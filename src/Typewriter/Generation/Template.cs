@@ -121,8 +121,7 @@ namespace Typewriter.Generation
 
         public bool RenderFile(File file)
         {
-            bool success;
-            var output = Render(file, out success);
+            var output = Render(file, out var success);
 
             if (success)
             {

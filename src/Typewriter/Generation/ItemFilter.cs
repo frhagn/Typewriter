@@ -11,8 +11,7 @@ namespace Typewriter.Generation
         {
             if (string.IsNullOrWhiteSpace(filter)) return items;
 
-            var filterable = items as IFilterable;
-            if (filterable == null) return items;
+            if (!(items is IFilterable filterable)) return items;
 
             Func<Item, IEnumerable<string>> selector;
 

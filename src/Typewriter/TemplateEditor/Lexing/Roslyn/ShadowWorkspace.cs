@@ -15,7 +15,6 @@ using Microsoft.CodeAnalysis.Recommendations;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CSharp.RuntimeBinder;
 using Typewriter.CodeModel;
-using Typewriter.VisualStudio;
 using File = System.IO.File;
 
 namespace Typewriter.TemplateEditor.Lexing.Roslyn

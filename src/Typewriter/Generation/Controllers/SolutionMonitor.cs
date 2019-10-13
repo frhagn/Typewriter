@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Typewriter.VisualStudio;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -126,20 +125,14 @@ namespace Typewriter.Generation.Controllers
 
         public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
         {
-            if (ProjectAdded != null)
-            {
-                ProjectAdded(this, new ProjectAddedEventArgs());
-            }
+            ProjectAdded?.Invoke(this, new ProjectAddedEventArgs());
 
             return VSConstants.S_OK;
         }
 
         public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
         {
-            if (SolutionOpened != null)
-            {
-                SolutionOpened(this, new SolutionOpenedEventArgs());
-            }
+            SolutionOpened?.Invoke(this, new SolutionOpenedEventArgs());
 
             AdviseRunningDocumentTableEvents();
             AdviseTrackProjectDocumentsEvents();
@@ -149,10 +142,7 @@ namespace Typewriter.Generation.Controllers
 
         public int OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved)
         {
-            if (ProjectRemoved != null)
-            {
-                ProjectRemoved(this, new ProjectRemovedEventArgs());
-            }
+            ProjectRemoved?.Invoke(this, new ProjectRemovedEventArgs());
 
             return VSConstants.S_OK;
         }
@@ -162,10 +152,7 @@ namespace Typewriter.Generation.Controllers
             UnadviseRunningDocumentTableEvents();
             UnadviseTrackProjectDocumentsEvents();
 
-            if (SolutionClosed != null)
-            {
-                SolutionClosed(this, new SolutionClosedEventArgs());
-            }
+            SolutionClosed?.Invoke(this, new SolutionClosedEventArgs());
 
             return VSConstants.S_OK;
         }
@@ -221,12 +208,15 @@ namespace Typewriter.Generation.Controllers
 
         public int OnAfterSave(uint docCookie)
         {
-            uint flags, readlocks, editlocks;
-            string name;
-            IVsHierarchy hier;
-            uint itemid;
-            IntPtr docData;
-            runningDocumentTable.GetDocumentInfo(docCookie, out flags, out readlocks, out editlocks, out name, out hier, out itemid, out docData);
+            runningDocumentTable.GetDocumentInfo(
+                docCookie,
+                out _,
+                out _,
+                out _,
+                out var name,
+                out _,
+                out _,
+                out _);
 
             TriggerFileChanged(name);
 

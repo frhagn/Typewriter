@@ -1,5 +1,3 @@
-using System;
-
 namespace Typewriter.TemplateEditor.Lexing
 {
     public class ContextSpan

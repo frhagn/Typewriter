@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -18,13 +19,12 @@ namespace Typewriter.VisualStudio
 {
     [ProvideOptionPage(typeof(TypewriterOptionsPage), "Typewriter", "General", 101, 106, true)]
     [Guid(Constants.ExtensionPackageId)]
-    [PackageRegistration(UseManagedResourcesOnly = true)]
-    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.16.0", IconResourceID = 401)]
     [ProvideLanguageService(typeof(LanguageService), Constants.LanguageName, 100, DefaultToInsertSpaces = true)]
     [ProvideLanguageExtension(typeof(LanguageService), Constants.TemplateExtension)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class ExtensionPackage : Package, IDisposable
+    public sealed class ExtensionPackage : AsyncPackage, IDisposable
     {
         private DTE dte;
         private Log log;
@@ -46,9 +46,14 @@ namespace Typewriter.VisualStudio
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-        protected override void Initialize()
+        /// <param name="cancellationToken">A cancellation token to monitor for initialization cancellation, which can occur when VS is shutting down.</param>
+        /// <param name="progress">A provider for progress updates.</param>
+        /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
+        protected override async System.Threading.Tasks.Task InitializeAsync(
+            CancellationToken cancellationToken,
+            IProgress<ServiceProgressData> progress)
         {
-            base.Initialize();
+            await base.InitializeAsync(cancellationToken, progress);
 
             GetDte();
             GetStatusbar();
@@ -56,8 +61,8 @@ namespace Typewriter.VisualStudio
             RegisterLanguageService();
             RegisterIcons();
             ClearTempDirectory();
-            
-            
+
+
             this.solutionMonitor = new SolutionMonitor();
             this.templateController = new TemplateController(dte);
             this.eventQueue = new EventQueue(statusBar);

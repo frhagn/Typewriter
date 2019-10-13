@@ -28,8 +28,7 @@ namespace Typewriter.Metadata.CodeDom
 
         private string GetNamespace()
         {
-            var parent = _codeEnum.Parent as CodeClass2;
-            return parent != null ? parent.FullName : (_codeEnum.Namespace?.FullName ?? string.Empty);
+            return _codeEnum.Parent is CodeClass2 parent ? parent.FullName : (_codeEnum.Namespace?.FullName ?? string.Empty);
         }
 
         internal static IEnumerable<IEnumMetadata> FromCodeElements(CodeElements codeElements, CodeDomFileMetadata file)

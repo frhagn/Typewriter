@@ -17,7 +17,7 @@ namespace Typewriter.Tests.CodeModel.Support
 
         public T Generic<T>(T parameter)
         {
-            return default(T);
+            return default;
         }
 
         public Task Task()
@@ -48,12 +48,12 @@ namespace Typewriter.Tests.CodeModel.Support
     {
         public T Method(T parameter)
         {
-            return default(T);
+            return default;
         }
 
         public T1 Generic<T1>(T1 parameter1, T parameter2)
         {
-            return default(T1);
+            return default;
         }
     }
 }

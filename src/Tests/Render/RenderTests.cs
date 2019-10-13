@@ -1,6 +1,5 @@
 ﻿using Should;
 using Typewriter.Generation;
-using Typewriter.Tests.Render.RoutedApiController;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
 
@@ -39,8 +38,7 @@ namespace Typewriter.Tests.Render
             var file = GetFile(path + ".cs");
             var result = GetFileContents(path + ".result");
 
-            bool success;
-            var output = template.Render(file, out success);
+            var output = template.Render(file, out var success);
             
             success.ShouldBeTrue();
             output.ShouldEqual(result);
