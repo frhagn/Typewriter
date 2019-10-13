@@ -73,21 +73,21 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <Version>2.9.4</Version>
+      <Version>2.9.6</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
-      <Version>3.2.1</Version>
+      <Version>3.3.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
-      <Version>3.2.1</Version>
+      <Version>3.3.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
       <Version>16.0.202</Version>
     </PackageReference>
     <PackageReference Include="StreamJsonRpc">
-      <Version>2.1.55</Version>
+      <Version>2.2.34</Version>
     </PackageReference>
     <PackageReference Include="xunit.runner.console">
       <Version>2.4.1</Version>
