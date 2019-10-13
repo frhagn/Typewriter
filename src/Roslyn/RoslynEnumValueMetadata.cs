@@ -8,7 +8,7 @@ namespace Typewriter.Metadata.Roslyn
 {
     public class RoslynEnumValueMetadata : IEnumValueMetadata
     {
-        private static readonly Int32Converter _converter = new Int32Converter();
+        private static readonly Int64Converter _converter = new Int64Converter();
 
         private readonly IFieldSymbol symbol;
 
@@ -21,7 +21,7 @@ namespace Typewriter.Metadata.Roslyn
         public string Name => symbol.Name;
         public string FullName => symbol.ToDisplayString();
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
-        public int Value => (int?)_converter.ConvertFromString(symbol.ConstantValue.ToString().Trim('\'')) ?? -1;
+        public long Value => (long?)_converter.ConvertFromString(symbol.ConstantValue.ToString().Trim('\'')) ?? -1;
 
         internal static IEnumerable<IEnumValueMetadata> FromFieldSymbols(IEnumerable<IFieldSymbol> symbols)
         {

@@ -35,6 +35,7 @@ namespace Typewriter
         public const string Operator = "Operator";
         public const string String = "String";
         public const string SyntaxError = "syntax error";
+        public const string Directive = "excluded code";
         public const string Warning = "compiler warning";
         public const string ClassSymbol = "Tst/ClassSymbol";
         public const string InterfaceSymbol = "Tst/InterfaceSymbol";

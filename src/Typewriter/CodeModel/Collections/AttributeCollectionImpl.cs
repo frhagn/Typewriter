@@ -14,16 +14,4 @@ namespace Typewriter.CodeModel.Collections
             yield return item.FullName;
         }
     }
-
-    public class ParameterCommentCollectionImpl : ItemCollectionImpl<ParameterComment>, ParameterCommentCollection
-    {
-        public ParameterCommentCollectionImpl(IEnumerable<ParameterComment> values) : base(values)
-        {
-        }
-
-        protected override IEnumerable<string> GetItemFilter(ParameterComment item)
-        {
-            yield return item.Name;
-        }
-    }
 }

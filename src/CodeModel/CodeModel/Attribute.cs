@@ -1,4 +1,5 @@
-﻿using Typewriter.CodeModel.Attributes;
+﻿using System.Collections.Generic;
+using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
@@ -22,7 +23,7 @@ namespace Typewriter.CodeModel
         /// The name of the attribute.
         /// </summary>
         public abstract string Name { get; }
-        
+
         /// <summary>
         /// The parent context of the attribute.
         /// </summary>
@@ -34,9 +35,14 @@ namespace Typewriter.CodeModel
         public abstract string Value { get; }
 
         /// <summary>
+        /// The arguments of the attribute.
+        /// </summary>
+        public abstract AttributeArgumentCollection Arguments { get; }
+
+        /// <summary>
         /// Converts the current instance to string.
         /// </summary>
-        public static implicit operator string (Attribute instance)
+        public static implicit operator string(Attribute instance)
         {
             return instance.ToString();
         }

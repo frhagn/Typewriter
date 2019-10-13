@@ -21,7 +21,7 @@ namespace Typewriter.CodeModel.Implementation
         public override string name => CamelCase(_metadata.Name.TrimStart('@'));
         public override string Name => _metadata.Name.TrimStart('@');
         public override string FullName => _metadata.FullName;
-        public override int Value => _metadata.Value;
+        public override long Value => _metadata.Value;
 
         private AttributeCollection _attributes;
         public override AttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this));

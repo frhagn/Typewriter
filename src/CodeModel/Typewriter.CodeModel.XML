@@ -34,6 +34,11 @@
             The value of the attribute as string.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Attribute.Arguments">
+            <summary>
+            The arguments of the attribute.
+            </summary>
+        </member>
         <member name="M:Typewriter.CodeModel.Attribute.op_Implicit(Typewriter.CodeModel.Attribute)~System.String">
             <summary>
             Converts the current instance to string.
@@ -62,6 +67,31 @@
         <member name="M:Typewriter.CodeModel.Attributes.ContextAttribute.#ctor(System.String,System.String)">
             <summary>
             Initializes a new instance of the ContextAttribute.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.AttributeArgument">
+            <summary>
+            Represents an attribute argument.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.AttributeArgument.Type">
+            <summary>
+            The type of the argument.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.AttributeArgument.TypeValue">
+            <summary>
+            The type value of the argument.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.AttributeArgument.Value">
+            <summary>
+            The value of the argument.
+            </summary>
+        </member>
+        <member name="T:Typewriter.CodeModel.AttributeArgumentCollection">
+            <summary>
+            Represents a collection of attribute arguments.
             </summary>
         </member>
         <member name="T:Typewriter.CodeModel.Class">

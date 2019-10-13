@@ -62,6 +62,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 if (ParseNumber(stream, semanticModel)) continue;
                 if (ParseOperators(stream, semanticModel)) continue;
                 if (ParseKeywords(stream, semanticModel)) continue;
+                if (ParseReference(stream, semanticModel)) continue;
                 if (ParseSymbols(stream, semanticModel)) continue;
 
                 TerminateSymbol(stream);
@@ -435,7 +436,22 @@ namespace Typewriter.TemplateEditor.Lexing
 
             return false;
         }
-        
+
+        private bool ParseReference(Stream stream, SemanticModel semanticModel)
+        {
+            const string keyword = "reference";
+
+            if (stream.Current == '#' && stream.Peek() == keyword[0] && stream.PeekWord(1) == keyword)
+            {
+                semanticModel.Tokens.Add(Classifications.Directive, stream.Position, keyword.Length + 1);
+                stream.Advance(keyword.Length);
+
+                return true;
+            }
+
+            return false;
+        }
+
         private bool ParseSymbols(Stream stream, SemanticModel semanticModel)
         {
             if (_isSymbol && stream.Position > _objectLiteralEnds)

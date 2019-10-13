@@ -32,7 +32,9 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             typeof (RuntimeBinderException).Assembly, // Microsoft.CSharp
             typeof (Class).Assembly // Typewriter.CodeModel
         };
-        
+
+        private List<MetadataReference> defaultMetadataReferences;
+
         public ShadowWorkspace() : base(MefHostServices.DefaultHost, WorkspaceKind.Host)
         {
         }
@@ -43,8 +45,8 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             var name = Path.GetFileNameWithoutExtension(documentFileName) + counter++;
 
             var projectId = ProjectId.CreateNewId();
-            var references = defaultReferences.Select(CreateReference).ToList();
-            var projectInfo = ProjectInfo.Create(projectId, new VersionStamp(), name, name + ".dll", LanguageNames.CSharp, metadataReferences: references, compilationOptions: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            defaultMetadataReferences = defaultReferences.Select(CreateReference).ToList();
+            var projectInfo = ProjectInfo.Create(projectId, new VersionStamp(), name, name + ".dll", LanguageNames.CSharp, metadataReferences: defaultMetadataReferences, compilationOptions: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             OnProjectAdded(projectInfo);
 
@@ -136,6 +138,27 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             UpdateText(documentId, text.ToString());
         }
 
+        public void SetMetadataReferences(DocumentId documentId, IEnumerable<Assembly> references)
+        {
+            var project = CurrentSolution.GetDocument(documentId).Project;
+            var currentReferences = project.MetadataReferences.ToList();
+            var newReferences = references.Select(CreateReference).Union(defaultMetadataReferences, MetadataReferenceComparer).ToList();
+
+            var toRemove = currentReferences.Except(newReferences, MetadataReferenceComparer);
+            foreach (var reference in toRemove)
+            {
+                project = project.RemoveMetadataReference(reference);
+                OnMetadataReferenceRemoved(project.Id, reference);
+            }
+
+            var toAdd = newReferences.Except(currentReferences, MetadataReferenceComparer);
+            foreach (var reference in toAdd)
+            {
+                project = project.AddMetadataReference(reference);
+                OnMetadataReferenceAdded(project.Id, reference);
+            }
+        }
+
         public EmitResult Compile(DocumentId documentId, string path)
         {
             var document = CurrentSolution.GetDocument(documentId);
@@ -164,5 +187,40 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
 
             return MetadataReference.CreateFromFile(location, new MetadataReferenceProperties(), provider);
         }
+
+        private class MetadataReferenceEqualityComparer : IEqualityComparer<MetadataReference>
+        {
+            /// <inheritdoc />
+            public bool Equals(MetadataReference x, MetadataReference y)
+            {
+                if (x != null)
+                {
+                    if (y != null)
+                    {
+                        if (x.GetType() == y.GetType())
+                        {
+                            return x.Display == y.Display;
+                        }
+
+                        return false;
+                    }
+
+                    return false;
+                }
+
+                if (y != null)
+                    return false;
+
+                return true;
+            }
+
+            /// <inheritdoc />
+            public int GetHashCode(MetadataReference obj)
+            {
+                return obj.Display.GetHashCode();
+            }
+        }
+
+        public static readonly IEqualityComparer<MetadataReference> MetadataReferenceComparer = new MetadataReferenceEqualityComparer();
     }
 }

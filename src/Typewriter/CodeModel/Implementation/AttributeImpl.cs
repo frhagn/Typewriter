@@ -23,6 +23,9 @@ namespace Typewriter.CodeModel.Implementation
         public override string FullName => _metadata.FullName;
         public override string Value => GetValue(_metadata.Value);
 
+        private AttributeArgumentCollection _arguments;
+        public override AttributeArgumentCollection Arguments => _arguments ?? (_arguments = AttributeArgumentImpl.FromMetadata(_metadata.Arguments, this));
+
         private static string GetValue(string value)
         {
             if (value == null) return null;

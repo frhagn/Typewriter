@@ -34,7 +34,7 @@ namespace Typewriter.Generation.Controllers
 
             var template = _templateController.GetTemplate(projectItem);
 
-            if (force == false && ExtensionPackage.Instance.Options.RenderOnSave == false)
+            if (force == false && ExtensionPackage.Instance.RenderOnSave == false)
             {
                 Log.Debug("Render skipped {0}", templatePath);
                 return;
@@ -79,7 +79,7 @@ namespace Typewriter.Generation.Controllers
 
         public void OnCsFileChanged(string[] paths)
         {
-            if (ExtensionPackage.Instance.Options.TrackSourceFiles == false)
+            if (ExtensionPackage.Instance.TrackSourceFiles == false)
             {
                 Log.Debug("Render skipped {0}", paths?.FirstOrDefault());
                 return;
@@ -112,7 +112,7 @@ namespace Typewriter.Generation.Controllers
 
         public void OnCsFileDeleted(string[] paths)
         {
-            if (ExtensionPackage.Instance.Options.TrackSourceFiles == false)
+            if (ExtensionPackage.Instance.TrackSourceFiles == false)
             {
                 Log.Debug("Delete skipped {0}", paths?.FirstOrDefault());
                 return;
@@ -131,7 +131,7 @@ namespace Typewriter.Generation.Controllers
 
         public void OnCsFileRenamed(string[] newPaths, string[] oldPaths)
         {
-            if (ExtensionPackage.Instance.Options.TrackSourceFiles == false)
+            if (ExtensionPackage.Instance.TrackSourceFiles == false)
             {
                 Log.Debug("Rename skipped {0}", oldPaths?.FirstOrDefault());
                 return;

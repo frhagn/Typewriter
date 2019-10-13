@@ -41,6 +41,7 @@
     <Compile Include="..\Typewriter\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeModel\AttributeArgumentTests.cs" />
     <Compile Include="CodeModel\AttributeTests.cs" />
     <Compile Include="CodeModel\PartialClassTests.cs" />
     <Compile Include="CodeModel\ConstantTests.cs" />

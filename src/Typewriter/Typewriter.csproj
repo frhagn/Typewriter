@@ -70,14 +70,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Shell.Immutable.14.0.14.3.25407\lib\net45\Microsoft.VisualStudio.Shell.Immutable.14.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeModel\Collections\AttributeArgumentCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\EventCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\DelegateCollectionImpl.cs" />
+    <Compile Include="CodeModel\Collections\ParameterCommentCollectionImpl.cs" />
     <Compile Include="CodeModel\Collections\TypeParameterCollectionImpl.cs" />
     <Compile Include="CodeModel\Configuration\ProjectHelpers.cs" />
     <Compile Include="CodeModel\Configuration\SettingsImpl.cs" />
+    <Compile Include="CodeModel\Implementation\AttributeArgumentImpl.cs" />
     <Compile Include="CodeModel\Implementation\DocComment.cs" />
     <Compile Include="CodeModel\Implementation\EventImpl.cs" />
     <Compile Include="CodeModel\Implementation\DelegateImpl.cs" />
@@ -135,6 +144,7 @@
     <Compile Include="TemplateEditor\Lexing\Tokens.cs" />
     <Compile Include="VisualStudio\ContextMenu\RenderTemplate.cs" />
     <Compile Include="VisualStudio\ErrorList.cs" />
+    <Compile Include="VisualStudio\PathResolver.cs" />
     <Compile Include="VisualStudio\ThemeInfo.cs" />
     <Compile Include="TemplateEditor\Controllers\BraceMatchingController.cs" />
     <Compile Include="TemplateEditor\FormatDefinitions\PropertyFormatDefinition.cs" />

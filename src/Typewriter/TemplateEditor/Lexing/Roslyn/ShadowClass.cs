@@ -41,19 +41,41 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         private readonly ShadowWorkspace workspace;
         private readonly DocumentId documentId;
         private readonly List<Snippet> snippets = new List<Snippet>();
-        
+        private readonly HashSet<Assembly> referencedAssemblies = new HashSet<Assembly>();
         private int offset;
         private bool classAdded;
-        
+
         public ShadowClass()
         {
+            AddDefaultReferencedAssemblies();
             workspace = new ShadowWorkspace();
             documentId = workspace.AddProjectWithDocument("ShadowClass.cs", "");
         }
 
         public IEnumerable<Snippet> Snippets => snippets;
 
-        public IEnumerable<Assembly> ReferencedAssemblies => new[] { typeof (Class).Assembly };
+        public IEnumerable<Assembly> ReferencedAssemblies => referencedAssemblies;
+
+        private void AddDefaultReferencedAssemblies()
+        {
+            referencedAssemblies.Add(typeof(Class).Assembly);
+        }
+
+        internal void ResetReferencedAssemblies()
+        {
+            referencedAssemblies.Clear();
+            AddDefaultReferencedAssemblies();
+            workspace.SetMetadataReferences(documentId, referencedAssemblies);
+        }
+
+        public void AddReference(string pathOrName)
+        {
+            var asm = pathOrName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)
+                ? Assembly.LoadFile(pathOrName)
+                : Assembly.Load(pathOrName);
+            if (referencedAssemblies.Add(asm))
+                workspace.SetMetadataReferences(documentId, referencedAssemblies);
+        }
 
         public void AddUsing(string code, int startIndex)
         {
@@ -103,6 +125,8 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
             snippets.Add(Snippet.Create(SnippetType.Class, startTemplate));
             offset = startTemplate.Length;
             classAdded = false;
+
+            ResetReferencedAssemblies();
         }
 
         public void Parse()

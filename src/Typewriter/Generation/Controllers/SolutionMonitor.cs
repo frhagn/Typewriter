@@ -91,7 +91,7 @@ namespace Typewriter.Generation.Controllers
             }
         }
 
-        private void AdviseTrackProjectDocumentsEvents()
+        public void AdviseTrackProjectDocumentsEvents()
         {
             trackProjectDocuments = Package.GetGlobalService(typeof(SVsTrackProjectDocuments)) as IVsTrackProjectDocuments2;
             if (trackProjectDocuments != null)

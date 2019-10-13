@@ -138,6 +138,11 @@ namespace Typewriter.Generation
             return success;
         }
 
+        protected virtual void WriteFile(string outputPath, string outputContent)
+        {
+            System.IO.File.WriteAllText(outputPath, outputContent, new UTF8Encoding(true));
+        }
+
         protected virtual void SaveFile(File file, string output, ref bool success)
         {
             ProjectItem item;
@@ -150,12 +155,35 @@ namespace Typewriter.Generation
                 return;
             }
 
-            if (HasChanged(outputPath, output))
+            var hasChanged = HasChanged(outputPath, output);
+
+            if (ExtensionPackage.Instance.AddGeneratedFilesToProject == false)
+            {
+                if (hasChanged)
+                {
+                    WriteFile(outputPath, output);
+                    Log.Debug($"Output file '{outputPath}' saved.");
+                }
+                return;
+            }
+
+            if (hasChanged)
             {
                 CheckOutFileFromSourceControl(outputPath);
+                WriteFile(outputPath, output);
+                item = FindProjectItem(outputPath);
 
-                System.IO.File.WriteAllText(outputPath, output, new UTF8Encoding(true));
-                item = FindProjectItem(outputPath) ?? _projectItem.ProjectItems.AddFromFile(outputPath);
+                if (item == null)
+                {
+                    try
+                    {
+                        item = _projectItem.ProjectItems.AddFromFile(outputPath);
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Error($"Unable to add '{outputPath}' to project. {exception.Message}");
+                    }
+                }
             }
             else
             {
@@ -225,7 +253,7 @@ namespace Typewriter.Generation
                 }
                 catch
                 {
-                    Log.Warn("Falied to save source map for '{0}'. Project type not supported.", path);
+                    Log.Warn("Failed to save source map for '{0}'. Project type not supported.", path);
                 }
             }
         }
@@ -243,7 +271,7 @@ namespace Typewriter.Generation
                 }
                 catch
                 {
-                    // Can't read properties from project item sometimes when deleting miltiple files
+                    // Can't read properties from project item sometimes when deleting multiple files
                 }
             }
 
@@ -353,7 +381,7 @@ namespace Typewriter.Generation
                 }
                 catch
                 {
-                    // Can't read properties from project item sometimes when deleting miltiple files
+                    // Can't read properties from project item sometimes when deleting multiple files
                 }
             }
 

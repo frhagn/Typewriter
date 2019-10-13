@@ -98,11 +98,11 @@ namespace Typewriter.Extensions.WebApi
                 return null;
             }
 
-            var routePrefix = @class?.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix")?.Value.TrimEnd('/');
+            var routePrefix = @class?.Attributes.FirstOrDefault(a => a.Name == "RoutePrefix")?.Value?.TrimEnd('/');
 
             if (String.IsNullOrEmpty(routePrefix))
             {
-                routePrefix = @class?.Attributes.FirstOrDefault(a => a.Name == "Route")?.Value.TrimEnd('/');
+                routePrefix = @class?.Attributes.FirstOrDefault(a => a.Name == "Route")?.Value?.TrimEnd('/');
             }
 
             if (String.IsNullOrEmpty(routePrefix) && @class.BaseClass != null)

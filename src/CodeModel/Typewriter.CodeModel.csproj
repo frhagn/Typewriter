@@ -44,6 +44,7 @@
     <Compile Include="CodeModel\Attribute.cs" />
     <Compile Include="Attributes\ContextAttribute.cs" />
     <Compile Include="Attributes\PropertyAttribute.cs" />
+    <Compile Include="CodeModel\AttributeArgument.cs" />
     <Compile Include="CodeModel\Class.cs" />
     <Compile Include="CodeModel\Constant.cs" />
     <Compile Include="CodeModel\Delegate.cs" />

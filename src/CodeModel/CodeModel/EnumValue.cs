@@ -41,7 +41,7 @@ namespace Typewriter.CodeModel
         /// <summary>
         /// The numeric value.
         /// </summary>
-        public abstract int Value { get; }
+        public abstract long Value { get; }
 
         /// <summary>
         /// Converts the current instance to string.
