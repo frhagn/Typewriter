@@ -70,9 +70,9 @@ namespace Typewriter.Extensions.WebApi
                 {
                     route = routePrefix ?? route;
                 }
-                else if (value.StartsWith("~"))
+                else if (value.StartsWith("~/"))
                 {
-                    route = value.Remove(0, 1);
+                    route = value.Remove(0, 2);
                 }
                 else if (routePrefix == null)
                 {
@@ -83,7 +83,7 @@ namespace Typewriter.Extensions.WebApi
                     route = string.Concat(routePrefix, "/", value);
                 }
             }
-            else if(routePrefix != null)
+            else if (routePrefix != null)
             {
                 route = string.Concat(routePrefix, "/", route);
             }
@@ -193,9 +193,12 @@ namespace Typewriter.Extensions.WebApi
         internal static string GetParameterValue(Method method, string name)
         {
             var parameter = method.Parameters.FirstOrDefault(p => p.Name == name);
-            if (parameter?.Type.Name == "string")
+            if (parameter != null)
             {
-                return $"encodeURIComponent({name})";
+                if (parameter.Type.Name == "string" || parameter.Type.IsDate)
+                {
+                    return $"encodeURIComponent({name})";
+                }
             }
 
             return name;
