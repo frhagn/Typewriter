@@ -195,9 +195,13 @@ namespace Typewriter.Extensions.WebApi
             var parameter = method.Parameters.FirstOrDefault(p => p.Name == name);
             if (parameter != null)
             {
-                if (parameter.Type.Name == "string" || parameter.Type.IsDate)
+                if (parameter.Type.Name == "string")
                 {
                     return $"encodeURIComponent({name})";
+                }
+                if (parameter.Type.IsDate)
+                {
+                    return $"encodeURIComponent(String({name}))";
                 }
             }
 
