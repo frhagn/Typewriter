@@ -35,7 +35,6 @@ namespace Typewriter.Extensions.Types
             if (type.Name == "void") return "void(0)";
             if (type.IsGuid && type.IsNullable == false) return "\"00000000-0000-0000-0000-000000000000\"";
             if (type.IsDate && type.IsNullable == false) return "new Date(0)";
-            /*
             if (type.IsEnum && type.IsNullable == false)
             {
                 var enumType = System.Type.GetType(type.FullName);
@@ -53,7 +52,7 @@ namespace Typewriter.Extensions.Types
                 var enumValueName = System.Enum.GetName(enumType, values.Cast<int>().Min());
                 return $"{type.Name}.{enumValueName}";
             }
-            */
+
             return "null";
         }
 
