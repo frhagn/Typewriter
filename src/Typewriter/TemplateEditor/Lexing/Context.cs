@@ -45,7 +45,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
         public IEnumerable<Identifier> GetExtensionIdentifiers(string extensionNamespace)
         {
-            return extensionIdentifiers.Where(i => i.Key.StartsWith(extensionNamespace + ".")).Select(i => i.Value);
+            return extensionIdentifiers.Where(i => i.Key.StartsWith(extensionNamespace + ".", StringComparison.OrdinalIgnoreCase)).Select(i => i.Value);
         }
     }
 

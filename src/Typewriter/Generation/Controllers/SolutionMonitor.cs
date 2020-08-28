@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Typewriter.Generation.Controllers
 {
-    public class SolutionMonitor : IVsSolutionEvents, IVsRunningDocTableEvents3, IVsTrackProjectDocumentsEvents2
+    public class SolutionMonitor : IVsSolutionEvents, IVsRunningDocTableEvents3, IVsTrackProjectDocumentsEvents2, IDisposable
     {
         private uint solutionCookie;
         private uint runningDocumentTableCookie;

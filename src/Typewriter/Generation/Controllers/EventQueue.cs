@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Typewriter.VisualStudio;
 using InteropConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
+using Task = System.Threading.Tasks.Task;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -43,13 +44,13 @@ namespace Typewriter.Generation.Controllers
                     {
                         var stopwatch = Stopwatch.StartNew();
                         action();
-                        
+
                         while (_queue.Count > 0)
                         {
                             action = _queue.Dequeue();
                             action();
                         }
-                        
+
                         stopwatch.Stop();
 
                         Log.Debug("Queue flushed in {0} ms", stopwatch.ElapsedMilliseconds);
@@ -58,7 +59,7 @@ namespace Typewriter.Generation.Controllers
                     {
                         Log.Error("Error processing queue: " + ex.Message + "\n" + ex.StackTrace);
                     }
-                    
+
                     ClearStatusbar(icon);
                 }
                 catch (InvalidOperationException ex)
@@ -67,50 +68,64 @@ namespace Typewriter.Generation.Controllers
                 }
             } while (!(_queue.Closed));
         }
-        
+
         public void Enqueue(Action action)
         {
             _queue.Enqueue(action);
         }
-        
+
         private void PrepareStatusbar(out object icon)
         {
-            icon = (short) InteropConstants.SBAI_Save;
-            
-            try
+            icon = (short)InteropConstants.SBAI_Save;
+            var tmpIcon = icon;
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                _statusBar.IsFrozen(out var frozen);
-                
-                if (frozen != 0) return;
-                
-                _statusBar.SetText("Rendering template...");
-                _statusBar.Animation(1, ref icon);
-            }
-            catch (Exception exception)
-            {
-                Log.Debug("Failed to prepare statusbar: {0}", exception.Message);
-            }
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                // You're now on the UI thread.
+
+                try
+                {
+
+                    _statusBar.IsFrozen(out var frozen);
+
+                    if (frozen != 0)
+                        return;
+
+                    _statusBar.SetText("Rendering template...");
+                    _statusBar.Animation(1, ref tmpIcon);
+                }
+                catch (Exception exception)
+                {
+                    Log.Debug("Failed to prepare statusbar: {0}", exception.Message);
+                }
+            });
         }
-        
+
         private void ClearStatusbar(object icon)
         {
-            try
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                _statusBar.Animation(0, ref icon);
-                _statusBar.SetText("Rendering complete");
-                _statusBar.FreezeOutput(0);
-            }
-            catch (Exception exception)
-            {
-                Log.Debug("Failed to clear statusbar: {0}", exception.Message);
-            }
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                try
+                {
+                    _statusBar.Animation(0, ref icon);
+                    _statusBar.SetText("Rendering complete");
+                    _statusBar.FreezeOutput(0);
+                }
+                catch (Exception exception)
+                {
+                    Log.Debug("Failed to clear statusbar: {0}", exception.Message);
+                }
+            });
         }
 
         private bool disposed;
 
         public void Dispose()
         {
-            if (disposed) return;
+            if (disposed)
+                return;
 
             disposed = true;
             _queue.Close();
@@ -126,5 +141,5 @@ namespace Typewriter.Generation.Controllers
         Rename,
         Template
     }
-    
+
 }

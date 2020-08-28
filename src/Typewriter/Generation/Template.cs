@@ -205,7 +205,7 @@ namespace Typewriter.Generation
 
             if (item != null)
             {
-                if (Path.GetFileName(oldPath)?.Equals(Path.GetFileName(newPath)) ?? false)
+                if (Path.GetFileName(oldPath)?.Equals(Path.GetFileName(newPath), StringComparison.OrdinalIgnoreCase) ?? false)
                 {
                     SetMappedSourceFile(item, newPath);
                     return;
@@ -235,8 +235,8 @@ namespace Typewriter.Generation
 
         private void SetMappedSourceFile(ProjectItem item, string path)
         {
-            if (_projectItem == null) throw new ArgumentException("item");
-            if (path == null) throw new ArgumentException("path");
+            if (_projectItem == null) throw new ArgumentNullException(nameof(item));
+            if (path == null) throw new ArgumentNullException(nameof(path));
 
             var pathUri = new Uri(path);
             var folderUri = new Uri(_projectPath.Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar);
@@ -244,6 +244,7 @@ namespace Typewriter.Generation
 
             if (relativeSourcePath.Equals(GetMappedSourceFile(item), StringComparison.InvariantCultureIgnoreCase) == false)
             {
+
                 try
                 {
                     var property = item.Properties.Item("CustomToolNamespace");

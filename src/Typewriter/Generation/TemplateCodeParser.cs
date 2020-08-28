@@ -50,7 +50,7 @@ namespace Typewriter.Generation
         {
             var types = new List<Type>();
 
-            var usings = shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using"));
+            var usings = shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using", StringComparison.OrdinalIgnoreCase));
             foreach (var usingStatement in usings.Select(u => u.Code))
             {
                 var ns = usingStatement.Remove(0, 5).Trim().Trim(';');
@@ -150,7 +150,7 @@ namespace Typewriter.Generation
                                 var contextName = identifier;
                                 // Todo: Make the TemplateCodeParser context aware
                                 if (contextName == "TypeArguments") contextName = "Types";
-                                else if (contextName.StartsWith("Nested")) contextName = contextName.Remove(0, 6);
+                                else if (contextName.StartsWith("Nested", StringComparison.OrdinalIgnoreCase)) contextName = contextName.Remove(0, 6);
 
                                 var type = contexts.Find(contextName)?.Type.FullName;
 

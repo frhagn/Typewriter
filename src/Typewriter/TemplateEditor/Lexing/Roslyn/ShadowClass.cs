@@ -199,7 +199,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
                 var identifier = method.Identifier.ToString();
                 var parameter = method.ParameterList.Parameters.FirstOrDefault()?.Type.ToString();
 
-                if (identifier.StartsWith("__") == false && parameter != null)
+                if (identifier.StartsWith("__", StringComparison.OrdinalIgnoreCase) == false && parameter != null)
                 {
                     var context = contexts.Find(parameter);
                     if (context != null)
@@ -228,7 +228,7 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
 
         private static string ExtraxtContextType(string returnType)
         {
-            if (returnType.EndsWith("[]")) return returnType.Substring(0, returnType.Length - 2);
+            if (returnType.EndsWith("[]", StringComparison.OrdinalIgnoreCase)) return returnType.Substring(0, returnType.Length - 2);
 
             var prefixes = new[] { "ICollection<", "IEnumerable<", "List<", "IList<" };
             var match = prefixes.FirstOrDefault(returnType.StartsWith);
@@ -255,9 +255,9 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         {
             var snippet = snippets.FirstOrDefault(s => s.Contains(position));
 
-            if (snippet == null) return new ISymbol[0];
+            if (snippet == null) return Array.Empty<ISymbol>();
 
-            return workspace.GetRecommendedSymbols(documentId, snippet.ToShadowIndex(position)).Where(s => s.Name.StartsWith("__") == false);
+            return workspace.GetRecommendedSymbols(documentId, snippet.ToShadowIndex(position)).Where(s => s.Name.StartsWith("__", StringComparison.OrdinalIgnoreCase) == false);
         }
 
         public EmitResult Compile(string outputPath)

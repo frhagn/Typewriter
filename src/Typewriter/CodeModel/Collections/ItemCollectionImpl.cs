@@ -11,32 +11,32 @@ namespace Typewriter.CodeModel.Collections
 
         public Func<Item, IEnumerable<string>> AttributeFilterSelector => i =>
         {
-            return !(i is T item) ? new string[0] : GetAttributeFilter(item);
+            return !(i is T item) ? Array.Empty<string>() : GetAttributeFilter(item);
         };
 
         public Func<Item, IEnumerable<string>> InheritanceFilterSelector => i =>
         {
-            return !(i is T item) ? new string[0] : GetInheritanceFilter(item);
+            return !(i is T item) ? Array.Empty<string>() : GetInheritanceFilter(item);
         };
 
         public Func<Item, IEnumerable<string>> ItemFilterSelector => i =>
         {
-            return !(i is T item) ? new string[0] : GetItemFilter(item);
+            return !(i is T item) ? Array.Empty<string>() : GetItemFilter(item);
         };
 
         protected virtual IEnumerable<string> GetAttributeFilter(T item)
         {
-            return new string[0];
+            return Array.Empty<string>();
         }
 
         protected virtual IEnumerable<string> GetInheritanceFilter(T item)
         {
-            return new string[0];
+            return Array.Empty<string>();
         }
 
         protected virtual IEnumerable<string> GetItemFilter(T item)
         {
-            return new string[0];
+            return Array.Empty<string>();
         }
     }
 }

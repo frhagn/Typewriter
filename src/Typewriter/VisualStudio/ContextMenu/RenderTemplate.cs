@@ -49,7 +49,7 @@ namespace Typewriter.VisualStudio.ContextMenu
         /// <param name="package">Owner package, not null.</param>
         private RenderTemplate(Package package)
         {
-            this.package = package ?? throw new ArgumentNullException("package");
+            this.package = package ?? throw new ArgumentNullException(nameof(package));
 
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
@@ -87,7 +87,7 @@ namespace Typewriter.VisualStudio.ContextMenu
                 ((IVsProject)hierarchy).GetMkDocument(itemid, out itemFullPath);
                 var transformFileInfo = new FileInfo(itemFullPath);
 
-                bool isTemplate = transformFileInfo.Name.EndsWith(".tst");
+                bool isTemplate = transformFileInfo.Name.EndsWith(".tst", StringComparison.OrdinalIgnoreCase);
 
                 // if not leave the menu hidden
                 if (!isTemplate) return;
@@ -206,7 +206,7 @@ namespace Typewriter.VisualStudio.ContextMenu
 
             // trigger a change and have it queue up
             var helper = new SolutionFilesHelper();
-            var templates = helper.SolutionFiles().Select(x => x.Name).Where(x => x.EndsWith(Constants.TemplateExtension));
+            var templates = helper.SolutionFiles().Select(x => x.Name).Where(x => x.EndsWith(Constants.TemplateExtension, StringComparison.OrdinalIgnoreCase));
             foreach (var itm in templates)
             {
                 Log.Debug($"Invoke renderTemplateClicked for '{itm}'.");

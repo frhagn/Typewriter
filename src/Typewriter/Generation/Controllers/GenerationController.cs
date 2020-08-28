@@ -6,6 +6,7 @@ using EnvDTE;
 using Typewriter.CodeModel.Implementation;
 using Typewriter.Metadata.Providers;
 using Typewriter.VisualStudio;
+using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
 namespace Typewriter.Generation.Controllers
 {
@@ -30,22 +31,25 @@ namespace Typewriter.Generation.Controllers
 
             ErrorList.Clear();
 
-            var projectItem = _dte.Solution.FindProjectItem(templatePath);
-
-            var template = _templateController.GetTemplate(projectItem);
-
-            if (force == false && ExtensionPackage.Instance.RenderOnSave == false)
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                Log.Debug("Render skipped {0}", templatePath);
-                return;
-            }
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                var projectItem = _dte.Solution.FindProjectItem(templatePath);
 
-            var filesToRender = template.GetFilesToRender();
-            Log.Debug(" Will Check/Render {0} .cs files in referenced projects", filesToRender.Count);
+                var template = _templateController.GetTemplate(projectItem);
 
-            // Delay to wait for Roslyn to refresh the current Workspace after a change.
-            Task.Delay(1000).ContinueWith(task =>
-            {
+                if (force == false && ExtensionPackage.Instance.RenderOnSave == false)
+                {
+                    Log.Debug("Render skipped {0}", templatePath);
+                    return;
+                }
+
+                var filesToRender = template.GetFilesToRender();
+                Log.Debug(" Will Check/Render {0} .cs files in referenced projects", filesToRender.Count);
+
+
+                // Delay to wait for Roslyn to refresh the current Workspace after a change.
+                await Task.Delay(1000).ConfigureAwait(true);
                 _eventQueue.Enqueue(() =>
                 {
                     var stopwatch = Stopwatch.StartNew();
@@ -72,7 +76,8 @@ namespace Typewriter.Generation.Controllers
                     template.SaveProjectFile();
 
                     stopwatch.Stop();
-                    Log.Debug("{0} processed {1} in {2}ms", GenerationType.Template, templatePath, stopwatch.ElapsedMilliseconds);
+                    Log.Debug("{0} processed {1} in {2}ms", GenerationType.Template, templatePath,
+                        stopwatch.ElapsedMilliseconds);
                 });
             });
         }
@@ -90,9 +95,11 @@ namespace Typewriter.Generation.Controllers
 
         private void RenderFile(string[] paths)
         {
-            // Delay to wait for Roslyn to refresh the current Workspace after a change.
-            Task.Delay(1000).ContinueWith(task =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
+                // Delay to wait for Roslyn to refresh the current Workspace after a change.
+                await Task.Delay(1000).ConfigureAwait(true);
+
                 Enqueue(GenerationType.Render, paths, (path, template) => _metadataProvider.GetFile(path, template.Settings, RenderFile), (fileMeta, template) =>
                 {
                     if (fileMeta == null)
@@ -119,8 +126,9 @@ namespace Typewriter.Generation.Controllers
             }
 
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
-            Task.Delay(1000).ContinueWith(task =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
+                await Task.Delay(1000).ConfigureAwait(true);
                 Enqueue(GenerationType.Delete, paths, (path, template) => template.DeleteFile(path));
             });
         }
@@ -138,9 +146,16 @@ namespace Typewriter.Generation.Controllers
             }
 
             // Delay to wait for Roslyn to refresh the current Workspace after a change.
-            Task.Delay(1000).ContinueWith(task =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                Enqueue(GenerationType.Rename, newPaths, (path, template, fileIndex) => new { OldPath = oldPaths[fileIndex], NewPath = path, NewFileMeta = _metadataProvider.GetFile(path, template.Settings, null) },
+                await Task.Delay(1000).ConfigureAwait(true);
+                Enqueue(GenerationType.Rename, newPaths,
+                    (path, template, fileIndex) => new
+                    {
+                        OldPath = oldPaths[fileIndex],
+                        NewPath = path,
+                        NewFileMeta = _metadataProvider.GetFile(path, template.Settings, null)
+                    },
                     (item, template) =>
                     {
                         if (item.NewFileMeta == null)

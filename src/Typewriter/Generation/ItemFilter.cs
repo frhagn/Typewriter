@@ -17,12 +17,12 @@ namespace Typewriter.Generation
 
             filter = filter.Trim();
 
-            if (filter.StartsWith("[") && filter.EndsWith("]"))
+            if (filter.StartsWith("[", StringComparison.OrdinalIgnoreCase) && filter.EndsWith("]", StringComparison.OrdinalIgnoreCase))
             {
                 filter = filter.Trim('[', ']', ' ');
                 selector = filterable.AttributeFilterSelector;
             }
-            else if (filter.StartsWith(":"))
+            else if (filter.StartsWith(":", StringComparison.OrdinalIgnoreCase))
             {
                 filter = filter.Remove(0, 1).Trim();
                 selector = filterable.InheritanceFilterSelector;
@@ -53,11 +53,11 @@ namespace Typewriter.Generation
                 }
                 else if (i == 0 && string.IsNullOrWhiteSpace(part) == false)
                 {
-                    items = items.Where(item => selector(item).Any(p => p.StartsWith(part)));
+                    items = items.Where(item => selector(item).Any(p => p.StartsWith(part, StringComparison.OrdinalIgnoreCase)));
                 }
                 else if (i == parts.Length - 1 && string.IsNullOrWhiteSpace(part) == false)
                 {
-                    items = items.Where(item => selector(item).Any(p => p.EndsWith(part)));
+                    items = items.Where(item => selector(item).Any(p => p.EndsWith(part, StringComparison.OrdinalIgnoreCase)));
                 }
                 else if (i > 0 && i < parts.Length - 1 && string.IsNullOrWhiteSpace(part) == false)
                 {

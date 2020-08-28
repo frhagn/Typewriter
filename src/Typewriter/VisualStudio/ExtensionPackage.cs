@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using EnvDTE;
+using Microsoft;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -52,7 +53,7 @@ namespace Typewriter.VisualStudio
             CancellationToken cancellationToken,
             IProgress<ServiceProgressData> progress)
         {
-            await base.InitializeAsync(cancellationToken, progress);
+            await base.InitializeAsync(cancellationToken, progress).ConfigureAwait(true);
 
             RegisterLanguageService();
             RegisterIcons();
@@ -60,8 +61,8 @@ namespace Typewriter.VisualStudio
 
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-            await GetDte();
-            await GetStatusBar();
+            await GetDteAsync().ConfigureAwait(true);
+            await GetStatusBarAsync().ConfigureAwait(true);
 
             GetOptions();
             GetCodeModelProvider();
@@ -86,53 +87,69 @@ namespace Typewriter.VisualStudio
 
         private void WireUpEvents()
         {
-            _dteEvents = Dte.Events;
-            
-            _solutionEvents = _dteEvents.SolutionEvents;
-            _solutionEvents.ProjectAdded += project => _templateController.ResetTemplates();
-            _solutionEvents.ProjectRemoved += project => _templateController.ResetTemplates();
-            _solutionEvents.ProjectRenamed += (project, oldName) => _templateController.ResetTemplates();
-
-            _solutionMonitor.AdviseTrackProjectDocumentsEvents();
-            _solutionMonitor.TemplateAdded += (sender, args) => _templateController.ResetTemplates();
-            _solutionMonitor.TemplateDeleted += (sender, args) => _templateController.ResetTemplates();
-            _solutionMonitor.TemplateRenamed += (sender, args) => _templateController.ResetTemplates();
-
-            _solutionMonitor.CsFileAdded += (sender, args) => _generationController.OnCsFileChanged(args.Paths);
-            _solutionMonitor.CsFileDeleted += (sender, args) => _generationController.OnCsFileDeleted(args.Paths);
-            _solutionMonitor.CsFileRenamed += (sender, args) => _generationController.OnCsFileRenamed(args.Paths, args.OldPaths);
-
-            _documentEvents = _dteEvents.DocumentEvents;
-            _documentEvents.DocumentSaved += document =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                if (document.FullName.EndsWith(Constants.CsExtension, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    _generationController.OnCsFileChanged(new[] { document.FullName });
-                }
-                else if (document.FullName.EndsWith(Constants.TemplateExtension, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    _generationController.OnTemplateChanged(document.FullName);
-                }
-            };
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            RenderTemplate.Instance.RenderTemplateClicked += (sender, args) => _generationController.OnTemplateChanged(args.Path, true);
+                _dteEvents = Dte.Events;
+
+                _solutionEvents = _dteEvents.SolutionEvents;
+                _solutionEvents.ProjectAdded += project => _templateController.ResetTemplates();
+                _solutionEvents.ProjectRemoved += project => _templateController.ResetTemplates();
+                _solutionEvents.ProjectRenamed += (project, oldName) => _templateController.ResetTemplates();
+
+                _solutionMonitor.AdviseTrackProjectDocumentsEvents();
+                _solutionMonitor.TemplateAdded += (sender, args) => _templateController.ResetTemplates();
+                _solutionMonitor.TemplateDeleted += (sender, args) => _templateController.ResetTemplates();
+                _solutionMonitor.TemplateRenamed += (sender, args) => _templateController.ResetTemplates();
+
+                _solutionMonitor.CsFileAdded += (sender, args) => _generationController.OnCsFileChanged(args.Paths);
+                _solutionMonitor.CsFileDeleted += (sender, args) => _generationController.OnCsFileDeleted(args.Paths);
+                _solutionMonitor.CsFileRenamed += (sender, args) =>
+                    _generationController.OnCsFileRenamed(args.Paths, args.OldPaths);
+
+                _documentEvents = _dteEvents.DocumentEvents;
+                _documentEvents.DocumentSaved += document =>
+                {
+                    if (document.FullName.EndsWith(Constants.CsExtension, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        _generationController.OnCsFileChanged(new[] {document.FullName});
+                    }
+                    else if (document.FullName.EndsWith(Constants.TemplateExtension,
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        _generationController.OnTemplateChanged(document.FullName);
+                    }
+                };
+
+                RenderTemplate.Instance.RenderTemplateClicked += (sender, args) =>
+                    _generationController.OnTemplateChanged(args.Path, true);
+            });
         }
 
-        private async Task GetDte()
+        private async Task GetDteAsync()
         {
-            Dte = await GetServiceAsync(typeof(DTE)) as DTE;
-            _log = new Log(Dte);
-
-            if (Dte == null)
-                ErrorHandler.ThrowOnFailure(1);
+            await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                Dte = await GetServiceAsync(typeof(DTE)).ConfigureAwait(true) as DTE;
+                Assumes.Present(Dte);
+                if (Dte == null)
+                    ErrorHandler.ThrowOnFailure(1);
+                _log = new Log(Dte);
+            });
         }
 
-        private async Task GetStatusBar()
+        private async Task GetStatusBarAsync()
         {
-            _statusBar = await GetServiceAsync(typeof(SVsStatusbar)) as IVsStatusbar;
+            await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                _statusBar = await GetServiceAsync(typeof(SVsStatusbar)).ConfigureAwait(true) as IVsStatusbar;
 
-            if (_statusBar == null)
-                ErrorHandler.ThrowOnFailure(1);
+                if (_statusBar == null)
+                    ErrorHandler.ThrowOnFailure(1);
+            });
         }
 
         private void GetCodeModelProvider()
@@ -274,6 +291,7 @@ namespace Typewriter.VisualStudio
             }
 
             Instance = null;
+            _options?.Dispose();
         }
     }
 }

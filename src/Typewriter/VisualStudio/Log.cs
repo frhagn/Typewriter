@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 
 namespace Typewriter.VisualStudio
 {
@@ -43,35 +45,47 @@ namespace Typewriter.VisualStudio
         {
             message = $"{DateTime.Now:HH:mm:ss.fff} {type}: {message}";
 
-            try
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                if (parameters.Any())
-                    OutputWindow.OutputString(string.Format(message, parameters) + Environment.NewLine);
-                else
-                    OutputWindow.OutputString(message + Environment.NewLine);
-            }
-            catch { }
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                try
+                {
+                    if (parameters.Any())
+                        OutputWindow.OutputString(string.Format(CultureInfo.InvariantCulture, message, parameters) +
+                                                  Environment.NewLine);
+                    else
+                        OutputWindow.OutputString(message + Environment.NewLine);
+                }
+                catch
+                {
+                }
+            });
         }
 
         private OutputWindowPane OutputWindow
         {
             get
             {
-                if (outputWindowPane != null) return outputWindowPane;
-
-                var window = dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
-                var outputWindow = (OutputWindow)window.Object;
-
-                for (uint i = 1; i <= outputWindow.OutputWindowPanes.Count; i++)
+                return ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    if (outputWindow.OutputWindowPanes.Item(i).Name.Equals("Typewriter", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        outputWindowPane = outputWindow.OutputWindowPanes.Item(i);
-                        break;
-                    }
-                }
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    if (outputWindowPane != null) return outputWindowPane;
 
-                return outputWindowPane ?? (outputWindowPane = outputWindow.OutputWindowPanes.Add("Typewriter"));
+                    var window = dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
+                    var outputWindow = (OutputWindow) window.Object;
+
+                    for (uint i = 1; i <= outputWindow.OutputWindowPanes.Count; i++)
+                    {
+                        if (outputWindow.OutputWindowPanes.Item(i).Name
+                            .Equals("Typewriter", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            outputWindowPane = outputWindow.OutputWindowPanes.Item(i);
+                            break;
+                        }
+                    }
+
+                    return outputWindowPane ?? (outputWindowPane = outputWindow.OutputWindowPanes.Add("Typewriter"));
+                });
             }
         }
     }

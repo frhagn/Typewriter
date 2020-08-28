@@ -24,31 +24,39 @@ namespace Typewriter.VisualStudio
 
         private static bool GetIsDark()
         {
-            if (!(Package.GetGlobalService(typeof(SVsFontAndColorStorage)) is IVsFontAndColorStorage storage)) return false;
-
-            var category = Microsoft.VisualStudio.Editor.DefGuidList.guidTextEditorFontCategory;
-            var success = storage.OpenCategory(ref category, (uint)(__FCSTORAGEFLAGS.FCSF_READONLY | __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS | __FCSTORAGEFLAGS.FCSF_NOAUTOCOLORS));
-
-            try
+            return ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                if (success == 0)
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                if (!(Package.GetGlobalService(typeof(SVsFontAndColorStorage)) is IVsFontAndColorStorage storage))
+                    return false;
+
+                var category = Microsoft.VisualStudio.Editor.DefGuidList.guidTextEditorFontCategory;
+                var success = storage.OpenCategory(ref category,
+                    (uint) (__FCSTORAGEFLAGS.FCSF_READONLY | __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS |
+                            __FCSTORAGEFLAGS.FCSF_NOAUTOCOLORS));
+
+                try
                 {
-                    var colors = new ColorableItemInfo[1];
-                    var hresult = storage.GetItem("Plain Text", colors);
-                    if (hresult == 0)
+                    if (success == 0)
                     {
-                        var dcolor = ColorTranslator.FromOle(Convert.ToInt32(colors[0].crBackground));
-                        var hsp = Math.Sqrt(0.299 * (dcolor.R * dcolor.R) + 0.587 * (dcolor.G * dcolor.G) + 0.114 * (dcolor.B * dcolor.B));
-                        return hsp < 127.5;
+                        var colors = new ColorableItemInfo[1];
+                        var hresult = storage.GetItem("Plain Text", colors);
+                        if (hresult == 0)
+                        {
+                            var dcolor = ColorTranslator.FromOle(Convert.ToInt32(colors[0].crBackground));
+                            var hsp = Math.Sqrt(0.299 * (dcolor.R * dcolor.R) + 0.587 * (dcolor.G * dcolor.G) +
+                                                0.114 * (dcolor.B * dcolor.B));
+                            return hsp < 127.5;
+                        }
                     }
                 }
-            }
-            finally
-            {
-                storage.CloseCategory();
-            }
+                finally
+                {
+                    storage.CloseCategory();
+                }
 
-            return false;
+                return false;
+            });
         }
     }
 }

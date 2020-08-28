@@ -14,6 +14,7 @@ using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Recommendations;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CSharp.RuntimeBinder;
+using Microsoft.VisualStudio.Shell;
 using Typewriter.CodeModel;
 using File = System.IO.File;
 
@@ -66,76 +67,97 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         public string FormatDocument(DocumentId documentId)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            document = Formatter.FormatAsync(document).Result;
-            var text = document.GetTextAsync().Result;
-
-            return text.ToString();
+            return ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                document = await Formatter.FormatAsync(document).ConfigureAwait(true);
+                var text = await document.GetTextAsync().ConfigureAwait(true);
+                return text.ToString();
+            }).Join();
         }
 
         public IEnumerable<ClassifiedSpan> GetClassifiedSpans(DocumentId documentId, int start, int length)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            return Classifier.GetClassifiedSpansAsync(document, TextSpan.FromBounds(start, start + length)).Result;
+            return ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                return await Classifier.GetClassifiedSpansAsync(document, TextSpan.FromBounds(start, start + length)).ConfigureAwait(true);
+            }).Join();
         }
 
         public IReadOnlyList<ISymbol> GetRecommendedSymbols(DocumentId documentId, int position)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            var semanticModel = document.GetSemanticModelAsync().Result;
-
-            return Recommender.GetRecommendedSymbolsAtPosition(semanticModel, position, this).ToArray();
+            return ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                var semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(true);
+                var result = await Recommender.GetRecommendedSymbolsAtPositionAsync(semanticModel, position, this).ConfigureAwait(true);
+                return result.ToArray();
+            }).Join();
         }
 
         public IReadOnlyList<Diagnostic> GetDiagnostics(DocumentId documentId, int start, int length)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            var semanticModel = document.GetSemanticModelAsync().Result;
-            var bounds = TextSpan.FromBounds(start, start + length);
-            var diagnostics = semanticModel.GetDiagnostics(bounds);
+            return ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                var semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(true);
+                var bounds = TextSpan.FromBounds(start, start + length);
+                var diagnostics = semanticModel.GetDiagnostics(bounds);
 
-            return diagnostics.ToArray();
+                return diagnostics.ToArray();
+            }).Join();
         }
 
         public IReadOnlyList<MethodDeclarationSyntax> GetMethods(DocumentId documentId)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            var syntaxTree = document.GetSyntaxTreeAsync().Result;
+            return ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                var syntaxTree = await document.GetSyntaxTreeAsync().ConfigureAwait(true);
 
-            var root = syntaxTree.GetRoot();
-            return root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToArray();
+                var root = await syntaxTree.GetRootAsync().ConfigureAwait(true);
+                return root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToArray();
+            }).Join();
         }
 
         public void ChangeAllMethodsToPublicStatic(DocumentId documentId)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            var semanticModel = document.GetSemanticModelAsync().Result;
-
-            var root = semanticModel.SyntaxTree.GetRoot();
-
-            // Constructors
-            var count = root.DescendantNodes().OfType<ConstructorDeclarationSyntax>().Count();
-            for (var i = 0; i < count; i++)
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var method = root.DescendantNodes().OfType<ConstructorDeclarationSyntax>().ToArray()[i];
-                var trivia = method.GetTrailingTrivia();
-                var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword).WithTrailingTrivia(trivia));
-                root = root.ReplaceNode(method, method.WithModifiers(modifiers));
-            }
+                var semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(true);
 
-            // Methods
-            count = root.DescendantNodes().OfType<MethodDeclarationSyntax>().Count();
-            for (var i = 0; i < count; i++)
-            {
-                var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToArray()[i];
-                var trivia = method.ReturnType.GetTrailingTrivia();
-                var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword).WithTrailingTrivia(trivia), SyntaxFactory.Token(SyntaxKind.StaticKeyword).WithTrailingTrivia(trivia));
-                root = root.ReplaceNode(method, method.WithModifiers(modifiers));
-            }
+                var root = await semanticModel.SyntaxTree.GetRootAsync().ConfigureAwait(true);
 
-            document = document.WithSyntaxRoot(root);
-            var text = document.GetTextAsync().Result;
+                // Constructors
+                var count = root.DescendantNodes().OfType<ConstructorDeclarationSyntax>().Count();
+                for (var i = 0; i < count; i++)
+                {
+                    var method = root.DescendantNodes().OfType<ConstructorDeclarationSyntax>().ToArray()[i];
+                    var trivia = method.GetTrailingTrivia();
+                    var modifiers =
+                        SyntaxFactory.TokenList(
+                            SyntaxFactory.Token(SyntaxKind.PublicKeyword).WithTrailingTrivia(trivia));
+                    root = root.ReplaceNode(method, method.WithModifiers(modifiers));
+                }
 
-            UpdateText(documentId, text.ToString());
+                // Methods
+                count = root.DescendantNodes().OfType<MethodDeclarationSyntax>().Count();
+                for (var i = 0; i < count; i++)
+                {
+                    var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToArray()[i];
+                    var trivia = method.ReturnType.GetTrailingTrivia();
+                    var modifiers = SyntaxFactory.TokenList(
+                        SyntaxFactory.Token(SyntaxKind.PublicKeyword).WithTrailingTrivia(trivia),
+                        SyntaxFactory.Token(SyntaxKind.StaticKeyword).WithTrailingTrivia(trivia));
+                    root = root.ReplaceNode(method, method.WithModifiers(modifiers));
+                }
+
+                document = document.WithSyntaxRoot(root);
+                var text = await document.GetTextAsync().ConfigureAwait(true);
+
+                UpdateText(documentId, text.ToString());
+            });
         }
 
         public void SetMetadataReferences(DocumentId documentId, IEnumerable<Assembly> references)
@@ -162,22 +184,28 @@ namespace Typewriter.TemplateEditor.Lexing.Roslyn
         public EmitResult Compile(DocumentId documentId, string path)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            var compilation = document.Project.GetCompilationAsync().Result;
-
-            using (var fileStream = File.Create(path))
+            return ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                return compilation.Emit(fileStream);
-            }
+                var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(true);
+
+                using (var fileStream = File.Create(path))
+                {
+                    return compilation.Emit(fileStream);
+                }
+            }).Join();
         }
 
         public ISymbol GetSymbol(DocumentId documentId, int position)
         {
             var document = CurrentSolution.GetDocument(documentId);
-            var semanticModel = document.GetSemanticModelAsync().Result;
-            var root = semanticModel.SyntaxTree.GetRoot();
-            var symbol = root.FindToken(position);
+            return ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                var semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(true);
+                var root = await semanticModel.SyntaxTree.GetRootAsync().ConfigureAwait(true);
+                var symbol = root.FindToken(position);
 
-            return semanticModel.GetSymbolInfo(symbol.Parent).Symbol;
+                return semanticModel.GetSymbolInfo(symbol.Parent).Symbol;
+            }).Join();
         }
 
         private MetadataReference CreateReference(Assembly assembly)

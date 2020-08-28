@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +10,7 @@ namespace Typewriter.TemplateEditor.Lexing
         
         public IEnumerable<Identifier> GetTempIdentifiers(Context context)
         {
-            return identifiers.ContainsKey(context) ? identifiers[context] : new Identifier[0];
+            return identifiers.ContainsKey(context) ? identifiers[context] : Array.Empty<Identifier>();
         }
         
         public void Add(IEnumerable<TemporaryIdentifier> temporaryIdentifiers)

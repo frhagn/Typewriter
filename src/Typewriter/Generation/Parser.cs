@@ -74,7 +74,7 @@ namespace Typewriter.Generation
                         else
                         {
                             IEnumerable<Item> items;
-                            if (filter != null && filter.StartsWith("$"))
+                            if (filter != null && filter.StartsWith("$", StringComparison.OrdinalIgnoreCase))
                             {
                                 var predicate = filter.Remove(0, 1);
                                 if (extensions != null)
@@ -90,7 +90,7 @@ namespace Typewriter.Generation
                                         }
                                         catch (Exception e)
                                         {
-                                            items = new Item[0];
+                                            items = Array.Empty<Item>();
                                             hasError = true;
 
                                             var message = $"Error rendering template. Cannot apply filter to identifier '{identifier}'.";
@@ -99,12 +99,12 @@ namespace Typewriter.Generation
                                     }
                                     else
                                     {
-                                        items = new Item[0];
+                                        items = Array.Empty<Item>();
                                     }
                                 }
                                 else
                                 {
-                                    items = new Item[0];
+                                    items = Array.Empty<Item>();
                                 }
                             }
                             else
