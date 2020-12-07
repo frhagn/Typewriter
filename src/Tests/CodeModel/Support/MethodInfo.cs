@@ -22,17 +22,17 @@ namespace Typewriter.Tests.CodeModel.Support
 
         public Task Task()
         {
-            return null;
+            return System.Threading.Tasks.Task.CompletedTask;
         }
 
         public Task<string> TaskString()
         {
-            return null;
+            return System.Threading.Tasks.Task.FromResult<string>(null);
         }
 
         public Task<Nullable<int>> TaskNullableInt()
         {
-            return null;
+            return System.Threading.Tasks.Task.FromResult<int?>(null);
         }
 
         public void ArrayParameter(byte[] byteArray)
