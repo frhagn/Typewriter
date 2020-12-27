@@ -6,6 +6,7 @@ using Typewriter.Metadata.Providers;
 using Typewriter.Metadata.Roslyn;
 using Typewriter.Configuration;
 using System;
+using Microsoft.VisualStudio.Shell;
 
 namespace Typewriter.Tests.TestInfrastructure
 {
@@ -19,7 +20,10 @@ namespace Typewriter.Tests.TestInfrastructure
             var msBuildWorkspace = MSBuildWorkspace.Create();
 
             // ReSharper disable once UnusedVariable
-            var solution = msBuildWorkspace.OpenSolutionAsync(solutionPath).Result;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await msBuildWorkspace.OpenSolutionAsync(solutionPath);
+            }).Join();
 
             this.workspace = msBuildWorkspace;
         }

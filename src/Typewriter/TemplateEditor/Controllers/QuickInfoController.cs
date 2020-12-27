@@ -1,60 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
 
 namespace Typewriter.TemplateEditor.Controllers
 {
-    [Export(typeof(IQuickInfoSourceProvider)), ContentType(Constants.ContentType)]
+    [Export(typeof(IAsyncQuickInfoSourceProvider)), ContentType(Constants.ContentType)]
     [Name("Tooltip Source Provider")]
-    internal class QuickInfoSourceProvider : IQuickInfoSourceProvider
+    internal class AsyncQuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
     {
         [Import]
         internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
 
-        public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
+        public IAsyncQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
-            return new QuickInfoSource(this, textBuffer);
+            // This ensures only one instance per textbuffer is created
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new AsyncQuickInfoSource(this, textBuffer));
         }
     }
 
-    internal class QuickInfoSource : IQuickInfoSource
+    internal class AsyncQuickInfoSource : IAsyncQuickInfoSource
     {
-        private readonly QuickInfoSourceProvider provider;
+        private readonly AsyncQuickInfoSourceProvider provider;
         private readonly ITextBuffer buffer;
 
-        public QuickInfoSource(QuickInfoSourceProvider provider, ITextBuffer buffer)
+        public AsyncQuickInfoSource(AsyncQuickInfoSourceProvider provider, ITextBuffer buffer)
         {
             this.provider = provider;
             this.buffer = buffer;
         }
 
-        public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> quickInfoContent, out ITrackingSpan applicableToSpan)
+        public Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
-            var snapshot = buffer.CurrentSnapshot;
-            var triggerPoint = session.GetTriggerPoint(snapshot);
-
+            var triggerPoint = session.GetTriggerPoint(buffer.CurrentSnapshot);
             if (triggerPoint.HasValue)
             {
                 var extent = GetExtentOfWord(triggerPoint.Value);
                 if (extent.HasValue)
                 {
-                    var info = Editor.Instance.GetQuickInfo(buffer, extent.Value);
+                    var line = triggerPoint.Value.GetContainingLine();
+                    var lineNumber = triggerPoint.Value.GetContainingLine().LineNumber;
+                    var lineSpan = buffer.CurrentSnapshot.CreateTrackingSpan(line.Extent, SpanTrackingMode.EdgeInclusive);
+                    var lineNumberElm = new ContainerElement(
+                        ContainerElementStyle.Wrapped,
+                        new ClassifiedTextElement(
+                            new ClassifiedTextRun(PredefinedClassificationTypeNames.Keyword, "Line number: "),
+                            new ClassifiedTextRun(PredefinedClassificationTypeNames.Identifier, $"{lineNumber + 1}")
+                        ));
 
-                    if (info != null)
-                    {
-                        applicableToSpan = snapshot.CreateTrackingSpan(extent.Value, SpanTrackingMode.EdgeInclusive);
-                        quickInfoContent.Add(info);
-                        return;
-                    }
+                    var dateElm = new ContainerElement(
+                        ContainerElementStyle.Stacked,
+                        lineNumberElm,
+                        extent.Value);
+
+                    return Task.FromResult(new QuickInfoItem(lineSpan, dateElm));
                 }
             }
 
-            applicableToSpan = null;
+            return Task.FromResult<QuickInfoItem>(null);
         }
 
         private bool disposed;
@@ -121,65 +130,6 @@ namespace Typewriter.TemplateEditor.Controllers
             }
 
             return null;
-        }
-    }
-
-    [Export(typeof(IIntellisenseControllerProvider)), ContentType(Constants.ContentType)]
-    [Name("Intellisense Controller Provider")]
-    internal class QuickInfoControllerProvider : IIntellisenseControllerProvider
-    {
-        [Import]
-        internal IQuickInfoBroker QuickInfoBroker { get; set; }
-
-        public IIntellisenseController TryCreateIntellisenseController(ITextView textView, IList<ITextBuffer> subjectBuffers)
-        {
-            return new QuickInfoController(textView, subjectBuffers, this);
-        }
-    }
-
-    internal class QuickInfoController : IIntellisenseController
-    {
-        private ITextView view;
-        private readonly IList<ITextBuffer> buffers;
-        private readonly QuickInfoControllerProvider provider;
-
-        internal QuickInfoController(ITextView view, IList<ITextBuffer> buffers, QuickInfoControllerProvider provider)
-        {
-            this.view = view;
-            this.buffers = buffers;
-            this.provider = provider;
-
-            view.MouseHover += OnTextViewMouseHover;
-        }
-
-        private void OnTextViewMouseHover(object sender, MouseHoverEventArgs e)
-        {
-            var point = view.BufferGraph.MapDownToFirstMatch(new SnapshotPoint(view.TextSnapshot, e.Position), PointTrackingMode.Positive,
-                snapshot => buffers.Contains(snapshot.TextBuffer), PositionAffinity.Predecessor);
-
-            if (point == null) return;
-
-            if (!provider.QuickInfoBroker.IsQuickInfoActive(view))
-            {
-                var triggerPoint = point.Value.Snapshot.CreateTrackingPoint(point.Value.Position, PointTrackingMode.Positive);
-                provider.QuickInfoBroker.TriggerQuickInfo(view, triggerPoint, true);
-            }
-        }
-
-        public void Detach(ITextView textView)
-        {
-            if (view != textView) return;
-
-            textView.MouseHover -= OnTextViewMouseHover;
-            view = null;
-        }
-
-        public void ConnectSubjectBuffer(ITextBuffer subjectBuffer)
-        {
-        }
-
-        public void DisconnectSubjectBuffer(ITextBuffer subjectBuffer)
-        {
         }
     }
 }

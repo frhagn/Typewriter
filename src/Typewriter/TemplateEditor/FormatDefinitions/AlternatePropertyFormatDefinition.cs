@@ -7,7 +7,7 @@ using Typewriter.VisualStudio;
 namespace Typewriter.TemplateEditor.FormatDefinitions
 {
     [Export(typeof (EditorFormatDefinition)), Name("TypeScript Template Alternate Property")]
-    [ClassificationType(ClassificationTypeNames = Classifications.AlternalteProperty)]
+    [ClassificationType(ClassificationTypeNames = Classifications.AlternateProperty)]
     internal sealed class AlternatePropertyFormatDefinition : ClassificationFormatDefinition
     {
         private static readonly Color _light = Color.FromRgb(228, 94, 43);
