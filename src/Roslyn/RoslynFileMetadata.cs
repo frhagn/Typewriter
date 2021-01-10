@@ -33,6 +33,9 @@ namespace Typewriter.Metadata.Roslyn
         public IEnumerable<IEnumMetadata> Enums => RoslynEnumMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<EnumDeclarationSyntax>());
         public IEnumerable<IInterfaceMetadata> Interfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<InterfaceDeclarationSyntax>(), this);
 
+        public IEnumerable<IRecordMetadata> Records =>
+            RoslynRecordMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<RecordDeclarationSyntax>(), this);
+
         private void LoadDocument(Document document)
         {
             _document = document;

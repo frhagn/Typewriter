@@ -22,7 +22,7 @@ namespace Typewriter.VisualStudio
     [Guid(Constants.ExtensionPackageId)]
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
-    [InstalledProductRegistration("#110", "#112", "1.22.0", IconResourceID = 401)]
+    [InstalledProductRegistration("#110", "#112", "1.30.0", IconResourceID = 401)]
     [ProvideLanguageService(typeof(LanguageService), Constants.LanguageName, 100, DefaultToInsertSpaces = true)]
     [ProvideLanguageExtension(typeof(LanguageService), Constants.TemplateExtension)]
     [ProvideMenuResource("Menus.ctmenu", 1)]

@@ -53,6 +53,7 @@
     <Compile Include="Interfaces\INamedItem.cs" />
     <Compile Include="Interfaces\IParameterMetadata.cs" />
     <Compile Include="Interfaces\IPropertyMetadata.cs" />
+    <Compile Include="Interfaces\IRecordMetadata.cs" />
     <Compile Include="Interfaces\ITypeParameterMetadata.cs" />
     <Compile Include="Interfaces\ITypeMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -58,6 +58,7 @@
     <Compile Include="RoslynMethodMetadata.cs" />
     <Compile Include="RoslynParameterMetadata.cs" />
     <Compile Include="RoslynPropertyMetadata.cs" />
+    <Compile Include="RoslynRecordMetadata.cs" />
     <Compile Include="RoslynTypeMetadata.cs" />
     <Compile Include="RoslynTypeParameterMetadata.cs" />
   </ItemGroup>

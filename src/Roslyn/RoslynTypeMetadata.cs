@@ -95,10 +95,13 @@ namespace Typewriter.Metadata.Roslyn
         }
 
         public bool IsEnum => symbol.TypeKind == TypeKind.Enum;
-        public bool IsEnumerable => symbol.ToDisplayString() != "string" && (
-            symbol.TypeKind == TypeKind.Array ||
-            symbol.ToDisplayString() == "System.Collections.IEnumerable" ||
-            symbol.AllInterfaces.Any(i => i.ToDisplayString() == "System.Collections.IEnumerable"));
+
+        public bool IsEnumerable => symbol.ToDisplayString() != "string" &&
+                                    symbol.ToDisplayString() != "string?" && (
+                                        symbol.TypeKind == TypeKind.Array ||
+                                        symbol.ToDisplayString() == "System.Collections.IEnumerable" ||
+                                        symbol.AllInterfaces.Any(i =>
+                                            i.ToDisplayString() == "System.Collections.IEnumerable"));
         public bool IsNullable => isNullable;
         public bool IsTask => isTask;
 

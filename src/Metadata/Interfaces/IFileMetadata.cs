@@ -10,5 +10,6 @@ namespace Typewriter.Metadata.Interfaces
         IEnumerable<IDelegateMetadata> Delegates { get; }
         IEnumerable<IEnumMetadata> Enums { get; }
         IEnumerable<IInterfaceMetadata> Interfaces { get; }
+        IEnumerable<IRecordMetadata> Records { get; }
     }
 }
