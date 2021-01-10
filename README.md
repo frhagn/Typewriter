@@ -1,9 +1,15 @@
-# Typewriter
+# Typewriter (Unofficial fork)
+
 Typewriter is a Visual Studio extensions that generates TypeScript files from c# code files using TypeScript Templates.
 This allows you to create fully typed TypeScript representations of server side API, models, controllers, SignalR hubs etc. that automatically updates when you make changes to your c# code.
 
-[Documentation](http://frhagn.github.io/Typewriter)  
-[Download from Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6)
+[Original Documentation](http://frhagn.github.io/Typewriter)  
+[Download from Visual Studio Gallery old version 1.22.0](https://visualstudiogallery.msdn.microsoft.com/e1d68248-f30e-4a5d-bf18-31399a0bcfa6)
+
+## Why new fork?
+
+It seems that Fredrik Hagnelius author of Typewriter is very busy and do not have enough time for supporting that extensions.
+From the other side that extensions really helps fulstack developers and work on it should be continued.
 
 ## Issues
 The issue tracker is the preferred channel for bug reports, features requests and submitting pull requests.   
