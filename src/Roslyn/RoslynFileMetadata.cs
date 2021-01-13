@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.VisualStudio.Shell;
 using Typewriter.Configuration;
 using Typewriter.Metadata.Interfaces;
 
@@ -32,11 +33,17 @@ namespace Typewriter.Metadata.Roslyn
         public IEnumerable<IEnumMetadata> Enums => RoslynEnumMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<EnumDeclarationSyntax>());
         public IEnumerable<IInterfaceMetadata> Interfaces => RoslynInterfaceMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<InterfaceDeclarationSyntax>(), this);
 
+        public IEnumerable<IRecordMetadata> Records =>
+            RoslynRecordMetadata.FromNamedTypeSymbols(GetNamespaceChildNodes<RecordDeclarationSyntax>(), this);
+
         private void LoadDocument(Document document)
         {
             _document = document;
-            _semanticModel = document.GetSemanticModelAsync().Result;
-            _root = _semanticModel.SyntaxTree.GetRoot();
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                _semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(true);
+                _root = await _semanticModel.SyntaxTree.GetRootAsync().ConfigureAwait(true);
+            });
         }
 
         private IEnumerable<INamedTypeSymbol> GetNamespaceChildNodes<T>() where T : SyntaxNode

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 using Typewriter.VisualStudio;
 using VSLangProj;
 
@@ -13,90 +13,113 @@ namespace Typewriter.Generation.Controllers
     {
         public static string Path(this ProjectItem projectItem)
         {
-            try
+            return ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                return projectItem.Properties.Item("FullPath").Value.ToString();
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Cannot find path of project item {e.Message}");
-            }
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                try
+                {
+                    return projectItem.Properties.Item("FullPath").Value.ToString();
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Cannot find path of project item {e.Message}");
+                }
 
-            return null;
+                return null;
+            });
         }
 
         public static IEnumerable<Project> AllProjects(this Solution solution)
         {
-            return GetProjects(solution.Projects);
+            return ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                return GetProjects(solution.Projects);
+            });
         }
 
         public static IEnumerable<ProjectItem> AllProjectItems(this Project project, string extension)
         {
-            if (project.ProjectItems == null)
-                return Enumerable.Empty<ProjectItem>();
+            return ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                if (project.ProjectItems == null)
+                    return Enumerable.Empty<ProjectItem>();
 
-            return GetProjectItems(project.ProjectItems, extension);
+                return GetProjectItems(project.ProjectItems, extension);
+            });
         }
 
         private static IEnumerable<Project> GetProjects(Projects projects)
         {
-            var list = new List<Project>();
-            var item = projects.GetEnumerator();
-            while (item.MoveNext())
+            return ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var project = item.Current as Project;
-                if (project == null)
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                var list = new List<Project>();
+                var item = projects.GetEnumerator();
+                while (item.MoveNext())
                 {
-                    continue;
+                    if (!(item.Current is Project project))
+                    {
+                        continue;
+                    }
+
+                    if (string.Equals(project.Kind, EnvDTE.Constants.vsProjectKindUnmodeled,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if (string.Equals(project.Kind, ProjectKinds.vsProjectKindSolutionFolder,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        list.AddRange(GetSolutionFolderProjects(project));
+                    }
+                    else
+                    {
+                        list.Add(project);
+                    }
                 }
 
-                if (string.Equals(project.Kind, EnvDTE.Constants.vsProjectKindUnmodeled, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                if (string.Equals(project.Kind, ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
-                {
-                    list.AddRange(GetSolutionFolderProjects(project));
-                }
-                else
-                {
-                    list.Add(project);
-                }
-            }
-
-            return list;
+                return list;
+            });
         }
 
         private static IEnumerable<Project> GetSolutionFolderProjects(Project solutionFolder)
         {
-            var list = new List<Project>();
-
-            for (var i = 1; i <= solutionFolder.ProjectItems.Count; i++)
+            return ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var subProject = solutionFolder.ProjectItems.Item(i).SubProject;
-                if (subProject == null)
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                var list = new List<Project>();
+
+                for (var i = 1; i <= solutionFolder.ProjectItems.Count; i++)
                 {
-                    continue;
+                    var subProject = solutionFolder.ProjectItems.Item(i).SubProject;
+                    if (subProject == null)
+                    {
+                        continue;
+                    }
+
+                    if (string.Equals(subProject.Kind, EnvDTE.Constants.vsProjectKindUnmodeled,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    // If this is another solution folder, do a recursive call, otherwise add
+                    if (string.Equals(subProject.Kind, ProjectKinds.vsProjectKindSolutionFolder,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        list.AddRange(GetSolutionFolderProjects(subProject));
+                    }
+                    else
+                    {
+                        list.Add(subProject);
+                    }
                 }
 
-                if (string.Equals(subProject.Kind, EnvDTE.Constants.vsProjectKindUnmodeled, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                // If this is another solution folder, do a recursive call, otherwise add
-                if (string.Equals(subProject.Kind, ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
-                {
-                    list.AddRange(GetSolutionFolderProjects(subProject));
-                }
-                else
-                {
-                    list.Add(subProject);
-                }
-            }
-
-            return list;
+                return list;
+            });
         }
 
         private static IEnumerable<ProjectItem> GetProjectItems(ProjectItems projectItems, string extension)

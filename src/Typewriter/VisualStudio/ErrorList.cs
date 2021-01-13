@@ -81,8 +81,7 @@ namespace Typewriter.VisualStudio
                 var project = projectItem.ContainingProject.FileName;
                 var filename = projectItem.FileNames[0];
 
-                IVsHierarchy hierarchyItem;
-                _ivsSolution.GetProjectOfUniqueName(project, out hierarchyItem);
+                _ivsSolution.GetProjectOfUniqueName(project, out var hierarchyItem);
 
                 var errorTask = new ErrorTask
                 {

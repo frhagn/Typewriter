@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Collections.Generic;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using Typewriter.Configuration;
 
 namespace Typewriter.CodeModel.Configuration
@@ -47,9 +46,16 @@ namespace Typewriter.CodeModel.Configuration
         public override Settings IncludeAllProjects()
         {
             if (_includedProjects == null)
+            {
                 _includedProjects = new List<string>();
+            }
 
-            ProjectHelpers.AddAllProjects(_projectItem.DTE, _includedProjects);
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                ProjectHelpers.AddAllProjects(_projectItem.DTE, _includedProjects);
+            });
             return this;
         }
 

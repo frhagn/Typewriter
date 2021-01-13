@@ -31,15 +31,13 @@ namespace Typewriter.Metadata.CodeDom
         {
             var index = 0;
 
-            var parentClass = codeFunction.Parent as CodeClass2;
-            if (parentClass != null)
+            if (codeFunction.Parent is CodeClass2 parentClass)
             {
                 index = parentClass.FullName.Length + 1;
             }
             else
             {
-                var parentInterface = codeFunction.Parent as CodeInterface2;
-                if (parentInterface != null)
+                if (codeFunction.Parent is CodeInterface2 parentInterface)
                 {
                     index = parentInterface.FullName.Length + 1;
                 }

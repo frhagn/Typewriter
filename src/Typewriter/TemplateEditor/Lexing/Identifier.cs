@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Language.Intellisense;
-using Typewriter.TemplateEditor.Lexing.Roslyn;
+using XmlDocumentationProvider = Typewriter.TemplateEditor.Lexing.Roslyn.XmlDocumentationProvider;
 
 namespace Typewriter.TemplateEditor.Lexing
 {
@@ -83,15 +83,13 @@ namespace Typewriter.TemplateEditor.Lexing
 
             if (symbol != null)
             {
-                var p = symbol as IPropertySymbol;
-                if (p != null)
+                if (symbol is IPropertySymbol p)
                 {
                     summary = p.Type.ToDisplayString() + " " + p.Name;
                 }
                 else
                 {
-                    var m = symbol as IMethodSymbol;
-                    if (m != null)
+                    if (symbol is IMethodSymbol m)
                     {
                         var prefix = m.IsExtensionMethod ? "(extension) " : "";
                         summary = string.Concat(prefix, m.ReturnType.ToDisplayString(), " ", m.ToDisplayString());
@@ -144,13 +142,12 @@ namespace Typewriter.TemplateEditor.Lexing
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var node in element.Nodes())
             {
-                var textNode = node as XText;
-                if (textNode != null)
+                if (node is XText textNode)
                 {
                     stringBuilder.Append(textNode.Value);
                 }
-                var elementNode = node as XElement;
-                if (elementNode != null && elementNode.Name == "see")
+
+                if (node is XElement elementNode && elementNode.Name == "see")
                 {
                     var crefAttribute = elementNode.Attributes("cref").FirstOrDefault();
                     if (crefAttribute != null)

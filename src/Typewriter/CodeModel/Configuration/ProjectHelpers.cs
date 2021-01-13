@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using Typewriter.Generation.Controllers;
 using Typewriter.VisualStudio;
 using VSLangProj;
@@ -13,55 +14,69 @@ namespace Typewriter.CodeModel.Configuration
     {
         internal static void AddProject(ProjectItem projectItem, ICollection<string> projectList, string projectName)
         {
-            foreach (var project in projectItem.DTE.Solution.AllProjects())
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                try
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                foreach (var project in projectItem.DTE.Solution.AllProjects())
                 {
-                    if (project.Name == projectName)
+                    try
                     {
-                        AddProject(projectList, project);
-                        return;
+                        if (project.Name == projectName)
+                        {
+                            AddProject(projectList, project);
+                            return;
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Debug($"Cannot add project named '{projectName}' ({exception.Message})");
                     }
                 }
-                catch (Exception exception)
-                {
-                    Log.Debug($"Cannot add project named '{projectName}' ({exception.Message})");
-                }
-            }
 
-            string message = $"Cannot find project named '{projectName}'";
+                string message = $"Cannot find project named '{projectName}'";
 
-            ErrorList.AddWarning(projectItem, message);
-            Log.Warn(message);
+                ErrorList.AddWarning(projectItem, message);
+                Log.Warn(message);
+            });
         }
 
         internal static void AddCurrentProject(ICollection<string> projectList, ProjectItem projectItem)
         {
-            var vsproject = projectItem.ContainingProject.Object as VSProject;
-            if (vsproject != null)
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                AddProject(projectList, projectItem.ContainingProject);
-            }
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                if (projectItem.ContainingProject.Object is VSProject)
+                {
+                    AddProject(projectList, projectItem.ContainingProject);
+                }
+            });
         }
 
         internal static void AddReferencedProjects(ICollection<string> projectList, ProjectItem projectItem)
         {
-            var vsproject = projectItem.ContainingProject.Object as VSProject;
-            if (vsproject != null)
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                foreach (Reference reference in vsproject.References)
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                if (projectItem.ContainingProject.Object is VSProject vsproject)
                 {
-                    AddProject(projectList, reference.SourceProject);
+                    foreach (Reference reference in vsproject.References)
+                    {
+                        AddProject(projectList, reference.SourceProject);
+                    }
                 }
-            }
+            });
         }
 
         internal static void AddAllProjects(DTE dte, ICollection<string> projectList)
         {
-            foreach (var project in dte.Solution.AllProjects())
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                AddProject(projectList, project);
-            }
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                foreach (var project in dte.Solution.AllProjects())
+                {
+                    AddProject(projectList, project);
+                }
+            });
         }
 
         internal static IEnumerable<string> GetProjectItems(DTE dte, ICollection<string> projectList, string filter)
@@ -87,19 +102,23 @@ namespace Typewriter.CodeModel.Configuration
 
         internal static bool ProjectListContainsItem(DTE dte, string filename, ICollection<string> projectList)
         {
-            try
+            return ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var projectItem = dte.Solution.FindProjectItem(filename);
-                if (projectItem == null)
-                    return false;
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                try
+                {
+                    var projectItem = dte.Solution.FindProjectItem(filename);
+                    if (projectItem == null)
+                        return false;
 
-                return projectList.Contains(projectItem.ContainingProject.FullName);
-            }
-            catch (Exception exception)
-            {
-                Log.Debug($"Cannot find project item '{filename}' ({exception.Message})");
-                return false;
-            }
+                    return projectList.Contains(projectItem.ContainingProject.FullName);
+                }
+                catch (Exception exception)
+                {
+                    Log.Debug($"Cannot find project item '{filename}' ({exception.Message})");
+                    return false;
+                }
+            });
         }
 
         private static void AddProject(ICollection<string> projectList, Project project)

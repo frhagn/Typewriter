@@ -7,7 +7,7 @@ namespace Typewriter.Generation
 {
     public class SolutionFilesHelper
     {
-        private DTE dte;
+        private readonly DTE dte;
 
         public SolutionFilesHelper()
         {
@@ -31,6 +31,11 @@ namespace Typewriter.Generation
         public IEnumerable<ProjectItem> Recurse(ProjectItem i)
         {
             yield return i;
+            if (i is null)
+            {
+                yield break;
+            }
+
             foreach (ProjectItem j in Recurse(i.ProjectItems))
             {
                 yield return j;

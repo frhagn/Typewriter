@@ -36,6 +36,8 @@ namespace Typewriter.Metadata.CodeDom
             CodeDomInterfaceMetadata.FromCodeElements(projectItem.FileCodeModel.CodeElements, this)
             .Concat(Namespaces.SelectMany(n => CodeDomInterfaceMetadata.FromCodeElements(n.Members, this)));
 
+        public IEnumerable<IRecordMetadata> Records => Enumerable.Empty<IRecordMetadata>();
+
         internal CodeType GetType(string fullName)
         {
             return typeFactory.GetType(fullName);

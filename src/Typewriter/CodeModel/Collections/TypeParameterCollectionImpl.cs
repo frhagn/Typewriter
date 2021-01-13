@@ -11,6 +11,11 @@ namespace Typewriter.CodeModel.Collections
 
         protected override IEnumerable<string> GetItemFilter(TypeParameter item)
         {
+            if (item is null)
+            {
+                yield break;
+            }
+
             yield return item.Name;
         }
 

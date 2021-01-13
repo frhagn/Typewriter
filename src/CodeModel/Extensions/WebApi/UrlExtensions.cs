@@ -141,8 +141,7 @@ namespace Typewriter.Extensions.WebApi
         {
             if ((route.Contains("{controller}") || route.Contains("[controller]")) && method.Parameters.Any(p => p.name == "controller") == false)
             {
-                var parent = method.Parent as Class;
-                if (parent != null)
+                if (method.Parent is Class parent)
                 {
                     var controller = parent.Name;
                     if (controller.EndsWith("Controller"))

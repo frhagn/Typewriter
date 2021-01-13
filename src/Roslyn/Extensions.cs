@@ -7,8 +7,7 @@ namespace Typewriter.Metadata.Roslyn
     {
         public static string GetName(this ISymbol symbol)
         {
-            var array = symbol as IArrayTypeSymbol;
-            return array != null ? $"{array.ElementType}[]" : symbol.Name;
+            return symbol is IArrayTypeSymbol array ? $"{array.ElementType}[]" : symbol.Name;
         }
 
         public static string GetFullName(this ISymbol symbol)
@@ -19,8 +18,7 @@ namespace Typewriter.Metadata.Roslyn
             if (symbol is IDynamicTypeSymbol)
                 return symbol.Name;
 
-            var type = symbol as INamedTypeSymbol;
-            var name = (type != null) ? GetFullTypeName(type) : symbol.Name;
+            var name = (symbol is INamedTypeSymbol type) ? GetFullTypeName(type) : symbol.Name;
 
             var namespaceSymbol = symbol.ContainingSymbol as INamespaceSymbol;
             if (namespaceSymbol?.IsGlobalNamespace == true)
@@ -28,8 +26,7 @@ namespace Typewriter.Metadata.Roslyn
                 return name;
             }
 
-            var array = symbol as IArrayTypeSymbol;
-            if (array != null)
+            if (symbol is IArrayTypeSymbol array)
             {
                 return "System.Collections.Generic.ICollection<" + GetFullName(array.ElementType) + ">";
             }
@@ -59,9 +56,7 @@ namespace Typewriter.Metadata.Roslyn
 
             if (type.Name == "Nullable" && type.ContainingNamespace.Name == "System")
             {
-                var typeSymbol = type.TypeArguments.First() as INamedTypeSymbol;
-
-                if (typeSymbol != null)
+                if (type.TypeArguments.First() is INamedTypeSymbol typeSymbol)
                     return GetFullTypeName(typeSymbol) + "?";
             }
 
@@ -70,8 +65,7 @@ namespace Typewriter.Metadata.Roslyn
                 result += "<";
                 result += string.Join(", ", type.TypeArguments.Select(t =>
                 {
-                    var typeSymbol = t as INamedTypeSymbol;
-                    return typeSymbol == null ? t.Name : GetFullName(typeSymbol);
+                    return !(t is INamedTypeSymbol typeSymbol) ? t.Name : GetFullName(typeSymbol);
                 }));
                 result += ">";
             }

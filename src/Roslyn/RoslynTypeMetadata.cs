@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Typewriter.Metadata.Interfaces;
 
 namespace Typewriter.Metadata.Roslyn
@@ -98,10 +95,13 @@ namespace Typewriter.Metadata.Roslyn
         }
 
         public bool IsEnum => symbol.TypeKind == TypeKind.Enum;
-        public bool IsEnumerable => symbol.ToDisplayString() != "string" && (
-            symbol.TypeKind == TypeKind.Array ||
-            symbol.ToDisplayString() == "System.Collections.IEnumerable" ||
-            symbol.AllInterfaces.Any(i => i.ToDisplayString() == "System.Collections.IEnumerable"));
+
+        public bool IsEnumerable => symbol.ToDisplayString() != "string" &&
+                                    symbol.ToDisplayString() != "string?" && (
+                                        symbol.TypeKind == TypeKind.Array ||
+                                        symbol.ToDisplayString() == "System.Collections.IEnumerable" ||
+                                        symbol.AllInterfaces.Any(i =>
+                                            i.ToDisplayString() == "System.Collections.IEnumerable"));
         public bool IsNullable => isNullable;
         public bool IsTask => isTask;
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Typewriter.CodeModel.Attributes
+﻿namespace Typewriter.CodeModel.Attributes
 {
     /// <summary>
     /// Marks context metadata classes.

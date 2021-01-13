@@ -70,7 +70,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 foreach (var method in methods)
                 {
                     var parameters = method.GetParameters();
-                    if (parameters.Count() != 1) continue;
+                    if (parameters.Length != 1) continue;
 
                     var context = items.Values.FirstOrDefault(c => c.Type == parameters.First().ParameterType);
 

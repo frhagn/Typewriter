@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -91,7 +92,7 @@ namespace Typewriter.TemplateEditor.Lexing
                     var contextIdentifiers = contextSpan.Context.Identifiers;
                     var customIdentifiers = this.tempIdentifiers.GetTempIdentifiers(contextSpan.Context);
                     // Todo: Optimize performance
-                    var extensionIdentifiers = shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using"))
+                    var extensionIdentifiers = shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using", StringComparison.OrdinalIgnoreCase))
                         .SelectMany(s => contextSpan.Context.GetExtensionIdentifiers(s.Code.Remove(0, 5).Trim().TrimEnd(';')));
 
                     return contextIdentifiers.Concat(customIdentifiers).Concat(extensionIdentifiers).OrderBy(i => i.Name);
@@ -108,7 +109,7 @@ namespace Typewriter.TemplateEditor.Lexing
                 return identifiers.OrderBy(i => i.Name);
             }
 
-            return new Identifier[0];
+            return Array.Empty<Identifier>();
         }
 
         // Lexers
@@ -121,7 +122,7 @@ namespace Typewriter.TemplateEditor.Lexing
             if (identifier != null) return identifier;
 
             // Todo: Optimize performance
-            foreach (var snippet in shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using")))
+            foreach (var snippet in shadowClass.Snippets.Where(s => s.Type == SnippetType.Using && s.Code.StartsWith("using", StringComparison.OrdinalIgnoreCase)))
             {
                 identifier = context.GetExtensionIdentifier(snippet.Code.Remove(0, 5).Trim().TrimEnd(';'), name);
                 if (identifier != null) return identifier;
@@ -143,7 +144,7 @@ namespace Typewriter.TemplateEditor.Lexing
             if (contextSpan?.Type == ContextType.Template)
             {
                 var quickInfo = tokens.GetToken(position)?.QuickInfo;
-                if (quickInfo != null && quickInfo.StartsWith("Item Parent"))
+                if (quickInfo != null && quickInfo.StartsWith("Item Parent", StringComparison.OrdinalIgnoreCase))
                 {
                     var parent = contextSpan.ParentContext?.Name;
                     if (parent != null)

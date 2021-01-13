@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Typewriter.CodeModel.Collections;
 using Typewriter.Metadata.Interfaces;
@@ -30,7 +31,7 @@ namespace Typewriter.CodeModel.Implementation
         {
             if (value == null) return null;
 
-            if (value.StartsWith("\"") && value.EndsWith("\""))
+            if (value.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && value.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
             {
                 var trimmed = value.Substring(1, value.Length - 2);
 

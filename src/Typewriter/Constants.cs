@@ -40,6 +40,6 @@ namespace Typewriter
         public const string ClassSymbol = "Tst/ClassSymbol";
         public const string InterfaceSymbol = "Tst/InterfaceSymbol";
         public const string Property = "Tst/Property";
-        public const string AlternalteProperty = "Tst/AlternateProperty";
+        public const string AlternateProperty = "Tst/AlternateProperty";
     }
 }

@@ -1,5 +1,3 @@
-using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
@@ -34,8 +32,7 @@ namespace Typewriter.Metadata.CodeDom
         {
             var index = 0;
 
-            var parentClass = codeDelegate.Parent as CodeClass2;
-            if (parentClass != null)
+            if (codeDelegate.Parent is CodeClass2 parentClass)
             {
                 index = parentClass.FullName.Length + 1;
             }

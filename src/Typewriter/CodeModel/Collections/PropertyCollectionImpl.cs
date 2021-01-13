@@ -10,6 +10,11 @@ namespace Typewriter.CodeModel.Collections
 
         protected override IEnumerable<string> GetAttributeFilter(Property item)
         {
+            if (item is null)
+            {
+                yield break;
+            }
+
             foreach (var attribute in item.Attributes)
             {
                 yield return attribute.Name;
@@ -19,6 +24,11 @@ namespace Typewriter.CodeModel.Collections
 
         protected override IEnumerable<string> GetItemFilter(Property item)
         {
+            if (item is null)
+            {
+                yield break;
+            }
+
             yield return item.Name;
             yield return item.FullName;
         }

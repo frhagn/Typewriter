@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 using Typewriter.CodeModel;
 
 namespace Typewriter.TemplateEditor.Lexing
@@ -519,7 +518,7 @@ namespace Typewriter.TemplateEditor.Lexing
 
         private static string GetPropertyClassification(int depth)
         {
-            return depth % 2 == 0 ? Classifications.Property : Classifications.AlternalteProperty;
+            return depth % 2 == 0 ? Classifications.Property : Classifications.AlternateProperty;
         }
     }
 }

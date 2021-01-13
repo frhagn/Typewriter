@@ -10,6 +10,11 @@ namespace Typewriter.CodeModel.Collections
 
         protected override IEnumerable<string> GetAttributeFilter(Interface item)
         {
+            if (item is null)
+            {
+                yield break;
+            }
+
             foreach (var attribute in item.Attributes)
             {
                 yield return attribute.Name;
@@ -19,6 +24,11 @@ namespace Typewriter.CodeModel.Collections
 
         protected override IEnumerable<string> GetInheritanceFilter(Interface item)
         {
+            if (item is null)
+            {
+                yield break;
+            }
+
             foreach (var implementedInterface in item.Interfaces)
             {
                 yield return implementedInterface.Name;
@@ -28,6 +38,11 @@ namespace Typewriter.CodeModel.Collections
 
         protected override IEnumerable<string> GetItemFilter(Interface item)
         {
+            if (item is null)
+            {
+                yield break;
+            }
+
             yield return item.Name;
             yield return item.FullName;
         }

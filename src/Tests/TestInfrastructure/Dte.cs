@@ -33,13 +33,11 @@ namespace Typewriter.Tests.TestInfrastructure
 
                 while (enumMoniker.Next(1, monikers, IntPtr.Zero) == 0)
                 {
-                    string displayName;
-                    monikers[0].GetDisplayName(bindCtx, null, out displayName);
+                    monikers[0].GetDisplayName(bindCtx, null, out var displayName);
 
                     if (displayName.StartsWith(visualStudioProgId))
                     {
-                        object o;
-                        Marshal.ThrowExceptionForHR(runningObjectTable.GetObject(monikers[0], out o));
+                        Marshal.ThrowExceptionForHR(runningObjectTable.GetObject(monikers[0], out var o));
 
                         var d = (DTE)o;
 

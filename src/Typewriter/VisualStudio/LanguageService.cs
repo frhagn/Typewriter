@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.TextManager.Interop;
@@ -19,7 +18,7 @@ namespace Typewriter.VisualStudio
         [Export, Name(Classifications.Property)]
         internal static ClassificationTypeDefinition PropertyClassificationType { get; set; }
 
-        [Export, Name(Classifications.AlternalteProperty)]
+        [Export, Name(Classifications.AlternateProperty)]
         internal static ClassificationTypeDefinition AlternatePropertyClassificationType { get; set; }
 
         [Export, Name(Classifications.ClassSymbol)]

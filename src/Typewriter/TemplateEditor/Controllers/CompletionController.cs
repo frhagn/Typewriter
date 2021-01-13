@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
@@ -13,7 +12,6 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
-using Typewriter.VisualStudio;
 using VSCommand = Microsoft.VisualStudio.VSConstants.VSStd2KCmdID;
 
 namespace Typewriter.TemplateEditor.Controllers

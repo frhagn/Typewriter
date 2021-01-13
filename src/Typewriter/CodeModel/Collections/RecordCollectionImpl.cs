@@ -1,14 +1,14 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Typewriter.CodeModel.Collections
 {
-    public class ClassCollectionImpl : ItemCollectionImpl<Class>, ClassCollection
+    public class RecordCollectionImpl : ItemCollectionImpl<Record>, RecordCollection
     {
-        public ClassCollectionImpl(IEnumerable<Class> values) : base(values)
+        public RecordCollectionImpl(IEnumerable<Record> values) : base(values)
         {
         }
 
-        protected override IEnumerable<string> GetAttributeFilter(Class item)
+        protected override IEnumerable<string> GetAttributeFilter(Record item)
         {
             if (item is null)
             {
@@ -22,17 +22,17 @@ namespace Typewriter.CodeModel.Collections
             }
         }
 
-        protected override IEnumerable<string> GetInheritanceFilter(Class item)
+        protected override IEnumerable<string> GetInheritanceFilter(Record item)
         {
             if (item is null)
             {
                 yield break;
             }
 
-            if (item.BaseClass != null)
+            if (item.BaseRecord != null)
             {
-                yield return item.BaseClass.Name;
-                yield return item.BaseClass.FullName;
+                yield return item.BaseRecord.Name;
+                yield return item.BaseRecord.FullName;
             }
 
             foreach (var implementedInterface in item.Interfaces)
@@ -42,7 +42,7 @@ namespace Typewriter.CodeModel.Collections
             }
         }
 
-        protected override IEnumerable<string> GetItemFilter(Class item)
+        protected override IEnumerable<string> GetItemFilter(Record item)
         {
             if (item is null)
             {
