@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.TestInfrastructure;
@@ -9,7 +10,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Interfaces"), Collection(nameof(CodeDomFixture))]
     public class CodeDomInterfaceTests : InterfaceTests
     {
-        public CodeDomInterfaceTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomInterfaceTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -17,7 +18,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Interfaces"), Collection(nameof(RoslynFixture))]
     public class RoslynInterfaceTests : InterfaceTests
     {
-        public RoslynInterfaceTests(RoslynFixture fixture) : base(fixture)
+        public RoslynInterfaceTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -26,7 +27,7 @@ namespace Typewriter.Tests.CodeModel
     {
         private readonly File fileInfo;
 
-        protected InterfaceTests(ITestFixture fixture) : base(fixture)
+        protected InterfaceTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\IInterfaceInfo.cs");
         }

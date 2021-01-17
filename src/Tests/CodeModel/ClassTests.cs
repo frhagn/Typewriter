@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.TestInfrastructure;
@@ -9,7 +10,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Classes"), Collection(nameof(CodeDomFixture))]
     public class CodeDomClassTests : ClassTests
     {
-        public CodeDomClassTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomClassTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -17,7 +18,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Classes"), Collection(nameof(RoslynFixture))]
     public class RoslynClassTests : ClassTests
     {
-        public RoslynClassTests(RoslynFixture fixture) : base(fixture)
+        public RoslynClassTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -26,7 +27,7 @@ namespace Typewriter.Tests.CodeModel
     {
         private readonly File fileInfo;
 
-        protected ClassTests(ITestFixture fixture) : base(fixture)
+        protected ClassTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\ClassInfo.cs");
         }

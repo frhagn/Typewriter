@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Extensions.WebApi;
@@ -10,7 +11,7 @@ namespace Typewriter.Tests.Extensions
     [Trait("Extensions", "WebApi"), Collection(nameof(CodeDomFixture))]
     public class CodeDomWebApiRouteExtensionsTests : WebApiRouteExtensionsTests
     {
-        public CodeDomWebApiRouteExtensionsTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomWebApiRouteExtensionsTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -18,7 +19,7 @@ namespace Typewriter.Tests.Extensions
     [Trait("Extensions", "WebApi"), Collection(nameof(RoslynFixture))]
     public class RoslynWebApiRouteExtensionsTests : WebApiRouteExtensionsTests
     {
-        public RoslynWebApiRouteExtensionsTests(RoslynFixture fixture) : base(fixture)
+        public RoslynWebApiRouteExtensionsTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -28,7 +29,7 @@ namespace Typewriter.Tests.Extensions
         private readonly File fileInfo;
         private readonly File routeLessControllerInfo;
 
-        protected WebApiRouteExtensionsTests(ITestFixture fixture) : base(fixture)
+        protected WebApiRouteExtensionsTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             fileInfo = GetFile(@"Tests\Extensions\Support\RouteController.cs");
             routeLessControllerInfo = GetFile(@"Tests\Extensions\Support\RouteLessController.cs");

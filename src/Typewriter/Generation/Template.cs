@@ -237,6 +237,10 @@ namespace Typewriter.Generation
         {
             if (_projectItem == null) throw new ArgumentNullException(nameof(item));
             if (path == null) throw new ArgumentNullException(nameof(path));
+            if (item == null)
+            {
+                return;
+            }
 
             var pathUri = new Uri(path);
             var folderUri = new Uri(_projectPath.Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar);

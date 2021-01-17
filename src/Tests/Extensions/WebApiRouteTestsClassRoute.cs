@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Extensions.WebApi;
@@ -10,7 +11,7 @@ namespace Typewriter.Tests.Extensions
     [Trait("Extensions", "WebApi"), Collection(nameof(CodeDomFixture))]
     public class CodeDomWebApiRouteClassRouteExtensionsTests : WebApiRouteClassRouteExtensionsTests
     {
-        public CodeDomWebApiRouteClassRouteExtensionsTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomWebApiRouteClassRouteExtensionsTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -18,7 +19,7 @@ namespace Typewriter.Tests.Extensions
     [Trait("Extensions", "WebApi"), Collection(nameof(RoslynFixture))]
     public class RoslynWebApiRouteClassRouteExtensionsTests : WebApiRouteClassRouteExtensionsTests
     {
-        public RoslynWebApiRouteClassRouteExtensionsTests(RoslynFixture fixture) : base(fixture)
+        public RoslynWebApiRouteClassRouteExtensionsTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -29,7 +30,7 @@ namespace Typewriter.Tests.Extensions
         private readonly File inheritedFileInfo;
 
 
-        protected WebApiRouteClassRouteExtensionsTests(ITestFixture fixture) : base(fixture)
+        protected WebApiRouteClassRouteExtensionsTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             fileInfo = GetFile(@"Tests\Extensions\Support\RouteControllerWithDefaultRoute.cs");
             inheritedFileInfo = GetFile(@"Tests\Extensions\Support\InheritedController.cs");

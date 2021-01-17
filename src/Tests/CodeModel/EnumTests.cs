@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.TestInfrastructure;
@@ -9,7 +10,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Enums"), Collection(nameof(CodeDomFixture))]
     public class CodeDomEnumTests : EnumTests
     {
-        public CodeDomEnumTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomEnumTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -17,7 +18,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Enums"), Collection(nameof(RoslynFixture))]
     public class RoslynEnumTests : EnumTests
     {
-        public RoslynEnumTests(RoslynFixture fixture) : base(fixture)
+        public RoslynEnumTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -26,7 +27,7 @@ namespace Typewriter.Tests.CodeModel
     {
         private readonly File fileInfo;
 
-        protected EnumTests(ITestFixture fixture) : base(fixture)
+        protected EnumTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\EnumInfo.cs");
         }

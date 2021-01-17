@@ -7,6 +7,7 @@ using File = Typewriter.CodeModel.File;
 using Typewriter.Configuration;
 using Typewriter.CodeModel.Configuration;
 using System;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
@@ -20,8 +21,9 @@ namespace Typewriter.Tests.TestInfrastructure
         protected readonly bool isRoslyn;
         protected readonly bool isCodeDom;
 
-        protected TestBase(ITestFixture fixture)
+        protected TestBase(ITestFixture fixture, GlobalServiceProvider sp)
         {
+            //sp.Reset();
             this.dte = fixture.Dte;
             this.metadataProvider = fixture.Provider;
 

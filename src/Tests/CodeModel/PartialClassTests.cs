@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.TestInfrastructure;
@@ -11,7 +12,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "PartialClasses"), Collection(nameof(RoslynFixture))]
     public class RoslynPartialClassTests : TestBase
     {
-        public RoslynPartialClassTests(RoslynFixture fixture) : base(fixture)
+        public RoslynPartialClassTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
 

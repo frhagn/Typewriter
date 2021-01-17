@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.TestInfrastructure;
@@ -13,20 +14,20 @@ namespace Typewriter.Tests.Metadata.Roslyn
     [Trait("CodeModel", "PartialClasses"), Collection(nameof(RoslynFixture))]
     public class RoslynClassMetadataTests : TestBase
     {
-        public RoslynClassMetadataTests(RoslynFixture fixture) : base(fixture)
+        public RoslynClassMetadataTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
 
         private File GetFile(PartialRenderingMode partialRenderingMode)
         {
             var settings = new SettingsImpl(null) { PartialRenderingMode = partialRenderingMode };
-            return GetFile(@"Tests\CodeModel\Support\GeneratedClass.cs", settings);
+            return GetFile(@"Tests\Metadata\Support\GeneratedClass.cs", settings);
         }
 
         [Fact]
         public void Expect_all_properties_to_exist()
         {
-            var fileInfo = GetFile(PartialRenderingMode.Combined);
+            var fileInfo = GetFile(PartialRenderingMode.Partial);
             var classInfo = fileInfo.Classes.First();
             var properties = typeof(GeneratedClass).GetProperties();
 
@@ -37,7 +38,7 @@ namespace Typewriter.Tests.Metadata.Roslyn
         [Fact]
         public void Expect_property_attributes_to_exist()
         {
-            var fileInfo = GetFile(PartialRenderingMode.Combined);
+            var fileInfo = GetFile(PartialRenderingMode.Partial);
             var classInfo = fileInfo.Classes.First();
 
             classInfo.Properties.Any(propertyInfo =>

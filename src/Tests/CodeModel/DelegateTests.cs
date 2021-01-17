@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.TestInfrastructure;
@@ -9,7 +10,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Delegates"), Collection(nameof(CodeDomFixture))]
     public class CodeDomDelegateTests : DelegateTests
     {
-        public CodeDomDelegateTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomDelegateTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -17,7 +18,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Delegates"), Collection(nameof(RoslynFixture))]
     public class RoslynDelegateTests : DelegateTests
     {
-        public RoslynDelegateTests(RoslynFixture fixture) : base(fixture)
+        public RoslynDelegateTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -26,7 +27,7 @@ namespace Typewriter.Tests.CodeModel
     {
         private readonly File fileInfo;
 
-        protected DelegateTests(ITestFixture fixture) : base(fixture)
+        protected DelegateTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\DelegateInfo.cs");
         }

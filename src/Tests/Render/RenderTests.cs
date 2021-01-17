@@ -1,4 +1,5 @@
-﻿using Should;
+﻿using Microsoft.VisualStudio.Sdk.TestFramework;
+using Should;
 using Typewriter.Generation;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
@@ -8,7 +9,7 @@ namespace Typewriter.Tests.Render
     [Trait("Render", "CodeDom"), Collection(nameof(CodeDomFixture))]
     public class CodeDomRenderTests : RenderTests
     {
-        public CodeDomRenderTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomRenderTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -16,14 +17,14 @@ namespace Typewriter.Tests.Render
     [Trait("Render", "Roslyn"), Collection(nameof(RoslynFixture))]
     public class RoslynRenderTests : RenderTests
     {
-        public RoslynRenderTests(RoslynFixture fixture) : base(fixture)
+        public RoslynRenderTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
 
     public abstract class RenderTests : TestBase
     {
-        protected RenderTests(ITestFixture fixture) : base(fixture)
+        protected RenderTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
 

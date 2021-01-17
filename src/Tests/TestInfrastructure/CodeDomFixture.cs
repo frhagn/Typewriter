@@ -1,4 +1,5 @@
 using EnvDTE;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Typewriter.Metadata.CodeDom;
 using Typewriter.Metadata.Providers;
 using Xunit;
@@ -26,7 +27,10 @@ namespace Typewriter.Tests.TestInfrastructure
     }
 
     [CollectionDefinition(nameof(CodeDomFixture))]
-    public class CodeDomCollection : ICollectionFixture<CodeDomFixture>
+    public class CodeDomCollection
+        : ICollectionFixture<CodeDomFixture>,
+            ICollectionFixture<GlobalServiceProvider>,
+            ICollectionFixture<MefHostingFixture>
     {
     }
 }

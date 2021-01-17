@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.Tests.TestInfrastructure;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Files"), Collection(nameof(CodeDomFixture))]
     public class CodeDomFileTests : FileTests
     {
-        public CodeDomFileTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomFileTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -18,7 +19,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Files"), Collection(nameof(RoslynFixture))]
     public class RoslynFileTests : FileTests
     {
-        public RoslynFileTests(RoslynFixture fixture) : base(fixture)
+        public RoslynFileTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -27,7 +28,7 @@ namespace Typewriter.Tests.CodeModel
     {
         private readonly File fileInfo;
 
-        protected FileTests(ITestFixture fixture) : base(fixture)
+        protected FileTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\FileInfo.cs");
         }

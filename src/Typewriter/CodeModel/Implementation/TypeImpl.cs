@@ -39,6 +39,7 @@ namespace Typewriter.CodeModel.Implementation
         public override bool IsGuid => FullName == "System.Guid" || FullName == "System.Guid?";
         public override bool IsTimeSpan => FullName == "System.TimeSpan" || FullName == "System.TimeSpan?";
         public override bool IsValueTuple => _metadata.IsValueTuple;
+        public override string DefaultValue => _metadata.DefaultValue;
 
 
         private AttributeCollection _attributes;

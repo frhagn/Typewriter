@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -28,6 +29,7 @@ namespace Typewriter.Metadata.Roslyn
 
         public string Namespace => symbol.GetNamespace();
         public ITypeMetadata Type => this;
+        public string DefaultValue { get; set; }
 
         public IEnumerable<IAttributeMetadata> Attributes => RoslynAttributeMetadata.FromAttributeData(symbol.GetAttributes());
         public IClassMetadata BaseClass => RoslynClassMetadata.FromNamedTypeSymbol(symbol.BaseType);
@@ -136,6 +138,23 @@ namespace Typewriter.Metadata.Roslyn
 
                 return new RoslynVoidTaskMetadata();
             }
+            else if (symbol.BaseType?.SpecialType == SpecialType.System_Enum)
+            {
+                var result = new RoslynTypeMetadata(symbol, false, false);
+                var namedTypeSymbol = symbol as INamedTypeSymbol;
+                
+                var symbols = namedTypeSymbol.GetMembers();
+                if (symbols.Length == 0)
+                {
+                    result.DefaultValue = "enum should contain minimum one enum value";
+                }
+                else
+                {
+                    result.DefaultValue = $"{namedTypeSymbol.Name}.{symbols[0].Name}";
+                }
+
+                return result;
+            }
 
             return new RoslynTypeMetadata(symbol, false, false);
         }
@@ -161,6 +180,7 @@ namespace Typewriter.Metadata.Roslyn
         public bool IsValueTuple => false;
         public string Namespace => "System";
         public ITypeMetadata Type => null;
+        public string DefaultValue => "void(0)";
 
         public IEnumerable<IAttributeMetadata> Attributes => new IAttributeMetadata[0];
         public IClassMetadata BaseClass => null;

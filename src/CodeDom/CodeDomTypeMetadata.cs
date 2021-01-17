@@ -37,6 +37,7 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsTask => isTask;
         public bool IsDefined => CodeType.InfoLocation == vsCMInfoLocation.vsCMInfoLocationProject;
         public bool IsValueTuple => false;
+        public string DefaultValue { get; set; }
         public IEnumerable<IFieldMetadata> TupleElements => new IFieldMetadata[0];
 
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(CodeType.Attributes);
@@ -147,6 +148,22 @@ namespace Typewriter.Metadata.CodeDom
                 }
 
                 return new LazyCodeDomTypeMetadata(name, false, true, file);
+            }
+
+            var isEnum = codeType.Kind == vsCMElement.vsCMElementEnum;
+            if (isEnum)
+            {
+                var result = new CodeDomTypeMetadata(codeType, false, false, file);
+                var members = codeType.Members;
+                if (members?.Count == 0)
+                {
+                    result.DefaultValue = "enum should contain minimum one enum value";
+                }
+                else
+                {
+                    result.DefaultValue = $"{codeType.Name}.{members.OfType<CodeVariable2>().FirstOrDefault().Name}";
+                }
+                return result;
             }
 
             return new CodeDomTypeMetadata(codeType, false, false, file);

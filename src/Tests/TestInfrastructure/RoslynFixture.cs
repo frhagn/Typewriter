@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Typewriter.Metadata.Providers;
 using Xunit;
 
@@ -25,7 +26,10 @@ namespace Typewriter.Tests.TestInfrastructure
     }
 
     [CollectionDefinition(nameof(RoslynFixture))]
-    public class RoslynCollection : ICollectionFixture<RoslynFixture>
+    public class RoslynCollection
+        : ICollectionFixture<RoslynFixture>,
+            ICollectionFixture<GlobalServiceProvider>,
+            ICollectionFixture<MefHostingFixture>
     {
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.TestInfrastructure;
@@ -9,7 +10,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Events"), Collection(nameof(CodeDomFixture))]
     public class CodeDomEventTests : EventTests
     {
-        public CodeDomEventTests(CodeDomFixture fixture) : base(fixture)
+        public CodeDomEventTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -17,7 +18,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "Events"), Collection(nameof(RoslynFixture))]
     public class RoslynEventTests : EventTests
     {
-        public RoslynEventTests(RoslynFixture fixture) : base(fixture)
+        public RoslynEventTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -26,7 +27,7 @@ namespace Typewriter.Tests.CodeModel
     {
         private readonly File fileInfo;
 
-        protected EventTests(ITestFixture fixture) : base(fixture)
+        protected EventTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             fileInfo = GetFile(@"Tests\CodeModel\Support\EventInfo.cs");
         }

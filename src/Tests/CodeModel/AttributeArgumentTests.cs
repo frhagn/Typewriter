@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.VisualStudio.Sdk.TestFramework;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.CodeModel.Support;
@@ -10,7 +11,7 @@ namespace Typewriter.Tests.CodeModel
     [Trait("CodeModel", "AttributeArguments"), Collection(nameof(RoslynFixture))]
     public class RoslynAttributeArgumentTests : AttributeArgumentTests
     {
-        public RoslynAttributeArgumentTests(RoslynFixture fixture) : base(fixture)
+        public RoslynAttributeArgumentTests(RoslynFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
         }
     }
@@ -19,7 +20,7 @@ namespace Typewriter.Tests.CodeModel
     {
         private readonly Class classInfo;
 
-        protected AttributeArgumentTests(ITestFixture fixture) : base(fixture)
+        protected AttributeArgumentTests(ITestFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
         {
             var fileInfo = GetFile(@"Tests\CodeModel\Support\AttributeInfo.cs");
             classInfo = fileInfo.Classes.First(c => c.Name == nameof(AttributeTestClass));

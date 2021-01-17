@@ -180,6 +180,11 @@ namespace Typewriter.CodeModel
         public abstract FieldCollection TupleElements { get; }
 
         /// <summary>
+        /// Default value for the type.
+        /// </summary>
+        public abstract string DefaultValue { get; }
+
+        /// <summary>
         /// Converts the current instance to string.
         /// </summary>
         public static implicit operator string (Type instance)

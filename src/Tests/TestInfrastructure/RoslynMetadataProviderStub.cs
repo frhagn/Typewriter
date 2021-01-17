@@ -18,12 +18,13 @@ namespace Typewriter.Tests.TestInfrastructure
         {
             var solutionPath = dte.Solution.FullName;
             var msBuildWorkspace = MSBuildWorkspace.Create();
-
+            msBuildWorkspace.OpenSolutionAsync(solutionPath).GetAwaiter().GetResult();
+            
             // ReSharper disable once UnusedVariable
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await msBuildWorkspace.OpenSolutionAsync(solutionPath);
-            }).Join();
+            //ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            //{
+            //    await msBuildWorkspace.OpenSolutionAsync(solutionPath);
+            //}).Join();
 
             this.workspace = msBuildWorkspace;
         }
