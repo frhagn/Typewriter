@@ -223,6 +223,11 @@
             Converts the current instance to string.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Class.Type">
+            <summary>
+            Represents a <see cref="T:Typewriter.CodeModel.Type"/>.
+            </summary>
+        </member>
         <member name="M:Typewriter.CodeModel.Class.op_Implicit(Typewriter.CodeModel.Class)~Typewriter.CodeModel.Type">
             <summary>
             Converts the current instance to a Type.
@@ -472,6 +477,11 @@
         <member name="M:Typewriter.CodeModel.Enum.op_Implicit(Typewriter.CodeModel.Enum)~System.String">
             <summary>
             Converts the current instance to string.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Enum.Type">
+            <summary>
+            Represents a <see cref="T:Typewriter.CodeModel.Type"/>.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Enum.op_Implicit(Typewriter.CodeModel.Enum)~Typewriter.CodeModel.Type">
@@ -768,6 +778,11 @@
             Converts the current instance to string.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Interface.Type">
+            <summary>
+            Represents a <see cref="T:Typewriter.CodeModel.Type"/>.
+            </summary>
+        </member>
         <member name="M:Typewriter.CodeModel.Interface.op_Implicit(Typewriter.CodeModel.Interface)~Typewriter.CodeModel.Type">
             <summary>
             Converts the current instance to a Type.
@@ -1046,6 +1061,11 @@
         <member name="M:Typewriter.CodeModel.Record.op_Implicit(Typewriter.CodeModel.Record)~System.String">
             <summary>
             Converts the current instance to string.
+            </summary>
+        </member>
+        <member name="P:Typewriter.CodeModel.Record.Type">
+            <summary>
+            Represents a <see cref="T:Typewriter.CodeModel.Type"/>.
             </summary>
         </member>
         <member name="M:Typewriter.CodeModel.Record.op_Implicit(Typewriter.CodeModel.Record)~Typewriter.CodeModel.Type">
