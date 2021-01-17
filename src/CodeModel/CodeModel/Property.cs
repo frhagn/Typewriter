@@ -39,6 +39,11 @@ namespace Typewriter.CodeModel
         public abstract bool IsAbstract { get; }
 
         /// <summary>
+        /// Determines if the property is virtual.
+        /// </summary>
+        public abstract bool IsVirtual { get; }
+
+        /// <summary>
         /// The name of the property (camelCased).
         /// </summary>
         public abstract string name { get; }

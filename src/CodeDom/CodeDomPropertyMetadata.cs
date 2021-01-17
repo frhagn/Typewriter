@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.CodeDom;
+using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
@@ -25,6 +26,9 @@ namespace Typewriter.Metadata.CodeDom
         public bool IsAbstract => 
             (codeProperty.Getter != null && codeProperty.Getter.MustImplement) || 
             (codeProperty.Setter != null && codeProperty.Setter.MustImplement);
+        public bool IsVirtual => codeProperty.Attributes
+            .OfType<MemberAttributes>()
+            .Any(a => a == MemberAttributes.Final);
         public IEnumerable<IAttributeMetadata> Attributes => CodeDomAttributeMetadata.FromCodeElements(codeProperty.Attributes);
         public ITypeMetadata Type => CodeDomTypeMetadata.FromCodeElement(codeProperty, file);
         

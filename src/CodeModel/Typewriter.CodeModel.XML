@@ -1093,6 +1093,11 @@
             Determines if the property is abstract.
             </summary>
         </member>
+        <member name="P:Typewriter.CodeModel.Property.IsVirtual">
+            <summary>
+            Determines if the property is virtual.
+            </summary>
+        </member>
         <member name="P:Typewriter.CodeModel.Property.name">
             <summary>
             The name of the property (camelCased).

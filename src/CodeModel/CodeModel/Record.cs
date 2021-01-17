@@ -121,6 +121,9 @@ namespace Typewriter.CodeModel
             return instance.ToString();
         }
 
+        /// <summary>
+        /// Represents a <see cref="Typewriter.CodeModel.Type"/>.
+        /// </summary>
         protected abstract Type Type { get; }
 
         /// <summary>

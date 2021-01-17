@@ -59,7 +59,7 @@ namespace Typewriter.CodeModel.Implementation
         public override MethodCollection Methods => _methods ?? (_methods = MethodImpl.FromMetadata(_metadata.Methods, this));
 
         private PropertyCollection _properties;
-        public override PropertyCollection Properties => _properties ?? (_properties = PropertyImpl.FromMetadata(_metadata.Properties, this));
+        public override PropertyCollection Properties => _properties ?? (_properties = PropertyImpl.FromMetadata(GetPropertiesFromClassMetadata(_metadata.Properties), this));
 
         private TypeParameterCollection _typeParameters;
         public override TypeParameterCollection TypeParameters => _typeParameters ?? (_typeParameters = TypeParameterImpl.FromMetadata(_metadata.TypeParameters, this));
@@ -89,6 +89,56 @@ namespace Typewriter.CodeModel.Implementation
         public static Class FromMetadata(IClassMetadata metadata, Item parent)
         {
             return metadata == null ? null : new ClassImpl(metadata, parent);
+        }
+
+        /** 
+         *  Example of this:
+         *  generated type:
+         *  public partial class GeneratedClass
+         *  {
+         *      public string GeneratedProperty { get; set; }
+         *  }
+         *  user-defined type (in separate file):
+         *  [ModelMetadata(typeof(GeneratedClassMetadata))]
+         *  public partial class GeneratedClass
+         *  {
+         *
+         *      internal sealed class GeneratedClassMetadata
+         *      {
+         *          [Column(DataType="varchar")]
+         *          public string GeneratedProperty { get; set; }
+         *      }
+         *  }
+         */
+        /// <summary>
+        /// Gets properties from a Metadata type: A nested class that allows decorators to be applied to generated code using either
+        /// the MetadataType (.NET Framework) or ModelMetadataType (.NET Core) to link it to the original.
+        /// </summary>
+        /// <returns>If there is a metadata type defined, returns a collection of overridden properties merged with the originals.
+        /// Otherwise, returns the original collection.</returns>
+        internal IEnumerable<IPropertyMetadata> GetPropertiesFromClassMetadata(IEnumerable<IPropertyMetadata> originalProperties)
+        {
+            var classMetadata = _metadata.Attributes.FirstOrDefault(a => a.Name == "MetadataType" || a.Name == "ModelMetadataType");
+            if (classMetadata == null)
+            {
+                return originalProperties;
+            }
+
+            var metadataTypeArgument = classMetadata.Arguments.First();
+            var metadataType = metadataTypeArgument.TypeValue;
+            if (metadataType == null)
+            {
+                return originalProperties;
+            }
+            //loop through the original properties and use the metadata property whenever it matches the name of an original
+            var mergedProperties = new List<IPropertyMetadata>();
+            foreach (var property in originalProperties)
+            {
+                var metadataProperty = metadataType.Properties
+                    .FirstOrDefault(mp => mp.Name == property.Name);
+                mergedProperties.Add(metadataProperty ?? property);
+            }
+            return mergedProperties;
         }
     }
 }
