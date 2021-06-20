@@ -74,24 +74,24 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <Version>3.3.2</Version>
+      <Version>3.3.3-beta1.21317.1</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
-      <Version>3.8.0</Version>
+      <Version>4.0.0-3.21317.20</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
-      <Version>3.8.0</Version>
+      <Version>4.0.0-3.21317.20</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
-      <Version>16.0.206</Version>
+      <Version>17.0.0-previews-1-31410-273</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="StreamJsonRpc">
-      <Version>2.6.121</Version>
+      <Version>2.8.21</Version>
     </PackageReference>
     <PackageReference Include="xunit.runner.console">
       <Version>2.4.1</Version>
