@@ -260,32 +260,32 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Common">
-      <Version>4.0.0-4.21406.14</Version>
+      <Version>4.0.0-5.21467.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-      <Version>5.0.4-preview1.21405.2</Version>
+      <Version>5.0.4-preview1.21417.2</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common">
-      <Version>4.0.0-4.21406.14</Version>
+      <Version>4.0.0-5.21467.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild">
-      <Version>4.0.0-4.21406.14</Version>
+      <Version>4.0.0-5.21467.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Debugger.Contracts">
-      <Version>17.2.0-beta.21262.1</Version>
+      <Version>17.2.0-beta.21417.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol">
-      <Version>17.0.2063-gd265275e54</Version>
+      <Version>17.0.4103-g225b54d231</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
-      <Version>4.0.0-4.21406.14</Version>
+      <Version>4.0.0-5.21467.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.0-previews-2-31512-422" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.0-previews-3-31605-261" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.2155-preview2">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5210-preview5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

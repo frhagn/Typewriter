@@ -144,30 +144,30 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Buildalyzer.Workspaces">
-      <Version>3.2.2</Version>
+      <Version>3.2.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis">
-      <Version>4.0.0-4.21406.14</Version>
+      <Version>4.0.0-5.21467.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common">
-      <Version>4.0.0-4.21406.14</Version>
+      <Version>4.0.0-5.21467.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common">
-      <Version>4.0.0-4.21406.14</Version>
+      <Version>4.0.0-5.21467.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <Version>3.3.3-beta1.21405.2</Version>
+      <Version>3.3.3-beta1.21417.2</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Debugger.Contracts">
-      <Version>17.2.0-beta.21262.1</Version>
+      <Version>17.2.0-beta.21417.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol">
-      <Version>17.0.2063-gd265275e54</Version>
+      <Version>17.0.4103-g225b54d231</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
-      <Version>4.0.0-4.21406.14</Version>
+      <Version>4.0.0-5.21467.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Sdk.TestFramework">
       <Version>16.5.22-beta</Version>
@@ -179,7 +179,7 @@
       <Version>1.1.20</Version>
     </PackageReference>
     <PackageReference Include="System.ComponentModel.Annotations">
-      <Version>5.0.0</Version>
+      <Version>6.0.0-preview.4.21253.7</Version>
     </PackageReference>
     <PackageReference Include="System.Reflection.TypeExtensions">
       <Version>4.7.0</Version>
