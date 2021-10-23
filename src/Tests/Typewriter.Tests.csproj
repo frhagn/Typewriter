@@ -148,16 +148,16 @@
       <Version>3.2.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis">
-      <Version>4.1.0-1.21511.14</Version>
+      <Version>4.1.0-1.21523.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common">
-      <Version>4.1.0-1.21511.14</Version>
+      <Version>4.1.0-1.21523.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common">
-      <Version>4.1.0-1.21511.14</Version>
+      <Version>4.1.0-1.21523.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <Version>3.3.3-beta1.21417.2</Version>
+      <Version>3.3.3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -168,7 +168,7 @@
       <Version>17.0.4103-g225b54d231</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
-      <Version>4.1.0-1.21511.14</Version>
+      <Version>4.1.0-1.21523.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Sdk.TestFramework">
       <Version>16.5.22-beta</Version>
