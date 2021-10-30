@@ -79,10 +79,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common">
-      <Version>4.1.0-1.21523.2</Version>
+      <Version>4.1.0-2.21529.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
-      <Version>4.1.0-1.21523.2</Version>
+      <Version>4.1.0-2.21529.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Debugger.Contracts">
       <Version>17.2.0</Version>
@@ -91,7 +91,7 @@
       <Version>17.0.4103-g225b54d231</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
-      <Version>4.1.0-1.21523.2</Version>
+      <Version>4.1.0-2.21529.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
       <Version>17.0.0-previews-4-31709-430</Version>

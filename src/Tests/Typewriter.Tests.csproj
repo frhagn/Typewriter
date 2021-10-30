@@ -148,13 +148,13 @@
       <Version>3.2.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis">
-      <Version>4.1.0-1.21523.2</Version>
+      <Version>4.1.0-2.21529.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common">
-      <Version>4.1.0-1.21523.2</Version>
+      <Version>4.1.0-2.21529.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common">
-      <Version>4.1.0-1.21523.2</Version>
+      <Version>4.1.0-2.21529.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
       <Version>3.3.3</Version>
@@ -168,7 +168,7 @@
       <Version>17.0.4103-g225b54d231</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
-      <Version>4.1.0-1.21523.2</Version>
+      <Version>4.1.0-2.21529.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Sdk.TestFramework">
       <Version>16.5.22-beta</Version>
@@ -186,18 +186,18 @@
       <Version>4.7.0</Version>
     </PackageReference>
     <PackageReference Include="xunit">
-      <Version>2.4.1</Version>
+      <Version>2.4.2-pre.12</Version>
     </PackageReference>
     <PackageReference Include="xunit.core">
-      <Version>2.4.1</Version>
+      <Version>2.4.2-pre.12</Version>
     </PackageReference>
     <PackageReference Include="xunit.runner.console">
-      <Version>2.4.1</Version>
+      <Version>2.4.2-pre.12</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="xunit.runner.msbuild">
-      <Version>2.4.1</Version>
+      <Version>2.4.2-pre.12</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
