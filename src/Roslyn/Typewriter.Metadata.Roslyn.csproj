@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -79,19 +80,16 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common">
-      <Version>4.1.0-2.21529.2</Version>
+      <Version>4.0.0-6.final</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
-      <Version>4.1.0-2.21529.2</Version>
+      <Version>4.0.0-6.final</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Debugger.Contracts">
       <Version>17.2.0</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol">
-      <Version>17.0.4103-g225b54d231</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
-      <Version>4.1.0-2.21529.2</Version>
+      <Version>4.0.0-6.final</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
       <Version>17.0.0-previews-4-31709-430</Version>
@@ -100,12 +98,7 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="StreamJsonRpc">
-      <Version>2.9.12-alpha</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.console">
-      <Version>2.4.1</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
+      <Version>2.9.85</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
