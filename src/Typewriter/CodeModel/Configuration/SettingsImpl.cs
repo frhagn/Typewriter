@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Typewriter.Configuration;
@@ -70,6 +71,21 @@ namespace Typewriter.CodeModel.Configuration
                 }
 
                 return _includedProjects;
+            }
+        }
+
+        public override string SolutionFullName
+        {
+            get
+            {
+                var fullName = string.Empty;
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                    fullName = _projectItem.DTE.Solution.FullName;
+                });
+                return fullName;
             }
         }
     }

@@ -45,5 +45,10 @@ namespace Typewriter.Configuration
         /// 
         /// </summary>
         public PartialRenderingMode PartialRenderingMode { get; set; } = PartialRenderingMode.Partial;
+
+        /// <summary>
+        /// Gets full solution name from DTE.
+        /// </summary>
+        public abstract string SolutionFullName { get; }
     }
 }
