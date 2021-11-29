@@ -1431,6 +1431,11 @@
             
             </summary>
         </member>
+        <member name="P:Typewriter.Configuration.Settings.SolutionFullName">
+            <summary>
+            Gets full solution name from DTE.
+            </summary>
+        </member>
         <member name="T:Typewriter.Extensions.Types.TypeExtensions">
             <summary>
             Extension methods for working with types.
