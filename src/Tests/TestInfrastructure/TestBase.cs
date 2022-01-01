@@ -28,7 +28,7 @@ namespace Typewriter.Tests.TestInfrastructure
             this.metadataProvider = fixture.Provider;
 
             this.isRoslyn = fixture is RoslynFixture;
-            this.isCodeDom = fixture is CodeDomFixture;
+            this.isCodeDom = false;
         }
         
         protected string SolutionDirectory => Path.Combine(new FileInfo(dte.Solution.FileName).Directory?.FullName, "src");

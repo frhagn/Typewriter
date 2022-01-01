@@ -85,7 +85,6 @@
     <Compile Include="Metadata\Support\GeneratedClass.cs" />
     <Compile Include="Metadata\Support\GeneratedClass.Additional.cs" />
     <Compile Include="Support\AcceptVerbsAttribute.cs" />
-    <Compile Include="TestInfrastructure\CodeDomFixture.cs" />
     <Compile Include="TestInfrastructure\RoslynFixture.cs" />
     <Compile Include="TestInfrastructure\Dte.cs" />
     <Compile Include="TestInfrastructure\ITestFixture.cs" />
@@ -116,10 +115,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeDom\Typewriter.Metadata.CodeDom.csproj">
-      <Project>{c822d1a9-4c43-4067-a01e-ea38f3138282}</Project>
-      <Name>Typewriter.Metadata.CodeDom</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CodeModel\Typewriter.CodeModel.csproj">
       <Project>{4ec6c920-d234-49f1-b17b-98a4de24ff87}</Project>
       <Name>Typewriter.CodeModel</Name>
@@ -145,7 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Buildalyzer.Workspaces">
-      <Version>3.2.3</Version>
+      <Version>3.2.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis">
       <Version>4.0.1</Version>
@@ -168,7 +163,7 @@
       <Version>4.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Sdk.TestFramework">
-      <Version>16.5.22-beta</Version>
+      <Version>17.0.15</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Shell.Framework">
       <Version>17.0.31902.203</Version>

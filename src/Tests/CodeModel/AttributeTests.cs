@@ -9,15 +9,6 @@ using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("CodeModel", "Attributes"), Collection(nameof(CodeDomFixture))]
-    public class CodeDomAttributeTests : AttributeTests
-    {
-        public CodeDomAttributeTests(CodeDomFixture fixture, GlobalServiceProvider sp)
-            : base(fixture, sp)
-        {
-        }
-    }
-
     [Trait("CodeModel", "Attributes"), Collection(nameof(RoslynFixture))]
     public class RoslynAttributeTests : AttributeTests
     {
