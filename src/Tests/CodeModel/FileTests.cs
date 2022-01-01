@@ -8,14 +8,6 @@ using File = Typewriter.CodeModel.File;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("CodeModel", "Files"), Collection(nameof(CodeDomFixture))]
-    public class CodeDomFileTests : FileTests
-    {
-        public CodeDomFileTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
-        {
-        }
-    }
-
     [Trait("CodeModel", "Files"), Collection(nameof(RoslynFixture))]
     public class RoslynFileTests : FileTests
     {

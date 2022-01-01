@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.ItemTemplates", "src\ItemTemplates\Typewriter.ItemTemplates.csproj", "{417568AF-7B73-4C93-9261-025D69AC89A5}"
 EndProject
@@ -9,13 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Tests", "src\Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.CodeModel", "src\CodeModel\Typewriter.CodeModel.csproj", "{4EC6C920-D234-49F1-B17B-98A4DE24FF87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata.CodeDom", "src\CodeDom\Typewriter.Metadata.CodeDom.csproj", "{C822D1A9-4C43-4067-A01E-EA38F3138282}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata", "src\Metadata\Typewriter.Metadata.csproj", "{511E50CC-6073-43EE-9E8B-DD6F584C81A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter.Metadata.Roslyn", "src\Roslyn\Typewriter.Metadata.Roslyn.csproj", "{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter", "src\Typewriter\Typewriter.csproj", "{425F5413-FED5-4905-A6F0-B5E6900FF045}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Typewriter", "src\Typewriter\Typewriter.csproj", "{0427C151-9B9D-4C77-8A64-68BF2C929595}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{4EC6C920-D234-49F1-B17B-98A4DE24FF87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EC6C920-D234-49F1-B17B-98A4DE24FF87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EC6C920-D234-49F1-B17B-98A4DE24FF87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C822D1A9-4C43-4067-A01E-EA38F3138282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C822D1A9-4C43-4067-A01E-EA38F3138282}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C822D1A9-4C43-4067-A01E-EA38F3138282}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C822D1A9-4C43-4067-A01E-EA38F3138282}.Release|Any CPU.Build.0 = Release|Any CPU
 		{511E50CC-6073-43EE-9E8B-DD6F584C81A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{511E50CC-6073-43EE-9E8B-DD6F584C81A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{511E50CC-6073-43EE-9E8B-DD6F584C81A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,10 +41,10 @@ Global
 		{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D74F5FF-AD4C-40A5-9577-5ED378031FF6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{425F5413-FED5-4905-A6F0-B5E6900FF045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{425F5413-FED5-4905-A6F0-B5E6900FF045}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{425F5413-FED5-4905-A6F0-B5E6900FF045}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{425F5413-FED5-4905-A6F0-B5E6900FF045}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0427C151-9B9D-4C77-8A64-68BF2C929595}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0427C151-9B9D-4C77-8A64-68BF2C929595}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0427C151-9B9D-4C77-8A64-68BF2C929595}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0427C151-9B9D-4C77-8A64-68BF2C929595}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

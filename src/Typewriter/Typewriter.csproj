@@ -199,10 +199,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeDom\Typewriter.Metadata.CodeDom.csproj">
-      <Project>{c822d1a9-4c43-4067-a01e-ea38f3138282}</Project>
-      <Name>Typewriter.Metadata.CodeDom</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CodeModel\Typewriter.CodeModel.csproj">
       <Project>{4ec6c920-d234-49f1-b17b-98a4de24ff87}</Project>
       <Name>Typewriter.CodeModel</Name>
@@ -221,9 +217,6 @@
     <ProjectReference Include="..\Roslyn\Typewriter.Metadata.Roslyn.csproj">
       <Project>{3d74f5ff-ad4c-40a5-9577-5ed378031ff6}</Project>
       <Name>Typewriter.Metadata.Roslyn</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>BuiltProjectOutputGroup</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

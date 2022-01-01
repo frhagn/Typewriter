@@ -11,8 +11,8 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 using Typewriter.Generation.Controllers;
-using Typewriter.Metadata.CodeDom;
 using Typewriter.Metadata.Providers;
+using Typewriter.Metadata.Roslyn;
 using Typewriter.VisualStudio.ContextMenu;
 using Task = System.Threading.Tasks.Task;
 
@@ -154,31 +154,8 @@ namespace Typewriter.VisualStudio
 
         private void GetCodeModelProvider()
         {
-            try
-            {
-                var version = GetVisualStudioVersion();
-                Log.Debug($"Visual Studio Version: {version}");
-
-                if (version.Major >= 14 || version.Major == 0)
-                {
-                    var assembly = Assembly.LoadFrom(Path.Combine(Constants.TypewriterDirectory, "Typewriter.Metadata.Roslyn.dll"));
-                    var type = assembly.GetType("Typewriter.Metadata.Roslyn.RoslynMetadataProvider");
-                    var provider = (IMetadataProvider)Activator.CreateInstance(type);
-
-                    Log.Debug("Using Roslyn");
-                    Constants.RoslynEnabled = true;
-                    _metadataProvider = provider;
-
-                    return;
-                }
-            }
-            catch (Exception exception)
-            {
-                Log.Debug(exception.Message);
-            }
-
-            Log.Debug("Using CodeDom");
-            _metadataProvider = new CodeDomMetadataProvider(Dte);
+            Log.Debug("Using Roslyn");
+            _metadataProvider = new RoslynMetadataProvider();
         }
 
         private void GetOptions()

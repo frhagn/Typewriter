@@ -8,14 +8,6 @@ using Xunit;
 
 namespace Typewriter.Tests.Extensions
 {
-    [Trait("Extensions", "WebApi"), Collection(nameof(CodeDomFixture))]
-    public class CodeDomWebApiRouteExtensionsTests : WebApiRouteExtensionsTests
-    {
-        public CodeDomWebApiRouteExtensionsTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
-        {
-        }
-    }
-
     [Trait("Extensions", "WebApi"), Collection(nameof(RoslynFixture))]
     public class RoslynWebApiRouteExtensionsTests : WebApiRouteExtensionsTests
     {

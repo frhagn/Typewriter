@@ -8,14 +8,6 @@ using Xunit;
 
 namespace Typewriter.Tests.CodeModel
 {
-    [Trait("CodeModel", "Types"), Collection(nameof(CodeDomFixture))]
-    public class CodeDomTypeTests : TypeTests
-    {
-        public CodeDomTypeTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
-        {
-        }
-    }
-
     [Trait("CodeModel", "Types"), Collection(nameof(RoslynFixture))]
     public class RoslynTypeTests : TypeTests
     {

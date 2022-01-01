@@ -6,14 +6,6 @@ using Xunit;
 
 namespace Typewriter.Tests.Render
 {
-    [Trait("Render", "CodeDom"), Collection(nameof(CodeDomFixture))]
-    public class CodeDomRenderTests : RenderTests
-    {
-        public CodeDomRenderTests(CodeDomFixture fixture, GlobalServiceProvider sp) : base(fixture, sp)
-        {
-        }
-    }
-
     [Trait("Render", "Roslyn"), Collection(nameof(RoslynFixture))]
     public class RoslynRenderTests : RenderTests
     {
