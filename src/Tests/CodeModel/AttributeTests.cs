@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.Sdk.TestFramework;
-using Microsoft.VisualStudio.Shell;
 using Should;
 using Typewriter.CodeModel;
 using Typewriter.Tests.CodeModel.Support;

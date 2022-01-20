@@ -1436,6 +1436,16 @@
             Gets full solution name from DTE.
             </summary>
         </member>
+        <member name="P:Typewriter.Configuration.Settings.OutputDirectory">
+            <summary>
+            Gets or sets output directory to which generated files needs to be saved.
+            </summary>
+        </member>
+        <member name="P:Typewriter.Configuration.Settings.SkipAddingGeneratedFilesToProject">
+            <summary>
+            Gets or sets value indicating if generated files should not be added to project.
+            </summary>
+        </member>
         <member name="T:Typewriter.Extensions.Types.TypeExtensions">
             <summary>
             Extension methods for working with types.

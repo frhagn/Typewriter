@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using System.Text;
 using EnvDTE;
-using Typewriter.Generation.Controllers;
 using Typewriter.VisualStudio;
 using File = Typewriter.CodeModel.File;
 

@@ -157,7 +157,8 @@ namespace Typewriter.Generation
 
             var hasChanged = HasChanged(outputPath, output);
 
-            if (ExtensionPackage.Instance.AddGeneratedFilesToProject == false)
+            if (ExtensionPackage.Instance.AddGeneratedFilesToProject == false
+                || _configuration.Value.SkipAddingGeneratedFilesToProject)
             {
                 if (hasChanged)
                 {
@@ -286,7 +287,7 @@ namespace Typewriter.Generation
         private string GetOutputPath(File file)
         {
             var path = file.FullName;
-            var directory = Path.GetDirectoryName(_templatePath);
+            var directory = GetOutputDirectory();
             var filename = GetOutputFilename(file, path);
             var outputPath = Path.Combine(directory, filename);
 
@@ -310,6 +311,17 @@ namespace Typewriter.Generation
             }
 
             throw new Exception("GetOutputPath");
+        }
+
+        private string GetOutputDirectory()
+        {
+            var directory = _configuration.Value.OutputDirectory;
+            if (!string.IsNullOrEmpty(directory))
+            {
+                return directory;
+            }
+
+            return Path.GetDirectoryName(_templatePath);
         }
 
         private string GetOutputFilename(File file, string sourcePath)

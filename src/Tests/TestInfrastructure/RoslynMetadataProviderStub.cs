@@ -6,7 +6,6 @@ using Typewriter.Metadata.Providers;
 using Typewriter.Metadata.Roslyn;
 using Typewriter.Configuration;
 using System;
-using Microsoft.VisualStudio.Shell;
 
 namespace Typewriter.Tests.TestInfrastructure
 {

@@ -50,5 +50,15 @@ namespace Typewriter.Configuration
         /// Gets full solution name from DTE.
         /// </summary>
         public abstract string SolutionFullName { get; }
+
+        /// <summary>
+        /// Gets or sets output directory to which generated files needs to be saved.
+        /// </summary>
+        public string OutputDirectory { get; set; } = null;
+
+        /// <summary>
+        /// Gets or sets value indicating if generated files should not be added to project.
+        /// </summary>
+        public bool SkipAddingGeneratedFilesToProject { get; set; }
     }
 }

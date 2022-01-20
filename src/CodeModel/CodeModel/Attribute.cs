@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Typewriter.CodeModel.Attributes;
+﻿using Typewriter.CodeModel.Attributes;
 
 namespace Typewriter.CodeModel
 {
