@@ -318,7 +318,7 @@ namespace Typewriter.Generation
             var directory = _configuration.Value.OutputDirectory;
             if (!string.IsNullOrEmpty(directory))
             {
-                return directory;
+                return Path.Combine(Path.GetDirectoryName(_templatePath), directory);
             }
 
             return Path.GetDirectoryName(_templatePath);

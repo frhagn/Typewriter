@@ -15,6 +15,10 @@ From the other side that extensions really helps fulstack developers and work on
 
 ## Version 2.6.0
 
+- fix relative paths in output directory - now relative to template location
+
+## Version 2.6.0
+
 - ability to setup different output directory in settings.OutputDirectory
 - ability to skip adding generated files in project in template by using settings.SkipAddingGeneratedFilesToProject
 
