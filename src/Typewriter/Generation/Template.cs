@@ -334,7 +334,6 @@ namespace Typewriter.Generation
             }
 
             return directory;
-            
         }
 
         private string GetOutputFilename(File file, string sourcePath)
