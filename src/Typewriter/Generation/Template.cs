@@ -316,12 +316,24 @@ namespace Typewriter.Generation
         private string GetOutputDirectory()
         {
             var directory = _configuration.Value.OutputDirectory;
-            if (!string.IsNullOrEmpty(directory))
+            if (string.IsNullOrEmpty(directory))
             {
-                return Path.Combine(Path.GetDirectoryName(_templatePath), directory);
+                return Path.GetDirectoryName(_templatePath);
             }
 
-            return Path.GetDirectoryName(_templatePath);
+            var templateDirectory = Path.GetDirectoryName(_templatePath);
+
+            if (!string.IsNullOrEmpty(templateDirectory) && !Path.IsPathRooted(directory))
+            {
+                directory = Path.Combine(templateDirectory, directory);
+            }
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            return directory;
         }
 
         private string GetOutputFilename(File file, string sourcePath)
