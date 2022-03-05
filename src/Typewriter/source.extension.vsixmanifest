@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="68E244F1-14E1-4681-A51C-5B902B9EE96C" Version="2.6.2" Language="en-US" Publisher="frhagn" />
+        <Identity Id="68E244F1-14E1-4681-A51C-5B902B9EE96C" Version="2.7.0" Language="en-US" Publisher="frhagn" />
         <DisplayName>Typewriter64</DisplayName>
         <Description xml:space="preserve">Typewriter generates TypeScript files from c# code files using TypeScript Templates. This allows you to create fully typed TypeScript representations of server side API that automatically updates when you make changes to your c# code.</Description>
         <MoreInfo>http://frhagn.github.io/Typewriter/</MoreInfo>

@@ -13,7 +13,11 @@ From the other side that extensions really helps fulstack developers and work on
 
 ## Main differences between original and this fork
 
-## Version 2.6.0
+## Version 2.7.0
+
+- latest updates for Visual Studio 17.1.x
+
+## Version 2.6.1
 
 - fix relative paths in output directory - now relative to template location
 
